@@ -3,6 +3,10 @@ from gi.repository import Hinawa
 class AvcGeneral():
     plug_direction = ('output', 'input')
     sampling_rates = (32000, 44100, 48000, 88200, 96000, 176400, 192000)
+    subunit_types = ('monitor', 'audio', 'printer', 'disc',
+                     'tape-recorder-player', 'tuner', 'ca', 'camera',
+                     'reserved', 'panel', 'bulletin-board', 'camera storate',
+                     'music')
 
     @staticmethod
     def command_control(unit, cmd):
@@ -41,6 +45,23 @@ class AvcGeneral():
             raise IOError('Not Implemented')
         elif params[0] != 0x0c:
             raise IOError('Unknown status')
+
+    @staticmethod
+    def get_plug_info(unit):
+        args = bytearray()
+        args.append(0x01)
+        args.append(0xff)
+        args.append(0x02)   # Plug info
+        args.append(0x00)   # Serial Bus Isochronous and External Plug
+        args.append(0xff)
+        args.append(0xff)
+        args.append(0xff)
+        args.append(0xff)
+        params = AvcGeneral.command_status(unit, args)
+        return {'isoc-input':       params[4],
+                'isoc-output':      params[5],
+                'external-input':   params[6],
+                'external-output':  params[7]}
 
     @staticmethod
     def set_plug_signal_format(unit, direction, plug, rate):
