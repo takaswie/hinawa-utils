@@ -6,7 +6,7 @@ from gi.repository import Hinawa
 from avc.general import AvcGeneral
 from avc.streamformat import AvcStreamFormat
 from avc.audio import AvcAudio
-from avc.bridgeco import AvcBridgeco
+from avc.bridgeco import ExtendedPlugInfo
 
 from math import log10
 
@@ -104,23 +104,31 @@ for key,count in plugs.items():
         break
 
     for plug in range(count):
-        addr = AvcBridgeco.get_unit_addr(dir, type, plug)
+        print('{0} {1} {2}'.format(type, dir, plug))
+        addr = ExtendedPlugInfo.get_unit_addr(dir, type, plug)
 
-        print(AvcBridgeco.get_plug_type(unit, addr))
-        print(AvcBridgeco.get_plug_name(unit, addr))
-        print(AvcBridgeco.get_plug_channels(unit, addr))
-        clusters = AvcBridgeco.get_plug_clusters(unit, addr)
-        print(clusters)
+        plug_type = ExtendedPlugInfo.get_plug_type(unit, addr)
+        plug_name = ExtendedPlugInfo.get_plug_name(unit, addr)
+        chs = ExtendedPlugInfo.get_plug_channels(unit, addr)
+
+        print('    type: {0}'.format(plug_type))
+        print('    name: {0}'.format(plug_name))
+        for ch in range(chs):
+            ch_name = ExtendedPlugInfo.get_plug_ch_name(unit, addr, ch + 1)
+            print('    ch: {0}'.format(ch_name))
+
+        if plug_type != 'IsoStream':
+            continue
+
+        clusters = ExtendedPlugInfo.get_plug_clusters(unit, addr)
         for i in range(len(clusters)):
-            print(AvcBridgeco.get_plug_cluster_info(unit, addr, i + 1))
-        for cls in clusters:
-            for pos in range(len(cls)):
-                print(AvcBridgeco.get_plug_ch_name(unit, addr, pos + 1))
+            info = ExtendedPlugInfo.get_plug_cluster_info(unit, addr, i + 1)
+            print('    cls: {0}'.format(info))
 
 #        if type == 'input':
-#            print(AvcBridgeco.get_plug_input(unit, addr))
+#            print(ExtendedPlugInfo.get_plug_input(unit, addr))
 #        else:
-#            print(AvcBridgeco.get_plug_outputs(unit, addr))
+#            print(ExtendedPlugInfo.get_plug_outputs(unit, addr))
 
 sys.exit()
 

@@ -1,6 +1,6 @@
 from avc.general import AvcGeneral
 
-class AvcBridgeco():
+class ExtendedPlugInfo():
     addr_dir  = ('input', 'output')
     addr_mode = ('unit', 'subunit', 'function-block')
     addr_unit_type = ('isoc', 'external', 'asynchronous')
@@ -17,29 +17,29 @@ class AvcBridgeco():
 
     @staticmethod
     def get_unit_addr(addr_dir, addr_unit_type, plug):
-        if AvcBridgeco.addr_dir.count(addr_dir) == 0:
+        if ExtendedPlugInfo.addr_dir.count(addr_dir) == 0:
             raise ValueError('Invalid argument for address direction')
-        if AvcBridgeco.addr_unit_type.count(addr_unit_type) == 0:
+        if ExtendedPlugInfo.addr_unit_type.count(addr_unit_type) == 0:
             raise ValueError('Invalid argumetn for address unit type')
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
         addr = bytearray()
-        addr.append(AvcBridgeco.addr_dir.index(addr_dir))
-        addr.append(AvcBridgeco.addr_mode.index('unit'))
-        addr.append(AvcBridgeco.addr_unit_type.index(addr_unit_type))
+        addr.append(ExtendedPlugInfo.addr_dir.index(addr_dir))
+        addr.append(ExtendedPlugInfo.addr_mode.index('unit'))
+        addr.append(ExtendedPlugInfo.addr_unit_type.index(addr_unit_type))
         addr.append(plug)
         addr.append(0xff)
         return addr
 
     @staticmethod
     def get_subunit_addr(addr_dir, subunit_type, subunit_id, plug):
-        if AvcBridgeco.addr_dir.count(addr_dir) == 0:
+        if ExtendedPlugInfo.addr_dir.count(addr_dir) == 0:
             raise ValueError('Invalid argument for address direction')
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
         addr = bytearray()
-        addr.append(AvcBridgeco.addr_dir.index(addr_dir))
-        addr.append(AvcBridgeco.addr_mode.index('subunit'))
+        addr.append(ExtendedPlugInfo.addr_dir.index(addr_dir))
+        addr.append(ExtendedPlugInfo.addr_mode.index('subunit'))
         addr.append(subunit_id)
         addr.append(plug)
         addr.append(0xff)
@@ -47,11 +47,11 @@ class AvcBridgeco():
 
     @staticmethod
     def get_function_block_addr(addr_dir, fb_type, fb_id, plug):
-        if AvcBridgeco.addr_dir.count(addr_dir) == 0:
+        if ExtendedPlugInfo.addr_dir.count(addr_dir) == 0:
             raise ValueError('Invalid argument for address direction')
         addr = bytearray()
-        addr.append(AvcBridgeco.addr_dir.index(addr_dir))
-        addr.append(AvcBridgeco.addr_mode.index('function-block'))
+        addr.append(ExtendedPlugInfo.addr_dir.index(addr_dir))
+        addr.append(ExtendedPlugInfo.addr_mode.index('function-block'))
         addr.append(fb_type)
         addr.append(fb_id)
         addr.append(plug)
@@ -73,9 +73,9 @@ class AvcBridgeco():
         args.append(0xff)
         args.append(0xff)
         params = AvcGeneral.command_status(unit, args)
-        if params[10] > len(AvcBridgeco.plug_type):
+        if params[10] > len(ExtendedPlugInfo.plug_type):
             raise IOError('Unexpected value in response')
-        return AvcBridgeco.plug_type[params[10]]
+        return ExtendedPlugInfo.plug_type[params[10]]
 
     @staticmethod
     def get_plug_name(unit, addr):
@@ -93,10 +93,10 @@ class AvcBridgeco():
         args.append(0xff)
         args.append(0xff)
         params = AvcGeneral.command_status(unit, args)
-        len = params[10]
-        if len == 0:
+        length = params[10]
+        if length == 0:
             return ""
-        return params[11:11 + len].decode()
+        return params[11:11 + length].decode()
 
     @staticmethod
     def get_plug_channels(unit, addr):
@@ -133,19 +133,20 @@ class AvcBridgeco():
         args.append(0xff)
         params = AvcGeneral.command_status(unit, args)
         data = params[10:]
-        print(data)
-        pos = 1
-        clusters = []
-        while pos < len(data):
-            cluster = []
+        pos = 0
+        clusters = [[] for i in range(data[pos])]
+        pos += 1
+        for cls in range(len(clusters)):
             num = data[pos]
-            if num == 0:
-                break
             pos += 1
-            for i in range(num):
-                cluster.append([data[pos], data[pos + 1]])
+            if num == 0:
+                break;
+
+            clusters[cls] = [[0, 0] for j in range(num)]
+            for e in range(len(clusters[cls])):
+                clusters[cls][e][0] = data[pos];
+                clusters[cls][e][1] = data[pos + 1];
                 pos += 2
-            clusters.append(cluster)
         return clusters
 
     @staticmethod
@@ -164,8 +165,8 @@ class AvcBridgeco():
         args.append(pos)
         args.append(0xff)
         params = AvcGeneral.command_status(unit, args)
-        len = params[11]
-        return params[12:12+len].decode()
+        length = params[11]
+        return params[12:12+length].decode()
 
     @staticmethod
     def get_plug_input(unit, addr):
@@ -217,6 +218,6 @@ class AvcBridgeco():
         args.append(cls)
         args.append(0xff)
         params = AvcGeneral.command_status(unit, args)
-        len = params[12]
-        return params[13:13+len].decode()
+        length = params[12]
+        return params[13:13+length].decode()
 
