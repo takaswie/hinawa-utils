@@ -6,6 +6,7 @@ from gi.repository import Hinawa
 from avc.general import AvcGeneral
 from avc.streamformat import AvcStreamFormat
 from avc.audio import AvcAudio
+from avc.bridgeco import AvcBridgeco
 
 from math import log10
 
@@ -81,6 +82,47 @@ print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1
 print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 0, 2, 2)))
 print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 2, 1, 1)))
 print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 2, 2, 2)))
+
+plugs = AvcGeneral.get_plug_info(unit)
+print(plugs)
+
+for key,count in plugs.items():
+    if   key == 'isoc-input':
+        type = 'isoc'
+        dir = 'input'
+    elif key == 'isoc-output':
+        type = 'isoc'
+        dir = 'output'
+    elif key == 'external-input':
+        type = 'external'
+        dir = 'input'
+    elif key == 'external-output':
+        type = 'external'
+        dir = 'output'
+    else:
+        print(key)
+        break
+
+    for plug in range(count):
+        addr = AvcBridgeco.get_unit_addr(dir, type, plug)
+
+        print(AvcBridgeco.get_plug_type(unit, addr))
+        print(AvcBridgeco.get_plug_name(unit, addr))
+        print(AvcBridgeco.get_plug_channels(unit, addr))
+        clusters = AvcBridgeco.get_plug_clusters(unit, addr)
+        print(clusters)
+        for i in range(len(clusters)):
+            print(AvcBridgeco.get_plug_cluster_info(unit, addr, i + 1))
+        for cls in clusters:
+            for pos in range(len(cls)):
+                print(AvcBridgeco.get_plug_ch_name(unit, addr, pos + 1))
+
+#        if type == 'input':
+#            print(AvcBridgeco.get_plug_input(unit, addr))
+#        else:
+#            print(AvcBridgeco.get_plug_outputs(unit, addr))
+
+sys.exit()
 
 import time
 
