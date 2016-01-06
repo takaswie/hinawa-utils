@@ -1,4 +1,4 @@
-from avc.general import AvcGeneral
+from ta1394.general import AvcGeneral
 
 class AvcAudio():
     attributes = ('resolution', 'minimum', 'maximum', 'default', 'duration',

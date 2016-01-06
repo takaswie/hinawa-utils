@@ -1,4 +1,4 @@
-from avc.general import AvcGeneral
+from ta1394.general import AvcGeneral
 
 class AvcStreamFormat():
     sampling_rates = (22050, 24000, 32000, 44100, 48000, 96000, 176400,

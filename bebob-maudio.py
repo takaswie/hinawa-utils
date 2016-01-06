@@ -3,11 +3,12 @@
 import sys
 
 from gi.repository import Hinawa
-from avc.general import AvcGeneral
-from avc.general import AvcConnection
-from avc.streamformat import AvcStreamFormat
-from avc.audio import AvcAudio
-from avc.bridgeco import ExtendedPlugInfo
+
+from ta1394.general import AvcGeneral
+from ta1394.general import AvcConnection
+from ta1394.streamformat import AvcStreamFormat
+from ta1394.audio import AvcAudio
+from bridgeco.extendedpluginfo import ExtendedPlugInfo
 
 from math import log10
 
