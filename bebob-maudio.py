@@ -4,6 +4,7 @@ import sys
 
 from gi.repository import Hinawa
 from avc.general import AvcGeneral
+from avc.general import AvcConnection
 from avc.streamformat import AvcStreamFormat
 from avc.audio import AvcAudio
 from avc.bridgeco import ExtendedPlugInfo
@@ -83,7 +84,9 @@ print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1
 print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 2, 1, 1)))
 print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 2, 2, 2)))
 
-plugs = AvcGeneral.get_plug_info(unit)
+print(AvcGeneral.get_unit_info(unit))
+print(AvcGeneral.get_subunit_info(unit, 0))
+plugs = AvcConnection.get_plug_info(unit)
 print(plugs)
 
 for key,count in plugs.items():

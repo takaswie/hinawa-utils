@@ -3,7 +3,7 @@ from avc.general import AvcGeneral
 class ExtendedPlugInfo():
     addr_dir  = ('input', 'output')
     addr_mode = ('unit', 'subunit', 'function-block')
-    addr_unit_type = ('isoc', 'external', 'asynchronous')
+    addr_unit_type = ('isoc', 'external', 'async')
 
     plug_type = ('IsoStream', 'AsyncStream', 'MIDI', 'Sync', 'Analog',
                  'Digital')
@@ -118,6 +118,9 @@ class ExtendedPlugInfo():
 
     @staticmethod
     def get_plug_clusters(unit, addr):
+        if addr[1] != ExtendedPlugInfo.addr_mode.index('unit') or \
+           addr[2] != ExtendedPlugInfo.addr_unit_type.index('isoc'):
+            raise ValueError('Isochronous unit plugs just support this')
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
