@@ -121,18 +121,25 @@ for key,count in plugs.items():
             ch_name = ExtendedPlugInfo.get_plug_ch_name(unit, addr, ch + 1)
             print('    ch: {0}'.format(ch_name))
 
-        if plug_type != 'IsoStream':
-            continue
+        if plug_type == 'IsoStream':
+            clusters = ExtendedPlugInfo.get_plug_clusters(unit, addr)
+            for i in range(len(clusters)):
+                info = ExtendedPlugInfo.get_plug_cluster_info(unit, addr, i + 1)
+                print('    cls: {0}'.format(info))
 
-        clusters = ExtendedPlugInfo.get_plug_clusters(unit, addr)
-        for i in range(len(clusters)):
-            info = ExtendedPlugInfo.get_plug_cluster_info(unit, addr, i + 1)
-            print('    cls: {0}'.format(info))
-
-#        if type == 'input':
-#            print(ExtendedPlugInfo.get_plug_input(unit, addr))
-#        else:
-#            print(ExtendedPlugInfo.get_plug_outputs(unit, addr))
+        if dir is 'output':
+            input = ExtendedPlugInfo.get_plug_input(unit, addr)
+            print('    input:')
+            for key,value in input.items():
+                print('        {0}: {1}'.format(key, value))
+            ExtendedPlugInfo.build_plug_info(input)
+        else:
+            outputs = ExtendedPlugInfo.get_plug_outputs(unit, addr)
+            for output in outputs:
+                print('    output:')
+                for key,value in output.items():
+                    print('       {0}: {1}'.format(key, value))
+                ExtendedPlugInfo.build_plug_info(output)
 
 sys.exit()
 
