@@ -8,6 +8,7 @@ from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
 from ta1394.streamformat import AvcStreamFormat
 from ta1394.audio import AvcAudio
+from ta1394.ccm import AvcCcm
 from bridgeco.extendedpluginfo import ExtendedPlugInfo
 
 from math import log10
@@ -52,6 +53,10 @@ class BebobMaudio(Hinawa.SndUnit):
         return self.read_transact(0xffc700600000, 15)
 
 unit = BebobMaudio(card)
+
+dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
+print(AvcCcm.get_signal_source(unit, dst))
+
 for i in range(1, 8):
     try:
         print(i, AvcAudio.get_selector_param(unit, 0, 'current', i))
