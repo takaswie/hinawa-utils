@@ -2,7 +2,7 @@
 
 import sys
 
-from fireworks import Fireworks
+from echoaudio.eft import Fireworks
 
 argv = sys.argv
 argc = len(argv)
