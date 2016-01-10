@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-
-from echoaudio.eft import Fireworks
+from echoaudio.fireworks import Fireworks
 
 argv = sys.argv
 argc = len(argv)
@@ -18,60 +17,38 @@ except Exception as e:
     print(e)
     sys.exit()
 
-for key in unit.supported_features:
-    print(key, unit.supported_features[key])
+info = unit.info
+print(info)
+print(unit.get_metering())
 
-for key in unit.supported_clock_sources:
-    print(key, unit.supported_clock_sources[key])
+print(unit.get_box_states())
 
-for key in unit.supported_sampling_rates:
-    print(key, unit.supported_sampling_rates[key])
+for ch in range(len(info['phys-outputs'])):
+    print(unit.get_phys_out_gain(ch))
+    print(unit.get_phys_out_mute(ch))
+    print(unit.get_phys_out_nominal(ch))
 
-for key in unit.firmware_versions:
-    print(key, unit.firmware_versions[key])
+for ch in range(len(info['phys-inputs'])):
+    print(unit.get_phys_in_nominal(ch))
 
-for kind in unit.phys_outputs:
-    print(kind)
+for ch in range(info['playback-channels']):
+    print(unit.get_playback_gain(ch))
+    print(unit.get_playback_mute(ch))
+    print(unit.get_playback_solo(ch))
 
-for kind in unit.phys_inputs:
-    print(kind)
+for in_ch in range(info['capture-channels']):
+    for out_ch in range(info['playback-channels']):
+        print(unit.get_monitor_gain(in_ch, out_ch))
+        print(unit.get_monitor_mute(in_ch, out_ch))
+        print(unit.get_monitor_solo(in_ch, out_ch))
+        print(unit.get_monitor_pan(in_ch, out_ch))
 
-for channel in range(len(unit.phys_outputs)):
-    print('Phys output: {0}'.format(channel))
-    try:
-        print(unit.phys_output_get_param('gain', channel))
-        print(unit.phys_output_get_param('mute', channel))
-        print(unit.phys_output_get_param('nominal', channel))
-    except Exception as e:
-        print(e)
-
-for channel in range(unit.mixer_playback_channels):
-    print('Mixer playback {0}'.format(channel))
-    try:
-        print(unit.playback_get_param('gain', channel))
-        print(unit.playback_get_param('mute', channel))
-        print(unit.playback_get_param('solo', channel))
-    except Exception as e:
-        print(e)
-
-for input in range(len(unit.phys_inputs)):
-   for output in range(len(unit.phys_outputs)):
-       print('Monitoring from {0} to {1}'.format(input, output))
-       try:
-           print(unit.monitor_get_param('gain', input, output))
-           print(unit.monitor_get_param('mute', input, output))
-           print(unit.monitor_get_param('solo', input, output))
-           print(unit.monitor_get_param('pan', input, output))
-       except Exception as e:
-           print(e)
-
-print(unit.ioconf_get_stream_mapping())
-print(unit.hwctl_get_clock())
-print(unit.hwctl_get_box_states())
-
-offset = unit.flash_get_session_offset()
-print(unit.flash_read_block(offset, 1))
-
-unit.unlisten()
-
-sys.exit()
+if info['features']['control-room-mirroring']:
+    print(unit.get_control_room_mirroring())
+if info['features']['aesebu-xlr'] or info['features']['spdif-coax'] or \
+   info['features']['spdif-opt'] or info['features']['adat-opt']:
+    print(unit.get_digital_input_mode())
+if info['features']['phantom-powering']:
+    print(unit.get_phantom_powering())
+if info['features']['rx-mapping'] or info['features']['tx-mapping']:
+    print(unit.get_stream_mapping())
