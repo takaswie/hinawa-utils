@@ -16,7 +16,7 @@ class AvcAudio():
     }
 
     @staticmethod
-    def set_selector_param(unit, subunit_id, attr, fb_id, value):
+    def set_selector_state(unit, subunit_id, attr, fb_id, value):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if ('current', 'minimum', 'maximum', 'default').count(attr) == 0:
@@ -37,7 +37,8 @@ class AvcAudio():
         args.append(0x01)   # Selector control
         AvcGeneral.command_control(unit, args)
 
-    def get_selector_param(unit, subunit_id, attr, fb_id):
+    @staticmethod
+    def get_selector_state(unit, subunit_id, attr, fb_id):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if ('current', 'minimum', 'maximum', 'default').count(attr) == 0:
@@ -57,7 +58,8 @@ class AvcAudio():
         params = AvcGeneral.command_status(unit, args)
         return params[7]
 
-    def set_feature_mute_param(unit, subunit_id, attr, fb_id, ch, mute):
+    @staticmethod
+    def set_feature_mute_state(unit, subunit_id, attr, fb_id, ch, mute):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if attr is not 'current':
@@ -82,10 +84,10 @@ class AvcAudio():
         args.append(0x01)   # Mute control
         args.append(0x01)   # Control data length is 1
         args.append(mute)
-        args.append(0xff)
         AvcGeneral.command_control(unit, args)
 
-    def get_feature_mute_param(unit, subunit_id, attr, fb_id, ch):
+    @staticmethod
+    def get_feature_mute_state(unit, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if attr is not 'current':
@@ -106,7 +108,6 @@ class AvcAudio():
         args.append(0x01)   # Mute control
         args.append(0x01)   # Control data length is 1
         args.append(0xff)   # Status
-        args.append(0xff)
         params = AvcGeneral.command_status(unit, args)
         if params[10] == 0x70:
             return True
@@ -115,7 +116,8 @@ class AvcAudio():
         else:
             raise IOError('Unexpected value in response')
 
-    def set_feature_volume_param(unit, subunit_id, attr, fb_id, ch, vol):
+    @staticmethod
+    def set_feature_volume_state(unit, subunit_id, attr, fb_id, ch, vol):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if AvcAudio.attributes.count(attr) == 0:
@@ -139,7 +141,8 @@ class AvcAudio():
         args.append(vol & 0xff) # Lower part of volume
         AvcGeneral.command_control(unit, args)
 
-    def get_feature_volume_param(unit, subunit_id, attr, fb_id, ch):
+    @staticmethod
+    def get_feature_volume_state(unit, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if AvcAudio.attributes.count(attr) == 0:
@@ -164,7 +167,8 @@ class AvcAudio():
         params = AvcGeneral.command_status(unit, args)
         return (params[10] << 8) | params[11]
 
-    def set_feature_lr_param(unit, subunit_id, attr, fb_id, ch, balance):
+    @staticmethod
+    def set_feature_lr_state(unit, subunit_id, attr, fb_id, ch, balance):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if AvcAudio.attributes.count(attr) == 0:
@@ -188,7 +192,8 @@ class AvcAudio():
         args.append(balance & 0xff) # Lower part of balance
         AvcGeneral.command_control(unit, args)
 
-    def get_feature_lr_param(unit, subunit_id, attr, fb_id, ch):
+    @staticmethod
+    def get_feature_lr_state(unit, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if AvcAudio.attributes.count(attr) == 0:
@@ -213,7 +218,8 @@ class AvcAudio():
         params = AvcGeneral.command_status(unit, args)
         return (params[10] << 8) | params[11]
 
-    def set_processing_mixer_param(unit, subunit_id, attr, fb_id, in_fb,
+    @staticmethod
+    def set_processing_mixer_state(unit, subunit_id, attr, fb_id, in_fb,
                                    in_ch, out_ch, setting):
         attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
         if subunit_id > 0x07:
@@ -243,11 +249,10 @@ class AvcAudio():
         args.append(0x02)   # Control data is 2
         args.append(setting >> 8)   # Higher part of setting
         args.append(setting & 0xff) # Lower part of setting
-        args.append(0xff)
-        args.append(0xff)
         AvcGeneral.command_control(unit, args)
 
-    def get_processing_mixer_param(unit, subunit_id, attr, fb_id, in_fb,
+    @staticmethod
+    def get_processing_mixer_state(unit, subunit_id, attr, fb_id, in_fb,
                                    in_ch, out_ch):
         attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
         if subunit_id > 0x07:
@@ -277,7 +282,66 @@ class AvcAudio():
         args.append(0x02)   # Control data is 2
         args.append(0xff)   # Higher part of setting
         args.append(0xff)   # Lower part of setting
-        args.append(0xff)
-        args.append(0xff)
         params = AvcGeneral.command_status(unit, args)
         return (params[12] << 8) | params[13]
+
+    @staticmethod
+    def set_processing_mixer_state_all(unit, subunit_id, attr, fb_id, in_fb,
+                                       states):
+        attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
+        if subunit_id > 0x07:
+            raise ValueError('Invalid argument for subunit ID')
+        if attrs.count(attr) == 0:
+            raise ValueError('Invalid argument for attribute')
+        if fb_id > 255:
+            raise ValueError('Invalid argument for function block ID')
+        if in_fb > 255:
+            raise ValueError('Invalid argument for input function block ID')
+        data_count = len(states) // 2
+        args = bytearray()
+        args.append(0x00)
+        args.append(0x08 | (subunit_id & 0x07))
+        args.append(0xb8)
+        args.append(0x82)   # Processing function block
+        args.append(fb_id)
+        args.append(AvcAudio.attribute_values[attr])
+        args.append(0x04)   # Selector length is 4
+        args.append(in_fb)
+        args.append(0xff)
+        args.append(0xff)
+        args.append(0x03)   		# Mixer control
+        args.append(data_count)	# The length of control data
+        for i in range(data_count):
+            args.append((states[i * 2] << 8) | states[i * 2 + 1])
+        AvcGeneral.command_control(unit, args)
+
+    @staticmethod
+    def get_processing_mixer_state_all(unit, subunit_id, attr, fb_id, in_fb):
+        attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
+        if subunit_id > 0x07:
+            raise ValueError('Invalid argument for subunit ID')
+        if attrs.count(attr) == 0:
+            raise ValueError('Invalid argument for attribute')
+        if fb_id > 255:
+            raise ValueError('Invalid argument for function block ID')
+        if in_fb > 255:
+            raise ValueError('Invalid argument for input function block ID')
+        args = bytearray()
+        args.append(0x01)
+        args.append(0x08 | (subunit_id & 0x07))
+        args.append(0xb8)
+        args.append(0x82)   # Processing function block
+        args.append(fb_id)
+        args.append(AvcAudio.attribute_values[attr])
+        args.append(0x04)   # Selector length is 4
+        args.append(in_fb)
+        args.append(0xff)
+        args.append(0xff)
+        args.append(0x03)   # Mixer control
+        args.append(0xff)   # The length of control data in response
+        params = AvcGeneral.command_status(unit, args)
+        count = params[11] // 2
+        status = []
+        for i in range(count):
+            status.append((params[12 + i * 2] << 8) | params[13 + i * 2])
+        return status

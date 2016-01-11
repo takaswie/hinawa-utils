@@ -1,6 +1,19 @@
 #!/usr/bin/env python3
 
 import sys
+from bridgeco.bebobnormal import BebobNormal
+
+argv = sys.argv
+argc = len(argv)
+
+if argc < 2:
+    print('help')
+
+card = argv[1]
+
+unit = BebobNormal(card)
+
+sys.exit()
 
 from gi.repository import Hinawa
 
@@ -9,7 +22,9 @@ from ta1394.general import AvcConnection
 from ta1394.streamformat import AvcStreamFormat
 from ta1394.audio import AvcAudio
 from ta1394.ccm import AvcCcm
-from bridgeco.extendedpluginfo import ExtendedPlugInfo
+from bridgeco.extensions import BcoPlugInfo
+from bridgeco.extensions import BcoSubunitInfo
+from bridgeco.extensions import BcoVendorDependent
 
 from math import log10
 
@@ -54,45 +69,63 @@ class BebobMaudio(Hinawa.SndUnit):
 
 unit = BebobMaudio(card)
 
+info = AvcGeneral.get_subunit_info(unit, 0)
+print(info)
+print(BcoSubunitInfo.get_subunits(unit))
+
 dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
-print(AvcCcm.get_signal_source(unit, dst))
+src = AvcCcm.get_signal_source(unit, dst)
+addr = BcoPlugInfo.get_subunit_addr('output', src['data']['type'], src['data']['id'], src['data']['plug'])
+print(BcoPlugInfo.get_plug_type(unit, addr))
+print(BcoPlugInfo.get_plug_name(unit, addr))
+print(BcoPlugInfo.get_plug_channels(unit, addr))
+#print(BcoPlugInfo.get_plug_clusters(unit, addr))
+#print(BcoPlugInfo.get_plug_input(unit, addr))
+#print(BcoPlugInfo.get_plug_outputs(unit, addr))
 
 for i in range(1, 8):
     try:
-        print(i, AvcAudio.get_selector_param(unit, 0, 'current', i))
+        print(i, AvcAudio.get_selector_state(unit, 0, 'current', i))
     except Exception as e:
         print(e)
 
 for i in range(1, 16):
     try:
-        print(i, AvcAudio.get_feature_mute_param(unit, 0, 'current', i, 0))
+        print(i, AvcAudio.get_feature_mute_state(unit, 0, 'current', i, 0))
     except Exception as e:
         print(e)
 
 for i in range(1, 16):
     try:
-        print(i, AvcAudio.get_feature_volume_param(unit, 0, 'current', i, 0))
+        print(i, AvcAudio.get_feature_volume_state(unit, 0, 'current', i, 0))
     except Exception as e:
         print(e)
 
 for i in range(1, 16):
     try:
-        print(i, AvcAudio.get_feature_lr_param(unit, 0, 'current', i, 0))
+        print(i, AvcAudio.get_feature_lr_state(unit, 0, 'current', i, 0))
     except Exception as e:
         print(e)
 
-print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 3, 1, 1)))
-print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 3, 2, 2)))
-print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 4, 1, 1)))
-print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 4, 2, 2)))
-print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 0, 1, 1)))
-print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 0, 2, 2)))
-print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 2, 1, 1)))
-print('{0:04x}'.format(AvcAudio.get_processing_mixer_param(unit, 0, 'current', 1, 2, 2, 2)))
+print('{0:04x}'.format(AvcAudio.get_processing_mixer_state(unit, 0, 'current', 1, 3, 1, 1)))
+print('{0:04x}'.format(AvcAudio.get_processing_mixer_state(unit, 0, 'current', 1, 3, 2, 2)))
+print('{0:04x}'.format(AvcAudio.get_processing_mixer_state(unit, 0, 'current', 1, 4, 1, 1)))
+print('{0:04x}'.format(AvcAudio.get_processing_mixer_state(unit, 0, 'current', 1, 4, 2, 2)))
+print('{0:04x}'.format(AvcAudio.get_processing_mixer_state(unit, 0, 'current', 1, 0, 1, 1)))
+print('{0:04x}'.format(AvcAudio.get_processing_mixer_state(unit, 0, 'current', 1, 0, 2, 2)))
+print('{0:04x}'.format(AvcAudio.get_processing_mixer_state(unit, 0, 'current', 1, 2, 1, 1)))
+print('{0:04x}'.format(AvcAudio.get_processing_mixer_state(unit, 0, 'current', 1, 2, 2, 2)))
+
+print(AvcAudio.get_processing_mixer_state_all(unit, 0, 'current', 1, 2))
+print(AvcAudio.get_processing_mixer_state_all(unit, 0, 'minimum', 1, 2))
+print(AvcAudio.get_processing_mixer_state_all(unit, 0, 'maximum', 1, 2))
+print(AvcAudio.get_processing_mixer_state_all(unit, 0, 'resolution', 1, 2))
+print(AvcAudio.get_processing_mixer_state_all(unit, 0, 'default', 1, 2))
+
+sys.exit()
 
 print(AvcGeneral.get_unit_info(unit))
-print(AvcGeneral.get_subunit_info(unit, 0))
-plugs = AvcConnection.get_plug_info(unit)
+plugs = AvcConnection.get_unit_plug_info(unit)
 print(plugs)
 
 for key,count in plugs.items():
@@ -114,39 +147,37 @@ for key,count in plugs.items():
 
     for plug in range(count):
         print('{0} {1} {2}'.format(type, dir, plug))
-        addr = ExtendedPlugInfo.get_unit_addr(dir, type, plug)
+        addr = BcoPlugInfo.get_unit_addr(dir, type, plug)
 
-        plug_type = ExtendedPlugInfo.get_plug_type(unit, addr)
-        plug_name = ExtendedPlugInfo.get_plug_name(unit, addr)
-        chs = ExtendedPlugInfo.get_plug_channels(unit, addr)
+        plug_type = BcoPlugInfo.get_plug_type(unit, addr)
+        plug_name = BcoPlugInfo.get_plug_name(unit, addr)
+        chs = BcoPlugInfo.get_plug_channels(unit, addr)
 
         print('    type: {0}'.format(plug_type))
         print('    name: {0}'.format(plug_name))
         for ch in range(chs):
-            ch_name = ExtendedPlugInfo.get_plug_ch_name(unit, addr, ch + 1)
+            ch_name = BcoPlugInfo.get_plug_ch_name(unit, addr, ch + 1)
             print('    ch: {0}'.format(ch_name))
 
         if plug_type == 'IsoStream':
-            clusters = ExtendedPlugInfo.get_plug_clusters(unit, addr)
+            clusters = BcoPlugInfo.get_plug_clusters(unit, addr)
             for i in range(len(clusters)):
-                info = ExtendedPlugInfo.get_plug_cluster_info(unit, addr, i + 1)
+                info = BcoPlugInfo.get_plug_cluster_info(unit, addr, i + 1)
                 print('    cls: {0}'.format(info))
 
         if dir is 'output':
-            input = ExtendedPlugInfo.get_plug_input(unit, addr)
+            input = BcoPlugInfo.get_plug_input(unit, addr)
             print('    input:')
             for key,value in input.items():
                 print('        {0}: {1}'.format(key, value))
-            ExtendedPlugInfo.build_plug_info(input)
+            BcoPlugInfo.build_plug_info(input)
         else:
-            outputs = ExtendedPlugInfo.get_plug_outputs(unit, addr)
+            outputs = BcoPlugInfo.get_plug_outputs(unit, addr)
             for output in outputs:
                 print('    output:')
                 for key,value in output.items():
                     print('       {0}: {1}'.format(key, value))
-                ExtendedPlugInfo.build_plug_info(output)
-
-sys.exit()
+                BcoPlugInfo.build_plug_info(output)
 
 import time
 

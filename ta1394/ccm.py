@@ -12,7 +12,7 @@ class AvcCcm():
             raise ValueError('Invalid argument for plug number')
         addr = bytearray()
         addr.append(0xff)
-        if AvcCcm.plug_unit_type[type] is 'isoc':
+        if type == 'isoc':
             addr.append(plug)
         else:
             addr.append(0x80 + plug)
@@ -75,3 +75,16 @@ class AvcCcm():
         args.append(dst[1])
         params = AvcGeneral.command_status(unit, args)
         return AvcCcm.parse_signal_addr(params[6:])
+
+    @staticmethod
+    def ask_signal_source(unit, src, dst):
+        args = bytearray()
+        args.append(0x02)
+        args.append(0xff)
+        args.append(0x1a)
+        args.append(0xff)
+        args.append(src[0])
+        args.append(src[1])
+        args.append(dst[0])
+        args.append(dst[1])
+        AvcGeneral.command_inquire(unit, args)
