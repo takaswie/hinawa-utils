@@ -2,40 +2,43 @@ from gi.repository import Hinawa
 
 from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
-from ta1394.streamformat import AvcStreamFormat
-from ta1394.audio import AvcAudio
 from ta1394.ccm import AvcCcm
 
 from bridgeco.extensions import BcoPlugInfo
 from bridgeco.extensions import BcoSubunitInfo
-from bridgeco.extensions import BcoVendorDependent
 
-class BebobNormal(Hinawa.SndUnit):
+class BebobNormal(Hinawa.FwUnit):
     unit_info = {}
     unit_plugs = {}
     subunit_plugs = {}
+    signal_destination = {}
+    signal_sources = {}
 
-    def __init__(self, card):
+    def __init__(self, path):
         super().__init__()
-        self.open('/dev/snd/hwC{0}D0'.format(card))
+        self.open(path)
         self.listen()
 
-        self.unit_info = self._parse_unit_info()
-        self.unit_plugs = self._parse_unit_plugs()
-        self.subunit_plugs = self._parse_subunit_plugs()
-        self.function_block_plugs = self._parse_function_block_plugs()
+        fcp = Hinawa.FwFcp()
+        fcp.listen(self)
 
-        self.signal_destination = self._parse_signal_destination()
-        self.signal_sources = self._parse_signal_sources()
+        self.unit_info = self._parse_unit_info(fcp)
+        self.unit_plugs = self._parse_unit_plugs(fcp)
+        self.subunit_plugs = self._parse_subunit_plugs(fcp)
+        self.function_block_plugs = self._parse_function_block_plugs(fcp)
 
-        self._parse_processing_fbs()
+        self.signal_destination = self._parse_signal_destination(fcp)
+        self.signal_sources = self._parse_signal_sources(fcp)
 
-    def _parse_unit_info(self):
-        return AvcGeneral.get_unit_info(self) 
+        fcp.unlisten()
+        del fcp
 
-    def _parse_unit_plugs(self):
+    def _parse_unit_info(self, fcp):
+        return AvcGeneral.get_unit_info(fcp) 
+
+    def _parse_unit_plugs(self, fcp):
         unit_plugs = {}
-        info = AvcConnection.get_unit_plug_info(self)
+        info = AvcConnection.get_unit_plug_info(fcp)
         for type, params in info.items():
             if type not in unit_plugs:
                 unit_plugs[type] = {}
@@ -43,170 +46,159 @@ class BebobNormal(Hinawa.SndUnit):
                 if dir not in unit_plugs[type]:
                     unit_plugs[type][dir] = []
                 for i in range(num):
-                    plug = self._parse_unit_plug(dir, type, i)
+                    plug = self._parse_unit_plug(fcp, dir, type, i)
                     unit_plugs[type][dir].append(plug)
         return unit_plugs
 
-    def _parse_unit_plug(self, dir, type, num):
+    def _parse_unit_plug(self, fcp, dir, type, num):
         plug = {}
         addr = BcoPlugInfo.get_unit_addr(dir, type, num)
-        plug['type'] = BcoPlugInfo.get_plug_type(self, addr)
-        plug['name'] = BcoPlugInfo.get_plug_name(self, addr)
+        plug['type'] = BcoPlugInfo.get_plug_type(fcp, addr)
+        plug['name'] = BcoPlugInfo.get_plug_name(fcp, addr)
         plug['channels'] = []
-        channels = BcoPlugInfo.get_plug_channels(self, addr)
+        channels = BcoPlugInfo.get_plug_channels(fcp, addr)
         for channel in range(channels):
-            ch = BcoPlugInfo.get_plug_ch_name(self, addr, channel + 1)
+            ch = BcoPlugInfo.get_plug_ch_name(fcp, addr, channel + 1)
             plug['channels'].append(ch)
         plug['clusters'] = []
         if plug['type'] is 'IsoStream':
-            clusters = BcoPlugInfo.get_plug_clusters(self, addr)
+            clusters = BcoPlugInfo.get_plug_clusters(fcp, addr)
             for cluster in range(len(clusters)):
-                clst = BcoPlugInfo.get_plug_cluster_info(self, addr, cluster + 1)
+                clst = BcoPlugInfo.get_plug_cluster_info(fcp, addr, cluster + 1)
                 plug['clusters'].append(clst)
         plug['input'] = []
         plug['outputs'] = []
         if dir == 'output':
-            plug['input'] = BcoPlugInfo.get_plug_input(self, addr)
+            plug['input'] = BcoPlugInfo.get_plug_input(fcp, addr)
         else:
-            plug['outputs'] = BcoPlugInfo.get_plug_outputs(self, addr)
+            plug['outputs'] = BcoPlugInfo.get_plug_outputs(fcp, addr)
         return plug
 
-    def _parse_subunit_plugs(self):
+    def _parse_subunit_plugs(self, fcp):
         subunit_plugs = {}
-        subunits = BcoSubunitInfo.get_subunits(self)
+        subunits = BcoSubunitInfo.get_subunits(fcp)
         for subunit in subunits:
             type = subunit['type']
             id = subunit['id']
+            if subunit['id'] != 0:
+                raise RuntimeError('Unsupported number for subunit id')
             if type not in subunit_plugs:
-                subunit_plugs[type] = []
-            if id >= len(subunit_plugs[type]):
-                subunit_plugs[type].append({})
-            info = AvcConnection.get_subunit_plug_info(self, type, id)
+                subunit_plugs[type] = {}
+                subunit_plugs[type]['input'] = []
+                subunit_plugs[type]['output'] = []
+            info = AvcConnection.get_subunit_plug_info(fcp, type, 0)
             for dir, num in info.items():
-                if dir not in subunit_plugs[type][id]:
-                    subunit_plugs[type][id][dir] = []
                 for i in range(num):
-                    plug = self._parse_subunit_plug(dir, type, id, i)
-                    subunit_plugs[type][id][dir].append(plug)
+                    plug = self._parse_subunit_plug(fcp, dir, type, 0, i)
+                    subunit_plugs[type][dir].append(plug)
         return subunit_plugs
 
-    def _parse_subunit_plug(self, dir, type, id, num):
+    def _parse_subunit_plug(self, fcp, dir, type, id, num):
         plug = {}
         addr = BcoPlugInfo.get_subunit_addr(dir, type, id, num)
-        plug['type'] = BcoPlugInfo.get_plug_type(self, addr)
-        plug['name'] = BcoPlugInfo.get_plug_name(self, addr)
+        plug['type'] = BcoPlugInfo.get_plug_type(fcp, addr)
+        plug['name'] = BcoPlugInfo.get_plug_name(fcp, addr)
         plug['channels'] = []
-        channels = BcoPlugInfo.get_plug_channels(self, addr)
+        channels = BcoPlugInfo.get_plug_channels(fcp, addr)
         for channel in range(channels):
-            ch = BcoPlugInfo.get_plug_ch_name(self, addr, channel + 1)
+            ch = BcoPlugInfo.get_plug_ch_name(fcp, addr, channel + 1)
             plug['channels'].append(ch)
         plug['clusters'] = []
         if plug['type'] is 'IsoStream':
-            clusters = BcoPlugInfo.get_plug_clusters(self, addr)
+            clusters = BcoPlugInfo.get_plug_clusters(fcp, addr)
             for cluster in range(len(clusters)):
-                clst = BcoPlugInfo.get_plug_cluster_info(self, addr, cluster + 1)
+                clst = BcoPlugInfo.get_plug_cluster_info(fcp, addr, cluster + 1)
                 plug['clusters'].append(clst)
         plug['input'] = {}
         plug['outputs'] = []
         # Music subunits have counter direction.
         try:
-            plug['input'] = BcoPlugInfo.get_plug_input(self, addr)
+            plug['input'] = BcoPlugInfo.get_plug_input(fcp, addr)
         except:
             pass
         try:
-            plug['outputs'] = BcoPlugInfo.get_plug_outputs(self, addr)
+            plug['outputs'] = BcoPlugInfo.get_plug_outputs(fcp, addr)
         except:
             pass
         return plug
 
-    def _parse_function_block_plugs(self):
+    def _parse_function_block_plugs(self, fcp):
         fbs = {}
-        subunits = BcoSubunitInfo.get_subunits(self)
-        for subunit in subunits:
-            type = subunit['type']
-            id = subunit['id']
-            if type not in fbs:
-                fbs[type] = []
-            if id >= len(fbs[type]):
-                fbs[type].append({})
+        subunits = BcoSubunitInfo.get_subunits(fcp)
+        for type in self.subunit_plugs.keys():
+            subunit_fbs = {}
             entries = []
             for i in range(0xff):
                 try:
-                    entries.extend(BcoSubunitInfo.get_subunit_fb_info(self, type, id, i, 0xff))
+                    entries.extend(BcoSubunitInfo.get_subunit_fb_info(fcp,
+                                                            type, 0, i, 0xff))
                 except:
                     break
-            fb_counts = {}
-            for entry in entries:
-                if entry['fb-type'] not in fb_counts:
-                    fb_counts[entry['fb-type']] = 0
-                fb_counts[entry['fb-type']] += 1
             for entry in entries:
                 fb_type = entry['fb-type']
-                if fb_type is not fbs[type][id]:
-                    fbs[type][id][fb_type] = [{} for i in range(fb_counts[fb_type])]
+                if fb_type not in subunit_fbs:
+                    subunit_fbs[fb_type] = []
+                subunit_fbs[fb_type].append({'input': [], 'output': []})
+            for entry in entries:
+                fb_type = entry['fb-type']
                 fb_id = entry['fb-id'] - 1
-                for j in range(entry['inputs']):
-                    if 'input' not in fbs[type][id][fb_type][fb_id]:
-                        fbs[type][id][fb_type][fb_id]['input'] = []
-                    plug = self._parse_fb_plug('input', type, id,
-                                        entry['fb-type'], entry['fb-id'], j)
-                    fbs[type][id][fb_type][fb_id]['input'].append(plug)
-                for j in range(entry['outputs']):
-                    if 'output' not in fbs[type][id][fb_type]:
-                        fbs[type][id][fb_type][fb_id]['output'] = []
-                    plug = self._parse_fb_plug('output', type, id,
-                                        entry['fb-type'], entry['fb-id'], j)
-                    fbs[type][id][fb_type][fb_id]['output'].append(plug)
+                for i in range(entry['inputs']):
+                    plug = self._parse_fb_plug(fcp, 'input', type, 0,
+                                               fb_type, fb_id + 1, i)
+                    subunit_fbs[fb_type][fb_id]['input'].append(plug)
+                for i in range(entry['outputs']):
+                    plug = self._parse_fb_plug(fcp, 'output', type, 0,
+                                               fb_type, fb_id + 1, i)
+                    subunit_fbs[fb_type][fb_id]['output'].append(plug)
+            fbs[type] = subunit_fbs
         return fbs
 
-    def _parse_fb_plug(self, dir, subunit_type, subunit_id, fb_type, fb_id,
+    def _parse_fb_plug(self, fcp, dir, subunit_type, subunit_id, fb_type, fb_id,
                        num):
         plug = {}
         addr = BcoPlugInfo.get_function_block_addr(dir, subunit_type,
                                             subunit_id, fb_type, fb_id, num)
-        plug['type'] = BcoPlugInfo.get_plug_type(self, addr)
-        plug['name'] = BcoPlugInfo.get_plug_name(self, addr)
+        plug['type'] = BcoPlugInfo.get_plug_type(fcp, addr)
+        plug['name'] = BcoPlugInfo.get_plug_name(fcp, addr)
         plug['channels'] = []
-        channels = BcoPlugInfo.get_plug_channels(self, addr)
+        channels = BcoPlugInfo.get_plug_channels(fcp, addr)
         for channel in range(channels):
-            ch = BcoPlugInfo.get_plug_ch_name(self, addr, channel + 1)
+            ch = BcoPlugInfo.get_plug_ch_name(fcp, addr, channel + 1)
             plug['channels'].append(ch)
         plug['clusters'] = []
         if plug['type'] is 'IsoStream':
-            clusters = BcoPlugInfo.get_plug_clusters(self, addr)
+            clusters = BcoPlugInfo.get_plug_clusters(fcp, addr)
             for cluster in range(len(clusters)):
-                clst = BcoPlugInfo.get_plug_cluster_info(self, addr, cluster + 1)
+                clst = BcoPlugInfo.get_plug_cluster_info(fcp, addr, cluster + 1)
                 plug['clusters'].append(clst)
         plug['input'] = {}
         plug['outputs'] = []
         # Music subunits have counter direction.
         try:
-            plug['input'] = BcoPlugInfo.get_plug_input(self, addr)
+            plug['input'] = BcoPlugInfo.get_plug_input(fcp, addr)
         except:
             pass
         try:
-            plug['outputs'] = BcoPlugInfo.get_plug_outputs(self, addr)
+            plug['outputs'] = BcoPlugInfo.get_plug_outputs(fcp, addr)
         except:
             pass
         return plug
 
-    def _parse_signal_destination(self):
+    def _parse_signal_destination(self, fcp):
         dst = []
-        for id, id_plugs in enumerate(self.subunit_plugs['music']):
-            for i, plug in enumerate(id_plugs['input']):
-                if plug['type'] == 'Sync':
-                    dst = AvcCcm.get_subunit_signal_addr('music', id, i)
+        for i, plug in enumerate(self.subunit_plugs['music']['input']):
+            if plug['type'] == 'Sync':
+                dst = AvcCcm.get_subunit_signal_addr('music', 0, i)
         return dst
 
-    def _parse_signal_sources(self):
+    def _parse_signal_sources(self, fcp):
         srcs = {}
         candidates = {}
         # This is internal clock source.
-        for id, id_plugs in enumerate(self.subunit_plugs['music']):
-            for i, plug in enumerate(id_plugs['output']):
-                if plug['type'] == 'Sync':
-                    addr = AvcCcm.get_subunit_signal_addr('music', id, i)
-                    candidates[plug['name']] = addr
+        for i, plug in enumerate(self.subunit_plugs['music']['output']):
+           if plug['type'] == 'Sync':
+               addr = AvcCcm.get_subunit_signal_addr('music', 0, i)
+               candidates[plug['name']] = addr
         # External source is available.
         for i, plug in enumerate(self.unit_plugs['external']['input']):
             if plug['type'] == 'Sync' or plug['type'] == 'Digital':
@@ -220,34 +212,8 @@ class BebobNormal(Hinawa.SndUnit):
         # Inquire these are able to connect to destination.
         for key, src in candidates.items():
             try:
-                AvcCcm.ask_signal_source(self, src, self.signal_destination)
+                AvcCcm.ask_signal_source(fcp, src, self.signal_destination)
             except:
                 continue
             srcs[key] = src
         return srcs
-
-    def set_clock_source(self, name):
-        if name not in self.signal_sources:
-            raise ValueError('Invalid argument for signal source label')
-        src = self.signal_sources[name]
-        dst = self.signal_destination
-        AvcCcm.set_signal_source(self, src, dst)
-
-    def get_clock_source(self):
-        status = {}
-        current = AvcCcm.get_signal_source(self, self.signal_destination)
-        for key, addr in self.signal_sources.items():
-            if AvcCcm.parse_signal_addr(addr) == current:
-                status[key] = True
-            else:
-                status[key] = False
-        return status
-
-    def _parse_processing_fbs(self):
-        for type, type_plugs in self.function_block_plugs.items():
-            for id, id_plugs in enumerate(type_plugs):
-                for fb_type, fb_type_plugs in id_plugs.items():
-                    for index, fb_plugs in enumerate(fb_type_plugs):
-                        for dir, dir_plugs in fb_plugs.items():
-                            for i, plugs in enumerate(dir_plugs):
-                                print(type, id, fb_type, index, dir, i)

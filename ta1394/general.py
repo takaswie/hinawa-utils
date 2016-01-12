@@ -11,8 +11,8 @@ class AvcGeneral():
     def command_control(unit, cmd):
         if isinstance(unit, Hinawa.SndUnit):
             params = unit.fcp_transact(cmd)
-        elif isinstance(unit, Hinawa.FwUnit):
-            params = unit.transaction(cmd)
+        elif isinstance(unit, Hinawa.FwFcp):
+            params = unit.transact(cmd)
         else:
             raise ValueError('Invalid argument for SndUnit')
         if   params[0] == 0x08:
@@ -27,11 +27,10 @@ class AvcGeneral():
     def command_status(unit, cmd):
         if isinstance(unit, Hinawa.SndUnit):
             params = unit.fcp_transact(cmd)
-        elif isinstance(unit, Hinawa.FwUnit):
-            params = unit.transaction(cmd)
+        elif isinstance(unit, Hinawa.FwFcp):
+            params = unit.transact(cmd)
         else:
             raise ValueError('Invalid argument for SndUnit')
-        params = unit.fcp_transact(cmd)
         if   params[0] == 0x08:
             raise IOError('Not implemented')
         elif params[0] == 0x0a:
@@ -46,11 +45,10 @@ class AvcGeneral():
     def command_inquire(unit, cmd):
         if isinstance(unit, Hinawa.SndUnit):
             params = unit.fcp_transact(cmd)
-        elif isinstance(unit, Hinawa.FwUnit):
-            params = unit.transaction(cmd)
+        elif isinstance(unit, Hinawa.FwFcp):
+            params = unit.transact(cmd)
         else:
             raise ValueError('Invalid argument for SndUnit')
-        params = unit.fcp_transact(cmd)
         if   params[0] == 0x08:
             raise IOError('Not Implemented')
         elif params[0] != 0x0c:
