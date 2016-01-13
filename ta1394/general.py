@@ -16,11 +16,11 @@ class AvcGeneral():
         else:
             raise ValueError('Invalid argument for SndUnit')
         if   params[0] == 0x08:
-            raise IOError('Not implemented')
+            raise OSError('Not implemented')
         elif params[0] == 0x0a:
-            raise IOError('Rejected')
+            raise OSError('Rejected')
         elif params[0] != 0x09:
-            raise IOError('Unknown status')
+            raise OSError('Unknown status')
         return params
 
     @staticmethod
@@ -32,13 +32,13 @@ class AvcGeneral():
         else:
             raise ValueError('Invalid argument for SndUnit')
         if   params[0] == 0x08:
-            raise IOError('Not implemented')
+            raise OSError('Not implemented')
         elif params[0] == 0x0a:
-            raise IOError('Rejected')
+            raise OSError('Rejected')
         elif params[0] == 0x0b:
-            raise IOError('In transition')
+            raise OSError('In transition')
         elif params[0] != 0x0c:
-            raise IOError('Unknown status')
+            raise OSError('Unknown status')
         return params
 
     @staticmethod
@@ -50,9 +50,9 @@ class AvcGeneral():
         else:
             raise ValueError('Invalid argument for SndUnit')
         if   params[0] == 0x08:
-            raise IOError('Not Implemented')
+            raise OSError('Not Implemented')
         elif params[0] != 0x0c:
-            raise IOError('Unknown status')
+            raise OSError('Unknown status')
 
     @staticmethod
     def get_unit_info(unit):
@@ -205,7 +205,7 @@ class AvcConnection():
         params = AvcGeneral.command_status(unit, args)
         param = params[5] & 0x03
         if param > len(AvcConnection.sampling_rates):
-            raise IOError
+            raise OSError
         return AvcConnection.sampling_rates[param]
 
     @staticmethod
@@ -227,6 +227,6 @@ class AvcConnection():
         args.append(0xff)
         try:
             AvcGeneral.command_inquire(unit, args)
-        except IOError:
+        except OSError:
             return False
         return True

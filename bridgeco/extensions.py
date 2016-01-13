@@ -1,4 +1,7 @@
 from ta1394.general import AvcGeneral
+from ta1394.streamformat import AvcStreamFormatInfo
+
+import time
 
 class BcoPlugInfo():
     addr_dir  = ('input', 'output')
@@ -6,7 +9,7 @@ class BcoPlugInfo():
     addr_unit_type = ('isoc', 'external', 'async')
 
     plug_type = ('IsoStream', 'AsyncStream', 'MIDI', 'Sync', 'Analog',
-                 'Digital')
+                 'Digital', 'Clock')
     ch_location = ('N/A', 'left-front', 'right-front', 'center', 'subwoofer',
                    'left-surround', 'right-surround', 'left-of-center',
                    'right-of-center', 'surround', 'side-left', 'side-right',
@@ -111,20 +114,20 @@ class BcoPlugInfo():
         if addr[0] == 0xff:
             return info
         if addr[0] >= len(BcoPlugInfo.addr_dir):
-            raise IOError('Unexpected address direction')
+            raise OSError('Unexpected address direction')
         info['dir'] = BcoPlugInfo.addr_dir[addr[0]]
         if addr[1] >= len(BcoPlugInfo.addr_mode):
-            raise IOError('Unexpected address mode in response')
+            raise OSError('Unexpected address mode in response')
         info['mode'] = BcoPlugInfo.addr_mode[addr[1]]
         data = {}
         if info['mode'] == 'unit':
             if addr[2] >= len(BcoPlugInfo.addr_unit_type):
-                raise IOError('Unexpected address unit type in response')
+                raise OSError('Unexpected address unit type in response')
             data['unit-type'] = BcoPlugInfo.addr_unit_type[addr[2]]
             data['plug'] = addr[3]
         else:
             if addr[2] >= len(AvcGeneral.subunit_types):
-                raise IOError('Unexpected address subunit type in response')
+                raise OSError('Unexpected address subunit type in response')
             data['subunit-type'] = AvcGeneral.subunit_types[addr[2]]
             data['subunit-id'] = addr[3]
             if info['mode'] == 'subunit':
@@ -153,7 +156,7 @@ class BcoPlugInfo():
         args.append(0xff)
         params = AvcGeneral.command_status(unit, args)
         if params[10] > len(BcoPlugInfo.plug_type):
-            raise IOError('Unexpected value in response')
+            raise OSError('Unexpected value in response')
         return BcoPlugInfo.plug_type[params[10]]
 
     @staticmethod
@@ -512,7 +515,90 @@ class BcoVendorDependent():
         args.append(0x00)
         params = AvcGeneral.get_vendor_dependent(self, company_ids, args)
         if params[0] != args[0] or params[1] != args[1] or params[2] != args[2]:
-            raise IOError('Unexpected value in response')
+            raise OSError('Unexpected value in response')
         if params[3] == 0x00:
             return False
         return True
+
+class BcoStreamFormatInfo():
+    format_types = ('Compound', 'Sync')
+    data_types = ('IEC60958-3',     # 0x00
+                  'IEC61937-3',
+                  'IEC61937-4',
+                  'IEC61937-5',
+                  'IEC61937-6',
+                  'IEC61937-7',
+                  'multi-bit-linear-audio-raw',
+                  'multi-bit-linear-audio-DVD-audio',
+                  'one-bit-audio-plain-raw',
+                  'one-bit-audio-plain-SACD',
+                  'one-bit-audio-encoded-raw',
+                  'one-bit-audio-encoded-SACD',
+                  'high-precision-multi-bit-linear-audio',
+                  'MIDI-conformant',
+                  'sync-stream',    # 0x40
+                  'do-not-care',    # 0xff
+                  'reserved')       # the others
+
+    @staticmethod
+    def get_entry_list(fcp, addr):
+        fmts = []
+        for i in range(0xff):
+            # DM1500 tends to cause timeout.
+            time.sleep(0.1)
+            try:
+                args = bytearray()
+                args.append(0x01)
+                args.append(addr[5])
+                args.append(0x2f)   # Bco stream format support
+                args.append(0xc1)   # List request
+                args.append(addr[0])
+                args.append(addr[1])
+                args.append(addr[2])
+                args.append(addr[3])
+                args.append(addr[4])
+                args.append(0xff)
+                args.append(i)
+                args.append(0xff)
+                params = AvcGeneral.command_status(fcp, args)
+                fmts.append(BcoStreamFormatInfo._parse_format(params[11:]))
+            except OSError as e:
+                if str(e) != 'Rejected':
+                    raise
+                else:
+                    break
+        return fmts
+
+    # Two types of sync stream: 0x90/0x00/0x40 and 0x90/0x40 with 'sync-stream'
+    @staticmethod
+    def _parse_format(params):
+        fmt = {}
+        # Sync stream with stereo raw audio
+        if params[0] == 0x90 and params[1] == 0x00 and params[2] == 0x40:
+            ctl = params[4] & 0x01
+            rate = params[4] >> 8
+            fmt['type'] = 'Sync'
+            fmt['rate-control'] = AvcStreamFormatInfo.rate_controls[ctl]
+            fmt['sampling-rate'] = AvcStreamFormatInfo.sampling_rates[rate]
+            fmt['formation'] = ['multi-bit-linear-audio-raw']
+            return fmt
+        if params[0] != 0x90 or params[1] != 0x40:
+            raise RuntimeError('Unsupported format')
+        fmt['type'] = 'Compound'
+        fmt['sampling-rate'] = AvcStreamFormatInfo.sampling_rates[params[2]]
+        ctl = params[3] & 0x3
+        fmt['rate-control'] = AvcStreamFormatInfo.rate_controls[ctl]
+        formation = []
+        for i in range(params[4]):
+            for c in range(params[5 + i * 2]):
+                type = params[5 + i * 2 + 1]
+                if type <= 0x0f:
+                    formation.append(BcoStreamFormatInfo.data_types[type])
+                elif type == 0x40:
+                    formation.append('sync-stream')
+                elif type == 0xff:
+                    formation.append('do-not-care')
+                else:
+                    formation.append('reserved')
+        fmt['formation'] = formation
+        return fmt

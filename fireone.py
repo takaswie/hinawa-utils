@@ -59,7 +59,7 @@ class Fireone(Hinawa.SndUnit):
     def display_get_mode(self):
         param = self.command_get_param(0x10)
         if param >= len(self.display_modes):
-            raise IOError
+            raise OSError
         return self.display_modes[param]
 
     def control_set_mode(self, arg):
@@ -70,7 +70,7 @@ class Fireone(Hinawa.SndUnit):
     def control_get_mode(self):
         param = self.command_get_param(0x11)
         if param >= len(self.control_modes):
-            raise IOError
+            raise OSError
         return self.control_modes[param]
 
     def input_set_mode(self, arg):
@@ -81,7 +81,7 @@ class Fireone(Hinawa.SndUnit):
     def input_get_mode(self):
         param = self.command_get_param(0x12)
         if param >= len(self.input_modes):
-            raise IOError
+            raise OSError
         return self.input_modes[param]
 
     def firmware_get_version(self):

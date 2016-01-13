@@ -458,9 +458,9 @@ class EftHwctl():
         args = get_array()
         params = EftHwctl.execute_command(unit, 1, args)
         if params[0] >= len(EftInfo.supported_clock_sources):
-            raise IOError('Unexpected clock source in response')
+            raise OSError('Unexpected clock source in response')
         if EftInfo.supported_sampling_rates.count(params[1]) == 0:
-            raise IOError('Unexpected sampling rate in response')
+            raise OSError('Unexpected sampling rate in response')
         return (params[1], EftInfo.supported_clock_sources[params[0]])
 
     @staticmethod
@@ -751,7 +751,7 @@ class EftIoconf():
         args = get_array()
         params = EftIoconf._execute_command(unit, 3, args)
         if params[0] >= len(EftIoconf.digital_input_modes):
-            raise IOError
+            raise OSError
         return EftIoconf.digital_input_modes[params[0]]
 
     @staticmethod

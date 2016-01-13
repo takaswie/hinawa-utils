@@ -6,6 +6,7 @@ from ta1394.ccm import AvcCcm
 
 from bridgeco.extensions import BcoPlugInfo
 from bridgeco.extensions import BcoSubunitInfo
+from bridgeco.extensions import BcoStreamFormatInfo
 
 class BebobNormal(Hinawa.FwUnit):
     unit_info = {}
@@ -24,8 +25,12 @@ class BebobNormal(Hinawa.FwUnit):
 
         self.unit_info = self._parse_unit_info(fcp)
         self.unit_plugs = self._parse_unit_plugs(fcp)
+
         self.subunit_plugs = self._parse_subunit_plugs(fcp)
+
         self.function_block_plugs = self._parse_function_block_plugs(fcp)
+
+        self.stream_formats = self._parse_stream_formats(fcp)
 
         self.signal_destination = self._parse_signal_destination(fcp)
         self.signal_sources = self._parse_signal_sources(fcp)
@@ -201,7 +206,7 @@ class BebobNormal(Hinawa.FwUnit):
                candidates[plug['name']] = addr
         # External source is available.
         for i, plug in enumerate(self.unit_plugs['external']['input']):
-            if plug['type'] == 'Sync' or plug['type'] == 'Digital':
+            if plug['type'] in ('Sync', 'Digital', 'Clock'):
                 addr = AvcCcm.get_unit_signal_addr('external', i)
                 candidates[plug['name']] = addr
         # SYT-match is available, but not practical.
@@ -217,3 +222,17 @@ class BebobNormal(Hinawa.FwUnit):
                 continue
             srcs[key] = src
         return srcs
+
+    def _parse_stream_formats(self, fcp):
+        hoge = {}
+        for type, dir_plugs in self.unit_plugs.items():
+            if type == 'async':
+                continue
+            hoge[type] = {}
+            for dir, plugs in dir_plugs.items():
+                hoge[type][dir] = []
+                for i, plug in enumerate(plugs):
+                    addr = BcoPlugInfo.get_unit_addr(dir, type, i)
+                    fmts = BcoStreamFormatInfo.get_entry_list(fcp, addr)
+                    hoge[type][dir].append(fmts)
+        return hoge

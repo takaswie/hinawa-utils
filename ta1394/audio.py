@@ -114,7 +114,7 @@ class AvcAudio():
         elif params[10] == 0x60:
             return False
         else:
-            raise IOError('Unexpected value in response')
+            raise OSError('Unexpected value in response')
 
     @staticmethod
     def set_feature_volume_state(unit, subunit_id, attr, fb_id, ch, vol):

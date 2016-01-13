@@ -1,9 +1,14 @@
 from ta1394.general import AvcGeneral
 
-class AvcStreamFormat():
+class AvcStreamFormatInfo():
+    hierarchy_roots = ('DVCR', 'Audio&Music', 'BT.601', 'invalid', 'reserved')
+
+    am_hierarchy_level1s = ('am824', 'audio-pack', 'floating-point',
+                            'am824-compound')
+
     sampling_rates = (22050, 24000, 32000, 44100, 48000, 96000, 176400,
                       192000, 0, 0, 88200, 0, 0, 0, 0, 0)
-    rate_controls = ('clock-based', 'command-based')
+    rate_controls = ('clock-based', 'command-based', 'not-supported')
     types = ('IEC60958-3',      # 0x00
              'IEC61937-3',
              'IEC61937-4',
@@ -46,7 +51,7 @@ class AvcStreamFormat():
         args.append(0xff)
         params = AvcGeneral.command_status(unit, args)
 
-        return AvcStreamFormat.parse_format(params[10:len(params)])
+        return AvcStreamFormatInfo.parse_format(params[10:len(params)])
 
     @staticmethod
     def parse_format(params):
@@ -54,17 +59,14 @@ class AvcStreamFormat():
             raise RuntimeError('Unsupported format')
 
         fmt = {}
-        fmt['sampling-rate'] = AvcStreamFormat.sampling_rates[params[2]]
-        if params[3] & 0x03 == 0x00:
-            fmt['rate-control'] = AvcStreamFormat.rate_controls[1]
-        else:
-            fmt['rate-control'] = AvcStreamFormat.rate_controls[0]
+        fmt['sampling-rate'] = AvcStreamFormatInfo.sampling_rates[params[2]]
+        fmt['rate-control'] = AvcStreamFormatInfo.rate_controls[params[3] & 0x03]
         formation = []
         for i in range(params[4]):
             for c in range(params[5 + i * 2]):
                 type = params[5 + i * 2 + 1]
                 if type <= 0x0f:
-                    formation.append(AvcStreamFormat.types[type])
+                    formation.append(AvcStreamFormatInfo.types[type])
                 elif type == 0x10:
                     formation.append('ancillary-data')
                 elif type == 0x40:
