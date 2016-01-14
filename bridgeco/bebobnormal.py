@@ -51,7 +51,10 @@ class BebobNormal(Hinawa.FwUnit):
                 if dir not in unit_plugs[type]:
                     unit_plugs[type][dir] = []
                 for i in range(num):
-                    plug = self._parse_unit_plug(fcp, dir, type, i)
+                    try:
+                        plug = self._parse_unit_plug(fcp, dir, type, i)
+                    except:
+                        plug = {}
                     unit_plugs[type][dir].append(plug)
         return unit_plugs
 
