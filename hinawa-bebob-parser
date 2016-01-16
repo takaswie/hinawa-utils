@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from bridgeco.bebobnormal import BebobNormal
+from bridgeco.plug_parser import PlugParser
 
 import sys
 import json
@@ -12,10 +12,11 @@ if argc < 3:
     print('arguments:')
     print(' 1: the number of firewire character device (/dev/fw*)')
     print(' 2: dump mode (0: id-only, 1: whole as json)')
+    sys.exit()
 
 path = '/dev/fw{0}'.format(argv[1])
 mode = int(argv[2])
-unit = BebobNormal(path)
+unit = PlugParser(path)
 
 def dump_plug_info_to_stdio_as_json(unit):
     info = {
@@ -34,7 +35,7 @@ def dump_plug_info_to_stdio_as_ids_only(unit):
 
     for type, dir_plugs in unit.subunit_plugs.items():
         for dir, plugs in dir_plugs.items():
-            for i, plugs in enumerate(plugs):
+            for i, plug in enumerate(plugs):
                 print(type, dir, i, plug['name'])
 
     for type, fb_type_plugs in unit.function_block_plugs.items():

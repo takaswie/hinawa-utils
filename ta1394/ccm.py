@@ -50,7 +50,7 @@ class AvcCcm():
         return info
 
     @staticmethod
-    def set_signal_souarce(unit, src, dst):
+    def set_signal_source(fcp, src, dst):
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
@@ -60,10 +60,10 @@ class AvcCcm():
         args.append(src[1])
         args.append(dst[0])
         args.append(dst[1])
-        return AvcGeneral.command_control(unit, args)
+        return AvcGeneral.command_control(fcp, args)
 
     @staticmethod
-    def get_signal_source(unit, dst):
+    def get_signal_source(fcp, dst):
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
@@ -73,11 +73,11 @@ class AvcCcm():
         args.append(0xfe)
         args.append(dst[0])
         args.append(dst[1])
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         return AvcCcm.parse_signal_addr(params[6:])
 
     @staticmethod
-    def ask_signal_source(unit, src, dst):
+    def ask_signal_source(fcp, src, dst):
         args = bytearray()
         args.append(0x02)
         args.append(0xff)
@@ -87,4 +87,4 @@ class AvcCcm():
         args.append(src[1])
         args.append(dst[0])
         args.append(dst[1])
-        AvcGeneral.command_inquire(unit, args)
+        AvcGeneral.command_inquire(fcp, args)

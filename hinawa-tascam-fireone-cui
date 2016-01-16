@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+import sys
+
+from oxfw.tascam_fireone import TascamFireone
+
+argv = sys.argv
+argc = len(argv)
+
+if argc < 2:
+    print('help')
+
+card = argv[1]
+
+unit = TascamFireone('/dev/snd/hwC{0}D0'.format(card))
+print(unit.hw_info)
+print(unit.playback_only)
+print(unit.supported_sampling_rates)
+for dir, formats in unit.supported_stream_formats.items():
+    for fmt in formats:
+        print(dir, fmt)
+
+sys.exit()

@@ -1,20 +1,16 @@
 from gi.repository import Hinawa
 
 class AvcGeneral():
-    plug_direction = ('output', 'input')
     subunit_types = ('monitor', 'audio', 'printer', 'disc',
                      'tape-recorder-player', 'tuner', 'ca', 'camera',
                      'reserved', 'panel', 'bulletin-board', 'camera storate',
                      'music')
 
     @staticmethod
-    def command_control(unit, cmd):
-        if isinstance(unit, Hinawa.SndUnit):
-            params = unit.fcp_transact(cmd)
-        elif isinstance(unit, Hinawa.FwFcp):
-            params = unit.transact(cmd)
-        else:
-            raise ValueError('Invalid argument for SndUnit')
+    def command_control(fcp, cmd):
+        if not isinstance(fcp, Hinawa.FwFcp):
+            raise ValueError('Invalid argument for FwFcp')
+        params = fcp.transact(cmd)
         if   params[0] == 0x08:
             raise OSError('Not implemented')
         elif params[0] == 0x0a:
@@ -24,13 +20,10 @@ class AvcGeneral():
         return params
 
     @staticmethod
-    def command_status(unit, cmd):
-        if isinstance(unit, Hinawa.SndUnit):
-            params = unit.fcp_transact(cmd)
-        elif isinstance(unit, Hinawa.FwFcp):
-            params = unit.transact(cmd)
-        else:
-            raise ValueError('Invalid argument for SndUnit')
+    def command_status(fcp, cmd):
+        if not isinstance(fcp, Hinawa.FwFcp):
+            raise ValueError('Invalid argument for FwFcp')
+        params = fcp.transact(cmd)
         if   params[0] == 0x08:
             raise OSError('Not implemented')
         elif params[0] == 0x0a:
@@ -42,20 +35,17 @@ class AvcGeneral():
         return params
 
     @staticmethod
-    def command_inquire(unit, cmd):
-        if isinstance(unit, Hinawa.SndUnit):
-            params = unit.fcp_transact(cmd)
-        elif isinstance(unit, Hinawa.FwFcp):
-            params = unit.transact(cmd)
-        else:
-            raise ValueError('Invalid argument for SndUnit')
+    def command_inquire(fcp, cmd):
+        if not isinstance(fcp, Hinawa.FwFcp):
+            raise ValueError('Invalid argument for FwFcp')
+        params = fcp.transact(cmd)
         if   params[0] == 0x08:
             raise OSError('Not Implemented')
         elif params[0] != 0x0c:
             raise OSError('Unknown status')
 
     @staticmethod
-    def get_unit_info(unit):
+    def get_unit_info(fcp):
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
@@ -65,7 +55,7 @@ class AvcGeneral():
         args.append(0xff)
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         info = {}
         info['unit-type'] = params[4] >> 3
         info['unit'] = params[4] & 0x07
@@ -73,7 +63,7 @@ class AvcGeneral():
         return info
 
     @staticmethod
-    def get_subunit_info(unit, page):
+    def get_subunit_info(fcp, page):
         if page > 7:
             raise ValueError('Invalid argument for page number')
         args = bytearray()
@@ -85,7 +75,7 @@ class AvcGeneral():
         args.append(0xff)
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         info = {}
         info['subunit-type'] = AvcGeneral.subunit_types[params[4] >> 3]
         info['maximum-id'] = params[4] & 0x07
@@ -93,7 +83,7 @@ class AvcGeneral():
         return info
 
     @staticmethod
-    def set_vendor_dependent(unit, company_ids, deps):
+    def set_vendor_dependent(fcp, company_ids, deps):
         if len(company_ids) != 3:
             raise ValueError('Invalid array for company ID')
         if len(deps) == 0:
@@ -106,10 +96,10 @@ class AvcGeneral():
             args.append(b)
         for b in deps:
             args.append(b)
-        AvcGeneral.command_control(unit, args)
+        AvcGeneral.command_control(fcp, args)
 
     @staticmethod
-    def get_vendor_dependent(unit, company_ids, deps):
+    def get_vendor_dependent(fcp, company_ids, deps):
         if len(company_ids) != 3:
             raise ValueError('Invalid array for company ID')
         if len(deps) == 0:
@@ -122,14 +112,15 @@ class AvcGeneral():
             args.append(b)
         for b in deps:
             args.append(b)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         return params[6:]
 
 class AvcConnection():
+    plug_direction = ('output', 'input')
     sampling_rates = (32000, 44100, 48000, 88200, 96000, 176400, 192000)
 
     @staticmethod
-    def get_unit_plug_info(unit):
+    def get_unit_plug_info(fcp):
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
@@ -139,7 +130,7 @@ class AvcConnection():
         args.append(0xff)
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         return {'isoc': {
                     'input':    params[4],
                     'output':   params[5]},
@@ -148,7 +139,7 @@ class AvcConnection():
                     'output':   params[7]}}
 
     @staticmethod
-    def get_subunit_plug_info(unit, subunit_type, subunit_id):
+    def get_subunit_plug_info(fcp, subunit_type, subunit_id):
         if AvcGeneral.subunit_types.count(subunit_type) == 0:
             raise ValueError('Invalid argument for subunit type')
         if subunit_id > 7:
@@ -162,71 +153,69 @@ class AvcConnection():
         args.append(0xff)
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         # Consider that destination is input and source is output.
         return {'input': params[4], 'output': params[5]}
 
     @staticmethod
-    def set_plug_signal_format(unit, direction, plug, rate):
-        if unit.get_property('streaming') is True:
-            raise RuntimeError('Packet streaming is running')
+    def set_plug_signal_format(fcp, direction, plug, rate):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
-        if AvcGeneral.plug_direction.count(direction) == 0:
+        if AvcConnection.plug_direction.count(direction) == 0:
             raise ValueError('Invalid argument for plug direction')
         if AvcConnection.sampling_rates.count(rate) == 0:
             raise ValueError('Invalid argument for sampling rate')
         args = bytearray()
         args.append(0x00)
         args.append(0xff)
-        args.append(0x18 + AvcGeneral.plug_direction.index(direction))
+        args.append(0x18 + AvcConnection.plug_direction.index(direction))
         args.append(plug)
         args.append(0x90)
         args.append(AvcGeneral.sampling_rates.index(rate))
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_control(unit, args)
+        params = AvcGeneral.command_control(fcp, args)
 
     @staticmethod
-    def get_plug_signal_format(unit, direction, plug):
+    def get_plug_signal_format(fcp, direction, plug):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
-        if AvcGeneral.plug_direction.count(direction) == 0:
+        if AvcConnection.plug_direction.count(direction) == 0:
             raise ValueError('Invalid argument for plug direction')
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
-        args.append(0x18 + AvcGeneral.plug_direction.index(direction))
+        args.append(0x18 + AvcConnection.plug_direction.index(direction))
         args.append(plug)
         args.append(0xff)
         args.append(0xff)
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         param = params[5] & 0x03
         if param > len(AvcConnection.sampling_rates):
             raise OSError
         return AvcConnection.sampling_rates[param]
 
     @staticmethod
-    def ask_plug_signal_format(unit, direction, plug, rate): 
+    def ask_plug_signal_format(fcp, direction, plug, rate):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
-        if AvcGeneral.plug_direction.count(direction) == 0:
+        if AvcConnection.plug_direction.count(direction) == 0:
             raise ValueError('Invalid argument for plug direction')
         if AvcConnection.sampling_rates.count(rate) == 0:
             raise ValueError('Invalid argument for sampling rate')
         args = bytearray()
         args.append(0x02)
         args.append(0xff)
-        args.append(0x18 + AvcGeneral.plug_direction.index(direction))
+        args.append(0x18 + AvcConnection.plug_direction.index(direction))
         args.append(plug)
         args.append(0x90)
         args.append(AvcConnection.sampling_rates.index(rate))
         args.append(0xff)
         args.append(0xff)
         try:
-            AvcGeneral.command_inquire(unit, args)
+            AvcGeneral.command_inquire(fcp, args)
         except OSError:
             return False
         return True
