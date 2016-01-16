@@ -16,6 +16,7 @@ class OxfwUnit(Hinawa.SndUnit):
 
     # For private use.
     on_juju = False,
+    assumed_fmts = False
 
     def __init__(self, path):
         if re.match('/dev/snd/hwC[0-9]*D0', path):
@@ -104,6 +105,7 @@ class OxfwUnit(Hinawa.SndUnit):
                 self.supported_stream_formats['playback'].append(assumed)
             else:
                 self.supported_stream_formats['capture'].append(assumed)
+        self.assumed_fmts = True
 
     def set_stream_formats(self, playback, capture):
         if playback not in self.supported_stream_formats['playback']:
@@ -115,6 +117,19 @@ class OxfwUnit(Hinawa.SndUnit):
                 raise ValueError('Invalid argument for capture stream format')
             if playback['sampling-rate'] != capture['sampling-rate']:
                 raise ValueError('Sampling rate mis-match between playback and capture')
-        AvcStreamFormatInfo.set_format(self.fcp, 'input', 0, playback)
+        if self.assumed_fmts:
+            rate = playback['sampling-rate']
+            AvcConnection.set_plug_signal_format(self.fcp, 'output', 0, rate)
+            AvcConnection.set_plug_signal_format(self.fcp, 'input', 0, rate)
+        else:
+            AvcStreamFormatInfo.set_format(self.fcp, 'input', 0, playback)
+            if not self.playback_only:
+                AvcStreamFormatInfo.set_format(self.fcp, 'output', 0, capture)
+
+    def get_current_stream_formats(self):
+        playback = AvcStreamFormatInfo.get_format(self.fcp, 'input', 0)
         if not self.playback_only:
-            AvcStreamFormatInfo.set_format(self.fcp, 'output', 0, capture)
+            capture = AvcStreamFormatInfo.get_format(self.fcp, 'output', 0)
+        else:
+            capture = None
+        return {'playback': playback, 'capture': capture}

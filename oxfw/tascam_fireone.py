@@ -9,15 +9,13 @@ class TascamFireone(OxfwUnit):
     display_modes = ('always-off', 'always-on', 'breathe', 'metronome',
                      'MIDI-clock-rotate', 'MIDI-clock-flash', 'jog-slow-rotate',
                      'jog-track')
-    control_modes = ('native', 'Mackie HUI emulation')
-    input_modes = ('stereo', 'monoral')
+    control_modes = ('native', 'mackie-HUI-emulation')
+    input_modes = ('stereo', 'monaural')
 
     def __init__(self, path):
         super().__init__(path)
-        self.fcp = Hinawa.FwFcp()
-        self.fcp.listen(self)
         unit_info = AvcGeneral.get_unit_info(self.fcp)
-        self.company_id = unit_info['company-id']
+        self.company_ids = unit_info['company-id']
 
     def command_set_param(self, cmd, param):
         deps = bytearray()
@@ -26,7 +24,11 @@ class TascamFireone(OxfwUnit):
         deps.append(0x31)
         deps.append(cmd)
         deps.append(param)
-        AvcGeneral.set_vendor_dependent(self.fcp, self.company_ids, deps)
+        try:
+            AvcGeneral.set_vendor_dependent(self.fcp, self.company_ids, deps)
+        except Exception as e:
+            if str(e) != 'Unknown status':
+                raise e
 
     def command_get_param(self, cmd):
         deps = bytearray()

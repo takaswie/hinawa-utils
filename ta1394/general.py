@@ -171,7 +171,7 @@ class AvcConnection():
         args.append(0x18 + AvcConnection.plug_direction.index(direction))
         args.append(plug)
         args.append(0x90)
-        args.append(AvcGeneral.sampling_rates.index(rate))
+        args.append(AvcConnection.sampling_rates.index(rate))
         args.append(0xff)
         args.append(0xff)
         params = AvcGeneral.command_control(fcp, args)
