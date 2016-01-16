@@ -21,6 +21,8 @@ class OxfwUnit(Hinawa.SndUnit):
         if re.match('/dev/snd/hwC[0-9]*D0', path):
             super().__init__()
             self.open(path)
+            if self.get_property('type') != 4:
+                raise ValueError('The character device is not for OXFW unit')
             self.listen()
         elif re.match('/dev/fw[0-9]*', path):
             # Just using parent class.
