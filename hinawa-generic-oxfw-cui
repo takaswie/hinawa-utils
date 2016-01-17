@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+
+import sys
+
+from oxfw.oxfw_unit import OxfwUnit
+
+# Helper functions
+def dump_status(unit):
+    print('Current status:')
+    print('  Packet Streaming:')
+    print('    running:          {0}'.format(unit.get_property('streaming')))
+    fmts = unit.get_current_stream_formats()
+    print('    sampling-rate:    {0}'.format(fmts['playback']['sampling-rate']))
+    print('  Stream formats:')
+    print('    playback: {0} PCM'.format(len(fmts['playback']['formation'])))
+    if not unit.playback_only:
+        print('    capture:  {0} PCM'.format(len(fmts['capture']['formation'])))
+    print('ASIC information:')
+    print('  type:             {0}'.format(unit.hw_info['asic-type']))
+    print('  ID:               {0}'.format(unit.hw_info['asic-id']))
+    print('  firmware version: {0}'.format(unit.hw_info['firmware-version']))
+
+def dump_commands(unit):
+    print('  Commands and supported arguments:')
+    print('    status:')
+    print('    commands:')
+    print('    stream-format:')
+    for dir, fmts in unit.supported_stream_formats.items():
+        print('      {0} entries:'.format(dir))
+        for i, fmt in enumerate(fmts):
+            rate = fmt['sampling-rate']
+            ch = len(fmt['formation'])
+            print('        {0}: {1}, {2} PCM'.format(i, rate, ch))
+
+# Main routine
+argv = sys.argv
+
+if len(argv) < 2:
+    print(' hinawa-generic-oxfw-cui CARD COMMAND [SUBCOMMAND [ARGUMENTS]]')
+    print('  CARD: the number as ALSA sound card, see /proc/asound/cards.')
+    print('  COMMAND:')
+    print('    status: output unit status')
+    print('    commands: output available sub-commands and arguments')
+    sys.exit()
+
+card = int(argv[1])
+unit = OxfwUnit('/dev/snd/hwC{0}D0'.format(card))
+
+if len(argv) < 3:
+    dump_commands(unit)
+    sys.exit()
+cmd = argv[2]
+
+if cmd == 'status':
+    dump_status(unit)
+elif cmd == 'stream-format':
+    if len(argv) < 4:
+        fmts = unit.get_current_stream_formats()
+        for dir, fmts in unit.get_current_stream_formats().items():
+            if not fmts:
+                continue
+            rate = fmts['sampling-rate']
+            ch = len(fmts['formation'])
+            print('{0}: {1}, {2} PCM'.format(dir, rate, ch))
+        sys.exit()
+    if unit.get_property('streaming'):
+        print('Packet streaming started')
+        sys.exit()
+    playback_entry = int(argv[3])
+    if playback_entry > len(unit.supported_stream_formats['playback']):
+        print('Invalid argument for playback entry')
+        sys.exit()
+    else:
+        pfmt = unit.supported_stream_formats['playback'][playback_entry]
+    if unit.playback_only:
+        cfmt = None
+    elif len(argv) < 5:
+        print('Missing entry for capture')
+        sys.exit()
+    else:
+        capture_entry = int(argv[4])
+        if capture_entry > len(unit.supported_stream_formats['capture']):
+            print('Invalid argument for capture entry')
+            sys.exit()
+        cfmt = unit.supported_stream_formats['capture'][capture_entry]
+        if cfmt['sampling-rate'] != pfmt['sampling-rate']:
+            print('Sampling rate mismatch between playback/capture format')
+            sys.exit()
+    unit.set_stream_formats(pfmt, cfmt)
+else:
+    dump_commands(unit)

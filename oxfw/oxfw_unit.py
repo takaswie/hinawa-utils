@@ -88,7 +88,7 @@ class OxfwUnit(Hinawa.SndUnit):
 
         if not self.playback_only:
             self.supported_stream_formats['capture'] = \
-                AvcStreamFormatInfo.get_formats(self.fcp, 'input', 0)
+                AvcStreamFormatInfo.get_formats(self.fcp, 'output', 0)
             if len(self.supported_stream_formats['capture']) == 0:
                 self._assume_supported_stram_formats('output', 0)
 
