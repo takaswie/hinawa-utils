@@ -4,10 +4,10 @@ from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
 from ta1394.ccm import AvcCcm
 
-from bridgeco.bebob_unit import BebobUnit
-from bridgeco.extensions import BcoPlugInfo
-from bridgeco.extensions import BcoSubunitInfo
-from bridgeco.extensions import BcoStreamFormatInfo
+from bebob.bebob_unit import BebobUnit
+from bebob.extensions import BcoPlugInfo
+from bebob.extensions import BcoSubunitInfo
+from bebob.extensions import BcoStreamFormatInfo
 
 class PlugParser(BebobUnit):
     unit_info = {}

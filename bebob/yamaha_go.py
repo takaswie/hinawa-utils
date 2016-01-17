@@ -1,14 +1,14 @@
 import re
 
-from bridgeco.bebob_unit import BebobUnit
+from bebob.bebob_unit import BebobUnit
 
 from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
 from ta1394.audio import AvcAudio
 
-from bridgeco.extensions import BcoVendorDependent
-from bridgeco.extensions import BcoPlugInfo
-from bridgeco.extensions import BcoStreamFormatInfo
+from bebob.extensions import BcoVendorDependent
+from bebob.extensions import BcoPlugInfo
+from bebob.extensions import BcoStreamFormatInfo
 
 class YamahaGo(BebobUnit):
     supported_clock_sources = ('Internal', 'S/PDIF')

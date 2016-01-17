@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from bridgeco.plug_parser import PlugParser
+from bebob.plug_parser import PlugParser
 
 import sys
 import json

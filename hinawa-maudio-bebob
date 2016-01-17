@@ -4,7 +4,7 @@ import sys
 import time
 from math import log10
 
-from bridgeco.bebob_maudio import BebobMaudio
+from bebob.bebob_maudio import BebobMaudio
 
 from ta1394.audio import AvcAudio
 

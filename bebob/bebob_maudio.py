@@ -2,7 +2,7 @@
 
 import sys
 
-from bridgeco.bebob_unit import BebobUnit
+from bebob.bebob_unit import BebobUnit
 
 class BebobMaudio(BebobUnit):
     meter_labels = ('Analog in 1', 'Analog in 2',

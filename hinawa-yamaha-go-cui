@@ -3,7 +3,7 @@
 import sys
 import re
 
-from bridgeco.yamaha_go import YamahaGo
+from bebob.yamaha_go import YamahaGo
 
 def dump_status(unit):
     print('Current status:')
