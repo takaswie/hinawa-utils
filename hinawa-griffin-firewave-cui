@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+
+import sys
+
+from oxfw.oxfw_unit import OxfwUnit
+
+from ta1394.audio import AvcAudio
+
+def dump_commands(unit):
+    print('  Commands and supported arguments:')
+    print('    status:')
+    print('    commands:')
+    print('    mute:')
+    print('      state (on, off)')
+    print('    gain:')
+    print('      channel number (0 - 5)')
+
+def dump_status(unit):
+    print('Current status:')
+    print('  Packet Streaming:')
+    print('    running:          {0}'.format(unit.get_property('streaming')))
+    fmts = unit.get_current_stream_formats()
+    print('    sampling-rate:    {0}'.format(fmts['playback']['sampling-rate']))
+    print('Volumes:')
+    for ch in range(1, 7):
+        gain = AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current', 1, ch)
+        print('  {0}: {1}'.format(ch, gain))
+    if AvcAudio.get_feature_mute_state(unit.fcp, 0, 'current', 1, 0):
+        mute = 'on'
+    else:
+        mute = 'off'
+    print('  mute: {0}'.format(mute))
+    print('ASIC information:')
+    print('  type:             {0}'.format(unit.hw_info['asic-type']))
+    print('  ID:               {0}'.format(unit.hw_info['asic-id']))
+    print('  firmware version: {0}'.format(unit.hw_info['firmware-version']))
+
+# Main routine
+argv = sys.argv
+
+if len(argv) < 2:
+    print(' hinawa-griffin-firewave-cui CARD COMMAND [SUBCOMMAND [ARGUMENTS]]')
+    print('  CARD: the number as ALSA sound card, see /proc/asound/cards.')
+    print('  COMMAND:')
+    print('    status: output unit status')
+    print('    commands: output available sub-commands and arguments')
+    sys.exit()
+
+card = argv[1]
+unit = OxfwUnit('/dev/snd/hwC{0}D0'.format(card))
+
+if len(argv) < 3:
+    dump_commands(unit)
+    sys.exit()
+cmd = argv[2]
+
+if cmd == 'status':
+    dump_status(unit)
+elif cmd == 'gain' and len(argv) > 3:
+    ch = int(argv[3]) + 1
+    if ch > 5:
+        print('Invalid argument for channel number')
+    elif len(argv) != 5:
+        print(AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current', 1, ch))
+    else:
+        val = int(argv[4])
+        AvcAudio.set_feature_volume_state(unit.fcp, 0, 'current', 1, ch, val)
+elif cmd == 'mute':
+    if len(argv) < 4:
+        if AvcAudio.get_feature_mute_state(unit.fcp, 0, 'current', 1, 0):
+            print('on')
+        else:
+            print('off')
+    else:
+        val = str(argv[3])
+        if val == 'on':
+            val = 1
+        else:
+            val = 0
+        AvcAudio.set_feature_mute_state(unit.fcp, 0, 'current', 1, 0, val)
+else:
+    dump_commands(unit)
+
+sys.exit()
