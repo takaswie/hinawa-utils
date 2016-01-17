@@ -51,13 +51,6 @@ def dump_plug_info_to_stdio_as_ids_only(unit):
                 for j, entry in enumerate(entries):
                     print(type, dir, i, j, entry['type'])
 
-#import pprint
-
-#pp = pprint.PrettyPrinter(indent=1)
-#pp.pprint(unit.function_block_plugs)
-
-#sys.exit()
-
 if mode == 0:
     dump_plug_info_to_stdio_as_ids_only(unit)
 else:
