@@ -9,7 +9,7 @@ class AvcStreamFormatInfo():
 
     sampling_rates = (22050, 24000, 32000, 44100, 48000, 96000, 176400,
                       192000, 0, 0, 88200, 0, 0, 0, 0, 0)
-    rate_controls = ('clock-based', 'command-based', 'not-supported')
+    rate_controls = ('command-based', 'clock-based', 'not-supported')
     types = ('IEC60958-3',      # 0x00
              'IEC61937-3',
              'IEC61937-4',

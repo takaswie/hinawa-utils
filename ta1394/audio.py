@@ -31,7 +31,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x80)   # Selector function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attribute])
+        args.append(AvcAudio.attribute_values[attr])
         args.append(0x02)   # Selector length is 2
         args.append(value)
         args.append(0x01)   # Selector control
@@ -71,7 +71,7 @@ class AvcAudio():
         if mute:
             mute = 0x70
         else:
-            mute = 0x80
+            mute = 0x60
         args = bytearray()
         args.append(0x00)
         args.append(0x08 | (subunit_id & 0x07))

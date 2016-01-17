@@ -23,7 +23,7 @@ class BcoPlugInfo():
         if BcoPlugInfo.addr_dir.count(addr_dir) == 0:
             raise ValueError('Invalid argument for address direction')
         if BcoPlugInfo.addr_unit_type.count(addr_unit_type) == 0:
-            raise ValueError('Invalid argumetn for address unit type')
+            raise ValueError('Invalid argument for address unit type')
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
         addr = bytearray()
@@ -140,7 +140,7 @@ class BcoPlugInfo():
         return info
 
     @staticmethod
-    def get_plug_type(unit, addr):
+    def get_plug_type(fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -154,13 +154,13 @@ class BcoPlugInfo():
         args.append(0x00)   # Info type is 'type'
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         if params[10] > len(BcoPlugInfo.plug_type):
             raise OSError('Unexpected value in response')
         return BcoPlugInfo.plug_type[params[10]]
 
     @staticmethod
-    def get_plug_name(unit, addr):
+    def get_plug_name(fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -174,14 +174,14 @@ class BcoPlugInfo():
         args.append(0x01)   # Info type is 'name'
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         length = params[10]
         if length == 0:
             return ""
         return params[11:11 + length].decode()
 
     @staticmethod
-    def get_plug_channels(unit, addr):
+    def get_plug_channels(fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -195,11 +195,11 @@ class BcoPlugInfo():
         args.append(0x02)   # Info type is 'the number of channels'
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         return params[10]
 
     @staticmethod
-    def get_plug_ch_name(unit, addr, pos):
+    def get_plug_ch_name(fcp, addr, pos):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -213,15 +213,12 @@ class BcoPlugInfo():
         args.append(0x04)   # Info type is 'channel position name'
         args.append(pos)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         length = params[11]
         return params[12:12+length].decode()
 
     @staticmethod
-    def get_plug_clusters(unit, addr):
-        if addr[1] != BcoPlugInfo.addr_mode.index('unit') or \
-           addr[2] != BcoPlugInfo.addr_unit_type.index('isoc'):
-            raise ValueError('Isochronous unit plugs just support this')
+    def get_plug_clusters(fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -235,7 +232,7 @@ class BcoPlugInfo():
         args.append(0x03)   # Info type is 'channel position data'
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         data = params[10:]
         pos = 0
         clusters = [[] for i in range(data[pos])]
@@ -254,10 +251,7 @@ class BcoPlugInfo():
         return clusters
 
     @staticmethod
-    def get_plug_cluster_info(unit, addr, cls):
-        if addr[1] != BcoPlugInfo.addr_mode.index('unit') or \
-           addr[2] != BcoPlugInfo.addr_unit_type.index('isoc'):
-            raise ValueError('Isochronous unit plugs just support this')
+    def get_plug_cluster_info(fcp, addr, cls):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -271,12 +265,12 @@ class BcoPlugInfo():
         args.append(0x07)   # Info type is 'cluster info'
         args.append(cls)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         length = params[12]
         return params[13:13+length].decode()
 
     @staticmethod
-    def get_plug_input(unit, addr):
+    def get_plug_input(fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -290,11 +284,11 @@ class BcoPlugInfo():
         args.append(0x05)   # Info type is 'input data'
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         return BcoPlugInfo.parse_plug_addr(params[10:])
 
     @staticmethod
-    def get_plug_outputs(unit, addr):
+    def get_plug_outputs(fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -308,7 +302,7 @@ class BcoPlugInfo():
         args.append(0x06)   # Info type is 'output data'
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         info = []
         plugs = params[10]
         if plugs != 0xff:
@@ -325,7 +319,7 @@ class BcoSubunitInfo():
     }
 
     @staticmethod
-    def get_subunits(unit):
+    def get_subunits(fcp):
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
@@ -335,7 +329,7 @@ class BcoSubunitInfo():
         args.append(0xff)
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         subunits = []
         for i in range(4, 7):
             if params[i] is not 0xff:
@@ -346,7 +340,7 @@ class BcoSubunitInfo():
         return subunits
 
     @staticmethod
-    def get_subunit_fb_info(unit, subunit_type, subunit_id, page, fb_type):
+    def get_subunit_fb_info(fcp, subunit_type, subunit_id, page, fb_type):
         if AvcGeneral.subunit_types.count(subunit_type) == 0:
             raise ValueError('Invalid argument for subunit type')
         if subunit_id > 7:
@@ -357,7 +351,7 @@ class BcoSubunitInfo():
         args[2] = 0x31
         args[3] = page
         args[4] = 0xff
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         entries = []
         for i in range(5):
             if params[5 + 5 * i] == 0xff:
@@ -454,7 +448,7 @@ class BcoVendorDependent():
     }
 
     @staticmethod
-    def set_digital_channel_status(unit, spec, name, values):
+    def set_digital_channel_status(fcp, spec, name, values):
         if   spec is 'con':
             attrs = BcoVendorDependent.supported_con_status
             subcmds  = BcoVendorDependent._con_subcmds
@@ -480,9 +474,10 @@ class BcoVendorDependent():
         else:
             for i in range(len(values)):
                 args[6 + i] = values[i]
-        AvcGeneral.command_control(unit, args)
+        AvcGeneral.command_control(fcp, args)
 
-    def get_digital_channel_status(unit, spec, name):
+    @staticmethod
+    def get_digital_channel_status(fcp, spec, name):
         if   spec is 'con':
             attrs = BcoVendorDependent.supported_con_status
             subcmds  = BcoVendorDependent._con_subcmds
@@ -492,7 +487,7 @@ class BcoVendorDependent():
         else:
             raise ValueError('Invalid argument for specification name')
         if name not in attrs:
-            raise ValueError('Invalid argumetn for attribute name')
+            raise ValueError('Invalid argument for attribute name')
         args = bytearray(0xff for i in range(10))
         args[0] = 0x01
         args[1] = 0xff
@@ -500,10 +495,11 @@ class BcoVendorDependent():
         args[3] = BcoVendorDependent.supported_spec.index(spec)
         args[4] = subcmds[name]
         args[5] = attrs[name]
-        params = AvcGeneral.command_status(unit, args)
+        params = AvcGeneral.command_status(fcp, args)
         return params[6:6 + attrs[name]]
 
-    def get_stream_detection(self, company_ids, dir, ext_plug):
+    @staticmethod
+    def get_stream_detection(fcp, company_ids, dir, ext_plug):
         if BcoVendorDependent.addr_dir.count(dir) == 0:
             raise ValueError('Invalid argument for address direction')
         if ext_plug >= 255:
@@ -511,9 +507,9 @@ class BcoVendorDependent():
         args = bytearray()
         args.append(0x00)
         args.append(BcoVendorDependent.addr_dir.index(dir))
-        args.append(plug)
-        args.append(0x00)
-        params = AvcGeneral.get_vendor_dependent(self, company_ids, args)
+        args.append(ext_plug)
+        args.append(0xff)
+        params = AvcGeneral.get_vendor_dependent(fcp, company_ids, args)
         if params[0] != args[0] or params[1] != args[1] or params[2] != args[2]:
             raise OSError('Unexpected value in response')
         if params[3] == 0x00:

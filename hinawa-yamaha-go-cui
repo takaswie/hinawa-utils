@@ -1,0 +1,155 @@
+#!/usr/bin/env python3
+
+import sys
+import re
+
+from bridgeco.yamaha_go import YamahaGo
+
+def dump_status(unit):
+    print('Current status:')
+    print('  Packet Streaming:')
+    print('    running:          {0}'.format(unit.get_property('streaming')))
+    rate = unit.get_sampling_rate()
+    print('    sampling-rate:    {0}'.format(rate))
+    print('Output settings:')
+    print('  Ports:')
+    for output in unit.supported_outputs:
+        if re.match('^analog', output):
+            print('    {0}'.format(output))
+            for i in range(2):
+                gain = unit.get_analog_output(output, 0, 'gain')
+                mute = unit.get_analog_output(output, 0, 'mute')
+                print('      gain: {0}, mute: {1}'.format(gain, mute))
+    print('  Routing:')
+    for out in unit.supported_outputs:
+        print('    {0}: {1}'.format(out, unit.get_output_routing(out)))
+    print('Mixer settings:')
+    print('  Inputs:')
+    for input in unit.supported_mixer_inputs:
+        print('    {0}:'.format(input))
+        for i in range(2):
+            gain = unit.get_mixer_input(input, i, 'gain')
+            mute = unit.get_mixer_input(input, i, 'mute')
+            print('      gain: {0}, mute: {1}'.format(gain, mute))
+    print('  Outputs:')
+    for i in range(2):
+        gain = unit.get_mixer_output(i, 'gain')
+        mute = unit.get_mixer_output(i, 'mute')
+        print('    {0}: gain: {1}, mute: {2}'.format(i + 1, gain, mute))
+
+def dump_commands(unit):
+    print('  Commands and supported arguments:')
+    print('    status:')
+    print('    commands:')
+    print('    output:')
+    opts = ', '.join(str(i) for i in unit.supported_outputs)
+    print('      pair ({0})'.format(opts))
+    print('      channel (0, 1)')
+    opts = ', '.join(str(i) for i in unit.channel_modes)
+    print('      operation ({0})'.format(opts))
+    print('    output-routing:')
+    opts = ', '.join(str(i) for i in unit.supported_outputs)
+    print('      destination ({0})'.format(opts))
+    opts = ', '.join(str(i) for i in unit.supported_output_sources)
+    print('      source ({0})'.format(opts))
+    print('    mixer-input')
+    opts = ', '.join(str(i) for i in unit.supported_mixer_inputs)
+    print('      input ({0})'.format(opts))
+    print('      channel (0, 1)')
+    opts = ', '.join(str(i) for i in unit.channel_modes)
+    print('      operation ({0})'.format(opts))
+    print('    mixer-output')
+    print('      channel (0, 1)')
+    opts = ', '.join(str(i) for i in unit.channel_modes)
+    print('      operation ({0})'.format(opts))
+    print('    sampling-rate:')
+    opts = ', '.join(str(i) for i in unit.supported_sampling_rates)
+    print('      rate ({0})'.format(opts))
+    print('    clock-source:')
+    opts = ', '.join(str(i) for i in unit.supported_clock_sources)
+    print('      source ({0})'.format(opts))
+
+def dump_firmware_info(unit):
+    print('BeBoB firmware information:')
+    for category, values in unit.firmware_info.items():
+        if isinstance(values, dict):
+            print('  {0}:'.format(category))
+            for name, value in values.items():
+                print('    {0}: {1}'.format(name, value))
+        else:
+            print('  {0}: {1}'.format(category, values))
+
+# Main routine
+argv = sys.argv
+
+if len(argv) < 2:
+    print(' hinawa-yamaha-go-cui CARD COMMAND [SUBCOMMAND [ARGUMENTS]]')
+    print('  CARD: the number as ALSA sound card, see /proc/asound/cards.')
+    print('  COMMAND:')
+    print('    status: output unit status')
+    print('    commands: output available sub-commands and arguments')
+    sys.exit()
+
+card = argv[1]
+unit = YamahaGo('/dev/snd/hwC{0}D0'.format(card))
+
+if len(argv) < 3:
+    dump_commands(unit)
+    sys.exit()
+cmd = argv[2]
+
+if cmd == 'status':
+    dump_status(unit)
+elif cmd == 'commands':
+    dump_commands(unit)
+elif cmd == 'output' and len(argv) > 5:
+    pair = argv[3]
+    ch = int(argv[4])
+    op = argv[5]
+    if len(argv) < 7:
+        print(unit.get_analog_output(pair, ch, op))
+    else:
+        val = int(argv[6])
+        unit.set_analog_output(pair, ch, op, val)
+elif cmd == 'output-routing' and len(argv) > 3:
+    dst = argv[3]
+    if len(argv) < 5:
+        print(dst, unit.get_output_routing(dst))
+    else:
+        src = argv[4]
+        unit.set_output_routing(src, dst)
+elif cmd == 'mixer-input' and len(argv) > 5:
+    input = argv[3]
+    ch = int(argv[4])
+    op = argv[5]
+    if len(argv) < 7:
+        print(unit.get_mixer_input(input, ch, op))
+    else:
+        val = int(argv[6])
+        unit.set_mixer_input(input, ch, op, val)
+elif cmd == 'mixer-output' and len(argv) > 4:
+    ch = int(argv[3])
+    op = argv[4]
+    if len(argv) < 6:
+        print(unit.get_mixer_output(ch, op))
+    else:
+        val = int(argv[5])
+        unit.set_mixer_output(ch, op, val)
+elif cmd == 'sampling-rate':
+    if len(argv) < 4:
+        print(unit.get_sampling_rate())
+    else:
+        unit.set_sampling_rate(argv[3])
+elif cmd == 'clock-source':
+    if len(argv) < 4:
+        print(unit.get_clock_source())
+    else:
+        src = argv[3]
+        if src == 'S/PDIF' and not unit.check_digital_input_signal():
+            print('S/PDIF signal is not detected.')
+        else:
+            unit.set_clock_source(argv[3])
+else:
+    dump_commands(unit)
+
+sys.exit()
