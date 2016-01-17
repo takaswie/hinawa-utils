@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+
+import sys
+
+from oxfw.oxfw_unit import OxfwUnit
+
+from ta1394.audio import AvcAudio
+
+def dump_commands(unit):
+    print('  Commands and supported arguments:')
+    print('    status:')
+    print('    commands:')
+    print('    gain:')
+    print('    mute:')
+    print('      state (on, off)')
+    print('    sampling-rate:')
+    print('      32000, 44100, 48000, 88200, 96000')
+
+def dump_status(unit):
+    print('Current status:')
+    print('  Packet Streaming:')
+    print('    running:          {0}'.format(unit.get_property('streaming')))
+    fmts = unit.get_current_stream_formats()
+    print('    sampling-rate:    {0}'.format(fmts['playback']['sampling-rate']))
+    print('Channel:')
+    gain = AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current', 1, 0))
+    print('  gain: {1}'.format(gain)
+    if AvcAudio.get_feature_mute_state(unit.fcp, 0, 'current', 1, 0):
+        mute = 'on'
+    else:
+        mute = 'off'
+    print('  mute: {0}'.format(mute)
+    print('ASIC information:')
+    print('  type:             {0}'.format(unit.hw_info['asic-type']))
+    print('  ID:               {0}'.format(unit.hw_info['asic-id']))
+    print('  firmware version: {0}'.format(unit.hw_info['firmware-version']))
+
+# Main routine
+argv = sys.argv
+
+if len(argv) < 2:
+    print(' hinawa-lacie-speaker-cui CARD COMMAND [SUBCOMMAND [ARGUMENTS]]')
+    print('  CARD: the number as ALSA sound card, see /proc/asound/cards.')
+    print('  COMMAND:')
+    print('    status: output unit status')
+    print('    commands: output available sub-commands and arguments')
+    sys.exit()
+
+card = argv[1]
+unit = OxfwUnit('/dev/snd/hwC{0}D0'.format(card))
+
+if len(argv) < 3:
+    dump_commands(unit)
+    sys.exit()
+cmd = argv[2]
+
+if cmd == 'status':
+    dump_status(unit)
+elif cmd == 'gain':
+    if len(argv) > 3:
+        val = int(argv[3])
+        AvcAudio.set_feature_volume_state(unit.fcp, 0, 'current', 1, 0, val)
+    else:
+        print(AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current', 1, 0))
+elif cmd == 'mute':
+    if len(argv) < 4:
+        if AvcAudio.get_feature_mute_state(unit.fcp, 0, 'current', 1, 0):
+            print('on')
+        else:
+            print('off')
+    else:
+        val = str(argv[3])
+        if val == 'on':
+            val = 1
+        else:
+            val = 0
+        AvcAudio.set_feature_mute_state(unit.fcp, 0, 'current', 1, 0, val)
+elif cmd == 'sampling-rate':
+    if len(argv) < 4:
+        print(AvcConnection.get_plug_signal_format(unit.fcp, 'input', 0))
+    else:
+        rate = int(argv[3])
+        if rate not in (32000, 44100, 48000, 88200, 96000):
+            print('Invalid argument for sampling rate')
+        else:
+            AvcConnection.set_plug_signal_format(unit.fcp, 'input', 0, rate)
+else:
+    dump_commands(unit)
+
+sys.exit()
