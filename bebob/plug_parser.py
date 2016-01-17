@@ -194,30 +194,34 @@ class PlugParser(BebobUnit):
         return dst
 
     def _parse_signal_sources(self):
-        srcs = {}
-        candidates = {}
+        srcs = []
+        candidates = []
         # This is internal clock source.
         for i, plug in self.subunit_plugs['music']['output'].items():
            if plug['type'] == 'Sync':
-               addr = AvcCcm.get_subunit_signal_addr('music', 0, i)
-               candidates[plug['name']] = addr
+                addr = AvcCcm.get_subunit_signal_addr('music', 0, i)
+                candidates.append((addr, plug))
         # External source is available.
         for i, plug in self.unit_plugs['external']['input'].items():
             if plug['type'] in ('Sync', 'Digital', 'Clock'):
                 addr = AvcCcm.get_unit_signal_addr('external', i)
-                candidates[plug['name']] = addr
+                candidates.append((addr, plug))
         # SYT-match is available, but not practical.
         for i, plug in self.unit_plugs['isoc']['input'].items():
             if plug['type'] == 'Sync':
                 addr = AvcCcm.get_unit_signal_addr('isoc', i)
-                candidates[plug['name']] = addr
+                candidates.append((addr, plug))
+        # BeBoBv3 has.
         # Inquire these are able to connect to destination.
-        for key, src in candidates.items():
+        for params in candidates:
+            addr = params[0]
+            plug = params[1]
             try:
-                AvcCcm.ask_signal_source(self.fcp, src, self.signal_destination)
+                AvcCcm.ask_signal_source(self.fcp, addr,
+                                         self.signal_destination)
             except:
                 continue
-            srcs[key] = src
+            srcs.append(params)
         return srcs
 
     def _parse_stream_formats(self):
