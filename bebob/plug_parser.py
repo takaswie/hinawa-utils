@@ -39,7 +39,9 @@ class PlugParser(BebobUnit):
         info = AvcConnection.get_unit_plug_info(self.fcp)
         for type, params in info.items():
             if type not in unit_plugs:
-                unit_plugs[type] = dict.fromkeys(['output', 'input'], {})
+                unit_plugs[type] = {}
+                unit_plugs[type]['output'] = {}
+                unit_plugs[type]['input'] = {}
             for dir, num in params.items():
                 for i in range(num + 1):
                     try:
@@ -82,7 +84,9 @@ class PlugParser(BebobUnit):
             if subunit['id'] != 0:
                 raise RuntimeError('Unsupported number for subunit id')
             if type not in subunit_plugs:
-                subunit_plugs[type] = dict.fromkeys(['input', 'output'], {})
+                subunit_plugs[type] = {}
+                subunit_plugs[type]['output'] = {}
+                subunit_plugs[type]['input'] = {}
             info = AvcConnection.get_subunit_plug_info(self.fcp, type, 0)
             for dir, num in info.items():
                 for i in range(num):
@@ -137,8 +141,9 @@ class PlugParser(BebobUnit):
                     subunit_fbs[fb_type] = {}
                 fb_id = entry['fb-id']
                 if fb_id not in subunit_fbs[fb_type]:
-                    subunit_fbs[fb_type][fb_id] = \
-                                        dict.fromkeys(['input', 'output'], {})
+                    subunit_fbs[fb_type][fb_id] = {}
+                    subunit_fbs[fb_type][fb_id]['output'] = {}
+                    subunit_fbs[fb_type][fb_id]['input'] = {}
                 for i in range(entry['inputs']):
                     plug = self._parse_fb_plug('input', type, 0,
                                                fb_type, fb_id, i)
