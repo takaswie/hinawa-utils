@@ -39,16 +39,14 @@ class PlugParser(BebobUnit):
         info = AvcConnection.get_unit_plug_info(self.fcp)
         for type, params in info.items():
             if type not in unit_plugs:
-                unit_plugs[type] = {}
+                unit_plugs[type] = dict.fromkeys(['output', 'input'], {})
             for dir, num in params.items():
-                if dir not in unit_plugs[type]:
-                    unit_plugs[type][dir] = []
-                for i in range(num):
+                for i in range(num + 1):
                     try:
                         plug = self._parse_unit_plug(dir, type, i)
+                        unit_plugs[type][dir][i] = plug
                     except:
-                        plug = {}
-                    unit_plugs[type][dir].append(plug)
+                        continue
         return unit_plugs
 
     def _parse_unit_plug(self, dir, type, num):
@@ -84,14 +82,12 @@ class PlugParser(BebobUnit):
             if subunit['id'] != 0:
                 raise RuntimeError('Unsupported number for subunit id')
             if type not in subunit_plugs:
-                subunit_plugs[type] = {}
-                subunit_plugs[type]['input'] = []
-                subunit_plugs[type]['output'] = []
+                subunit_plugs[type] = dict.fromkeys(['input', 'output'], {})
             info = AvcConnection.get_subunit_plug_info(self.fcp, type, 0)
             for dir, num in info.items():
                 for i in range(num):
                     plug = self._parse_subunit_plug(dir, type, 0, i)
-                    subunit_plugs[type][dir].append(plug)
+                    subunit_plugs[type][dir][i] = plug
         return subunit_plugs
 
     def _parse_subunit_plug(self, dir, type, id, num):
@@ -105,7 +101,7 @@ class PlugParser(BebobUnit):
             ch = BcoPlugInfo.get_plug_ch_name(self.fcp, addr, channel + 1)
             plug['channels'].append(ch)
         plug['clusters'] = []
-        if plug['type'] is 'IsoStream':
+        if plug['type'] == 'IsoStream':
             clusters = BcoPlugInfo.get_plug_clusters(self.fcp, addr)
             for cluster in range(len(clusters)):
                 clst = BcoPlugInfo.get_plug_cluster_info(self.fcp, addr, cluster + 1)
@@ -138,19 +134,19 @@ class PlugParser(BebobUnit):
             for entry in entries:
                 fb_type = entry['fb-type']
                 if fb_type not in subunit_fbs:
-                    subunit_fbs[fb_type] = []
-                subunit_fbs[fb_type].append({'input': [], 'output': []})
-            for entry in entries:
-                fb_type = entry['fb-type']
-                fb_id = entry['fb-id'] - 1
+                    subunit_fbs[fb_type] = {}
+                fb_id = entry['fb-id']
+                if fb_id not in subunit_fbs[fb_type]:
+                    subunit_fbs[fb_type][fb_id] = \
+                                        dict.fromkeys(['input', 'output'], {})
                 for i in range(entry['inputs']):
                     plug = self._parse_fb_plug('input', type, 0,
-                                               fb_type, fb_id + 1, i)
-                    subunit_fbs[fb_type][fb_id]['input'].append(plug)
+                                               fb_type, fb_id, i)
+                    subunit_fbs[fb_type][fb_id]['output'][i] = plug
                 for i in range(entry['outputs']):
                     plug = self._parse_fb_plug('output', type, 0,
-                                               fb_type, fb_id + 1, i)
-                    subunit_fbs[fb_type][fb_id]['output'].append(plug)
+                                               fb_type, fb_id, i)
+                    subunit_fbs[fb_type][fb_id]['input'][i] = plug
             fbs[type] = subunit_fbs
         return fbs
 
@@ -187,7 +183,7 @@ class PlugParser(BebobUnit):
 
     def _parse_signal_destination(self):
         dst = []
-        for i, plug in enumerate(self.subunit_plugs['music']['input']):
+        for i, plug in self.subunit_plugs['music']['input'].items():
             if plug['type'] == 'Sync':
                 dst = AvcCcm.get_subunit_signal_addr('music', 0, i)
         return dst
@@ -196,17 +192,17 @@ class PlugParser(BebobUnit):
         srcs = {}
         candidates = {}
         # This is internal clock source.
-        for i, plug in enumerate(self.subunit_plugs['music']['output']):
+        for i, plug in self.subunit_plugs['music']['output'].items():
            if plug['type'] == 'Sync':
                addr = AvcCcm.get_subunit_signal_addr('music', 0, i)
                candidates[plug['name']] = addr
         # External source is available.
-        for i, plug in enumerate(self.unit_plugs['external']['input']):
+        for i, plug in self.unit_plugs['external']['input'].items():
             if plug['type'] in ('Sync', 'Digital', 'Clock'):
                 addr = AvcCcm.get_unit_signal_addr('external', i)
                 candidates[plug['name']] = addr
         # SYT-match is available, but not practical.
-        for i, plug in enumerate(self.unit_plugs['isoc']['input']):
+        for i, plug in self.unit_plugs['isoc']['input'].items():
             if plug['type'] == 'Sync':
                 addr = AvcCcm.get_unit_signal_addr('isoc', i)
                 candidates[plug['name']] = addr
@@ -227,8 +223,11 @@ class PlugParser(BebobUnit):
             hoge[type] = {}
             for dir, plugs in dir_plugs.items():
                 hoge[type][dir] = []
-                for i, plug in enumerate(plugs):
+                for i, plug in plugs.items():
                     addr = BcoPlugInfo.get_unit_addr(dir, type, i)
-                    fmts = BcoStreamFormatInfo.get_entry_list(self.fcp, addr)
-                    hoge[type][dir].append(fmts)
+                    try:
+                        fmts = BcoStreamFormatInfo.get_entry_list(self.fcp, addr)
+                        hoge[type][dir].append(fmts)
+                    except:
+                        continue
         return hoge

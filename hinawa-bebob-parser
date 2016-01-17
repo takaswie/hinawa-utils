@@ -20,9 +20,9 @@ unit = PlugParser(path)
 
 def dump_plug_info_to_stdio_as_json(unit):
     info = {
-        'unit': unit.unit_plugs,
-        'subunit': unit.subunit_plugs,
-        'function-block': unit.function_block_plugs,
+        'units': unit.unit_plugs,
+        'subunits': unit.subunit_plugs,
+        'function-blocks': unit.function_block_plugs,
         'stream-formats': unit.stream_formats,
     }
     print(json.dumps(info))
@@ -30,26 +30,33 @@ def dump_plug_info_to_stdio_as_json(unit):
 def dump_plug_info_to_stdio_as_ids_only(unit):
     for type, dir_plugs in unit.unit_plugs.items():
         for dir, plugs in dir_plugs.items():
-            for i, plug in enumerate(plugs):
-                print(type, dir, i, plug['name'])
+            for num, plug in plugs.items():
+                print(type, dir, num, plug['name'])
 
     for type, dir_plugs in unit.subunit_plugs.items():
         for dir, plugs in dir_plugs.items():
-            for i, plug in enumerate(plugs):
+            for i, plug in plugs.items():
                 print(type, dir, i, plug['name'])
 
     for type, fb_type_plugs in unit.function_block_plugs.items():
         for fb_type, fb_id_plugs in fb_type_plugs.items():
-            for fb_id, dir_plugs in enumerate(fb_id_plugs):
+            for fb_id, dir_plugs in fb_id_plugs.items():
                 for dir, plugs in dir_plugs.items():
-                    for i, plug in enumerate(plugs):
-                        print(type, fb_type, fb_id + 1, dir, i, plug['name'])
+                    for i, plug in plugs.items():
+                        print(type, fb_type, fb_id, dir, i, plug['name'])
 
     for type, dir_fmts in unit.stream_formats.items():
         for dir, fmts in dir_fmts.items():
             for i, entries in enumerate(fmts):
                 for j, entry in enumerate(entries):
                     print(type, dir, i, j, entry['type'])
+
+#import pprint
+
+#pp = pprint.PrettyPrinter(indent=1)
+#pp.pprint(unit.function_block_plugs)
+
+#sys.exit()
 
 if mode == 0:
     dump_plug_info_to_stdio_as_ids_only(unit)
