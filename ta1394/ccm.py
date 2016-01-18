@@ -52,7 +52,7 @@ class AvcCcm():
     @staticmethod
     def set_signal_source(fcp, src, dst):
         args = bytearray()
-        args.append(0x01)
+        args.append(0x00)
         args.append(0xff)
         args.append(0x1a)
         args.append(0x0f)
