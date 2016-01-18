@@ -74,7 +74,8 @@ class AvcCcm():
         args.append(dst[0])
         args.append(dst[1])
         params = AvcGeneral.command_status(fcp, args)
-        return AvcCcm.parse_signal_addr(params[6:])
+        src = params[4:6]
+        return AvcCcm.parse_signal_addr(src)
 
     @staticmethod
     def ask_signal_source(fcp, src, dst):
