@@ -10,6 +10,8 @@ class AvcGeneral():
     def command_control(fcp, cmd):
         if not isinstance(fcp, Hinawa.FwFcp):
             raise ValueError('Invalid argument for FwFcp')
+        if cmd[0] != 0x00:
+            raise ValueError('Invalid command code for control')
         params = fcp.transact(cmd)
         if   params[0] == 0x08:
             raise OSError('Not implemented')
@@ -23,6 +25,8 @@ class AvcGeneral():
     def command_status(fcp, cmd):
         if not isinstance(fcp, Hinawa.FwFcp):
             raise ValueError('Invalid argument for FwFcp')
+        if cmd[0] != 0x01:
+            raise ValueError('Invalid command code for status')
         params = fcp.transact(cmd)
         if   params[0] == 0x08:
             raise OSError('Not implemented')
@@ -38,6 +42,8 @@ class AvcGeneral():
     def command_inquire(fcp, cmd):
         if not isinstance(fcp, Hinawa.FwFcp):
             raise ValueError('Invalid argument for FwFcp')
+        if cmd[0] != 0x02:
+            raise ValueError('Invalid command code for inquire')
         params = fcp.transact(cmd)
         if   params[0] == 0x08:
             raise OSError('Not Implemented')
