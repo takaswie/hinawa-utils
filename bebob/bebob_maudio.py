@@ -214,11 +214,11 @@ class BebobMaudio(BebobUnit):
         if sink not in self._labels[self._id]['mixers']:
             raise ValueError('Invalid argument for mixer output')
         input = self._labels[self._id]['inputs'].index(source)
-        in_fb = self._inputs[self._id][input][0]
-        in_ch = self._inputs[self._id][input][1][0]   # Use left channel.
+        in_fb = self._mixer_sources[self._id][input][0]
+        in_ch = self._mixer_sources[self._id][input][1][0]   # Use left channel.
         output = self._labels[self._id]['mixers'].index(sink)
-        out_fb = self._outputs[self._id][output][0]
-        out_ch = self._outputs[self._id][output][1][0]
+        out_fb = self._mixer_sinks[self._id][output][0]
+        out_ch = self._mixer_sinks[self._id][output][1][0]  # Use left channel.
         return (in_fb, in_ch, out_fb, out_ch)
 
     def set_mixer_routing(self, source, sink, value):
