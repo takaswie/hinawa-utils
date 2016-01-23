@@ -2,11 +2,14 @@
 
 import sys
 import time
+import re
 from math import log10
 
 from bebob.bebob_maudio import BebobMaudio
 
 from ta1394.audio import AvcAudio
+
+# NOTE: FireWire 410 doesn't support mute feature function block.
 
 argv = sys.argv
 argc = len(argv)
@@ -27,8 +30,12 @@ print(unit.get_output_labels())
 print(unit.get_headphone_labels())
 
 for input in unit.get_input_labels():
-    print(input, unit.get_input_volume(input, 0), unit.get_input_mute(input, 0))
-    print(input, unit.get_input_volume(input, 1), unit.get_input_mute(input, 1))
+    if re.match('^Digital', input) or True:
+      print(input, unit.get_input_volume(input, 0))
+      print(input, unit.get_input_volume(input, 1))
+    else:
+      print(input, unit.get_input_volume(input, 0), unit.get_input_mute(input, 0))
+      print(input, unit.get_input_volume(input, 1), unit.get_input_mute(input, 1))
 
 '''
 for src in unit.get_aux_source_labels():
@@ -36,23 +43,20 @@ for src in unit.get_aux_source_labels():
     print(src, unit.get_aux_source_volume(src, 2))
 '''
 
-print('aux', unit.get_aux_master_volume(0), unit.get_aux_master_mute(0))
-print('aux', unit.get_aux_master_volume(1), unit.get_aux_master_mute(1))
+#print('aux', unit.get_aux_master_volume(0), unit.get_aux_master_mute(0))
+#print('aux', unit.get_aux_master_volume(1), unit.get_aux_master_mute(1))
 
-'''
+print('aux', unit.get_aux_master_volume(0))
+print('aux', unit.get_aux_master_volume(1))
+
 for src in unit.get_mixer_source_labels():
     for sink in unit.get_mixer_sink_labels():
-        print(unit.get_mixer_routing(src, sink))
-'''
+        print(src, sink, unit.get_mixer_routing(src, sink))
 
 for output in unit.get_output_labels():
-    print(output, unit.get_output_mute(output, 0))
-    print(output, unit.get_output_mute(output, 1))
-    print(output, unit.get_output_volume(output, 0))
-    print(output, unit.get_output_volume(output, 1))
+    print(output, unit.get_output_volume(output, 0))#, unit.get_output_mute(output, 0))
+    print(output, unit.get_output_volume(output, 1))#, unit.get_output_mute(output, 1))
 
 for hp in unit.get_headphone_labels():
-    print(hp, unit.get_headphone_mute(hp, 0))
-    print(hp, unit.get_headphone_mute(hp, 1))
-    print(hp, unit.get_headphone_volume(hp, 0))
-    print(hp, unit.get_headphone_volume(hp, 1))
+    print(hp, unit.get_headphone_volume(hp, 0))#, unit.get_headphone_mute(hp, 0))
+    print(hp, unit.get_headphone_volume(hp, 1))#, unit.get_headphone_mute(hp, 1))
