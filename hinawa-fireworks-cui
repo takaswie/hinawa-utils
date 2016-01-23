@@ -1,0 +1,159 @@
+#!/usr/bin/env python3
+
+import sys
+
+from echoaudio.fireworks import Fireworks
+
+def handle_clock_source(unit, arg):
+    rate, source = unit.get_clock_state()
+    if arg:
+        unit.set_clock_state(rate, arg)
+    else:
+        return source
+
+def handle_sampling_rate(unit, arg):
+    rate, source = unit.get_clock_state()
+    if arg:
+        unit.set_clock_state(arg, source)
+    else:
+        return rate
+
+def handle_control_room_mirroring(unit, arg):
+    if arg:
+        unit.set_control_room_mirroring(arg)
+    else:
+        return unit.get_control_room_mirroring()
+
+def handle_digital_input(unit, arg):
+    if arg:
+        unit.set_digital_input_mode(arg)
+    else:
+        return unit.get_digital_input_mode()
+
+def handle_phantom_powering(unit, arg):
+    if arg:
+        unit.set_phantom_powering(arg)
+    else:
+        return unit.get_phantom_powering()
+
+def handle_box_state(unit, name, value):
+    if value:
+        unit.set_box_states(name, value)
+    else:
+        return unit.get_box_states(name)
+
+def handle_room_mirroring(unit, value):
+    if value:
+        unit.set_control_room_mirroring(value)
+    else:
+        return unit.get_control_room_mirroring()
+
+def handle_stream_mapping(unit, direction, mapping):
+    # TODO
+    pass
+
+def handle_output(unit, operation, ch, value):
+    ops = {
+        'gain':     (unit.set_phys_out_gain, unit.get_phys_out_gain),
+        'mute':     (unit.set_phys_out_mute, unit.get_phys_out_mute),
+        'nominal':  (unit.set_phys_out_nominal, unit.get_phys_out_nominal)
+    }
+    if value:
+        ops[operation][0](int(ch), int(value))
+    else:
+        return ops[operation][1](int(ch))
+
+def handle_input(unit, operation, ch, value):
+    ops = {
+        'nominal':  (unit.set_phys_in_nominal, unit.get_phys_in_nominal),
+    }
+    if value:
+        ops[operation][0](int(ch), int(value))
+    else:
+        return ops[operation][1](int(ch))
+
+def handle_playback(unit, operation, ch, value):
+    ops = {
+        'gain': (unit.set_playback_gain, unit.get_playback_gain),
+        'mute': (unit.set_playback_mute, unit.get_playback_mute),
+        'solo': (unit.set_playback_solo, unit.get_playback_solo)
+    }
+    if value:
+       ops[operation][0](int(ch), int(value))
+    else:
+       return ops[operation][1](int(ch))
+
+def handle_monitor(unit, operation, ch, value):
+    ops = {
+        'gain':  (unit.set_monitor_gain, unit.get_monitor_gain),
+        'mute':  (unit.set_monitor_mute, unit.get_monitor_mute),
+        'solo':  (unit.set_monitor_solo, unit.get_monitor_solo),
+        'pan':   (unit.set_monitor_pan, unit.get_monitor_pan,)
+    }
+    if valie:
+        ops[operation][0](int(ch), int(value))
+    else:
+        ops[operation][1](int(ch))
+
+def dump_commands(unit):
+    pass
+
+def dump_status(unit):
+    pass
+
+
+# name/subcmds
+cmds = (
+    ('clock-source',    (), 1, handle_clock_source),
+    ('sampling-rate',   (), 1, handle_sampling_rate),
+    ('room-mirroring',  (), 1, handle_room_mirroring),
+    ('digital-input',   (), 1, handle_input),
+    ('phantom-powering',(), 1, handle_phantom_powering),
+    ('box-state',   ('spdif-pro', 'spdif-non-audio',
+                         'control-room', 'output-level-bypass',
+                         'metering-mode-in', 'metering-mode-out',
+                         'soft-clip', 'robot-hex-input',
+                         'robot-battery-charge'), 1, handle_box_state),
+    ('stream-mapping',  ('playback', 'capture'), 1, handle_stream_mapping),
+    ('output',      ('gain', 'mute', 'nominal'), 2, handle_output),
+    ('input',       ('nominal',), 2, handle_input),
+    ('playback',    ('gain', 'mute', 'solo'), 2, handle_playback),
+    ('monitor',     ('gain', 'mute', 'solo', 'pan'), 2, handle_monitor),
+)
+
+argv = sys.argv
+
+if len(argv) < 2:
+    print('help')
+    sys.exit()
+card = argv[1]
+
+unit = Fireworks(card)
+
+# At least 4 arguments are required.
+if len(argv) < 3:
+    dump_commands(unit)
+    sys.exit()
+name = str(argv[2])
+
+for cmd in cmds:
+    if cmd[0] != name:
+        continue
+    # Sub command is not required.
+    if len(cmd[1]) == 0:
+        if len(argv) < 5:
+            print(cmd[3](unit, None))
+            sys.exit()
+        else:
+            cmd[3](unit, argv[3])
+            sys.exit()
+    else:
+        if argv[3] in cmd[1]:
+            if len(argv) < 6:
+                print(cmd[3](unit, argv[3], argv[4], None))
+                sys.exit()
+            else:
+                cmd[3](unit, argv[3], argv[4], argv[5])
+                sys.exit()
+
+dump_commands(unit)
