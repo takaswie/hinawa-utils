@@ -10,6 +10,21 @@ import re
 
 class BebobMaudio(BebobUnit):
     _labels = (
+        {'inputs':  ('Analog 1/2', 'Digital 1/2',
+                     'Stream 1/2', 'Stream 3/4', 'Stream 5/6', 'Stream 7/8',
+                     'Stream 9/10'),
+         'outputs': ('Analog 1/2', 'Analog 3/4', 'Analog 5/6', 'Analog 7/8',
+                     'Digital 1/2'),
+         'mixers':  ('Mixer 1/2', 'Mixer 3/4', 'Mixer 5/6', 'Mixer 7/8',
+                     'Mixer 9/10'),
+         'meters':  ('Analog in 1', 'Analog in 2',
+                     'Digital in 1', 'Digital in 2',
+                     'Analog out 1', 'Analog out 2',
+                     'Analog out 3', 'Analog out 4',
+                     'Analog out 5', 'Analog out 6',
+                     'Analog out 7', 'Analog out 8',
+                     'Digital out 1', 'Digital out 2',
+                     'Headphone out 1', 'Headphone out 2')},
         {'inputs':  ('Analog 1/2', 'Analog 3/4', 'Analog 5/6', 'Analog 7/8',
                      'Stream 1/2', 'Stream 3/4',
                      'ADAT 1/2', 'ADAT 3/4', 'ADAT 5/6', 'ADAT 7/8',
@@ -31,6 +46,8 @@ class BebobMaudio(BebobUnit):
 
     # = _labels['inputs']
     _inputs = (
+        (( 3, (1, 2)), ( 4, (1, 2)),
+         ( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8)), ( 2, (1, 2))),
         (( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2)), ( 4, (1, 2)),
          (10, (1, 2)), (11, (1, 2)),
          ( 5, (1, 2)),
@@ -39,6 +56,8 @@ class BebobMaudio(BebobUnit):
 
     # = _labels['inputs']
     _aux_sources = (
+        (( 7, (1, 2)), ( 8, (1, 2)), ( 9, (1, 2)), ( 6, (1, 2)),
+         ( 5, (1, 2)), ( 5, (3, 4)), ( 5, (5, 6)), ( 5, (7, 8))),
         ((19, (1, 2)), (20, (1, 2)), (21, (1, 2)), (22, (1, 2)),
          (17, (1, 2)), (18, (1, 2)),
          (23, (1, 2)),
@@ -46,11 +65,15 @@ class BebobMaudio(BebobUnit):
     )
 
     _aux_output = (
+         9,
         13,
     )
 
     # = _labels['inputs']
     _mixer_sources = (
+        (( 2, (1, 2)), ( 3, (1, 2)),
+         ( 0, (1, 2)), ( 0, (3, 4)), ( 0, (5, 6)), ( 0, (7, 8)),
+         ( 1, (1, 2))),
         (( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8)),
          ( 2, (1, 2)), ( 2, (3, 4)),
          ( 3, (1, 2)),
@@ -59,28 +82,33 @@ class BebobMaudio(BebobUnit):
 
     # = _labels['outputs']
     _mixer_sinks = (
+        (( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8)), ( 1, (9, 10))),
         (( 1, (1, 2)), ( 2, (1, 2))),
     )
 
     # = _labels['outputs']
     _output_sources = (
+        (( 2, (1, 2)), ( 3, (1, 2)), ( 4, (1, 2)), ( 5, (1, 2)), ( 6, (1, 2))),
         (( 3, (1, 2)), ( 4, (1, 2))),
     )
 
     # = _labels['outputs']
     _outputs = (
+        ((10, (1, 2)), (11, (1, 2)), (12, (1, 2)), (13, (1, 2)), (14, (1, 2))),
         ((12, (1, 2)), (13, (1, 2))),
     )
 
     _hp_sources = (
-        (( 1, (1,  2,  4)), ( 2, (1, 2, 4))),
+        (( 7, (2, 3, 4, 5, 6, 7))),
+        (( 1, (1, 2, 4)), ( 2, (1, 2, 4))),
     )
 
     _hp_outs = (
-        ((14, (1, 2)), (15, (1, 2))),
+        ((15, (1, 2)), ),
+        ((15, (1, 2)), (16, (1, 2))),
     )
 
-    _meters = (84, )
+    _meters = (76, 84, )
 
     def __init__(self, path):
         super().__init__(path)
