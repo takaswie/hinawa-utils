@@ -4,6 +4,7 @@ import sys
 
 from bebob.bebob_unit import BebobUnit
 
+from ta1394.general import AvcGeneral
 from ta1394.audio import AvcAudio
 
 import re
@@ -113,7 +114,8 @@ class BebobMaudio(BebobUnit):
     def __init__(self, path):
         super().__init__(path)
         self._id = 0
-
+        info = AvcGeneral.get_unit_info(self.fcp)
+        self._company_ids = info['company-id']
 
     def _refer_fb_data(self, targets, index, ch):
         if index > len(targets):
@@ -196,6 +198,7 @@ class BebobMaudio(BebobUnit):
             raise ValueError('Invalid argument for master channel')
         fb = self._aux_output[self._id]
         AvcAudio.set_feature_volume_state(self.fcp, 0, 'current', fb, ch, value)
+
     def get_aux_master_volume(self, ch):
         if ch > 2:
             raise ValueError('Invalid argument for master channel')
@@ -229,7 +232,6 @@ class BebobMaudio(BebobUnit):
         in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(source, sink)
         return AvcAudio.get_processing_mixer_state(self.fcp, 0, 'current',
                                             out_fb, in_fb, in_ch, out_ch)
-
 
     def get_output_labels(self):
         return self._labels[self._id]['outputs']
