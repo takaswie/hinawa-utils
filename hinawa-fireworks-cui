@@ -4,122 +4,198 @@ import sys
 
 from echoaudio.fireworks import Fireworks
 
-def handle_clock_source(unit, arg):
+def handle_clock_source(unit, args):
     rate, source = unit.get_clock_state()
-    if arg:
-        unit.set_clock_state(rate, arg)
+    if len(args) > 0:
+        source = args[0]
+        unit.set_clock_state(rate, source)
     else:
-        return source
+        print(source)
+    return True
 
-def handle_sampling_rate(unit, arg):
+def handle_sampling_rate(unit, args):
     rate, source = unit.get_clock_state()
-    if arg:
-        unit.set_clock_state(arg, source)
+    if len(args) > 0:
+        rate = int(args)
+        unit.set_clock_state(rate, source)
     else:
-        return rate
+        print(rate)
+    return True
 
-def handle_control_room_mirroring(unit, arg):
-    if arg:
-        unit.set_control_room_mirroring(arg)
+def handle_control_room_mirroring(unit, args):
+    if len(args) > 0:
+        unit.set_control_room_mirroring(args[0])
     else:
-        return unit.get_control_room_mirroring()
+        print(unit.get_control_room_mirroring())
+    return True
 
-def handle_digital_input(unit, arg):
-    if arg:
-        unit.set_digital_input_mode(arg)
+def handle_digital_input(unit, args):
+    if len(args) > 0:
+        unit.set_digital_input_mode(args[0])
     else:
-        return unit.get_digital_input_mode()
+        print(unit.get_digital_input_mode())
+    return True
 
-def handle_phantom_powering(unit, arg):
-    if arg:
-        unit.set_phantom_powering(arg)
+def handle_phantom_powering(unit, args):
+    if len(args) > 0:
+        unit.set_phantom_powering(args[0])
     else:
-        return unit.get_phantom_powering()
+        print(unit.get_phantom_powering())
+    return True
 
-def handle_box_state(unit, name, value):
-    if value:
-        unit.set_box_states(name, value)
-    else:
-        return unit.get_box_states(name)
+def handle_box_state(unit, args):
+    states = unit.get_box_states()
+    if len(args) > 0:
+        name = args[0]
+        if len(args) > 1:
+            value = args[1]
+            unit.set_box_states(name, value)
+        else:
+            print(unit.get_box_states(name))
+        return True
+    print('Arguments for box-state command:')
+    print('  box-state name [value]')
+    print('    name: {0}'.format(', '.join(states)))
+    return False
 
-def handle_room_mirroring(unit, value):
-    if value:
+def handle_room_mirroring(unit, args):
+    if len(args) > 0:
+        value = int(args[0])
         unit.set_control_room_mirroring(value)
     else:
-        return unit.get_control_room_mirroring()
+        print(unit.get_control_room_mirroring())
+    return True
 
-def handle_stream_mapping(unit, direction, mapping):
-    # TODO
-    pass
+def handle_stream_mapping(unit, args):
+    if len(args) > 0:
+        value = int(args[0])
+    else:
+        print(unit.get_stream_mapping())
+    return True
 
-def handle_output(unit, operation, ch, value):
+def handle_output(unit, args):
     ops = {
         'gain':     (unit.set_phys_out_gain, unit.get_phys_out_gain),
         'mute':     (unit.set_phys_out_mute, unit.get_phys_out_mute),
         'nominal':  (unit.set_phys_out_nominal, unit.get_phys_out_nominal)
     }
-    if value:
-        ops[operation][0](int(ch), int(value))
-    else:
-        return ops[operation][1](int(ch))
+    if len(args) > 1:
+        operation = args[0]
+        ch = int(args[1])
+        if len(args) == 3:
+            value = int(args[2])
+            ops[operation][0](ch, value)
+        else:
+            print(ops[operation][1](ch))
+        return True
+    print('Arguments for output command:')
+    print('  output operation ch [value]')
+    print('    operation: {0}'.format(', '.join(ops)))
+    print('    ch: 0-{0}'.format(len(unit.info['phys-outputs']) - 1))
+    print('    value: []')
+    return False
 
-def handle_input(unit, operation, ch, value):
+def handle_input(unit, args):
     ops = {
         'nominal':  (unit.set_phys_in_nominal, unit.get_phys_in_nominal),
     }
-    if value:
-        ops[operation][0](int(ch), int(value))
-    else:
-        return ops[operation][1](int(ch))
+    if len(args) > 1:
+        operation = args[0]
+        ch = int(args[1])
+        if len(args) == 3:
+            value = int(args[2])
+            ops[operation][0](ch, value)
+        else:
+            print(ops[operation][1](ch))
+        return True
+    print('Arguments for input command:')
+    print('  input operation ch [value]')
+    print('    operation: {0}'.format(', '.join(ops)))
+    print('    ch: 0-{0}'.format(len(unit.info['phys-inputs']) - 1))
+    print('    value: []')
+    return False
 
-def handle_playback(unit, operation, ch, value):
+def handle_playback(unit, args):
     ops = {
         'gain': (unit.set_playback_gain, unit.get_playback_gain),
         'mute': (unit.set_playback_mute, unit.get_playback_mute),
         'solo': (unit.set_playback_solo, unit.get_playback_solo)
     }
-    if value:
-       ops[operation][0](int(ch), int(value))
-    else:
-       return ops[operation][1](int(ch))
+    if len(args) > 1:
+        operation = args[0]
+        ch = int(args[1])
+        if len(args) == 3:
+            value = int(args[2])
+            ops[operation][0](ch, value)
+        else:
+            print(ops[operation][1](ch))
+        return True
+    print('Arguments for playback command:')
+    print('  playback operation ch [value]')
+    print('    operation: {0}'.format(', '.join(ops)))
+    print('    ch: 0-{0}'.format(unit.info['playback-channels'] - 1))
+    print('    value: []')
+    return False
 
-def handle_monitor(unit, operation, ch, value):
+def handle_monitor(unit, args):
     ops = {
         'gain':  (unit.set_monitor_gain, unit.get_monitor_gain),
         'mute':  (unit.set_monitor_mute, unit.get_monitor_mute),
         'solo':  (unit.set_monitor_solo, unit.get_monitor_solo),
         'pan':   (unit.set_monitor_pan, unit.get_monitor_pan,)
     }
-    if valie:
-        ops[operation][0](int(ch), int(value))
-    else:
-        ops[operation][1](int(ch))
+    if len(args) > 2:
+        operation = args[0]
+        input = int(args[1])
+        output = int(args[2])
+        if len(args) == 4:
+            value = int(args[3])
+            ops[operation][0](input, output, value)
+        else:
+            print(ops[operation][1](input, output))
+        return True
+    print('Arguments for monitor command:')
+    print('  monitor operation ch [value]')
+    print('    operation: {0}'.format(', '.join(ops)))
+    print('    input:   0-{0}'.format(len(unit.info['phys-inputs']) - 1))
+    print('    output:  0-{0}'.format(len(unit.info['phys-outputs']) - 1))
+    print('    value:   []')
+    return False
+
+def handle_listen_metering(unit, args):
+    import time
+    import signal
+    # This is handled by another context.
+    def handle_unix_signal(signum, frame):
+        sys.exit()
+    signal.signal(signal.SIGINT, handle_unix_signal)
+    while 1:
+        meters = unit.get_metering()
+        for name in sorted(meters):
+            print(name, meters[name])
+        print('')
+        time.sleep(0.1)
+    return True
+
+cmds = {
+    'clock-source':     handle_clock_source,
+    'sampling-rate':    handle_sampling_rate,
+    'control-room':     handle_room_mirroring,
+    'digital-input':    handle_digital_input,
+    'phantom-powering': handle_phantom_powering,
+    'box-state':        handle_box_state,
+    'stream-mapping':   handle_stream_mapping,
+    'output':           handle_output,
+    'input':            handle_input,
+    'playback':         handle_playback,
+    'monitor':          handle_monitor,
+    'listen-metering':  handle_listen_metering,
+}
 
 def dump_commands(unit):
-    pass
-
-def dump_status(unit):
-    pass
-
-
-# name/subcmds
-cmds = (
-    ('clock-source',    (), 1, handle_clock_source),
-    ('sampling-rate',   (), 1, handle_sampling_rate),
-    ('room-mirroring',  (), 1, handle_room_mirroring),
-    ('digital-input',   (), 1, handle_input),
-    ('phantom-powering',(), 1, handle_phantom_powering),
-    ('box-state',   ('spdif-pro', 'spdif-non-audio',
-                         'control-room', 'output-level-bypass',
-                         'metering-mode-in', 'metering-mode-out',
-                         'soft-clip', 'robot-hex-input',
-                         'robot-battery-charge'), 1, handle_box_state),
-    ('stream-mapping',  ('playback', 'capture'), 1, handle_stream_mapping),
-    ('output',      ('gain', 'mute', 'nominal'), 2, handle_output),
-    ('input',       ('nominal',), 2, handle_input),
-    ('playback',    ('gain', 'mute', 'solo'), 2, handle_playback),
-    ('monitor',     ('gain', 'mute', 'solo', 'pan'), 2, handle_monitor),
-)
+    print('Available commands:')
+    for name in cmds.keys():
+        print('  {0}'.format(name))
 
 argv = sys.argv
 
@@ -130,30 +206,13 @@ card = argv[1]
 
 unit = Fireworks(card)
 
-# At least 4 arguments are required.
 if len(argv) < 3:
     dump_commands(unit)
     sys.exit()
 name = str(argv[2])
 
-for cmd in cmds:
-    if cmd[0] != name:
-        continue
-    # Sub command is not required.
-    if len(cmd[1]) == 0:
-        if len(argv) < 5:
-            print(cmd[3](unit, None))
-            sys.exit()
-        else:
-            cmd[3](unit, argv[3])
-            sys.exit()
-    else:
-        if argv[3] in cmd[1]:
-            if len(argv) < 6:
-                print(cmd[3](unit, argv[3], argv[4], None))
-                sys.exit()
-            else:
-                cmd[3](unit, argv[3], argv[4], argv[5])
-                sys.exit()
+if name not in cmds:
+    dump_commands(unit)
+    sys.exit()
 
-dump_commands(unit)
+cmds[name](unit, argv[3:])
