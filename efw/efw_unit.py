@@ -1,13 +1,13 @@
 from gi.repository import Hinawa
-from echoaudio.transactions import EftInfo
-from echoaudio.transactions import EftHwctl
-from echoaudio.transactions import EftPhysOutput
-from echoaudio.transactions import EftPhysInput
-from echoaudio.transactions import EftPlayback
-from echoaudio.transactions import EftMonitor
-from echoaudio.transactions import EftIoconf
+from efw.transactions import EftInfo
+from efw.transactions import EftHwctl
+from efw.transactions import EftPhysOutput
+from efw.transactions import EftPhysInput
+from efw.transactions import EftPlayback
+from efw.transactions import EftMonitor
+from efw.transactions import EftIoconf
 
-class Fireworks(Hinawa.SndEfw):
+class EfwUnit(Hinawa.SndEfw):
     info = {}
 
     def __init__(self, card):
