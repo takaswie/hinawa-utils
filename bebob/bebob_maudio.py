@@ -5,50 +5,102 @@ import sys
 from bebob.bebob_unit import BebobUnit
 
 from ta1394.general import AvcGeneral
+from ta1394.general import AvcConnection
 from ta1394.audio import AvcAudio
 
 import re
+from math import log10
 
 class BebobMaudio(BebobUnit):
+    _ids = {
+        0x00000a: (0, "Ozonic"),
+        0x010062: (1, "Firewire Solo"),
+        0x010060: (2, "Firewire Audiophile"),
+        0x010046: (3, "Firewire 410"),
+        0x010071: (4, "Firewire 1814"),
+        0x010091: (4, "ProjectMix I/O"),
+        # Need information.
+        #   NRV10
+        #   ProFire Lightbridge
+    }
+
     _labels = (
-        {'inputs':  ('Analog 1/2', 'Digital 1/2',
-                     'Stream 1/2', 'Stream 3/4', 'Stream 5/6', 'Stream 7/8',
-                     'Stream 9/10'),
-         'outputs': ('Analog 1/2', 'Analog 3/4', 'Analog 5/6', 'Analog 7/8',
-                     'Digital 1/2'),
-         'mixers':  ('Mixer 1/2', 'Mixer 3/4', 'Mixer 5/6', 'Mixer 7/8',
-                     'Mixer 9/10'),
-         'meters':  ('Analog in 1', 'Analog in 2',
-                     'Digital in 1', 'Digital in 2',
-                     'Analog out 1', 'Analog out 2',
-                     'Analog out 3', 'Analog out 4',
-                     'Analog out 5', 'Analog out 6',
-                     'Analog out 7', 'Analog out 8',
-                     'Digital out 1', 'Digital out 2',
-                     'Headphone out 1', 'Headphone out 2')},
-        {'inputs':  ('Analog 1/2', 'Analog 3/4', 'Analog 5/6', 'Analog 7/8',
-                     'Stream 1/2', 'Stream 3/4',
-                     'ADAT 1/2', 'ADAT 3/4', 'ADAT 5/6', 'ADAT 7/8',
-                     'S/PDIF 1/2'),
-         'outputs': ('Analog 1/2', 'Analog 3/4'),
-         'mixers':  ('Mixer 1/2', 'Mixer 3/4'),
-         'meters':  ('Analog in 1', 'Analog in 2',
-                     'Analog in 3', 'Analog in 4',
-                     'Analog in 5', 'Analog in 6',
-                     'Analog in 7', 'Analog in 8',
+        {'inputs':  ('analog-1/2', 'analog-3/4', 'stream-1/2', 'stream-3/4'),
+         'outputs': ('analog-1/2', 'analog-3/4'),
+         'mixers':  ('mixer-1/2', 'mixer-3/4'),
+         'meters':  ('analog-in-1', 'analog-in-2',
+                     'analog-in-3', 'analog-in-4',
+                     'stream-in-1', 'stream-in-2',
+                     'stream-in-3', 'stream-in-4',
+                     'analog-out-1', 'analog-out-2',
+                     'analog-out-3', 'analog-out-4')},
+        {'inputs':  ('analog-1/2', 'digital-1/2', 'stream-1/2', 'stream-3/4'),
+         'outputs': ('analog-1/2', 'digital-1/2'),
+         'mixers':  ('mixer-1/2', 'mixer-3/4'),
+         'meters':  ('analog-in-1', 'analog-in-2',
+                     'digital-in-1', 'digital-in-2',
+                     'stream-in-1', 'stream-in-2',
+                     'stream-in-3', 'stream-in-4',
+                     'analog-out-1', 'analog-out-2',
+                     'digital-out-1', 'digital-out-2')},
+        {'inputs':  ('analog-1/2', 'digital-1/2',
+                     'stream-1/2', 'stream-3/4', 'stream-5/6'),
+         'outputs': ('analog-1/2', 'analog-3/4', 'digital-1/2'),
+         'mixers':  ('mixer-1/2', 'mixer-3/4', 'mixer-5/6'),
+         'meters':  ('analog-in-1', 'analog-in-2',
+                     'digital-in-1', 'digital-in-2',
+                     'analog-out-1', 'analog-out-2',
+                     'analog-out-3', 'analog-out-4',
+                     'digital-out-1', 'digital-out-2',
+                     'headphone-out-1', 'headphone-out-2',
+                     'aux-out-1', 'aux-out-2')},
+        {'inputs':  ('analog-1/2', 'digital-1/2',
+                     'stream-1/2', 'stream-3/4', 'stream-5/6', 'stream-7/8',
+                     'stream-9/10'),
+         'outputs': ('analog-1/2', 'analog-3/4', 'analog-5/6', 'analog-7/8',
+                     'digital-1/2'),
+         'mixers':  ('mixer-1/2', 'mixer-3/4', 'mixer-5/6', 'mixer-7/8',
+                     'mixer-9/10'),
+         'meters':  ('analog-in-1', 'analog-in-2',
+                     'digital-in-1', 'digital-in-2',
+                     'analog-out-1', 'analog-out-2',
+                     'analog-out-3', 'analog-out-4',
+                     'analog-out-5', 'analog-out-6',
+                     'analog-out-7', 'analog-out-8',
+                     'digital-out-1', 'digital-out-2',
+                     'headphone-out-1', 'headphone-out-2',
+                     'headphone-out-3', 'headphone-out-4')},
+        {'inputs':  ('analog-1/2', 'analog-3/4', 'analog-5/6', 'analog-7/8',
+                     'stream-1/2', 'stream-3/4',
+                     'adat-1/2', 'adat-3/4', 'adat-5/6', 'adat-7/8',
+                     'spdif-1/2'),
+         'outputs': ('analog-1/2', 'analog-3/4'),
+         'mixers':  ('mixer-1/2', 'mixer-3/4'),
+         'meters':  ('analog-in-1', 'analog-in-2',
+                     'analog-in-3', 'analog-in-4',
+                     'analog-in-5', 'analog-in-6',
+                     'analog-in-7', 'analog-in-8',
                      'S/PDIF in 1', 'S/PDIF in 2',
-                     'ADAT in 1', 'ADAT in 2', 'ADAT in 3', 'ADAT in 4',
-                     'Analog out 1', 'Analog out 2',
-                     'Analog out 3', 'Analog out 4',
-                     'S/PDIF out 1', 'S/PDIF out 2',
-                     'ADAT out 1', 'ADAT out 2', 'ADAT out 3', 'ADAT out 4',
+                     'adat-in-1', 'adat-in-2', 'adat-in-3', 'adat-in-4',
+                     'adat-in-5', 'adat-in-6', 'adat-in-7', 'adat-in-8',
+                     'analog-out-1', 'analog-out-2',
+                     'analog-out-3', 'analog-out-4',
+                     'spdif-out-1', 'spdif-out-2',
+                     'adat-out-1', 'adat-out-2', 'adat-out-3', 'adat-out-4',
+                     'adat-out-5', 'adat-out-6', 'adat-out-7', 'adat-out-8',
+                     'headphone-out-1', 'headphone-out-2',
+                     'headphone-out-3', 'headphone-out-4',
+                     'aux-out-1', 'aux-out-2',
                     )},
     )
 
     # = _labels['inputs']
     _inputs = (
+        (( 3, (1, 2)), ( 4, (1, 2)), ( 1, (1, 2)), ( 2, (1, 2))),
+        (( 1, (1, 2)), ( 2, (1, 2)), ( 4, (1, 2)), ( 3, (1, 2))),
+        (( 4, (1, 2)), ( 5, (1, 2)), ( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2))),
         (( 3, (1, 2)), ( 4, (1, 2)),
-         ( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8)), ( 2, (1, 2))),
+         ( 2, (1, 2)), ( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8))),
         (( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2)), ( 4, (1, 2)),
          (10, (1, 2)), (11, (1, 2)),
          ( 5, (1, 2)),
@@ -56,7 +108,10 @@ class BebobMaudio(BebobUnit):
     )
 
     # = _labels['inputs']
-    _aux_sources = (
+    _aux_inputs = (
+        (),
+        (),
+        (( 9, (1, 2)), (10, (1, 2)), ( 6, (1, 2)), ( 7, (1, 2)), ( 8, (1, 2))),
         (( 7, (1, 2)), ( 8, (1, 2)), ( 9, (1, 2)), ( 6, (1, 2)),
          ( 5, (1, 2)), ( 5, (3, 4)), ( 5, (5, 6)), ( 5, (7, 8))),
         ((19, (1, 2)), (20, (1, 2)), (21, (1, 2)), (22, (1, 2)),
@@ -66,15 +121,21 @@ class BebobMaudio(BebobUnit):
     )
 
     _aux_output = (
+        None,
+        None,
+        11,
          9,
         13,
     )
 
     # = _labels['inputs']
     _mixer_sources = (
+        (( 2, (1, 2)), ( 3, (1, 2)), ( 0, (1, 2)), ( 1, (1, 2))),
+        (( 0, (1, 2)), ( 1, (1, 2)), ( 3, (1, 2)), ( 2, (1, 2))),
+        (( 3, (1, 2)), ( 4, (1, 2)), ( 0, (1, 2)), ( 1, (1, 2)), ( 2, (1, 2))),
         (( 2, (1, 2)), ( 3, (1, 2)),
-         ( 0, (1, 2)), ( 0, (3, 4)), ( 0, (5, 6)), ( 0, (7, 8)),
-         ( 1, (1, 2))),
+         ( 1, (1, 2)), ( 0, (1, 2)), ( 0, (3, 4)), ( 0, (5, 6)),
+         ( 0, (7, 8))),
         (( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8)),
          ( 2, (1, 2)), ( 2, (3, 4)),
          ( 3, (1, 2)),
@@ -83,47 +144,74 @@ class BebobMaudio(BebobUnit):
 
     # = _labels['outputs']
     _mixer_sinks = (
+        (( 1, (1, 2)), ( 1, (1, 2))),
+        (( 1, (1, 2)), ( 1, (3, 4))),
+        (( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2)), ( 4, (1, 2))),
         (( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8)), ( 1, (9, 10))),
         (( 1, (1, 2)), ( 2, (1, 2))),
     )
 
     # = _labels['outputs']
     _output_sources = (
-        (( 2, (1, 2)), ( 3, (1, 2)), ( 4, (1, 2)), ( 5, (1, 2)), ( 6, (1, 2))),
-        (( 3, (1, 2)), ( 4, (1, 2))),
+        (),
+        (),
+        ( 1, 2, 3),
+        ( 2, 3, 4, 5, 6),
+        ( 3, 4),
     )
 
     # = _labels['outputs']
     _outputs = (
+        (( 5, (1, 2)), ( 6, (1, 2))),
+        (( 2, (1, 2)), ( 3, (1, 2))),
+        ((12, (1, 2)), (13, (1, 2)), (14, (1, 2))),
         ((10, (1, 2)), (11, (1, 2)), (12, (1, 2)), (13, (1, 2)), (14, (1, 2))),
         ((12, (1, 2)), (13, (1, 2))),
     )
 
     _hp_sources = (
-        (( 7, (2, 3, 4, 5, 6, 7))),
+        (),
+        (),
+        (( 4, (0, 1, 2, 3)), ),
+        (( 7, (2, 3, 4, 5, 6, 7)), ),
         (( 1, (1, 2, 4)), ( 2, (1, 2, 4))),
     )
 
     _hp_outs = (
+        (),
+        (),
+        ((16, (1, 2)), ),
         ((15, (1, 2)), ),
         ((15, (1, 2)), (16, (1, 2))),
     )
 
-    _meters = (76, 84, )
+    _meters = (
+        48 // 4,
+        52 // 4,
+        60 // 4,
+        76 // 4,
+        84 // 4,
+    )
 
     def __init__(self, path):
         super().__init__(path)
-        self._id = 0
-        info = AvcGeneral.get_unit_info(self.fcp)
-        self._company_ids = info['company-id']
+        model_id = -1
+        for quad in self.get_config_rom():
+            if quad >> 24 == 0x17:
+                model_id = quad & 0x00ffffff
+                self._id = self._ids[model_id][0]
+                info = AvcGeneral.get_unit_info(self.fcp)
+                self._company_ids = info['company-id']
+        if model_id < 0:
+            raise OSError('Not supported')
 
     def _refer_fb_data(self, targets, index, ch):
-        if index > len(targets):
+        if index >= len(targets):
             raise ValueError('Invalid argument for function block index')
-        if ch > len(targets[index][1]):
+        if ch >= len(targets[index][1]):
             raise ValueError('Invalid argument for channel number')
         fb = targets[index][0]
-        ch = targets[index][1][0]
+        ch = targets[index][1][ch]
         return (fb, ch)
 
     def _set_mute(self, targets, index, ch, value):
@@ -164,22 +252,24 @@ class BebobMaudio(BebobUnit):
         return self._get_volume(self._inputs[self._id], index, ch)
 
 
-    def get_aux_source_labels(self):
+    def get_aux_input_labels(self):
+        if not self._aux_output[self._id]:
+            return ()
         return self._labels[self._id]['inputs']
 
-    def set_aux_source_mute(self, target, ch, value):
+    def set_aux_input_mute(self, target, ch, value):
         index = self._refer_input_data(target)
-        self._set_mute(self._aux_sources[self._id], index, ch, value)
-    def get_aux_source_mute(self, target, ch):
+        self._set_mute(self._aux_inputs[self._id], index, ch, value)
+    def get_aux_input_mute(self, target, ch):
         index = self._refer_input_data(target)
-        return self._get_mute(self._aux_sources[self._id], index, ch)
+        return self._get_mute(self._aux_inputs[self._id], index, ch)
 
-    def set_aux_source_volume(self, target, ch, value):
+    def set_aux_input_volume(self, target, ch, value):
         index = self._refer_input_data(target)
-        self._set_volume(self._aux_sources[self._id], index, ch, value)
-    def get_aux_source_volume(self, target, ch):
+        self._set_volume(self._aux_inputs[self._id], index, ch, value)
+    def get_aux_input_volume(self, target, ch):
         index = self._refer_input_data(target)
-        return self._get_volume(self._aux_sources[self._id], index, ch)
+        return self._get_volume(self._aux_inputs[self._id], index, ch)
 
 
     def set_aux_master_mute(self, ch, value):
@@ -248,7 +338,7 @@ class BebobMaudio(BebobUnit):
         index = self._refer_out_data(target)
         return self._get_mute(self._outputs[self._id], index, ch)
 
-    def set_output_volume(self, target, ch):
+    def set_output_volume(self, target, ch, value):
         index = self._refer_out_data(target)
         self._set_volume(self._outputs[self._id], index, ch, value)
     def get_output_volume(self, target, ch):
@@ -259,38 +349,38 @@ class BebobMaudio(BebobUnit):
     def get_output_source_labels(self, target):
         index = self._refer_out_data(target)
         labels = []
-        labels.append(self._labels[self._id]['mixers'][index] + ' out')
-        labels.append("Aux 1/2 out")
+        labels.append(self._labels[self._id]['mixers'][index])
+        if self._aux_output[self._id]:
+            labels.append("aux-1/2")
         return labels
 
     def set_output_source(self, target, source):
         index = self._refer_out_data(target)
-        if source in self._labels[self._id]['mixers']:
-            ch = 0
-        elif source.find('Aux'):
-            ch = 1
+        if source in self._labels[self._id]['mixers'][index]:
+            value = 0
+        elif source.find('aux') == 0:
+            value = 1
         else:
             raise ValueError('Invalid argument for output target')
-        fb = self._output_sources[self._id][index][0]
-        value = self._output_sources[self.id][index][1][ch]
+        fb = self._output_sources[self._id][index]
         AvcAudio.set_selector_state(self.fcp, 0, 'current', fb, value)
 
     def get_output_source(self, target):
         index = self._refer_out_data(target)
-        fb = self._output_sources[self._id][index][0]
+        fb = self._output_sources[self._id][index]
         value = AvcAudio.get_selector_state(self.fcp, 0, 'current', fb)
-        if self._output_sources[index][1].index(value) == 0:
-            return self._labels[self._id]['mixers'][index]
-        return 'Aux 1/2 out'
+        if value == 1 and self._aux_output[self._id]:
+            return 'aux-1/2'
+        return self._labels[self._id]['mixers'][index]
 
 
     def get_headphone_labels(self):
         labels = []
         for i in range(len(self._hp_outs[self._id])):
-            labels.append('Headphone {0}/{1}'.format(i * 2 + 1, i * 2 + 2))
+            labels.append('headphone-{0}/{1}'.format(i * 2 + 1, i * 2 + 2))
         return labels
 
-    _hp_expr = re.compile('^Headphone ([0-9]*)/([0-9]*)$')
+    _hp_expr = re.compile('^headphone-([0-9]*)/([0-9]*)$')
 
     def _refer_hp_data(self, target):
         matches = self._hp_expr.match(target)
@@ -317,34 +407,35 @@ class BebobMaudio(BebobUnit):
         return self._get_volume(self._hp_outs[self._id], index, ch)
 
 
-    def get_headphone_source_labels(self, target):
-        index = self._refer_out_data(target)
+    def get_headphone_source_labels(self):
         labels = []
-        for mixer in self._labels[self._id]['mixers']:
-            labels.append(mixer + ' out')
-        labels.append("Aux 1/2 out")
+        if len(self._hp_sources[self._id]) > 0:
+            for mixer in self._labels[self._id]['mixers']:
+                labels.append(mixer)
+            if self._aux_output[self._id]:
+                labels.append("aux-1/2")
         return labels
 
     def set_headphone_source(self, target, source):
-        index = self._refer_out_data(target)
+        index = self._refer_hp_data(target)
         if source in self._labels[self._id]['mixers']:
             ch = self._labels[self._id]['mixers'].index(source)
-        elif source.find('Aux'):
+        elif source.find('aux') == 0:
             ch = len(self._labels[self._id]['mixers'])
         else:
             raise ValueError('Invalid argument for output target')
         fb = self._hp_sources[self._id][index][0]
-        value = self._hp_sources[self.id][index][1][ch]
+        value = self._hp_sources[self._id][index][1][ch]
         AvcAudio.set_selector_state(self.fcp, 0, 'current', fb, value)
 
     def get_headphone_source(self, target):
-        index = self._refer_out_data(target)
+        index = self._refer_hp_data(target)
         fb = self._hp_sources[self._id][index][0]
         value = AvcAudio.get_selector_state(self.fcp, 0, 'current', fb)
-        ch = self._hp_sources[index][1].index(value)
+        ch = self._hp_sources[self._id][index][1][value]
         if ch < len(self._labels[self._id]['mixers']):
             return self._labels[self._id]['mixers'][ch]
-        return 'Aux 1/2 out'
+        return 'aux-1/2'
 
     def get_meter_labels(self):
         return self._labels[self._id]['meters']
@@ -352,9 +443,36 @@ class BebobMaudio(BebobUnit):
     # 0x0000ffff - 0x7fffffff
     # db = 20 * log10(vol / 0x80000000)
     # vol = 0, then db = -144.0
-    #
-    # fw410: 19
-    # audiophile: 15
+    # may differs analog-in and the others.
     def get_meters(self):
-        length = self._meters[self._id]
-        return self.read_transact(0xffc700600000, length)
+        labels = self._labels[self._id]['meters']
+        meters = {}
+        current = self.read_transact(0xffc700600000, self._meters[self._id])
+        if self._id == 4:
+            meters['switch-0'] = (current[0] >> 24) & 0xff
+            meters['switch-1'] = 0
+            meters['rotery-0'] = (current[0] >> 16) & 0xff
+            meters['rotery-1'] = (current[0] >>  8) & 0xff
+            meters['rotery-2'] = (current[0] >>  0) & 0xff
+            for i, name in enumerate(labels):
+                if i % 2 == 0:
+                    meters[name] = current[1 + i // 2] & 0xffff0000
+                else:
+                    meters[name] = (current[1 + i // 2] & 0xffff) << 16
+            meters['rate'] = \
+                        AvcConnection.sampling_rates[(current[-1] >> 8) & 0x0f]
+            meters['sync'] = current[-1] & 0x0f
+        else:
+            for i, name in enumerate(labels):
+                meters[name] = current[i]
+            if len(current) > len(labels):
+                misc = current[len(labels)]
+                meters['switch-0'] = (misc >> 24) & 0x0f
+                meters['switch-1'] = (misc >> 28) & 0x0f
+                meters['rotery-0'] = (misc >> 16) & 0x0f
+                meters['rotery-1'] = (misc >> 20) & 0x0f
+                meters['rotery-2'] = 0
+                meters['rate']     = \
+                                AvcConnection.sampling_rates[(misc >> 8) & 0xff]
+                meters['sync']     = (misc >> 0) & 0x0f
+        return meters
