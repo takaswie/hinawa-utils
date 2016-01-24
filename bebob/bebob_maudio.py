@@ -6,6 +6,7 @@ from bebob.bebob_unit import BebobUnit
 
 from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
+from ta1394.ccm import AvcCcm
 from ta1394.audio import AvcAudio
 
 import re
@@ -192,6 +193,31 @@ class BebobMaudio(BebobUnit):
         76 // 4,
         84 // 4,
     )
+
+    _clocks = (
+        {},
+        {'Internal':    AvcCcm.get_subunit_signal_addr('music', 0, 1),
+         'S/PDIF':      AvcCcm.get_unit_signal_addr('external', 1)},
+        {'Internal':    AvcCcm.get_subunit_signal_addr('music', 0, 1),
+         'S/PDIF':      AvcCcm.get_unit_signal_addr('external', 2)},
+        {'Internal':    AvcCcm.get_subunit_signal_addr('music', 0, 1),
+         'S/PDIF':      AvcCcm.get_unit_signal_addr('external', 2),
+         'ADAT':        AvcCcm.get_unit_signal_addr('external', 3)},
+        {},
+    )
+
+    def get_clock_source_labels(self):
+        return self._clocks[self._id].keys()
+    def set_clock_source(self, src):
+        dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
+        addr = self._clocks[self._id][src]
+        AvcCcm.set_signal_source(self.fcp, addr, dst)
+    def get_clock_source(self):
+        dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
+        curr = AvcCcm.get_signal_source(self.fcp, dst)
+        for name, addr in self._clocks[self._id].items():
+            if AvcCcm.compare_addrs(curr, AvcCcm.parse_signal_addr(addr)):
+                return name
 
     def __init__(self, path):
         super().__init__(path)

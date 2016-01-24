@@ -30,6 +30,19 @@ class AvcCcm():
         return addr
 
     @staticmethod
+    def compare_addrs(a, b):
+        if a['mode'] == b['mode'] == 'unit':
+            if a['data']['type'] == b['data']['type'] and \
+               a['data']['plug'] == b['data']['plug']:
+                return True
+        elif a['mode'] == b['mode'] == 'subunit':
+            if a['data']['type'] == b['data']['type'] and \
+               a['data']['id'] == b['data']['id'] and \
+               a['data']['plug'] == b['data']['plug']:
+                return True
+        return False
+
+    @staticmethod
     def parse_signal_addr(addr):
         info = {}
         data = {}

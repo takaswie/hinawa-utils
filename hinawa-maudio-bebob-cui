@@ -4,6 +4,20 @@ import sys
 
 from bebob.bebob_maudio import BebobMaudio
 
+def handle_clock_source(unit, args):
+    if len(args) == 0:
+        print(unit.get_clock_source())
+        return True
+    elif not unit.get_property('streaming'):
+        source = args[0]
+        if source in unit.get_clock_source_labels():
+            unit.set_clock_source(source)
+            return True
+    print('Arguments for clock-source command:')
+    print('  clock-source <source>')
+    print('    source: {0}'.format(', '.join(unit.get_clock_source_labels())))
+    print('  Packet streaming should be stopped.')
+
 def handle_input(unit, args):
     ops = {
         'volume':   (unit.set_input_volume, unit.get_input_volume),
@@ -217,6 +231,7 @@ def handle_listen_metering(unit, args):
     return True
 
 cmds = {
+    'clock-source':         handle_clock_source,
     'input':                handle_input,
     'aux-input':            handle_aux_input,
     'aux-output':           handle_aux_output,
