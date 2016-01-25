@@ -12,14 +12,12 @@ from ta1394.audio import AvcAudio
 import re
 from math import log10
 
-class BebobMaudio(BebobUnit):
+class MaudioNormal(BebobUnit):
     _ids = {
         0x00000a: (0, "Ozonic"),
         0x010062: (1, "Firewire Solo"),
         0x010060: (2, "Firewire Audiophile"),
         0x010046: (3, "Firewire 410"),
-        0x010071: (4, "Firewire 1814"),
-        0x010091: (4, "ProjectMix I/O"),
         # Need information.
         #   NRV10
         #   ProFire Lightbridge
@@ -71,28 +69,6 @@ class BebobMaudio(BebobUnit):
                      'digital-out-1', 'digital-out-2',
                      'headphone-out-1', 'headphone-out-2',
                      'headphone-out-3', 'headphone-out-4')},
-        {'inputs':  ('analog-1/2', 'analog-3/4', 'analog-5/6', 'analog-7/8',
-                     'stream-1/2', 'stream-3/4',
-                     'adat-1/2', 'adat-3/4', 'adat-5/6', 'adat-7/8',
-                     'spdif-1/2'),
-         'outputs': ('analog-1/2', 'analog-3/4'),
-         'mixers':  ('mixer-1/2', 'mixer-3/4'),
-         'meters':  ('analog-in-1', 'analog-in-2',
-                     'analog-in-3', 'analog-in-4',
-                     'analog-in-5', 'analog-in-6',
-                     'analog-in-7', 'analog-in-8',
-                     'S/PDIF in 1', 'S/PDIF in 2',
-                     'adat-in-1', 'adat-in-2', 'adat-in-3', 'adat-in-4',
-                     'adat-in-5', 'adat-in-6', 'adat-in-7', 'adat-in-8',
-                     'analog-out-1', 'analog-out-2',
-                     'analog-out-3', 'analog-out-4',
-                     'spdif-out-1', 'spdif-out-2',
-                     'adat-out-1', 'adat-out-2', 'adat-out-3', 'adat-out-4',
-                     'adat-out-5', 'adat-out-6', 'adat-out-7', 'adat-out-8',
-                     'headphone-out-1', 'headphone-out-2',
-                     'headphone-out-3', 'headphone-out-4',
-                     'aux-out-1', 'aux-out-2',
-                    )},
     )
 
     # = _labels['inputs']
@@ -102,10 +78,6 @@ class BebobMaudio(BebobUnit):
         (( 4, (1, 2)), ( 5, (1, 2)), ( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2))),
         (( 3, (1, 2)), ( 4, (1, 2)),
          ( 2, (1, 2)), ( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8))),
-        (( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2)), ( 4, (1, 2)),
-         (10, (1, 2)), (11, (1, 2)),
-         ( 5, (1, 2)),
-         ( 6, (1, 2)), ( 7, (1, 2)), ( 8, (1, 2)), ( 9, (1, 2))),
     )
 
     # = _labels['inputs']
@@ -115,10 +87,6 @@ class BebobMaudio(BebobUnit):
         (( 9, (1, 2)), (10, (1, 2)), ( 6, (1, 2)), ( 7, (1, 2)), ( 8, (1, 2))),
         (( 7, (1, 2)), ( 8, (1, 2)), ( 9, (1, 2)), ( 6, (1, 2)),
          ( 5, (1, 2)), ( 5, (3, 4)), ( 5, (5, 6)), ( 5, (7, 8))),
-        ((19, (1, 2)), (20, (1, 2)), (21, (1, 2)), (22, (1, 2)),
-         (17, (1, 2)), (18, (1, 2)),
-         (23, (1, 2)),
-         (24, (1, 2)), (25, (1, 2)), (26, (1, 2)), (27, (1, 2))),
     )
 
     _aux_output = (
@@ -126,7 +94,6 @@ class BebobMaudio(BebobUnit):
         None,
         11,
          9,
-        13,
     )
 
     # = _labels['inputs']
@@ -137,10 +104,6 @@ class BebobMaudio(BebobUnit):
         (( 2, (1, 2)), ( 3, (1, 2)),
          ( 1, (1, 2)), ( 0, (1, 2)), ( 0, (3, 4)), ( 0, (5, 6)),
          ( 0, (7, 8))),
-        (( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8)),
-         ( 2, (1, 2)), ( 2, (3, 4)),
-         ( 3, (1, 2)),
-         ( 4, (1, 2)), ( 4, (3, 4)), ( 4, (5, 6)), ( 4, (7, 8))),
     )
 
     # = _labels['outputs']
@@ -149,7 +112,6 @@ class BebobMaudio(BebobUnit):
         (( 1, (1, 2)), ( 1, (3, 4))),
         (( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2)), ( 4, (1, 2))),
         (( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8)), ( 1, (9, 10))),
-        (( 1, (1, 2)), ( 2, (1, 2))),
     )
 
     # = _labels['outputs']
@@ -158,7 +120,6 @@ class BebobMaudio(BebobUnit):
         (),
         ( 1, 2, 3),
         ( 2, 3, 4, 5, 6),
-        ( 3, 4),
     )
 
     # = _labels['outputs']
@@ -167,7 +128,6 @@ class BebobMaudio(BebobUnit):
         (( 2, (1, 2)), ( 3, (1, 2))),
         ((12, (1, 2)), (13, (1, 2)), (14, (1, 2))),
         ((10, (1, 2)), (11, (1, 2)), (12, (1, 2)), (13, (1, 2)), (14, (1, 2))),
-        ((12, (1, 2)), (13, (1, 2))),
     )
 
     _hp_sources = (
@@ -175,7 +135,6 @@ class BebobMaudio(BebobUnit):
         (),
         (( 4, (0, 1, 2, 3)), ),
         (( 7, (2, 3, 4, 5, 6, 7)), ),
-        (( 1, (1, 2, 4)), ( 2, (1, 2, 4))),
     )
 
     _hp_outs = (
@@ -183,7 +142,6 @@ class BebobMaudio(BebobUnit):
         (),
         ((16, (1, 2)), ),
         ((15, (1, 2)), ),
-        ((15, (1, 2)), (16, (1, 2))),
     )
 
     _meters = (
@@ -191,7 +149,6 @@ class BebobMaudio(BebobUnit):
         52 // 4,
         60 // 4,
         76 // 4,
-        84 // 4,
     )
 
     _clocks = (
@@ -203,7 +160,6 @@ class BebobMaudio(BebobUnit):
         {'Internal':    AvcCcm.get_subunit_signal_addr('music', 0, 1),
          'S/PDIF':      AvcCcm.get_unit_signal_addr('external', 2),
          'ADAT':        AvcCcm.get_unit_signal_addr('external', 3)},
-        {},
     )
 
     def get_clock_source_labels(self):
@@ -474,31 +430,15 @@ class BebobMaudio(BebobUnit):
         labels = self._labels[self._id]['meters']
         meters = {}
         current = self.read_transact(0xffc700600000, self._meters[self._id])
-        if self._id == 4:
-            meters['switch-0'] = (current[0] >> 24) & 0xff
-            meters['switch-1'] = 0
-            meters['rotery-0'] = (current[0] >> 16) & 0xff
-            meters['rotery-1'] = (current[0] >>  8) & 0xff
-            meters['rotery-2'] = (current[0] >>  0) & 0xff
-            for i, name in enumerate(labels):
-                if i % 2 == 0:
-                    meters[name] = current[1 + i // 2] & 0xffff0000
-                else:
-                    meters[name] = (current[1 + i // 2] & 0xffff) << 16
-            meters['rate'] = \
-                        AvcConnection.sampling_rates[(current[-1] >> 8) & 0x0f]
-            meters['sync'] = current[-1] & 0x0f
-        else:
-            for i, name in enumerate(labels):
-                meters[name] = current[i]
-            if len(current) > len(labels):
-                misc = current[len(labels)]
-                meters['switch-0'] = (misc >> 24) & 0x0f
-                meters['switch-1'] = (misc >> 28) & 0x0f
-                meters['rotery-0'] = (misc >> 16) & 0x0f
-                meters['rotery-1'] = (misc >> 20) & 0x0f
-                meters['rotery-2'] = 0
-                meters['rate']     = \
-                                AvcConnection.sampling_rates[(misc >> 8) & 0xff]
-                meters['sync']     = (misc >> 0) & 0x0f
+        for i, name in enumerate(labels):
+            meters[name] = current[i]
+        if len(current) > len(labels):
+            misc = current[len(labels)]
+            meters['switch-0'] = (misc >> 24) & 0x0f
+            meters['switch-1'] = (misc >> 28) & 0x0f
+            meters['rotery-0'] = (misc >> 16) & 0x0f
+            meters['rotery-1'] = (misc >> 20) & 0x0f
+            meters['rotery-2'] = 0
+            meters['rate']     = AvcConnection.sampling_rates[(misc >> 8) & 0xff]
+            meters['sync']     = (misc >> 0) & 0x0f
         return meters

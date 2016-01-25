@@ -2,7 +2,7 @@
 
 import sys
 
-from bebob.bebob_maudio import BebobMaudio
+from bebob.maudio_normal import MaudioNormal
 
 def handle_clock_source(unit, args):
     if len(args) == 0:
@@ -254,7 +254,7 @@ if len(argv) < 2:
     sys.exit()
 card = argv[1]
 
-unit = BebobMaudio('/dev/snd/hwC{0}D0'.format(card))
+unit = MaudioNormal('/dev/snd/hwC{0}D0'.format(card))
 if len(argv) < 3:
     dump_commands(unit)
     sys.exit()
