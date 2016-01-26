@@ -46,13 +46,14 @@ def handle_current_status(unit, args):
         for j, name in enumerate(params['formation']):
             print('      {0}:         {1}'.format(j, name))
     sync_info = unit.get_sync_info()
-    print('Synchronization infomation:')
-    print('  clock-source:  {0}'.format(sync_info['clock-source']))
-    print('  locked:        {0}'.format(sync_info['locked']))
-    print('  sampling-rate: {0}'.format(sync_info['sampling-rate']))
-    print('    ADAT:')
-    print('      data-bits: {0}'.format(sync_info['adat']['data-bits']))
-    print('      no-data:   {0}'.format(sync_info['adat']['no-data']))
+    if len(sync_info) > 0:
+        print('Synchronization infomation:')
+        print('  clock-source:  {0}'.format(sync_info['clock-source']))
+        print('  locked:        {0}'.format(sync_info['locked']))
+        print('  sampling-rate: {0}'.format(sync_info['sampling-rate']))
+        print('    ADAT:')
+        print('      data-bits: {0}'.format(sync_info['adat']['data-bits']))
+        print('      no-data:   {0}'.format(sync_info['adat']['no-data']))
 
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')

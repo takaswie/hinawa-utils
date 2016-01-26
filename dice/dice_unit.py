@@ -250,6 +250,8 @@ class DiceUnit(Hinawa.SndDice):
 
     def get_sync_info(self):
         info = {}
+        if self._addrs['extended']['size'] == 0:
+            return info
         data = self.read_extended(0, self._addrs['extended']['size'])
         index = data[0] & 0xff
         if index >= len(self._clock_sources):
