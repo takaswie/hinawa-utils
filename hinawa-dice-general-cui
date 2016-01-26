@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+from dice.dice_unit import DiceUnit
+
+#unit = DiceUnit('/dev/snd/hwC1D0')
+unit = DiceUnit('/dev/snd/hwC1D0')
+
+unit.read_notification()
+unit.set_sampling_rate(32000)
