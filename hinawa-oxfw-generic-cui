@@ -36,7 +36,7 @@ def dump_commands(unit):
 argv = sys.argv
 
 if len(argv) < 2:
-    print(' hinawa-generic-oxfw-cui CARD COMMAND [SUBCOMMAND [ARGUMENTS]]')
+    print(' hinawa-oxfw-generic-cui CARD COMMAND [SUBCOMMAND [ARGUMENTS]]')
     print('  CARD: the number as ALSA sound card, see /proc/asound/cards.')
     print('  COMMAND:')
     print('    status: output unit status')

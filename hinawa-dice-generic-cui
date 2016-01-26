@@ -121,7 +121,7 @@ def dump_commands():
 # Main routine
 argv = sys.argv
 if len(argv) < 2:
-    print('hinawa-generic-dice-cui CARD COMMAND [ARGS]')
+    print('hinawa-dice-generic-cui CARD COMMAND [ARGS]')
     print('  CARD: ALSA sound card number')
     print('  COMMAND: {0}'.format(', '.join(cmds)))
     print('  ARGS: depending on COMMAND')
