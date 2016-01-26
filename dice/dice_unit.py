@@ -1,8 +1,12 @@
 import re
+import array
 
 from gi.repository import Hinawa
 
 class DiceUnit(Hinawa.SndDice):
+    supported_sampling_rates = []
+    supported_clock_sources = []
+
     # For private use.
     _addrs = {}
 
@@ -13,6 +17,18 @@ class DiceUnit(Hinawa.SndDice):
             raise ValueError('The character device is not for Dice unit')
         self.listen()
         self._parse_address_space()
+        self._parse_clock_caps()
+
+    # This should not be imported.
+    def _get_array(self):
+        # The width with 'L' parameter is depending on environment.
+        arr = array('L')
+        if arr.itemsize is not 4:
+            arr = array('I')
+            if arr.itemsize is not 4:
+                raise RuntimeError('Platform has no representation \
+                                    equivalent to quadlet.')
+        return arr
 
     def _parse_address_space(self):
         min_sizes = (
@@ -41,31 +57,69 @@ class DiceUnit(Hinawa.SndDice):
         addr = self._addrs['global']['addr'] + offset
         return self.read_transact(addr, quads)
 
-    def read_notification(self):
-        data = self._read_global(0x08, 1)
-        print('{0:08x}'.format(data[0]))
-
     _sampling_rates = (32000, 44100, 48000, 88200, 96000, 176400, 192000)
+    _clock_sources = ('aes1', 'aes2', 'aes3', 'aes4', 'aes-any',
+                      'adat', 'tdif', 'word-clock',
+                      'arx1', 'arx2', 'arx3', 'arx4', 'internal')
+    def _parse_clock_caps(self):
+        data = self._read_global(0x64, 1)
+        for i, rate in enumerate(self._sampling_rates):
+            if data & (1 << i):
+                self.supported_sampling_rates.append(rate)
+        for i, src in enumerate(self._clock_sources):
+            if data & (1 << (i + 16)):
+                self.supported_clock_sources.append(src)
+
+    def read_latest_notification(self):
+        return self._read_global(0x08, 1)
+
+    def set_clock_source(self, source):
+        if source not in self.supported_clock_sources:
+            raise ValueError('Invalid argument for clock source.')
+        data = self._read_global(0x4c, 1)
+        if data[0] & 0x000000ff != self._clock_sources.index(source):
+            data[0] = (data[0] & 0xffffff00) | (self._clock-source.index(source))
+            addr = self._addrs['global']['addr'] + 0x4c
+            self.transact(addr, data, 0x00000020)
+    def get_clock_source(self):
+        data = self._read_global(0x4c, 1)
+        index = data[0] & 0x000000ff
+        if index >= len(self._clock_sources):
+            raise OSError('Unexpected return value for clock source.')
+        return self._clock_sources[index]
 
     def set_sampling_rate(self, rate):
-        if rate not in self._sampling_rates:
-            raise ValueError('Invalid argument for sampling rate')
-        reg = self._read_global(0x4c, 1)
-        print('{0:08x}'.format(reg[0]))
-        reg[0] = (reg[0] & 0xffff00ff) | (self._sampling_rates.index(rate) << 8)
-        print('{0:08x}'.format(reg[0]))
-        addr = self._addrs['global']['addr'] + 0x4c
-        try:
-            self.transact(addr, reg, 0xffffffff)
-        except:
-            reg = self._read_global(0x4c, 1)
-            print('{0:08x}'.format(reg[0]))
+        if rate not in self.supported_sampling_rates:
+            raise ValueError('Invalid argument for sampling rate.')
+        data = self._read_global(0x4c, 1)
+        if ((data[0] & 0x0000ff00) >> 8) != self._sampling_rates.index(rate):
+            data[0] = (data[0] & 0xffff00ff) | \
+                                        (self._sampling_rates.index(rate) << 8)
+            addr = self._addrs['global']['addr'] + 0x4c
+            self.transact(addr, data, 0x00000020)
     def get_sampling_rate(self):
-        return
+        data = self._read_global(0x4c, 1)
+        index = (data[0] & 0x0000ff00) >> 8
+        if index >= len(self._sampling_rates):
+            raise OSError('Unexpected return value for sampling rate.')
+        return self._sampling_rates[index]
 
-    def set_nickname(self):
-        return
-
+    def set_nickname(self, name):
+        byte_literal = name.encode('utf-8')
+        if len(byte_literal) > 63:
+            raise ValueError('The length of name should be within 63 bytes.')
+        data = self._get_array()
+        for i in range(64 // 4):
+            data.append(0x00000000)
+        for i, b in enumerate(len(byte_literal)):
+            data[i // 4] = data[i // 4] | (b << (3 - i % 4))
+        self._write_global(0x0c, data)
     def get_nickname(self):
-        return
-
+        data = self._read_global(0x0c, 64 // 4)
+        byte_literal = bytearray()
+        for i, quad in enumerate(data):
+            byte_literal.append((data >> 24) & 0xff)
+            byte_literal.append((data >> 16) & 0xff)
+            byte_literal.append((data >>  8) & 0xff)
+            byte_literal.append((data >>  0) & 0xff)
+        return byte_literal.decode('utf-8')
