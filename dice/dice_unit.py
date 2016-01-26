@@ -142,7 +142,7 @@ class DiceUnit(Hinawa.SndDice):
                 self.supported_clock_sources.append(src)
 
     def get_latest_notification(self):
-        return self.read_global(0x08, 1)
+        return self.read_global(0x08, 1)[0]
 
     def set_clock_source(self, source):
         if source not in self.supported_clock_sources:
@@ -223,8 +223,8 @@ class DiceUnit(Hinawa.SndDice):
                       'midi':         data[2],
                       'speed':        data[3],
                       'formation':    self._parse_stream_names(data[4:-3]),
-                      'iec60958':     {'capabilities':  data[-2],
-                                       'enable':        data[-1]}}
+                      'iec60958':     {'caps':      data[-2],
+                                       'enable':    data[-1]}}
             offset = size
             params.append(stream)
         return params
@@ -243,8 +243,8 @@ class DiceUnit(Hinawa.SndDice):
                       'pcm':         data[2],
                       'midi':        data[3],
                       'formation':   self._parse_stream_names(data[4:-3]),
-                      'iec60958':    {'capabilities':   data[-2],
-                                      'enable':         data[-1]}}
+                      'iec60958':    {'caps':       data[-2],
+                                      'enable':     data[-1]}}
             params.append(stream)
         return params
 

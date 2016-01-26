@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+
+import sys
+
+from dice.dice_unit import DiceUnit
+
+def handle_current_status(unit, args):
+    print('owner address: {0:016x}'.format(unit.read_owner_addr()))
+    print('global enabled: {0}'.format(unit.read_enabled()))
+    print('clock status:')
+    for name, value in unit.read_clock_status().items():
+        print('  {0}: {1}'.format(name, value))
+    print('clock source detection:')
+    for name, value in unit.read_clock_detection().items():
+        print('  {0}: {1}'.format(name, ', '.join(value)))
+    print('measured rate: {0}'.format(unit.read_measured_rate()))
+    print('dice version: {0}'.format(unit.read_dice_version()))
+    print('latest notification: 0x{0:08x}'.format(unit.get_latest_notification()))
+    print('clock source: {0}'.format(unit.get_clock_source()))
+    print('sampling rate: {0}'.format(unit.get_sampling_rate()))
+    print('nickname: {0}'.format(unit.get_nickname()))
+    print('Transmitted streams:')
+    for i, params in enumerate(unit.get_tx_params()):
+        print('  Stream {0}:'.format(i))
+        print('    iso-channel: {0}'.format(params['iso-channel']))
+        print('    speed:       {0}'.format(params['speed']))
+        print('    pcm:         {0}'.format(params['pcm']))
+        print('    midi:        {0}'.format(params['midi']))
+        print('    iec60958:')
+        print('      caps:      {0}'.format(params['iec60958']['caps']))
+        print('      enable:    {0}'.format(params['iec60958']['enable']))
+        print('    formation:')
+        for j, name in enumerate(params['formation']):
+            print('      {0}:         {1}'.format(j, name))
+    print('Received streams:')
+    for i, params in enumerate(unit.get_rx_params()):
+        print('  Stream {0}:'.format(i))
+        print('    iso-channel: {0}'.format(params['iso-channel']))
+        print('    start:       {0}'.format(params['start']))
+        print('    pcm:         {0}'.format(params['pcm']))
+        print('    midi:        {0}'.format(params['midi']))
+        print('    iec60958:')
+        print('      caps:      {0}'.format(params['iec60958']['caps']))
+        print('      enable:    {0}'.format(params['iec60958']['enable']))
+        print('    formation:')
+        for j, name in enumerate(params['formation']):
+            print('      {0}:         {1}'.format(j, name))
+    sync_info = unit.get_sync_info()
+    print('Synchronization infomation:')
+    print('  clock-source:  {0}'.format(sync_info['clock-source']))
+    print('  locked:        {0}'.format(sync_info['locked']))
+    print('  sampling-rate: {0}'.format(sync_info['sampling-rate']))
+    print('    ADAT:')
+    print('      data-bits: {0}'.format(sync_info['adat']['data-bits']))
+    print('      no-data:   {0}'.format(sync_info['adat']['no-data']))
+
+def handle_sampling_rate(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            if unit.get_property('streaming'):
+                print('Packet streaming started.')
+                sys.exit()
+            rate = int(args[1])
+            unit.set_sampling_rate(rate)
+        else:
+            print(unit.get_sampling_rate())
+        return True
+    print('Arguments for sampling-rate command:')
+    print('  sampling-rate OPERATION [RATE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    rates = ', '.join(str(r) for r in unit.supported_sampling_rates)
+    print('    RATE:      {0}'.format(rates))
+    return False
+
+def handle_clock_source(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            if unit.get_property('streaming'):
+                print('Packet streaming started.')
+                sys.exit()
+            source = args[1]
+            unit.set_clock_source(source)
+        else:
+            print(unit.get_clock_source())
+        return True
+    print('Arguments for clock-source command:')
+    print('  clock-source OPERATION [SOURCE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    SOURCE:    {0}'.format(', '.join(unit.supported_clock_sources)))
+
+def handle_nickname(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            name = args[1]
+            unit.set_nickname(name)
+        else:
+            print(unit.get_nickname())
+        return True
+    print('Arguments for nickname command:')
+    print('  nickname OPERATION [SOURCE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+
+cmds = {
+    'current-status':   handle_current_status,
+    'sampling-rate':    handle_sampling_rate,
+    'clock-source':     handle_clock_source,
+    'nickname':         handle_nickname,
+}
+
+def dump_commands():
+    print('Available commands:')
+    for name in cmds.keys():
+        print('  {0}'.format(name))
+
+# Main routine
+argv = sys.argv
+if len(argv) < 2:
+    print('hinawa-generic-dice-cui CARD COMMAND [ARGS]')
+    print('  CARD: ALSA sound card number')
+    print('  COMMAND: {0}'.format(', '.join(cmds)))
+    print('  ARGS: depending on COMMAND')
+    sys.exit()
+card = argv[1]
+
+unit = DiceUnit('/dev/snd/hwC{0}D0'.format(card))
+if len(argv) < 3:
+    dump_commands()
+    sys.exit()
+cmd = argv[2]
+
+if cmd in cmds:
+    cmds[cmd](unit, argv[3:])
+else:
+    dump_commands()
+
+sys.exit()
