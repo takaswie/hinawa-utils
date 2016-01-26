@@ -11,16 +11,26 @@ from bebob.extensions import BcoPlugInfo
 from bebob.extensions import BcoStreamFormatInfo
 
 class YamahaGo(BebobUnit):
+    channel_modes = ('volume', 'mute')
     supported_clock_sources = ('Internal', 'S/PDIF')
+    supported_sampling_rates = (32000, 44100, 48000, 88200, 96000, 192000)
     supported_mixer_inputs = (
         'analog-in-1/2', 'analog-in-3/4', 'digital-in-1/2',
         'stream-in-1/2', 'stream-in-3/4', 'stream-in-5/6')
     supported_outputs = ('analog-out-1/2', 'analog-out-3/4', 'digital-out-1/2')
-    supported_output_sources = (
-        'stream-in-1/2', 'stream-in-3/4', 'analog-in-1/2', 'digital-in-1/2',
-        'mixer-out-1/2', 'stream-in-5/6')
-    channel_modes = ('gain', 'mute')
-    supported_sampling_rates = (32000, 44100, 48000, 88200, 96000, 192000)
+
+    _mixer_inputs = (
+        {'Analog-1/2':  6, 'Digital-1/2': 7,
+         'Stream-1/2':  3, 'Stream-3/4':  4, 'Stream-5/6': 5},
+        {'Analog-1/2':  6, 'Digital-1/2': 7,
+         'Stream-1/2':  3, 'Stream-3/4':  4, 'Stream-5/6': 5},
+    )
+    _mixer_output = (1, 2)
+
+    _outputs = (
+        {},
+        {'Analog-1/2': 1, 'Analog-3/4': 8}
+    )
 
     def __init__(self, path):
         super().__init__(path)
@@ -36,7 +46,7 @@ class YamahaGo(BebobUnit):
         return fmts
 
     def _set_state(self, mode, fb, ch, value):
-        if mode == 'gain':
+        if mode == 'volume':
             AvcAudio.set_feature_volume_state(self.fcp, 0, 'current',
                                               fb, ch, value)
         elif mode == 'mute':
@@ -45,9 +55,8 @@ class YamahaGo(BebobUnit):
                                             fb, ch, value)
         else:
             raise ValueError('Invalid argument for channel mode')
-
     def _get_state(self, mode, fb, ch):
-        if mode == 'gain':
+        if mode == 'volume':
             return AvcAudio.get_feature_volume_state(self.fcp, 0, 'current',
                                                      fb, ch)
         elif mode == 'mute':
@@ -56,7 +65,9 @@ class YamahaGo(BebobUnit):
         else:
             raise ValueError('Invalid argument for channel mode')
 
-    def set_analog_output(self, pair, left, mode, val):
+    def get_output_labels(self):
+        return self.supported_outputs
+    def set_output(self, mode, pair, left, val):
         if self.supported_outputs.count(pair) == 0:
             raise ValueError('Invalid argument for channel name')
         if not re.match('^analog', pair):
@@ -65,7 +76,7 @@ class YamahaGo(BebobUnit):
             raise ValueError('Invalid argument for stereo position')
         ch = self.supported_outputs.index(pair) * 2 + left + 1
         self._set_state(mode, 1, ch, val)
-    def get_analog_output(self, pair, left, mode):
+    def get_output(self, mode, pair, left):
         if self.supported_outputs.count(pair) == 0:
             raise ValueError('Invalid argument for channel name')
         if not re.match('^analog', pair):
@@ -94,21 +105,23 @@ class YamahaGo(BebobUnit):
             ch = left + 1
         return (fb, ch)
 
-    def set_mixer_input(self, pair, left, mode, val):
+    def get_mixer_input_labels(self):
+        return self.supported_mixer_inputs
+    def set_mixer_input(self, mode, pair, left, val):
         fb,ch = self._calculate_fb_params(pair, left)
         self._set_state(mode, fb, ch, val)
-    def get_mixer_input(self, pair, left, mode):
+    def get_mixer_input(self, mode, pair, left):
         fb, ch = self._calculate_fb_params(pair, left)
         return self._get_state(mode, fb, ch)
 
-    def set_mixer_output(self, left, mode):
+    def set_mixer_output(self, mode, left, value):
         if mode not in self.channel_modes:
             raise ValueError('Invalid argument for channel mode')
         if left > 1:
             raise ValueError('Invalid argument for stereo position')
         ch = left + 1
-        self._set_state(mode, 2, ch, val)
-    def get_mixer_output(self, left, mode):
+        self._set_state(mode, 2, ch, value)
+    def get_mixer_output(self, mode, left):
         if mode not in self.channel_modes:
             raise ValueError('Invalid argument for channel mode')
         if left > 1:
@@ -116,36 +129,46 @@ class YamahaGo(BebobUnit):
         ch = left + 1
         return self._get_state(mode, 2, ch)
 
-    def set_output_routing(self, source, output):
-        if self.supported_output_sources.count(source) == 0:
+    _output_sources = {
+        'Analog-1/2': 2, 'Digital-1/2': 3, 'Mixer-1/2':  4,
+        'Stream-1/2': 0, 'Stream-3/4':  1, 'Stream-5/6': 5}
+    _output_sinks = {
+    }
+    def get_output_source_labels(self):
+        return self._output_sources
+    def set_output_source(self, output, source):
+        if self._output_sources.count(source) == 0:
             raise ValueError('Invalid argument for output source pair')
         if self.supported_outputs.count(output) == 0:
             raise ValueError('Invalid argument for output channel pair')
         fb = self.supported_outputs.index(output) + 1
-        src = self.supported_output_sources.index(source)
+        src = self._output_sources.index(source)
         AvcAudio.set_selector_state(self.fcp, 0, 'current', fb, src)
-    def get_output_routing(self, output):
+    def get_output_source(self, output):
         if self.supported_outputs.count(output) == 0:
             raise ValueError('Invalid argument for output channel pair')
         num = self.supported_outputs.index(output) + 1
         idx = AvcAudio.get_selector_state(self.fcp, 0, 'current', num)
-        return self.supported_output_sources[idx]
+        return self._output_sources[idx]
 
     def check_digital_input_signal(self):
         # External input plug 1 is for S/PDIF in.
         return BcoVendorDependent.get_stream_detection(self.fcp,
                                                 self.company_ids, 'input', 1)
 
+    def get_clock_source_labels(self):
+        return self.supported_clock_sources
     def set_clock_source(self, source):
         if self.supported_clock_sources.count(source) == 0:
             raise ValueError('Invalid argument for clock source')
         val = self.supported_clock_sources.index(source)
         AvcAudio.set_selector_state(self.fcp, 0, 'current', 4, val)
-
     def get_clock_source(self):
         state = AvcAudio.get_selector_state(self.fcp, 0, 'current', 4)
         return self.supported_clock_sources[state]
 
+    def get_sampling_rate_labels(self):
+        return self.supported_sampling_rates
     def set_sampling_rate(self, rate):
         AvcConnection.set_plug_signal_format(self.fcp, 'input', rate)
         AvcConnection.set_plug_signal_format(self.fcp, 'output', rate)

@@ -79,77 +79,140 @@ def dump_firmware_info(unit):
         else:
             print('  {0}: {1}'.format(category, values))
 
+def handle_output(unit, args):
+    ops = ('volume', 'mute')
+    if len(args) > 2 and args[0] in ops:
+        op = args[0]
+        pair = args[1]
+        ch = int(args[2])
+        if op == ops[0] and len(args) == 4:
+            value = int(args[3])
+            unit.set_output(op, pair, ch, value)
+        else:
+            print(unit.get_output(op, pair, ch))
+        return True
+    print('Arguments for output command:')
+    print('  output OP PAIR CH [VALUE]')
+    print('    OP:    {0}'.format(', '.join(ops)))
+    print('    PAIR:  {0}'.format(', '.join(unit.get_output_labels())))
+    print('    CH:    {0}'.format(0))
+    print('    VALUE: {0}'.format(0))
+    return False
+
+def handle_output_source(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 1 and args[0] in ops:
+        dst = args[1]
+        if args[0] == ops[0] and len(args) == 3:
+            src = args[2]
+            unit.set_output_source(dst, src)
+        else:
+            print(unit.get_output_source(dst))
+        return True
+    print('Arguments for output-source command:')
+    print('  output-source OP OUTPUT [SOURCE]')
+    print('    OP:    {0}'.format(', '.join(ops)))
+    print('    OUTPUT:  {0}'.format(', '.join(unit.get_output_labels())))
+    print('    SOURCE:  {0}'.format(', '.join(unit.get_output_source_labels())))
+    return False
+
+def handle_mixer_input(unit, args):
+    ops = ('volume', 'mute')
+    if len(args) > 2 and args[0] in ops:
+        op = args[0]
+        input = args[1]
+        ch = int(args[2])
+        if op == ops[0] and len(args) == 4:
+            value = int(args[3])
+            unit.set_mixer_input(op, input, ch, value)
+        else:
+            print(unit.get_mixer_input(op, input, ch))
+        return True
+    print('Arguments for mixer-input command:')
+    print('  mixer-input OP INPUT CH [VALUE]')
+    print('    OP:    {0}'.format(', '.join(ops)))
+    print('    INPUT: {0}'.format(', '.join(unit.get_mixer_input_labels())))
+    print('    CH:    {0}'.format(0))
+    print('    VALUE: {0}'.format(0))
+    return False
+
+def handle_mixer_output(unit, args):
+    ops = ('volume', 'mute')
+    if len(args) > 1 and args[0] in ops:
+        op = args[0]
+        ch = int(args[1])
+        if op == ops[0] and len(args) == 3:
+            value = int(args[2])
+            unit.set_mixer_output(op, ch, value)
+        else:
+            print(unit.get_mixer_output(op, ch))
+        return True
+    print('Arguments for mixer-output command:')
+    print('  mixer-output OP CH [VALUE]')
+    print('    OP:    {0}'.format(', '.join(ops)))
+    print('    CH:    {0}'.format(0))
+    print('    VALUE: {0}'.format(0))
+    return False
+
+def handle_sampling_rate(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        if args[0] == ops[0] and len(args) == 2:
+            rate = int(args[1])
+            unit.set_sampling_rate(rate)
+        else:
+            print(unit.get_sampling_rate())
+        return True
+    print('Arguments for sampling-rate command:')
+    print('  sampling-rate OP [RATE]')
+    print('    OP:   {0}'.format(', '.join(ops)))
+    print('    RATE: {0}'.format(', '.join(
+                                    map(str, unit.get_sampling_rate_labels()))))
+    return False
+
+def handle_clock_source(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        if args[0] == ops[0] and len(args) == 2:
+            source = args[1]
+            unit.set_clock_source(source)
+        else:
+            print(unit.get_clock_source())
+        return True
+    print('Arguments for clock-source command:')
+    print('  clock-source OP [SOURCE]')
+    print('    OP:     {0}'.format(', '.join(ops)))
+    print('    SOURCE: {0}'.format(', '.join(unit.get_clock_source_labels())))
+    return False
+
+cmds = {
+    'output':           handle_output,
+    'output-source':    handle_output_source,
+    'mixer-input':      handle_mixer_input,
+    'mixer-output':     handle_mixer_output,
+    'sampling-rate':    handle_sampling_rate,
+    'clock-source':     handle_clock_source,
+}
+
+def dump_commands():
+    print('Available commands:')
+    for name in cmds.keys():
+        print('  {0}'.format(name))
+
 # Main routine
 argv = sys.argv
-
 if len(argv) < 2:
-    print(' hinawa-yamaha-go-cui CARD COMMAND [SUBCOMMAND [ARGUMENTS]]')
-    print('  CARD: the number as ALSA sound card, see /proc/asound/cards.')
-    print('  COMMAND:')
-    print('    status: output unit status')
-    print('    commands: output available sub-commands and arguments')
+    print('help')
     sys.exit()
-
 card = argv[1]
-unit = YamahaGo('/dev/snd/hwC{0}D0'.format(card))
 
+unit = YamahaGo('/dev/snd/hwC{0}D0'.format(card))
 if len(argv) < 3:
-    dump_commands(unit)
+    dump_commands()
     sys.exit()
 cmd = argv[2]
 
-if cmd == 'status':
-    dump_status(unit)
-elif cmd == 'commands':
-    dump_commands(unit)
-elif cmd == 'output' and len(argv) > 5:
-    pair = argv[3]
-    ch = int(argv[4])
-    op = argv[5]
-    if len(argv) < 7:
-        print(unit.get_analog_output(pair, ch, op))
-    else:
-        val = int(argv[6])
-        unit.set_analog_output(pair, ch, op, val)
-elif cmd == 'output-routing' and len(argv) > 3:
-    dst = argv[3]
-    if len(argv) < 5:
-        print(dst, unit.get_output_routing(dst))
-    else:
-        src = argv[4]
-        unit.set_output_routing(src, dst)
-elif cmd == 'mixer-input' and len(argv) > 5:
-    input = argv[3]
-    ch = int(argv[4])
-    op = argv[5]
-    if len(argv) < 7:
-        print(unit.get_mixer_input(input, ch, op))
-    else:
-        val = int(argv[6])
-        unit.set_mixer_input(input, ch, op, val)
-elif cmd == 'mixer-output' and len(argv) > 4:
-    ch = int(argv[3])
-    op = argv[4]
-    if len(argv) < 6:
-        print(unit.get_mixer_output(ch, op))
-    else:
-        val = int(argv[5])
-        unit.set_mixer_output(ch, op, val)
-elif cmd == 'sampling-rate':
-    if len(argv) < 4:
-        print(unit.get_sampling_rate())
-    else:
-        unit.set_sampling_rate(argv[3])
-elif cmd == 'clock-source':
-    if len(argv) < 4:
-        print(unit.get_clock_source())
-    else:
-        src = argv[3]
-        if src == 'S/PDIF' and not unit.check_digital_input_signal():
-            print('S/PDIF signal is not detected.')
-        else:
-            unit.set_clock_source(argv[3])
+if cmd in cmds:
+    cmds[cmd](unit, argv[3:])
 else:
-    dump_commands(unit)
-
-sys.exit()
+    dump_commands()
