@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+
+import sys
+
+from dg00x.dg00x_unit import Dg00xUnit
+
+def handle_clock_source(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            if unit.get_property('streaming'):
+                print('Packet streaming started.')
+                return False
+            source = args[1]
+            unit.set_clock_source(source)
+        else:
+            print(unit.get_clock_source())
+        return True
+    print('Arguments for clock-source command:')
+    print('  clock-source OPERATION [SOURCE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    SOURCE:    {0}'.format(', '.join(unit.supported_clock_sources)))
+    return False
+
+def handle_sampling_rate(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            if unit.get_property('streaming'):
+                print('Packet streaming started.')
+                return False
+            rate = int(args[1])
+            unit.set_sampling_rate(rate)
+        else:
+            print(unit.get_sampling_rate())
+        return True
+    print('Arguments for sampling-rate command:')
+    print('  sampling-rate OPERATION [RATE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    rates = [str(r) for r in unit.supported_sampling_rates]
+    print('    RATE:      {0}'.format(', '.join(rates)))
+    return False
+
+def handle_mixer_mode(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            mode = int(args[1])
+            unit.set_mixer_mode(mode)
+        else:
+            print(unit.get_mixer_mode())
+        return True
+    print('Arguments for mixer-mode command:')
+    print('  sampling-rate OPERATION [MODE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    MODE:      0, 1')
+    return False
+
+def handle_opt_iface(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            if unit.get_property('streaming'):
+                print('Packet streaming started.')
+                return False
+            mode = args[1]
+            unit.set_opt_iface(mode)
+        else:
+            print(unit.get_opt_iface())
+        return True
+    print('Arguments for optical-interface command:')
+    print('  optical-interface OPERATION [MODE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    MODE:      {0}'.format(', '.join(
+                                            unit.supported_optical_interfaces)))
+    return False
+
+def handle_listen_message(self, args):
+    from gi.repository import GLib
+    import signal
+    # This is handled by another context.
+    def handle_unix_signal(loop):
+        loop.quit()
+    def handle_message(unit, message):
+        print('{0:08x}'.format(message))
+    def handle_disconnect(unit, loop):
+        loop.quit()
+    self.connect('message', handle_message)
+    loop = GLib.MainLoop()
+    GLib.unix_signal_add(GLib.PRIORITY_HIGH, signal.SIGINT, \
+                         handle_unix_signal, loop)
+    self.connect('disconnected', handle_disconnect, loop)
+    loop.run()
+    return True
+
+cmds = {
+    'clock-source':         handle_clock_source,
+    'sampling-rate':        handle_sampling_rate,
+    'mixer-mode':           handle_mixer_mode,
+    'optical-interface':    handle_opt_iface,
+    'listen-message':       handle_listen_message,
+}
+
+def dump_commands():
+    print('Available commands:')
+    for name in cmds.keys():
+        print('  {0}'.format(name))
+
+# Main routine
+argv = sys.argv
+if len(argv) < 2:
+    print('hinawa-dg00x-cui CARD COMMAND [ARGS]')
+    print('  CARD: ALSA sound card number')
+    print('  COMMAND: {0}'.format(', '.join(cmds)))
+    print('  ARGS: depending on COMMAND')
+    sys.exit()
+card = argv[1]
+
+unit = Dg00xUnit('/dev/snd/hwC{0}D0'.format(card))
+if len(argv) < 3:
+    dump_commands()
+    sys.exit()
+cmd = argv[2]
+
+if cmd in cmds:
+    cmds[cmd](unit, argv[3:])
+else:
+    dump_commands()
+
+sys.exit()
