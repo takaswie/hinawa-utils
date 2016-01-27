@@ -20,7 +20,7 @@ class BebobUnit(Hinawa.SndUnit):
         elif re.match('/dev/fw[0-9]*', path):
             # Just using parent class.
             super(Hinawa.FwUnit, self).__init__()
-            Hinawa.FwUnit.open(self, '/dev/fw1')
+            Hinawa.FwUnit.open(self, path)
             Hinawa.FwUnit.listen(self)
             self.on_juju = True
         else:
