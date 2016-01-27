@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+
+import sys
+
+from tscm.tscm_unit import TscmUnit
+
+def handle_clock_source(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            if unit.get_property('streaming'):
+                print('Packet streaming started.')
+                return False
+            source = args[1]
+            unit.set_clock_source(source)
+        else:
+            print(unit.get_clock_source())
+        return True
+    print('Arguments for clock-source command:')
+    print('  clock-source OPERATION [SOURCE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    SOURCE:    {0}'.format(', '.join(unit.supported_clock_sources)))
+    return False
+
+def handle_sampling_rate(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 3:
+            position = int(ops[1])
+            mode = ops[2]
+            unit.bright_led(position, mode)
+        else:
+            print(unit.get_sampling_rate())
+        return True
+    print('Arguments for sampling-rate command:')
+    print('  sampling-rate OPERATION [RATE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    rates = [str(r) for r in unit.supported_sampling_rates]
+    print('    RATE:      {0}'.format(', '.join(rates)))
+    return False
+
+def handle_firmware_versions(unit, args):
+    info = unit.get_firmware_versions()
+    for name, value in info.items():
+        print('{0}: {1}'.format(name, value))
+    return True
+
+def handle_master_fader(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            rate = int(args[1])
+            unit.set_master_fader(rate)
+        else:
+            print(unit.get_master_fader())
+        return True
+    print('Arguments for master-fader command:')
+    print('  master-fader OPERATION [RATE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    rates = [str(r) for r in unit.supported_sampling_rates]
+    print('    RATE:      {0}'.format(', '.join(rates)))
+    return False
+
+def handle_coax_src(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            rate = args[1]
+            unit.set_coaxial_source(rate)
+        else:
+            print(unit.get_coaxial_source())
+        return True
+    print('Arguments for coaxial-source command:')
+    print('  coaxial-source OPERATION [RATE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    RATE:      {0}'.format(', '.join(unit.supported_coax_sources)))
+    return False
+
+def handle_bright_led(unit, args):
+    if len(args) == 2:
+        rate = args[1]
+        unit.bright_led(rate)
+        return True
+    print('Arguments for coaxial-source command:')
+    print('  coaxial-source POSITION STATE')
+    print('    POSITION:  0-???')
+    print('    STATE: {0}'.format(', '.join(unit.supported_led_status)))
+    return False
+
+cmds = {
+    'clock-source':         handle_clock_source,
+    'sampling-rate':        handle_sampling_rate,
+    'firmware-versions':    handle_firmware_versions,
+    'master-fader':         handle_master_fader,
+    'coaxial-source':       handle_coax_src,
+    'bright-led':           handle_bright_led,
+}
+
+def dump_commands():
+    print('Available commands:')
+    for name in cmds.keys():
+        print('  {0}'.format(name))
+
+# Main routine
+argv = sys.argv
+if len(argv) < 2:
+    print('hinawa-dg00x-cui CARD COMMAND [ARGS]')
+    print('  CARD: ALSA sound card number')
+    print('  COMMAND: {0}'.format(', '.join(cmds)))
+    print('  ARGS: depending on COMMAND')
+    sys.exit()
+card = argv[1]
+
+unit = TscmUnit('/dev/snd/hwC{0}D0'.format(card))
+if len(argv) < 3:
+    dump_commands()
+    sys.exit()
+cmd = argv[2]
+
+if cmd in cmds:
+    cmds[cmd](unit, argv[3:])
+else:
+    dump_commands()
+
+sys.exit()
