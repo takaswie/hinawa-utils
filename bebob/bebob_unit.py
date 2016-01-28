@@ -3,11 +3,6 @@ import re
 from gi.repository import Hinawa
 
 class BebobUnit(Hinawa.SndUnit):
-    # Public properties
-    firmware_info = {}
-
-    # For private use.
-    on_juju = False,
     REG_INFO = 0xffffc8020000
 
     def __init__(self, path):
@@ -16,6 +11,7 @@ class BebobUnit(Hinawa.SndUnit):
             self.open(path)
             if self.get_property('type') != 3:
                 raise ValueError('The character device is not for BeBoB unit')
+            on_juju = False,
             self.listen()
         elif re.match('/dev/fw[0-9]*', path):
             # Just using parent class.
@@ -27,9 +23,9 @@ class BebobUnit(Hinawa.SndUnit):
             raise ValueError('Invalid argument for character device')
         self.fcp = Hinawa.FwFcp()
         self.fcp.listen(self)
-        self._parse_firmware_info()
+        self.firmware_info = self._get_firmware_info()
 
-    def _parse_firmware_info(self):
+    def _get_firmware_info(self):
         def _get_string_literal(params):
             if params[0] == 0 and params[1] == 0:
                 return '00000000'
@@ -60,17 +56,18 @@ class BebobUnit(Hinawa.SndUnit):
         req = Hinawa.FwReq()
         params = req.read(self, BebobUnit.REG_INFO, 26)
 
-        self.firmware_info['manufacturer'] = \
+        info = {}
+        info['manufacturer'] = \
             _get_string_literal(params[0:2])
-        self.firmware_info['protocol-version'] = \
+        info['protocol-version'] = \
             _get_version_literal(params[2])
-        self.firmware_info['guid'] = \
+        info['guid'] = \
             (params[4] << 32) | params[5]
-        self.firmware_info['model-id'] = \
+        info['model-id'] = \
             _get_id(params[6])
-        self.firmware_info['model-revision'] = \
+        info['model-revision'] = \
             _get_id(params[7])
-        self.firmware_info['software'] = {
+        info['software'] = {
             'build-date':   _get_string_literal(params[8:10]),
             'build-time':   _get_time_literal(params[10:12]),
             'id':           _get_id(params[12]),
@@ -78,14 +75,16 @@ class BebobUnit(Hinawa.SndUnit):
             'base-address': int(params[14]),
             'max-size':     int(params[15]),
         }
-        self.firmware_info['bootloader'] = {
+        info['bootloader'] = {
             'build-date':   _get_string_literal(params[16:18]),
             'build-time':   _get_time_literal(params[18:20]),
             'version':      _get_version_literal(params[3]),
         }
-        self.firmware_info['debugger'] = {
+        info['debugger'] = {
             'build-date':   _get_string_literal(params[20:22]),
             'build-time':   _get_time_literal(params[22:24]),
             'id':           _get_id(params[24]),
             'version':      _get_version_literal(params[25]),
         }
+
+        return info

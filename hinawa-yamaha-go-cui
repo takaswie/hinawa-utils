@@ -1,75 +1,41 @@
 #!/usr/bin/env python3
 
 import sys
-import re
 
 from bebob.yamaha_go import YamahaGo
 
-def dump_status(unit):
+def handle_current_status(unit, args):
     print('Current status:')
     print('  Packet Streaming:')
-    print('    running:          {0}'.format(unit.get_property('streaming')))
+    print('    started:          {0}'.format(unit.get_property('streaming')))
     rate = unit.get_sampling_rate()
     print('    sampling-rate:    {0}'.format(rate))
     print('Output settings:')
-    print('  Ports:')
-    for output in unit.supported_outputs:
-        if re.match('^analog', output):
+    if len(unit.get_output_labels()) > 0:
+        print('  Ports:')
+        for output in unit.get_output_labels():
             print('    {0}'.format(output))
             for i in range(2):
-                gain = unit.get_analog_output(output, 0, 'gain')
-                mute = unit.get_analog_output(output, 0, 'mute')
+                gain = unit.get_output('volume', output, i)
+                mute = unit.get_output('mute', output, i)
                 print('      gain: {0}, mute: {1}'.format(gain, mute))
     print('  Routing:')
-    for out in unit.supported_outputs:
-        print('    {0}: {1}'.format(out, unit.get_output_routing(out)))
-    print('Mixer settings:')
-    print('  Inputs:')
-    for input in unit.supported_mixer_inputs:
-        print('    {0}:'.format(input))
+    for sink in unit.get_output_sink_labels():
+        print('    {0}: {1}'.format(sink, unit.get_output_source(sink)))
+    print('Mixer inputs:')
+    for input in unit.get_mixer_input_labels():
+        print('  {0}:'.format(input))
         for i in range(2):
-            gain = unit.get_mixer_input(input, i, 'gain')
-            mute = unit.get_mixer_input(input, i, 'mute')
-            print('      gain: {0}, mute: {1}'.format(gain, mute))
-    print('  Outputs:')
+            gain = unit.get_mixer_input('volume', input, i)
+            mute = unit.get_mixer_input('mute', input, i)
+            print('    gain: {0}, mute: {1}'.format(gain, mute))
+    print('Mixer output:')
     for i in range(2):
-        gain = unit.get_mixer_output(i, 'gain')
-        mute = unit.get_mixer_output(i, 'mute')
-        print('    {0}: gain: {1}, mute: {2}'.format(i + 1, gain, mute))
+        gain = unit.get_mixer_output('volume', i)
+        mute = unit.get_mixer_output('mute', i)
+        print('  gain: {0}, mute: {1}'.format(gain, mute))
 
-def dump_commands(unit):
-    print('  Commands and supported arguments:')
-    print('    status:')
-    print('    commands:')
-    print('    output:')
-    opts = ', '.join(str(i) for i in unit.supported_outputs)
-    print('      pair ({0})'.format(opts))
-    print('      channel (0, 1)')
-    opts = ', '.join(str(i) for i in unit.channel_modes)
-    print('      operation ({0})'.format(opts))
-    print('    output-routing:')
-    opts = ', '.join(str(i) for i in unit.supported_outputs)
-    print('      destination ({0})'.format(opts))
-    opts = ', '.join(str(i) for i in unit.supported_output_sources)
-    print('      source ({0})'.format(opts))
-    print('    mixer-input')
-    opts = ', '.join(str(i) for i in unit.supported_mixer_inputs)
-    print('      input ({0})'.format(opts))
-    print('      channel (0, 1)')
-    opts = ', '.join(str(i) for i in unit.channel_modes)
-    print('      operation ({0})'.format(opts))
-    print('    mixer-output')
-    print('      channel (0, 1)')
-    opts = ', '.join(str(i) for i in unit.channel_modes)
-    print('      operation ({0})'.format(opts))
-    print('    sampling-rate:')
-    opts = ', '.join(str(i) for i in unit.supported_sampling_rates)
-    print('      rate ({0})'.format(opts))
-    print('    clock-source:')
-    opts = ', '.join(str(i) for i in unit.supported_clock_sources)
-    print('      source ({0})'.format(opts))
-
-def dump_firmware_info(unit):
+def handle_firmware_info(unit, args):
     print('BeBoB firmware information:')
     for category, values in unit.firmware_info.items():
         if isinstance(values, dict):
@@ -79,94 +45,118 @@ def dump_firmware_info(unit):
         else:
             print('  {0}: {1}'.format(category, values))
 
-def handle_output(unit, args):
-    ops = ('volume', 'mute')
-    if len(args) > 2 and args[0] in ops:
+def handle_input_level(unit, args):
+    ops = ('set', 'get')
+    if len(unit.get_input_level_labels()) == 0:
+        print('Not supported')
+        return False
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            level = args[1]
+            unit.set_input_level(level)
+        else:
+            print(unit.get_input_level())
+        return True
+    print('Arguments for input command:')
+    print('  output OPERATION [LEVEL]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    LEVEL:     {0}'.format(', '.join(
+                                            unit.get_input_level_labels())))
+    return False
+
+def handle_analog_output(unit, args):
+    if len(unit.get_output_labels()) == 0:
+        print('Not supported')
+        return False
+    if len(args) > 2 and args[0] in unit.channel_ops:
         op = args[0]
         pair = args[1]
         ch = int(args[2])
-        if op == ops[0] and len(args) == 4:
+        if op == unit.channel_ops[0] and len(args) == 4:
             value = int(args[3])
             unit.set_output(op, pair, ch, value)
         else:
             print(unit.get_output(op, pair, ch))
         return True
     print('Arguments for output command:')
-    print('  output OP PAIR CH [VALUE]')
-    print('    OP:    {0}'.format(', '.join(ops)))
-    print('    PAIR:  {0}'.format(', '.join(unit.get_output_labels())))
-    print('    CH:    {0}'.format(0))
-    print('    VALUE: {0}'.format(0))
+    print('  output OPERATION PAIR CHANNEL [VALUE]')
+    print('    OPERATION: {0}'.format(', '.join(unit.channel_ops)))
+    print('    PAIR:      {0}'.format(', '.join(unit.get_output_labels())))
+    print('    CHANNEL:   1, 2 (0 = both)')
+    print('    VALUE:     {0}'.format(0))
     return False
 
 def handle_output_source(unit, args):
     ops = ('set', 'get')
     if len(args) > 1 and args[0] in ops:
-        dst = args[1]
+        output = args[1]
         if args[0] == ops[0] and len(args) == 3:
             src = args[2]
-            unit.set_output_source(dst, src)
+            unit.set_output_source(output, src)
         else:
-            print(unit.get_output_source(dst))
+            print(unit.get_output_source(output))
         return True
     print('Arguments for output-source command:')
-    print('  output-source OP OUTPUT [SOURCE]')
-    print('    OP:    {0}'.format(', '.join(ops)))
-    print('    OUTPUT:  {0}'.format(', '.join(unit.get_output_labels())))
-    print('    SOURCE:  {0}'.format(', '.join(unit.get_output_source_labels())))
+    print('  output-source OPERATION OUTPUT [SOURCE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    OUTPUT:    {0}'.format(', '.join(unit.get_output_sink_labels())))
+    print('    SOURCE:    {0}'.format(', '.join(
+                                            unit.get_output_source_labels())))
     return False
 
 def handle_mixer_input(unit, args):
-    ops = ('volume', 'mute')
-    if len(args) > 2 and args[0] in ops:
+    if len(args) > 2 and args[0] in unit.channel_ops:
         op = args[0]
         input = args[1]
         ch = int(args[2])
-        if op == ops[0] and len(args) == 4:
+        if len(args) == 4:
             value = int(args[3])
             unit.set_mixer_input(op, input, ch, value)
         else:
             print(unit.get_mixer_input(op, input, ch))
         return True
     print('Arguments for mixer-input command:')
-    print('  mixer-input OP INPUT CH [VALUE]')
-    print('    OP:    {0}'.format(', '.join(ops)))
-    print('    INPUT: {0}'.format(', '.join(unit.get_mixer_input_labels())))
-    print('    CH:    {0}'.format(0))
-    print('    VALUE: {0}'.format(0))
+    print('  mixer-input OPERATION INPUT CHANNEL [VALUE]')
+    print('    OPERATION: {0}'.format(', '.join(unit.channel_ops)))
+    print('    INPUT:     {0}'.format(', '.join(unit.get_mixer_input_labels())))
+    print('    CHANNEL:   {0}'.format(0))
+    print('    VALUE:     {0}'.format(0))
     return False
 
 def handle_mixer_output(unit, args):
-    ops = ('volume', 'mute')
-    if len(args) > 1 and args[0] in ops:
+    if len(args) > 1 and args[0] in unit.channel_ops:
         op = args[0]
         ch = int(args[1])
-        if op == ops[0] and len(args) == 3:
+        if len(args) == 3:
             value = int(args[2])
             unit.set_mixer_output(op, ch, value)
         else:
             print(unit.get_mixer_output(op, ch))
         return True
     print('Arguments for mixer-output command:')
-    print('  mixer-output OP CH [VALUE]')
-    print('    OP:    {0}'.format(', '.join(ops)))
-    print('    CH:    {0}'.format(0))
-    print('    VALUE: {0}'.format(0))
+    print('  mixer-output OPERATION CHANNEL [VALUE]')
+    print('    OPERATION: {0}'.format(', '.join(unit.channel_ops)))
+    print('    CHANNEL:   1, 2 (0 = both)')
+    print('    VALUE:     ')
     return False
 
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
         if args[0] == ops[0] and len(args) == 2:
+            if unit.get_property('streaming'):
+                print('Packet streaming started.')
+                return False
             rate = int(args[1])
             unit.set_sampling_rate(rate)
         else:
             print(unit.get_sampling_rate())
         return True
     print('Arguments for sampling-rate command:')
-    print('  sampling-rate OP [RATE]')
-    print('    OP:   {0}'.format(', '.join(ops)))
-    print('    RATE: {0}'.format(', '.join(
+    print('  sampling-rate OPERATION [RATE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    RATE:      {0}'.format(', '.join(
                                     map(str, unit.get_sampling_rate_labels()))))
     return False
 
@@ -174,19 +164,26 @@ def handle_clock_source(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
         if args[0] == ops[0] and len(args) == 2:
+            if unit.get_property('streaming'):
+                print('Packet streaming started.')
+                return False
             source = args[1]
             unit.set_clock_source(source)
         else:
             print(unit.get_clock_source())
         return True
     print('Arguments for clock-source command:')
-    print('  clock-source OP [SOURCE]')
-    print('    OP:     {0}'.format(', '.join(ops)))
-    print('    SOURCE: {0}'.format(', '.join(unit.get_clock_source_labels())))
+    print('  clock-source OPERATION [SOURCE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    SOURCE:    {0}'.format(', '.join(
+                                            unit.get_clock_source_labels())))
     return False
 
 cmds = {
-    'output':           handle_output,
+    'current-status':   handle_current_status,
+    'firmware-info':    handle_firmware_info,
+    'input-level':      handle_input_level,
+    'analog-output':    handle_analog_output,
     'output-source':    handle_output_source,
     'mixer-input':      handle_mixer_input,
     'mixer-output':     handle_mixer_output,
