@@ -1,0 +1,27 @@
+= Utilities for audio and music units on IEEE 1394 bus
+
+ * hinawa-bebob-parser
+    * Plug structure parser for BeBoB firmware
+ * hinawa-dg00x-cui
+    * CUI tool for Digidesign Digi 00x family
+ * hinawa-dice-common-cui
+    * CUI tool for Dice common functionalities
+ * hinawa-fireworks-cui
+    * CUI tool for Echo Audio Fireworks module
+ * hinawa-griffin-firewave-cui
+    * CUI tool for Griffin Firewave
+ * hinawa-lacie-speakers-cui
+    * CUI tool for Lacie FireWire speakers
+ * hinawa-maudio-bebob-normal-cui
+    * CUI tool for M-Audio FireWire series
+ * hinawa-oxfw-generic-cui
+    * CUI tool for OXFW generic functionalities
+ * hinawa-tascam-fireone-cui
+    * CUI tool for Tascam FireOne
+ * hinawa-tscm-fw-cui
+    * CUI tool for Tascam FireWire series
+ * hinawa-yamaha-go-cui
+    * CUI tool for Yamaha GO series
+
+All of them are libhinawa applications. Please install libhinawa in advance.
+ * https://github.com/takaswie/libhinawa
