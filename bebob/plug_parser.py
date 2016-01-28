@@ -10,12 +10,6 @@ from bebob.extensions import BcoSubunitInfo
 from bebob.extensions import BcoStreamFormatInfo
 
 class PlugParser(BebobUnit):
-    unit_info = {}
-    unit_plugs = {}
-    subunit_plugs = {}
-    signal_destination = {}
-    signal_sources = {}
-
     def __init__(self, path):
         super().__init__(path)
 

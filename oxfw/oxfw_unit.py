@@ -7,17 +7,6 @@ from ta1394.general import AvcConnection
 from ta1394.streamformat import AvcStreamFormatInfo
 
 class OxfwUnit(Hinawa.SndUnit):
-    # Public properties
-    hw_info = dict.fromkeys(('asic-type', 'asic-id', 'firmware-version'))
-    playback_only = False
-    supported_sampling_rates = dict.fromkeys(AvcConnection.sampling_rates,
-                                             False)
-    supported_stream_formats = dict.fromkeys(('playback', 'capture'), [])
-
-    # For private use.
-    on_juju = False,
-    assumed_fmts = False
-
     def __init__(self, path):
         if re.match('/dev/snd/hwC[0-9]*D0', path):
             super().__init__()
@@ -25,23 +14,30 @@ class OxfwUnit(Hinawa.SndUnit):
             if self.get_property('type') != 4:
                 raise ValueError('The character device is not for OXFW unit')
             self.listen()
+            self._on_juju = False,
         elif re.match('/dev/fw[0-9]*', path):
             # Just using parent class.
             super(Hinawa.FwUnit, self).__init__()
             Hinawa.FwUnit.open(self, path)
             Hinawa.FwUnit.listen(self)
-            self.on_juju = True
+            self._on_juju = True
         else:
             raise ValueError('Invalid argument for character device')
         self.fcp = Hinawa.FwFcp()
         self.fcp.listen(self)
+        hw_info = dict.fromkeys(('asic-type', 'asic-id', 'firmware-version'))
+        playback_only = False
+        supported_sampling_rates = dict.fromkeys(AvcConnection.sampling_rates,
+                                                 False)
+        supported_stream_formats = dict.fromkeys(('playback', 'capture'), [])
+        assumed_fmts = False
         self._parse_hardware_info()
         self._parse_supported_sampling_rates()
         self._parse_supported_stream_formats()
 
     def _parse_hardware_info(self):
         def _read_transaction(addr, quads):
-            if self.on_juju:
+            if self._on_juju:
                 req = Hinawa.FwReq()
                 return req.read(self, addr, quads)
             return self.read_transact(addr, quads)

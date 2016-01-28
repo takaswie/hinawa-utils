@@ -8,9 +8,6 @@ class Dg00xUnit(Hinawa.SndDg00x):
     supported_clock_sources = ('Internal', 'S/PDIF', 'ADAT', 'Word-clock')
     supported_optical_interfaces = ('ADAT', 'S/PDIF')
 
-    # For private use.
-    _on_juju = False,
-
     def __init__(self, path):
         if re.match('/dev/snd/hwC[0-9]*D0', path):
             super().__init__()
@@ -18,6 +15,7 @@ class Dg00xUnit(Hinawa.SndDg00x):
             if self.get_property('type') != 5:
                 raise ValueError('The character device is not for Dg00x unit')
             self.listen()
+            self._on_juju = False,
         elif re.match('/dev/fw[0-9]*', path):
             # Just using parent class.
             super(Hinawa.FwUnit, self).__init__()

@@ -4,12 +4,6 @@ from array import array
 from gi.repository import Hinawa
 
 class DiceUnit(Hinawa.SndDice):
-    supported_sampling_rates = []
-    supported_clock_sources = []
-
-    # For private use.
-    _addrs = {}
-
     def __init__(self, path):
         super().__init__()
         self.open(path)
@@ -17,6 +11,9 @@ class DiceUnit(Hinawa.SndDice):
             raise ValueError('The character device is not for Dice unit')
         self.listen()
         self._parse_address_space()
+        self._addrs = {}
+        self.supported_sampling_rates = []
+        self.supported_clock_sources = []
         self._parse_clock_caps()
 
     # This should not be imported.

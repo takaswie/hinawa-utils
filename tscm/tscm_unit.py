@@ -9,9 +9,6 @@ class TscmUnit(Hinawa.SndTscm):
     supported_coax_sources = ('S/PDIF-1/2', 'Analog-1/2')
     supported_led_status = ('off', 'on')
 
-    # For private use.
-    _on_juju = False,
-
     def __init__(self, path):
         if re.match('/dev/snd/hwC[0-9]*D0', path):
             super().__init__()
@@ -19,12 +16,13 @@ class TscmUnit(Hinawa.SndTscm):
             if self.get_property('type') != 6:
                 raise ValueError('The character device is not for Tascam unit')
             self.listen()
+            self._on_juju = False,
         elif re.match('/dev/fw[0-9]*', path):
             # Just using parent class.
             super(Hinawa.FwUnit, self).__init__()
             Hinawa.FwUnit.open(self, path)
             Hinawa.FwUnit.listen(self)
-            self.on_juju = True
+            self._on_juju = True
         else:
             raise ValueError('Invalid argument for character device')
 
