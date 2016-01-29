@@ -6,8 +6,8 @@ class AvcGeneral():
                      'reserved', 'panel', 'bulletin-board', 'camera storate',
                      'music')
 
-    @staticmethod
-    def command_control(fcp, cmd):
+    @classmethod
+    def command_control(cls, fcp, cmd):
         if not isinstance(fcp, Hinawa.FwFcp):
             raise ValueError('Invalid argument for FwFcp')
         if cmd[0] != 0x00:
@@ -21,8 +21,8 @@ class AvcGeneral():
             raise OSError('Unknown status')
         return params
 
-    @staticmethod
-    def command_status(fcp, cmd):
+    @classmethod
+    def command_status(cls, fcp, cmd):
         if not isinstance(fcp, Hinawa.FwFcp):
             raise ValueError('Invalid argument for FwFcp')
         if cmd[0] != 0x01:
@@ -38,8 +38,8 @@ class AvcGeneral():
             raise OSError('Unknown status')
         return params
 
-    @staticmethod
-    def command_inquire(fcp, cmd):
+    @classmethod
+    def command_inquire(cls, fcp, cmd):
         if not isinstance(fcp, Hinawa.FwFcp):
             raise ValueError('Invalid argument for FwFcp')
         if cmd[0] != 0x02:
@@ -50,8 +50,8 @@ class AvcGeneral():
         elif params[0] != 0x0c:
             raise OSError('Unknown status')
 
-    @staticmethod
-    def get_unit_info(fcp):
+    @classmethod
+    def get_unit_info(cls, fcp):
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
@@ -61,15 +61,15 @@ class AvcGeneral():
         args.append(0xff)
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(fcp, args)
+        params = cls.command_status(fcp, args)
         info = {}
         info['unit-type'] = params[4] >> 3
         info['unit'] = params[4] & 0x07
         info['company-id'] = (params[5], params[6], params[7])
         return info
 
-    @staticmethod
-    def get_subunit_info(fcp, page):
+    @classmethod
+    def get_subunit_info(cls, fcp, page):
         if page > 7:
             raise ValueError('Invalid argument for page number')
         args = bytearray()
@@ -81,15 +81,15 @@ class AvcGeneral():
         args.append(0xff)
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_status(fcp, args)
+        params = cls.command_status(fcp, args)
         info = {}
-        info['subunit-type'] = AvcGeneral.subunit_types[params[4] >> 3]
+        info['subunit-type'] = cls.subunit_types[params[4] >> 3]
         info['maximum-id'] = params[4] & 0x07
         # ignoring extended_subunit_type and extended_subunit_ID
         return info
 
-    @staticmethod
-    def set_vendor_dependent(fcp, company_ids, deps):
+    @classmethod
+    def set_vendor_dependent(cls, fcp, company_ids, deps):
         if len(company_ids) != 3:
             raise ValueError('Invalid array for company ID')
         if len(deps) == 0:
@@ -102,10 +102,10 @@ class AvcGeneral():
             args.append(b)
         for b in deps:
             args.append(b)
-        AvcGeneral.command_control(fcp, args)
+        cls.command_control(fcp, args)
 
-    @staticmethod
-    def get_vendor_dependent(fcp, company_ids, deps):
+    @classmethod
+    def get_vendor_dependent(cls, fcp, company_ids, deps):
         if len(company_ids) != 3:
             raise ValueError('Invalid array for company ID')
         if len(deps) == 0:
@@ -118,15 +118,15 @@ class AvcGeneral():
             args.append(b)
         for b in deps:
             args.append(b)
-        params = AvcGeneral.command_status(fcp, args)
+        params = cls.command_status(fcp, args)
         return params[6:]
 
 class AvcConnection():
     plug_direction = ('output', 'input')
     sampling_rates = (32000, 44100, 48000, 88200, 96000, 176400, 192000)
 
-    @staticmethod
-    def get_unit_plug_info(fcp):
+    @classmethod
+    def get_unit_plug_info(cls, fcp):
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
@@ -144,8 +144,8 @@ class AvcConnection():
                     'input':    params[6],
                     'output':   params[7]}}
 
-    @staticmethod
-    def get_subunit_plug_info(fcp, subunit_type, subunit_id):
+    @classmethod
+    def get_subunit_plug_info(cls, fcp, subunit_type, subunit_id):
         if AvcGeneral.subunit_types.count(subunit_type) == 0:
             raise ValueError('Invalid argument for subunit type')
         if subunit_id > 7:
@@ -163,8 +163,8 @@ class AvcConnection():
         # Consider that destination is input and source is output.
         return {'input': params[4], 'output': params[5]}
 
-    @staticmethod
-    def set_plug_signal_format(fcp, direction, plug, rate):
+    @classmethod
+    def set_plug_signal_format(cls, fcp, direction, plug, rate):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
         if AvcConnection.plug_direction.count(direction) == 0:
@@ -182,8 +182,8 @@ class AvcConnection():
         args.append(0xff)
         params = AvcGeneral.command_control(fcp, args)
 
-    @staticmethod
-    def get_plug_signal_format(fcp, direction, plug):
+    @classmethod
+    def get_plug_signal_format(cls, fcp, direction, plug):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
         if AvcConnection.plug_direction.count(direction) == 0:
@@ -203,8 +203,8 @@ class AvcConnection():
             raise OSError
         return AvcConnection.sampling_rates[param]
 
-    @staticmethod
-    def ask_plug_signal_format(fcp, direction, plug, rate):
+    @classmethod
+    def ask_plug_signal_format(cls, fcp, direction, plug, rate):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
         if AvcConnection.plug_direction.count(direction) == 0:

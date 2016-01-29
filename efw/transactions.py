@@ -125,44 +125,45 @@ class EftInfo():
         'hex-signal':       0x80000000,
     }
 
+    @staticmethod
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
         return unit.transact(0, cmd, args)
 
-    @staticmethod
-    def get_spec(unit):
+    @classmethod
+    def get_spec(cls, unit):
         args = get_array()
-        params = EftInfo._execute_command(unit, 0, args)
+        params = cls._execute_command(unit, 0, args)
         info = {}
-        info['features'] = EftInfo._parse_capability(params)
-        info['clock-sources'] = EftInfo._parse_clock_source(params)
-        info['sampling-rates'] = EftInfo._parse_sampling_rate(params)
-        info.update(EftInfo._parse_phys_ports(params))
-        info.update(EftInfo._parse_mixer_channels(params))
-        info.update(EftInfo._parse_stream_formation(params))
-        info['firmware-versions'] = EftInfo._parse_firmware_versions(params)
+        info['features'] = cls._parse_capability(params)
+        info['clock-sources'] = cls._parse_clock_source(params)
+        info['sampling-rates'] = cls._parse_sampling_rate(params)
+        info.update(cls._parse_phys_ports(params))
+        info.update(cls._parse_mixer_channels(params))
+        info.update(cls._parse_stream_formation(params))
+        info['firmware-versions'] = cls._parse_firmware_versions(params)
         return info
 
-    @staticmethod
-    def get_metering(unit):
+    @classmethod
+    def get_metering(cls, unit):
         args = get_array()
-        params = EftInfo._execute_command(unit, 1, args)
+        params = cls._execute_command(unit, 1, args)
         metering = {}
         metering['clocks'] = {}
-        for name, flag in EftInfo._clock_flags.items():
+        for name, flag in cls._clock_flags.items():
             if params[0] & flag:
                 metering['clocks'][name] = True
             else:
                 metering['clocks'][name] = False
         metering['midi'] = {}
-        for name, flags in EftInfo._midi_flags.items():
+        for name, flags in cls._midi_flags.items():
             if params[0] & flag:
                 metering['midi'][name] = True
             else:
                 metering['midi'][name] = False
         metering['robot'] = {}
-        for name, flags in EftInfo._robot_flags.items():
+        for name, flags in cls._robot_flags.items():
             if params[0] & flag:
                 metering['robot'][name] = True
             else:
@@ -187,25 +188,25 @@ class EftInfo():
             metering['inputs'].append(db)
         return metering
 
-    @staticmethod
-    def set_resp_addr(unit, addr):
+    @classmethod
+    def set_resp_addr(cls, unit, addr):
         args = get_array()
         args.append((addr >> 24) & 0xffffffff)
         args.append(addr         & 0xffffffff)
-        EftInfo._execute_command(unit, 2, args)
+        cls._execute_command(unit, 2, args)
 
-    @staticmethod
-    def read_session_data(unit, offset, quadlets):
+    @classmethod
+    def read_session_data(cls, unit, offset, quadlets):
         args = get_array()
         args.append(offset)
         args.append(quadlets)
-        params = EftInfo._execute_command(unit, 3, args)
+        params = cls._execute_command(unit, 3, args)
         return params
 
-    @staticmethod
-    def get_debug_info(unit):
+    @classmethod
+    def get_debug_info(cls, unit):
         args = get_array()
-        params = EftInfo._execute_command(unit, 4, args)
+        params = cls._execute_command(unit, 4, args)
 
         # params[00]: isochronous stream 1 flushed
         # params[01]: isochronous stream 1 underruns
@@ -214,48 +215,52 @@ class EftInfo():
         # params[04-15]: data
         return params
 
-    @staticmethod
-    def test_dsp(unit, value):
+    @classmethod
+    def test_dsp(cls, unit, value):
         args = get_array()
         args.append(value)
-        params = EftInfo._execute_command(unit, 5, args)
+        params = cls._execute_command(unit, 5, args)
         return params[0]
 
-    @staticmethod
-    def test_arm(unit, value):
+    @classmethod
+    def test_arm(cls, unit, value):
         args = get_array()
         args.append(value)
-        params = EftInfo._execute_command(unit, 6, args)
+        params = cls._execute_command(unit, 6, args)
         return params[0]
 
-    def _parse_capability(params):
+    @classmethod
+    def _parse_capability(cls, params):
         caps = {}
-        for name, flag in EftInfo._feature_flags.items():
+        for name, flag in cls._feature_flags.items():
             if params[0] & flag:
                 caps[name] = True
             else:
                 caps[name] = False
         return caps
 
-    def _parse_clock_source(params):
+    @classmethod
+    def _parse_clock_source(cls, params):
         srcs = {}
-        for name, flag in EftInfo._clock_flags.items():
+        for name, flag in cls._clock_flags.items():
             if params[21] & flag:
                 srcs[name] = True
             else:
                 srcs[name] = False
         return srcs
 
-    def _parse_sampling_rate(params):
+    @classmethod
+    def _parse_sampling_rate(cls, params):
         rates = {}
-        for rate in EftInfo.supported_sampling_rates:
+        for rate in cls.supported_sampling_rates:
             if params[39] <= rate and rate <= params[38]:
                 rates[rate] = True
             else:
                 rates[rate] = False
         return rates
 
-    def _parse_phys_ports(params):
+    @classmethod
+    def _parse_phys_ports(cls, params):
         phys_outputs = []
         phys_inputs = []
         outputs = (params[27] >> 16, params[27] & 0xffff,
@@ -269,37 +274,41 @@ class EftInfo():
         for i in range(params[26]):
             count = outputs[i] & 0xff
             index = outputs[i] >> 8
-            if index > len(EftInfo.supported_port_names):
+            if index > len(cls.supported_port_names):
                 name = 'dummy'
             else:
-                name = EftInfo.supported_port_names[index]
+                name = cls.supported_port_names[index]
             for j in range(count):
                 phys_outputs.append(name)
         for i in range(params[31]):
             count = inputs[i] & 0xff
             index = inputs[i] >> 8
-            if index > len(EftInfo.supported_port_names):
+            if index > len(cls.supported_port_names):
                 name = 'dummy'
             else:
-                name = EftInfo.supported_port_names[index]
+                name = cls.supported_port_names[index]
             for j in range(count):
                 phys_inputs.append(name)
         return {'phys-inputs': phys_inputs,
                 'phys-outputs': phys_outputs}
 
+    @staticmethod
     def _parse_mixer_channels(params):
         return {'capture-channels': params[43],
                 'playback-channels': params[42]}
 
+    @staticmethod
     def _parse_stream_formation(params):
         return {'tx-stream-channels': (params[23], params[46], params[48]),
                 'rx-stream-channels': (params[22], params[45], params[47])}
 
-    def _parse_firmware_versions(params):
-        return {'DSP':  EftInfo._get_literal_version(params[40]),
-                'ARM':  EftInfo._get_literal_version(params[41]),
-                'FPGA': EftInfo._get_literal_version(params[44])}
+    @classmethod
+    def _parse_firmware_versions(cls, params):
+        return {'DSP':  cls._get_literal_version(params[40]),
+                'ARM':  cls._get_literal_version(params[41]),
+                'FPGA': cls._get_literal_version(params[44])}
 
+    @staticmethod
     def _get_literal_version(val):
         return '{0}.{1}.{2}'.format((val >> 24) & 0xff, \
                                     (val >> 16) & 0xff, \
@@ -309,53 +318,54 @@ class EftInfo():
 # Category No.1, for flash commands
 #
 class EftFlash():
+    @staticmethod
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
         return unit.transact(1, cmd, args)
 
-    @staticmethod
-    def erase(unit, offset):
+    @classmethod
+    def erase(cls, unit, offset):
         args = get_array()
         args.append(offset)
-        EftFlash._execute_command(unit, 0, args)
+        cls._execute_command(unit, 0, args)
 
-    @staticmethod
-    def read_block(unit, offset, quadlets):
+    @classmethod
+    def read_block(cls, unit, offset, quadlets):
         args = get_array()
         args.append(offset)
         args.append(quadlets)
-        return EftFlash._execute_command(unit, 1, args)
+        return cls._execute_command(unit, 1, args)
 
-    @staticmethod
-    def write_block(unit, offset, data):
+    @classmethod
+    def write_block(cls, unit, offset, data):
         args = get_array()
         args.append(offset)
         args.append(len(data))
         for datum in data:
             args.append(datum)
-        EftFlash._execute_command(unit, 2, args)
+        cls._execute_command(unit, 2, args)
 
-    @staticmethod
-    def get_status(unit):
+    @classmethod
+    def get_status(cls, unit):
         args = get_array()
         # return status means it.
-        EftFlash._execute_command(unit, 3, args)
+        cls._execute_command(unit, 3, args)
 
-    @staticmethod
-    def get_session_offset(unit):
+    @classmethod
+    def get_session_offset(cls, unit):
         args = get_array()
-        params = EftFlash._execute_command(unit, 4, args)
+        params = cls._execute_command(unit, 4, args)
         return params[0]
 
-    @staticmethod
-    def set_lock(unit, lock):
+    @classmethod
+    def set_lock(cls, unit, lock):
         args = get_array()
         if lock is not 0:
             args.append(1)
         else:
             args.append(0)
-        EftFlash._execute_command(unit, 5, args)
+        cls._execute_command(unit, 5, args)
 
 #
 # Category No.2, for transmission control commands
@@ -367,37 +377,38 @@ class EftTransmit():
     supported_serial_bps = (16, 24)
     supported_serial_data_formats = ('left-adjusted', 'i2s')
 
+    @staticmethod
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
         return unit.transact(2, cmd, args)
 
-    @staticmethod
-    def set_mode(unit, mode):
-        if EftTransmit.supported_modes.count(mode) == 0:
+    @classmethod
+    def set_mode(cls, unit, mode):
+        if cls.supported_modes.count(mode) == 0:
             raise ValueError('Invalid argument for mode')
         args = get_array()
-        args.append(EftTransmit.supported_modes.index(mode))
-        EftTransmit._execute_command(unit, 0, args)
+        args.append(cls.supported_modes.index(mode))
+        cls._execute_command(unit, 0, args)
 
-    @staticmethod
-    def set_fw_hdmi(unit, playback_drop, record_stretch_ratio, serial_bps,
+    @classmethod
+    def set_fw_hdmi(cls, unit, playback_drop, record_stretch_ratio, serial_bps,
                     data_format):
-        if EftTransmit.supported_playback_drops.count(playback_drop) == 0:
+        if cls.supported_playback_drops.count(playback_drop) == 0:
             raise ValueError('Invalid argument for playback drop')
-        if EftTransmit.supported_record_streatch_ratios(record_stretch_ratio) == 0:
+        if cls.supported_record_streatch_ratios(record_stretch_ratio) == 0:
             raise ValueError('Invalid argument for record stretch')
-        if EftTransmit.supported_serial_bps.count(serial_bps) == 0:
+        if cls.supported_serial_bps.count(serial_bps) == 0:
             raise ValueError('Invalid argument for serial bits per second')
-        if EftTransmit.supported_serial_data_formats(serial_data_format) == 0:
+        if cls.supported_serial_data_formats(serial_data_format) == 0:
             raise ValueError('Invalid argument for serial data format')
 
         args = get_array()
         args.append(playback_drop)
         args.append(record_stretch)
         args.append(serial_bps)
-        args.append(EftTransmit.supported_serial_data_formats.index(serial_data_format))
-        EftTransmit._execute_command(unit, 4, args)
+        args.append(cls.supported_serial_data_formats.index(serial_data_format))
+        cls._execute_command(unit, 4, args)
 
 #
 # Category No.3, for hardware control commands
@@ -434,44 +445,44 @@ class EftHwctl():
     }
 
     @staticmethod
-    def execute_command(unit, cmd, args):
+    def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
         return unit.transact(3, cmd, args)
 
-    @staticmethod
-    def set_clock(unit, rate, source, reset):
+    @classmethod
+    def set_clock(cls, unit, rate, source, reset):
         if EftInfo.supported_sampling_rates.count(rate) == 0:
             raise ValueError('Invalid argument for sampling rate')
-        if EftHwctl.supported_clock_sources.count(source) == 0:
+        if cls.supported_clock_sources.count(source) == 0:
             raise ValueError('Invalid argument for source of clock')
         if reset > 0:
             reset = 0x80000000
         args = get_array()
         args.append(rate)
-        args.append(EftHwctl.supported_clock_sources[source])
+        args.append(cls.supported_clock_sources[source])
         args.append(reset)
-        EftHwctl.execute_command(unit, 0, args)
+        cls._execute_command(unit, 0, args)
 
-    @staticmethod
-    def get_clock(unit):
+    @classmethod
+    def get_clock(cls, unit):
         args = get_array()
-        params = EftHwctl.execute_command(unit, 1, args)
+        params = cls._execute_command(unit, 1, args)
         if params[0] >= len(EftInfo.supported_clock_sources):
             raise OSError('Unexpected clock source in response')
         if EftInfo.supported_sampling_rates.count(params[1]) == 0:
             raise OSError('Unexpected sampling rate in response')
         return (params[1], EftInfo.supported_clock_sources[params[0]])
 
-    @staticmethod
-    def set_box_states(unit, states):
+    @classmethod
+    def set_box_states(cls, unit, states):
         enable = 0
         disable = 0
         for name,state in states:
-            if name not in EftHwctl._box_state_params:
+            if name not in cls._box_state_params:
                 raise ValueError('Invalid value in box states')
-            shift   = EftHwctl._box_state_params[name][0]
-            values  = EftHwctl._box_state_params[name][1]
+            shift   = cls._box_state_params[name][0]
+            values  = cls._box_state_params[name][1]
             value = values.index(state)
             if value is 0:
                 disabled |= (1 << shift)
@@ -480,36 +491,36 @@ class EftHwctl():
         args = get_array()
         args.append(enabled)
         args.append(disabled)
-        EftHwctl.execute_command(unit, 3, args)
+        cls._execute_command(unit, 3, args)
 
-    @staticmethod
-    def get_box_states(unit):
+    @classmethod
+    def get_box_states(cls, unit):
         args = get_array()
-        params = EftHwctl.execute_command(unit, 4, args)
+        params = cls._execute_command(unit, 4, args)
         state = params[0]
         states = {}
-        for name,params in EftHwctl._box_state_params.items():
+        for name,params in cls._box_state_params.items():
             shift = params[0]
             values = params[1]
             index = (state >> shift) & 0x01
             states[name] = values[index]
         return states
 
-    @staticmethod
-    def reconnect_phy(unit):
+    @classmethod
+    def reconnect_phy(cls, unit):
         args = get_array()
-        EftHwctl.execute_command(unit, 6, args)
+        cls._execute_command(unit, 6, args)
 
-    @staticmethod
-    def blink_leds(unit):
+    @classmethod
+    def blink_leds(cls, unit):
         args = get_array()
-        EftHwctl.execute_command(unit, 7, args)
+        cls._execute_command(unit, 7, args)
 
-    @staticmethod
-    def set_continuous_clock(unit, continuous_rate):
+    @classmethod
+    def set_continuous_clock(cls, unit, continuous_rate):
         args = get_array()
         args.append(continuous_rate * 512 // 1500)
-        EftHwctl.execute_command(unit, 8, args)
+        cls._execute_command(unit, 8, args)
 
 #
 # Category No.4, for physical output multiplexer commands
@@ -518,13 +529,13 @@ class EftPhysOutput():
     operations = ('gain', 'mute', 'nominal')
 
     @staticmethod
-    def execute_command(unit, cmd, args):
+    def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
         return unit.transact(4, cmd, args)
 
-    @staticmethod
-    def set_param(unit, operation, channel, value):
+    @classmethod
+    def set_param(cls, unit, operation, channel, value):
         if operation is 'gain':
             cmd = 0
             value = calculate_vol_from_db(value)
@@ -541,10 +552,10 @@ class EftPhysOutput():
         args = get_array()
         args.append(channel)
         args.append(value)
-        EftPhysOutput.execute_command(unit, cmd, args)
+        cls._execute_command(unit, cmd, args)
 
-    @staticmethod
-    def get_param(unit, operation, channel):
+    @classmethod
+    def get_param(cls, unit, operation, channel):
         if operation is 'gain':
             cmd = 1
         elif operation is 'mute':
@@ -555,7 +566,7 @@ class EftPhysOutput():
             raise ValueError('Invalid argument for operation.')
         args = get_array()
         args.append(channel)
-        params = EftPhysOutput.execute_command(unit, cmd, args)
+        params = cls._execute_command(unit, cmd, args)
         if operation is 'gain':
             params[1] = calculate_vol_to_db(params[1])
         if operation is 'nominal':
@@ -569,13 +580,14 @@ class EftPhysOutput():
 class EftPhysInput():
     operations = ('nominal')
 
+    @staticmethod
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
         return unit.transact(5, cmd, args)
 
-    @staticmethod
-    def set_param(unit, operation, channel, value):
+    @classmethod
+    def set_param(cls, unit, operation, channel, value):
         if operation is 'nominal':
             cmd = 8
             if value > 0:
@@ -585,10 +597,10 @@ class EftPhysInput():
         args = get_array()
         args.append(channel)
         args.append(value)
-        EftPhysInput._execute_command(unit, cmd, args)
+        cls._execute_command(unit, cmd, args)
 
-    @staticmethod
-    def get_param(unit, operation, channel):
+    @classmethod
+    def get_param(cls, unit, operation, channel):
         if operation is 'nominal':
             cmd = 9
         else:
@@ -596,7 +608,7 @@ class EftPhysInput():
         args = get_array()
         args.append(channel)
         args.append(0xff)
-        params = EftPhysInput._execute_command(unit, cmd, args)
+        params = cls._execute_command(unit, cmd, args)
         return params[1]
 
 #
@@ -606,13 +618,13 @@ class EftPlayback():
     operations = ('gain', 'mute', 'solo')
 
     @staticmethod
-    def execute_command(unit, cmd, args):
+    def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
         return unit.transact(6, cmd, args)
 
-    @staticmethod
-    def set_param(unit, operation, channel, value):
+    @classmethod
+    def set_param(cls, unit, operation, channel, value):
         if operation is 'gain':
             cmd = 0
             value = calculate_vol_from_db(value)
@@ -629,10 +641,10 @@ class EftPlayback():
         args = get_array()
         args.append(channel)
         args.append(value)
-        EftPhysInput.execute_command(unit, cmd, args)
+        EftPhysInput._execute_command(unit, cmd, args)
 
-    @staticmethod
-    def get_param(unit, operation, channel):
+    @classmethod
+    def get_param(cls, unit, operation, channel):
         if operation is 'gain':
             cmd = 1
         elif operation is 'mute':
@@ -643,7 +655,7 @@ class EftPlayback():
             raise ValueError('Invalid argument for operation.')
         args = get_array()
         args.append(channel)
-        params = EftPlayback.execute_command(unit, cmd, args)
+        params = cls._execute_command(unit, cmd, args)
         if operation is 'gain':
             params[1] = calculate_vol_to_db(params[1])
         return params[1]
@@ -652,7 +664,7 @@ class EftCapture():
     operations = ()
 
     @staticmethod
-    def execute_command(unit, cmd, args):
+    def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
         return unit.transact(7, cmd, args)
@@ -664,13 +676,13 @@ class EftMonitor():
     operations = ('gain', 'mute', 'solo', 'pan')
 
     @staticmethod
-    def execute_command(unit, cmd, args):
+    def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
         return unit.transact(8, cmd, args)
 
-    @staticmethod
-    def set_param(unit, operation, in_ch, out_ch, value):
+    @classmethod
+    def set_param(cls, unit, operation, in_ch, out_ch, value):
         if operation is 'gain':
             cmd = 0
             value = calculate_vol_from_db(value)
@@ -692,10 +704,10 @@ class EftMonitor():
         args.append(in_ch)
         args.append(out_ch)
         args.append(value)
-        EftMonitor.execute_command(unit, cmd, args)
+        cls._execute_command(unit, cmd, args)
 
-    @staticmethod
-    def get_param(unit, operation, in_ch, out_ch):
+    @classmethod
+    def get_param(cls, unit, operation, in_ch, out_ch):
         if operation is 'gain':
             cmd = 1
         elif operation is 'mute':
@@ -709,7 +721,7 @@ class EftMonitor():
         args = get_array()
         args.append(in_ch)
         args.append(out_ch)
-        params = EftMonitor.execute_command(unit, cmd, args)
+        params = cls._execute_command(unit, cmd, args)
         if operation is 'gain':
             params[2] = calculate_vol_to_db(params[2])
         return params[2]
@@ -721,57 +733,58 @@ class EftIoconf():
     # NOTE: use the same strings in features of EftInfo.
     digital_input_modes = ('spdif-coax', 'aesebu-xlr', 'spdif-opt', 'adat-opt')
 
+    @staticmethod
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
         return unit.transact(9, cmd, args)
 
-    @staticmethod
-    def set_control_room_mirroring(unit, output_pair):
+    @classmethod
+    def set_control_room_mirroring(cls, unit, output_pair):
         args = get_array()
         args.append(output_pair)
-        EftIoconf._execute_command(unit, 0, args)
+        cls._execute_command(unit, 0, args)
 
-    @staticmethod
-    def get_control_room_mirroring(unit):
+    @classmethod
+    def get_control_room_mirroring(cls, unit):
         args = get_array()
-        params = EftIoconf._execute_command(unit, 1, args)
+        params = cls._execute_command(unit, 1, args)
         return params[0]
 
-    @staticmethod
-    def set_digital_input_mode(unit, mode):
-        if EftIoconf.digital_input_modes.count(mode) == 0:
+    @classmethod
+    def set_digital_input_mode(cls, unit, mode):
+        if cls.digital_input_modes.count(mode) == 0:
             raise ValueError('Invalid argument for digital mode')
         args = get_array()
-        args.append(EftIoconf.digital_input_modes.index(mode))
-        params = EftIoconf._execute_command(unit, 2, args)
+        args.append(cls.digital_input_modes.index(mode))
+        params = cls._execute_command(unit, 2, args)
 
-    @staticmethod
-    def get_digital_input_mode(unit):
+    @classmethod
+    def get_digital_input_mode(cls, unit):
         args = get_array()
-        params = EftIoconf._execute_command(unit, 3, args)
-        if params[0] >= len(EftIoconf.digital_input_modes):
+        params = cls._execute_command(unit, 3, args)
+        if params[0] >= len(cls.digital_input_modes):
             raise OSError
-        return EftIoconf.digital_input_modes[params[0]]
+        return cls.digital_input_modes[params[0]]
 
-    @staticmethod
-    def set_phantom_powering(unit, state):
+    @classmethod
+    def set_phantom_powering(cls, unit, state):
         if state > 0:
             state = 1
         args = get_array()
         args.append(state)
-        EftIoconf._execute_command(unit, 4, args)
+        cls._execute_command(unit, 4, args)
 
-    @staticmethod
-    def get_phantom_powering(unit):
+    @classmethod
+    def get_phantom_powering(cls, unit):
         args = get_array()
-        params= EftIoconf._execute_command(unit, 5, args)
+        params= cls._execute_command(unit, 5, args)
         return params[0]
 
-    @staticmethod
-    def set_stream_mapping(unit, rx_maps, tx_maps):
+    @classmethod
+    def set_stream_mapping(cls, unit, rx_maps, tx_maps):
         args = get_array()
-        params = EftIoconf._execute_command(unit, 6, args)
+        params = cls._execute_command(unit, 6, args)
         rx_map_count = params[2]
         if len(rx_maps) > rx_map_count:
             ValueError('Invalid argument for rx stream mapping')
@@ -782,12 +795,12 @@ class EftIoconf():
             params[4 + i] = rx_maps[i]
         for i in range(tx_maps):
             params[36 + i] = tx_maps[i]
-        EftIoconf._execute_command(unit, 6, args)
+        cls._execute_command(unit, 6, args)
 
-    @staticmethod
-    def get_stream_mapping(unit):
+    @classmethod
+    def get_stream_mapping(cls, unit):
         args = get_array()
-        param = EftIoconf._execute_command(unit, 7, args)
+        param = cls._execute_command(unit, 7, args)
         tx_map_count = param[34]
         tx_map = []
         for i in range(tx_map_count):

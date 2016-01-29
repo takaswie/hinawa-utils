@@ -4,9 +4,9 @@ class AvcCcm():
     plug_mode = ('unit', 'subunit')
     plug_unit_type = ('isoc', 'external')
 
-    @staticmethod
-    def get_unit_signal_addr(type, plug):
-        if AvcCcm.plug_unit_type.count(type) == 0:
+    @classmethod
+    def get_unit_signal_addr(cls, type, plug):
+        if cls.plug_unit_type.count(type) == 0:
             raise ValueError('Invalid argument for plug unit type')
         if plug >= 30:
             raise ValueError('Invalid argument for plug number')
@@ -18,8 +18,8 @@ class AvcCcm():
             addr.append(0x80 + plug)
         return addr
 
-    @staticmethod
-    def get_subunit_signal_addr(type, id, plug):
+    @classmethod
+    def get_subunit_signal_addr(cls, type, id, plug):
         if AvcGeneral.subunit_types.count(type) == 0:
             raise ValueError('Invalid argument for subunit type')
         if plug >= 30:
@@ -29,8 +29,8 @@ class AvcCcm():
         addr.append(plug)
         return addr
 
-    @staticmethod
-    def compare_addrs(a, b):
+    @classmethod
+    def compare_addrs(cls, a, b):
         if a['mode'] == b['mode'] == 'unit':
             if a['data']['type'] == b['data']['type'] and \
                a['data']['plug'] == b['data']['plug']:
@@ -42,7 +42,7 @@ class AvcCcm():
                 return True
         return False
 
-    @staticmethod
+    @classmethod
     def parse_signal_addr(addr):
         info = {}
         data = {}
@@ -62,8 +62,8 @@ class AvcCcm():
         info['data'] = data
         return info
 
-    @staticmethod
-    def set_signal_source(fcp, src, dst):
+    @classmethod
+    def set_signal_source(cls, fcp, src, dst):
         args = bytearray()
         args.append(0x00)
         args.append(0xff)
@@ -75,8 +75,8 @@ class AvcCcm():
         args.append(dst[1])
         return AvcGeneral.command_control(fcp, args)
 
-    @staticmethod
-    def get_signal_source(fcp, dst):
+    @classmethod
+    def get_signal_source(cls, fcp, dst):
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
@@ -88,10 +88,10 @@ class AvcCcm():
         args.append(dst[1])
         params = AvcGeneral.command_status(fcp, args)
         src = params[4:6]
-        return AvcCcm.parse_signal_addr(src)
+        return cls.parse_signal_addr(src)
 
-    @staticmethod
-    def ask_signal_source(fcp, src, dst):
+    @classmethod
+    def ask_signal_source(cls, fcp, src, dst):
         args = bytearray()
         args.append(0x02)
         args.append(0xff)

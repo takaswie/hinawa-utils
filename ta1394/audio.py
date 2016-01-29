@@ -15,8 +15,8 @@ class AvcAudio():
         'delta':        0x19,
     }
 
-    @staticmethod
-    def set_selector_state(fcp, subunit_id, attr, fb_id, value):
+    @classmethod
+    def set_selector_state(cls, fcp, subunit_id, attr, fb_id, value):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if ('current', 'minimum', 'maximum', 'default').count(attr) == 0:
@@ -31,14 +31,14 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x80)   # Selector function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x02)   # Selector length is 2
         args.append(value)
         args.append(0x01)   # Selector control
         AvcGeneral.command_control(fcp, args)
 
-    @staticmethod
-    def get_selector_state(fcp, subunit_id, attr, fb_id):
+    @classmethod
+    def get_selector_state(cls, fcp, subunit_id, attr, fb_id):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if ('current', 'minimum', 'maximum', 'default').count(attr) == 0:
@@ -51,15 +51,15 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x80)   # Selector function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x02)   # Selector length is 2
         args.append(0xff)
         args.append(0x01)   # Selector control
         params = AvcGeneral.command_status(fcp, args)
         return params[7]
 
-    @staticmethod
-    def set_feature_mute_state(fcp, subunit_id, attr, fb_id, ch, mute):
+    @classmethod
+    def set_feature_mute_state(cls, fcp, subunit_id, attr, fb_id, ch, mute):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if attr is not 'current':
@@ -78,7 +78,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x01)   # Mute control
@@ -86,8 +86,8 @@ class AvcAudio():
         args.append(mute)
         AvcGeneral.command_control(fcp, args)
 
-    @staticmethod
-    def get_feature_mute_state(fcp, subunit_id, attr, fb_id, ch):
+    @classmethod
+    def get_feature_mute_state(cls, fcp, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
         if attr is not 'current':
@@ -102,7 +102,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x01)   # Mute control
@@ -116,11 +116,11 @@ class AvcAudio():
         else:
             raise OSError('Unexpected value in response')
 
-    @staticmethod
-    def set_feature_volume_state(fcp, subunit_id, attr, fb_id, ch, vol):
+    @classmethod
+    def set_feature_volume_state(cls, fcp, subunit_id, attr, fb_id, ch, vol):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if AvcAudio.attributes.count(attr) == 0:
+        if cls.attributes.count(attr) == 0:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -132,20 +132,20 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x02)   # Volume control
         args.append(0x02)   # Control data length is 2
         args.append(vol >> 8)   # Higher part of volume
         args.append(vol & 0xff) # Lower part of volume
-        AvcGeneral.command_control(fcp, args)
+        AvcGeneral.command_control(cls, fcp, args)
 
-    @staticmethod
-    def get_feature_volume_state(fcp, subunit_id, attr, fb_id, ch):
+    @classmethod
+    def get_feature_volume_state(cls, fcp, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if AvcAudio.attributes.count(attr) == 0:
+        if cls.attributes.count(attr) == 0:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -157,7 +157,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x02)   # Volume control
@@ -167,11 +167,11 @@ class AvcAudio():
         params = AvcGeneral.command_status(fcp, args)
         return (params[10] << 8) | params[11]
 
-    @staticmethod
-    def set_feature_lr_state(fcp, subunit_id, attr, fb_id, ch, balance):
+    @classmethod
+    def set_feature_lr_state(cls, fcp, subunit_id, attr, fb_id, ch, balance):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if AvcAudio.attributes.count(attr) == 0:
+        if cls.attributes.count(attr) == 0:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -183,7 +183,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x03)   # LR control
@@ -192,11 +192,11 @@ class AvcAudio():
         args.append(balance & 0xff) # Lower part of balance
         AvcGeneral.command_control(fcp, args)
 
-    @staticmethod
-    def get_feature_lr_state(fcp, subunit_id, attr, fb_id, ch):
+    @classmethod
+    def get_feature_lr_state(cls, fcp, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if AvcAudio.attributes.count(attr) == 0:
+        if cls.attributes.count(attr) == 0:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -208,7 +208,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x03)   # LR control
@@ -218,8 +218,8 @@ class AvcAudio():
         params = AvcGeneral.command_status(fcp, args)
         return (params[10] << 8) | params[11]
 
-    @staticmethod
-    def set_processing_mixer_state(fcp, subunit_id, attr, fb_id, in_fb,
+    @classmethod
+    def set_processing_mixer_state(cls, fcp, subunit_id, attr, fb_id, in_fb,
                                    in_ch, out_ch, setting):
         attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
         if subunit_id > 0x07:
@@ -240,7 +240,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x82)   # Processing function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x04)   # Selector length is 4
         args.append(in_fb)
         args.append(in_ch)
@@ -251,8 +251,8 @@ class AvcAudio():
         args.append(setting & 0xff) # Lower part of setting
         AvcGeneral.command_control(fcp, args)
 
-    @staticmethod
-    def get_processing_mixer_state(fcp, subunit_id, attr, fb_id, in_fb,
+    @classmethod
+    def get_processing_mixer_state(cls, fcp, subunit_id, attr, fb_id, in_fb,
                                    in_ch, out_ch):
         attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
         if subunit_id > 0x07:
@@ -273,7 +273,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x82)   # Processing function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x04)   # Selector length is 4
         args.append(in_fb)
         args.append(in_ch)
@@ -285,8 +285,8 @@ class AvcAudio():
         params = AvcGeneral.command_status(fcp, args)
         return (params[12] << 8) | params[13]
 
-    @staticmethod
-    def set_processing_mixer_state_all(fcp, subunit_id, attr, fb_id, in_fb,
+    @classmethod
+    def set_processing_mixer_state_all(cls, fcp, subunit_id, attr, fb_id, in_fb,
                                        states):
         attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
         if subunit_id > 0x07:
@@ -304,19 +304,20 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x82)   # Processing function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x04)   # Selector length is 4
         args.append(in_fb)
         args.append(0xff)
         args.append(0xff)
-        args.append(0x03)   		# Mixer control
+        args.append(0x03)       # Mixer control
         args.append(data_count)	# The length of control data
         for i in range(data_count):
             args.append((states[i * 2] << 8) | states[i * 2 + 1])
         AvcGeneral.command_control(fcp, args)
 
-    @staticmethod
-    def get_processing_mixer_state_all(fcp, subunit_id, attr, fb_id, in_fb):
+    @classmethod
+    def get_processing_mixer_state_all(cls, fcp, subunit_id, attr,
+                                       fb_id, in_fb):
         attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
@@ -332,7 +333,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x82)   # Processing function block
         args.append(fb_id)
-        args.append(AvcAudio.attribute_values[attr])
+        args.append(cls.attribute_values[attr])
         args.append(0x04)   # Selector length is 4
         args.append(in_fb)
         args.append(0xff)

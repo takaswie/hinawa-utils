@@ -35,14 +35,14 @@ class AvcStreamFormatInfo():
         if params[0] != 0x90 or params[1] != 0x40:
             raise RuntimeError('Unsupported format')
         fmt = {}
-        fmt['sampling-rate'] = AvcStreamFormatInfo.sampling_rates[params[2]]
-        fmt['rate-control'] = AvcStreamFormatInfo.rate_controls[params[3] & 0x03]
+        fmt['sampling-rate'] = cls.sampling_rates[params[2]]
+        fmt['rate-control'] = cls.rate_controls[params[3] & 0x03]
         formation = []
         for i in range(params[4]):
             for c in range(params[5 + i * 2]):
                 type = params[5 + i * 2 + 1]
                 if type <= 0x0f:
-                    formation.append(AvcStreamFormatInfo.types[type])
+                    formation.append(cls.types[type])
                 elif type == 0x10:
                     formation.append('ancillary-data')
                 elif type == 0x40:
@@ -55,20 +55,20 @@ class AvcStreamFormatInfo():
         return fmt
 
     def _build_format(fmt):
-        if AvcStreamFormatInfo.sampling_rates.count(fmt['sampling-rate']) == 0:
+        if cls.sampling_rates.count(fmt['sampling-rate']) == 0:
             raise ValueError('Invalid argument for sampling rate')
-        if AvcStreamFormatInfo.rate_controls.count(fmt['rate-control']) == 0:
+        if cls.rate_controls.count(fmt['rate-control']) == 0:
             raise ValueError('Invalid argument for rate control mode')
         args = bytearray()
         args.append(0x90)
         args.append(0x40)
-        args.append(AvcStreamFormatInfo.sampling_rates.index(fmt['sampling-rate']))
-        args.append(AvcStreamFormatInfo.rate_controls.index(fmt['rate-control']))
+        args.append(cls.sampling_rates.index(fmt['sampling-rate']))
+        args.append(cls.rate_controls.index(fmt['rate-control']))
         args.append(0x00)     # Set it later.
         prev = ''
         num = -1
         for i, formation in enumerate(fmt['formation']):
-            if AvcStreamFormatInfo.types.count(formation) == 0:
+            if cls.types.count(formation) == 0:
                 raise ValueError('Invalid argument for stream formation type')
             if formation == 'ancillary-data':
                 type = 0x10
@@ -80,7 +80,7 @@ class AvcStreamFormatInfo():
                 # Use this value.
                 type = 0xfe
             else:
-                type = AvcStreamFormatInfo.types.index(formation)
+                type = cls.types.index(formation)
             if type != prev or i == len(fmt['formation']) - 1:
                 if num > 0:
                     args.append(num + 1)
@@ -92,25 +92,25 @@ class AvcStreamFormatInfo():
             prev = type
         return args
 
-    @staticmethod
-    def set_format(fcp, direction, plug, fmt):
+    @classmethod
+    def set_format(cls, fcp, direction, plug, fmt):
         args = bytearray()
         args.append(0x00)   # Control
         args.append(0xff)   # Addressing to unit
         args.append(0xbf)   # Extended stream format information command
         args.append(0xc0)   # SINGLE subfunction
-        args.append(AvcStreamFormatInfo.plug_direction.index(direction))
+        args.append(cls.plug_direction.index(direction))
         args.append(0x00)
         args.append(0x00)
         args.append(plug)
         args.append(0xff)
         args.append(0xff)
-        args.extend(AvcStreamFormatInfo._build_format(fmt))
+        args.extend(cls._build_format(fmt))
         AvcGeneral.command_control(fcp, args)
 
-    @staticmethod
-    def get_format(fcp, direction, plug):
-        if AvcStreamFormatInfo.plug_direction.count(direction) == 0:
+    @classmethod
+    def get_format(cls, fcp, direction, plug):
+        if cls.plug_direction.count(direction) == 0:
             raise ValueError('Invalid argument for plug direction')
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
@@ -119,7 +119,7 @@ class AvcStreamFormatInfo():
         args.append(0xff)
         args.append(0xbf)
         args.append(0xc0)
-        args.append(AvcStreamFormatInfo.plug_direction.index(direction))
+        args.append(cls.plug_direction.index(direction))
         args.append(0x00)
         args.append(0x00)
         args.append(plug)
@@ -129,11 +129,11 @@ class AvcStreamFormatInfo():
         args.append(0xff)
         params = AvcGeneral.command_status(fcp, args)
 
-        return AvcStreamFormatInfo._parse_format(params[10:len(params)])
+        return cls._parse_format(params[10:len(params)])
 
-    @staticmethod
-    def get_formats(fcp, direction, plug):
-        if AvcStreamFormatInfo.plug_direction.count(direction) == 0:
+    @classmethod
+    def get_formats(cls, fcp, direction, plug):
+        if cls.plug_direction.count(direction) == 0:
             raise ValueError('Invalid argument for plug direction')
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
@@ -143,7 +143,7 @@ class AvcStreamFormatInfo():
         args.append(0xff)
         args.append(0xbf)
         args.append(0xc1)
-        args.append(AvcStreamFormatInfo.plug_direction.index(direction))
+        args.append(cls.plug_direction.index(direction))
         args.append(0x00)
         args.append(0x00)
         args.append(plug)
@@ -155,7 +155,7 @@ class AvcStreamFormatInfo():
             args[10] = i
             try:
                 params = AvcGeneral.command_status(fcp, args)
-                fmt = AvcStreamFormatInfo._parse_format(params[11:])
+                fmt = cls._parse_format(params[11:])
                 fmts.append(fmt)
             except:
                 break

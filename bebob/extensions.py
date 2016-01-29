@@ -18,27 +18,27 @@ class BcoPlugInfo():
     port_type = ('speaker', 'headphone', 'microphone', 'line', 'spdif',
                  'adat', 'tdif', 'madi', 'analog', 'digital', 'MIDI', 'no-type')
 
-    @staticmethod
-    def get_unit_addr(addr_dir, addr_unit_type, plug):
-        if BcoPlugInfo.addr_dir.count(addr_dir) == 0:
+    @classmethod
+    def get_unit_addr(cls, addr_dir, addr_unit_type, plug):
+        if cls.addr_dir.count(addr_dir) == 0:
             raise ValueError('Invalid argument for address direction')
-        if BcoPlugInfo.addr_unit_type.count(addr_unit_type) == 0:
+        if cls.addr_unit_type.count(addr_unit_type) == 0:
             raise ValueError('Invalid argument for address unit type')
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
         addr = bytearray()
-        addr.append(BcoPlugInfo.addr_dir.index(addr_dir))
-        addr.append(BcoPlugInfo.addr_mode.index('unit'))
-        addr.append(BcoPlugInfo.addr_unit_type.index(addr_unit_type))
+        addr.append(cls.addr_dir.index(addr_dir))
+        addr.append(cls.addr_mode.index('unit'))
+        addr.append(cls.addr_unit_type.index(addr_unit_type))
         addr.append(plug)
         addr.append(0xff)
         # For my purpose.
         addr.append(0xff)
         return addr
 
-    @staticmethod
-    def get_subunit_addr(addr_dir, subunit_type, subunit_id, plug):
-        if BcoPlugInfo.addr_dir.count(addr_dir) == 0:
+    @classmethod
+    def get_subunit_addr(cls, addr_dir, subunit_type, subunit_id, plug):
+        if cls.addr_dir.count(addr_dir) == 0:
             raise ValueError('Invalid argument for address direction')
         if AvcGeneral.subunit_types.count(subunit_type) == 0:
             raise ValueError('Invalid argument for address subunit type')
@@ -47,8 +47,8 @@ class BcoPlugInfo():
         if plug > 255:
             raise ValueError('Invalid argument for address plug number')
         addr = bytearray()
-        addr.append(BcoPlugInfo.addr_dir.index(addr_dir))
-        addr.append(BcoPlugInfo.addr_mode.index('subunit'))
+        addr.append(cls.addr_dir.index(addr_dir))
+        addr.append(cls.addr_mode.index('subunit'))
         addr.append(plug)
         addr.append(0xff)
         addr.append(0xff)
@@ -57,18 +57,18 @@ class BcoPlugInfo():
                     subunit_id)
         return addr
 
-    @staticmethod
-    def get_function_block_addr(addr_dir, subunit_type, subunit_id,
+    @classmethod
+    def get_function_block_addr(cls, addr_dir, subunit_type, subunit_id,
                                 fb_type, fb_id, plug):
-        if BcoPlugInfo.addr_dir.count(addr_dir) == 0:
+        if cls.addr_dir.count(addr_dir) == 0:
             raise ValueError('Invalid argument for address direction')
         if AvcGeneral.subunit_types.count(subunit_type) == 0:
             raise ValueError('Invalid argument for address subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for address subunit id')
         addr = bytearray()
-        addr.append(BcoPlugInfo.addr_dir.index(addr_dir))
-        addr.append(BcoPlugInfo.addr_mode.index('function-block'))
+        addr.append(cls.addr_dir.index(addr_dir))
+        addr.append(cls.addr_mode.index('function-block'))
         addr.append(fb_type)
         addr.append(fb_id)
         addr.append(plug)
@@ -77,20 +77,20 @@ class BcoPlugInfo():
                     subunit_id)
         return addr
 
-    @staticmethod
-    def build_plug_info(info):
+    @classmethod
+    def build_plug_info(cls, info):
         addr = bytearray()
-        if BcoPlugInfo.addr_dir.count(info['dir']) == 0:
+        if cls.addr_dir.count(info['dir']) == 0:
             raise ValueError('Invalid address direction')
-        addr.append(BcoPlugInfo.addr_dir.index(info['dir']))
-        if BcoPlugInfo.addr_mode.count(info['mode']) == 0:
+        addr.append(cls.addr_dir.index(info['dir']))
+        if cls.addr_mode.count(info['mode']) == 0:
             raise ValueError('Invalid address mode')
-        addr.append(BcoPlugInfo.addr_mode.index(info['mode']))
+        addr.append(cls.addr_mode.index(info['mode']))
         data = info['data']
         if info['mode'] == 'unit':
-            if BcoPlugInfo.addr_unit_type.count(data['unit-type']) == 0:
+            if cls.addr_unit_type.count(data['unit-type']) == 0:
                 raise ValueError('Invalid address unit type')
-            addr.append(BcoPlugInfo.addr_unit_type.index(data['unit-type']))
+            addr.append(cls.addr_unit_type.index(data['unit-type']))
             addr.append(data['plug'])
             addr.append(0xff)
             addr.append(0xff)
@@ -108,22 +108,22 @@ class BcoPlugInfo():
                 addr.append(data['plug'])
         return addr
 
-    @staticmethod
-    def parse_plug_addr(addr):
+    @classmethod
+    def parse_plug_addr(cls, addr):
         info = {}
         if addr[0] == 0xff:
             return info
-        if addr[0] >= len(BcoPlugInfo.addr_dir):
+        if addr[0] >= len(cls.addr_dir):
             raise OSError('Unexpected address direction')
-        info['dir'] = BcoPlugInfo.addr_dir[addr[0]]
-        if addr[1] >= len(BcoPlugInfo.addr_mode):
+        info['dir'] = cls.addr_dir[addr[0]]
+        if addr[1] >= len(cls.addr_mode):
             raise OSError('Unexpected address mode in response')
-        info['mode'] = BcoPlugInfo.addr_mode[addr[1]]
+        info['mode'] = cls.addr_mode[addr[1]]
         data = {}
         if info['mode'] == 'unit':
-            if addr[2] >= len(BcoPlugInfo.addr_unit_type):
+            if addr[2] >= len(cls.addr_unit_type):
                 raise OSError('Unexpected address unit type in response')
-            data['unit-type'] = BcoPlugInfo.addr_unit_type[addr[2]]
+            data['unit-type'] = cls.addr_unit_type[addr[2]]
             data['plug'] = addr[3]
         else:
             if addr[2] >= len(AvcGeneral.subunit_types):
@@ -139,8 +139,8 @@ class BcoPlugInfo():
         info['data'] = data
         return info
 
-    @staticmethod
-    def get_plug_type(fcp, addr):
+    @classmethod
+    def get_plug_type(cls, fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -155,12 +155,12 @@ class BcoPlugInfo():
         args.append(0xff)
         args.append(0xff)
         params = AvcGeneral.command_status(fcp, args)
-        if params[10] > len(BcoPlugInfo.plug_type):
+        if params[10] > len(cls.plug_type):
             raise OSError('Unexpected value in response')
-        return BcoPlugInfo.plug_type[params[10]]
+        return cls.plug_type[params[10]]
 
-    @staticmethod
-    def get_plug_name(fcp, addr):
+    @classmethod
+    def get_plug_name(cls, fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -180,8 +180,8 @@ class BcoPlugInfo():
             return ""
         return params[11:11 + length].decode()
 
-    @staticmethod
-    def get_plug_channels(fcp, addr):
+    @classmethod
+    def get_plug_channels(cls, fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -198,8 +198,8 @@ class BcoPlugInfo():
         params = AvcGeneral.command_status(fcp, args)
         return params[10]
 
-    @staticmethod
-    def get_plug_ch_name(fcp, addr, pos):
+    @classmethod
+    def get_plug_ch_name(cls, fcp, addr, pos):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -217,8 +217,8 @@ class BcoPlugInfo():
         length = params[11]
         return params[12:12+length].decode()
 
-    @staticmethod
-    def get_plug_clusters(fcp, addr):
+    @classmethod
+    def get_plug_clusters(cls, fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -250,8 +250,8 @@ class BcoPlugInfo():
                 pos += 2
         return clusters
 
-    @staticmethod
-    def get_plug_cluster_info(fcp, addr, cls):
+    @classmethod
+    def get_plug_cluster_info(cls, fcp, addr, cluster):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -263,14 +263,14 @@ class BcoPlugInfo():
         args.append(addr[3])
         args.append(addr[4])
         args.append(0x07)   # Info type is 'cluster info'
-        args.append(cls)
+        args.append(cluster)
         args.append(0xff)
         params = AvcGeneral.command_status(fcp, args)
         length = params[12]
         return params[13:13+length].decode()
 
-    @staticmethod
-    def get_plug_input(fcp, addr):
+    @classmethod
+    def get_plug_input(cls, fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -285,10 +285,10 @@ class BcoPlugInfo():
         args.append(0xff)
         args.append(0xff)
         params = AvcGeneral.command_status(fcp, args)
-        return BcoPlugInfo.parse_plug_addr(params[10:])
+        return cls.parse_plug_addr(params[10:])
 
-    @staticmethod
-    def get_plug_outputs(fcp, addr):
+    @classmethod
+    def get_plug_outputs(cls, fcp, addr):
         args = bytearray()
         args.append(0x01)
         args.append(addr[5])
@@ -307,7 +307,7 @@ class BcoPlugInfo():
         plugs = params[10]
         if plugs != 0xff:
             for i in range(plugs):
-                addr = BcoPlugInfo.parse_plug_addr(params[11 + i * 7:])
+                addr = cls.parse_plug_addr(params[11 + i * 7:])
                 info.append(addr)
         return info
 
@@ -318,8 +318,8 @@ class BcoSubunitInfo():
         0xff: 'nothing-special'
     }
 
-    @staticmethod
-    def get_subunits(fcp):
+    @classmethod
+    def get_subunits(cls, fcp):
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
@@ -339,8 +339,8 @@ class BcoSubunitInfo():
                 subunits.append(subunit)
         return subunits
 
-    @staticmethod
-    def get_subunit_fb_info(fcp, subunit_type, subunit_id, page, fb_type):
+    @classmethod
+    def get_subunit_fb_info(cls, fcp, subunit_type, subunit_id, page, fb_type):
         if AvcGeneral.subunit_types.count(subunit_type) == 0:
             raise ValueError('Invalid argument for subunit type')
         if subunit_id > 7:
@@ -359,7 +359,7 @@ class BcoSubunitInfo():
             entry = {}
             entry['fb-type'] = params[5 + 5 * i]
             entry['fb-id'] = params[6 + 5 * i]
-            entry['fb-purpose'] = BcoSubunitInfo.fb_purpose[params[7 + 5 * i]]
+            entry['fb-purpose'] = cls.fb_purpose[params[7 + 5 * i]]
             entry['inputs'] = params[8+ 5 * i]
             entry['outputs'] = params[9 + 5 * i]
             entries.append(entry)
@@ -447,8 +447,8 @@ class BcoVendorDependent():
         'cyclicRedundancyCheck':   0x12,
     }
 
-    @staticmethod
-    def set_digital_channel_status(fcp, spec, name, values):
+    @classmethod
+    def set_digital_channel_status(cls, fcp, spec, name, values):
         if   spec is 'con':
             attrs = BcoVendorDependent.supported_con_status
             subcmds  = BcoVendorDependent._con_subcmds
@@ -476,8 +476,8 @@ class BcoVendorDependent():
                 args[6 + i] = values[i]
         AvcGeneral.command_control(fcp, args)
 
-    @staticmethod
-    def get_digital_channel_status(fcp, spec, name):
+    @classmethod
+    def get_digital_channel_status(cls, fcp, spec, name):
         if   spec is 'con':
             attrs = BcoVendorDependent.supported_con_status
             subcmds  = BcoVendorDependent._con_subcmds
@@ -498,8 +498,8 @@ class BcoVendorDependent():
         params = AvcGeneral.command_status(fcp, args)
         return params[6:6 + attrs[name]]
 
-    @staticmethod
-    def get_stream_detection(fcp, company_ids, dir, ext_plug):
+    @classmethod
+    def get_stream_detection(cls, fcp, company_ids, dir, ext_plug):
         if BcoVendorDependent.addr_dir.count(dir) == 0:
             raise ValueError('Invalid argument for address direction')
         if ext_plug >= 255:
@@ -536,8 +536,8 @@ class BcoStreamFormatInfo():
                   'do-not-care',    # 0xff
                   'reserved')       # the others
 
-    @staticmethod
-    def get_entry_list(fcp, addr):
+    @classmethod
+    def get_entry_list(cls, fcp, addr):
         fmts = []
         for i in range(0xff):
             # DM1500 tends to cause timeout.
@@ -557,7 +557,7 @@ class BcoStreamFormatInfo():
                 args.append(i)
                 args.append(0xff)
                 params = AvcGeneral.command_status(fcp, args)
-                fmts.append(BcoStreamFormatInfo._parse_format(params[11:]))
+                fmts.append(cls._parse_format(params[11:]))
             except OSError as e:
                 if str(e) != 'Rejected':
                     raise
@@ -566,8 +566,8 @@ class BcoStreamFormatInfo():
         return fmts
 
     # Two types of sync stream: 0x90/0x00/0x40 and 0x90/0x40 with 'sync-stream'
-    @staticmethod
-    def _parse_format(params):
+    @classmethod
+    def _parse_format(cls, params):
         fmt = {}
         # Sync stream with stereo raw audio
         if params[0] == 0x90 and params[1] == 0x00 and params[2] == 0x40:
@@ -589,7 +589,7 @@ class BcoStreamFormatInfo():
             for c in range(params[5 + i * 2]):
                 type = params[5 + i * 2 + 1]
                 if type <= 0x0f:
-                    formation.append(BcoStreamFormatInfo.data_types[type])
+                    formation.append(cls.data_types[type])
                 elif type == 0x40:
                     formation.append('sync-stream')
                 elif type == 0xff:
