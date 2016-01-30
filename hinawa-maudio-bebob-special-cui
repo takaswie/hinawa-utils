@@ -1,0 +1,141 @@
+#!/usr/bin/env python3
+
+import sys
+
+from misc.cui_kit import CuiKit
+from bebob.maudio_special import MaudioSpecial
+
+def handle_input_volume(unit, args):
+    if len(args) > 1:
+        target = args[0]
+        ch = int(args[1])
+        if target in unit.input_labels and ch < 2:
+            if len(args) > 2:
+                value = int(args[2])
+                unit.set_input_volume(target, ch, value)
+            else:
+                print(unit.get_input_volume(target, ch))
+            return True
+    print('Arguments for input-volume command:')
+    print('  target:    [{0}]'.format((', ').join(unit.input_labels)))
+    print('  ch:        [0, 1]')
+    print('  value:     []')
+    return False
+
+def handle_output_volume(unit, args):
+    if len(args) > 1:
+        target = args[0]
+        ch = int(args[1])
+        if target in unit.output_labels and ch < 2:
+            if len(args) > 2:
+                value = int(args[2])
+                unit.set_output_volume(target, ch, value)
+            else:
+                print(unit.get_output_volume(target, ch))
+            return True
+    print('Arguments for output-volume command:')
+    print('  target:    [{0}]'.format((', ').join(unit.output_labels)))
+    print('  ch:        [0, 1]')
+    print('  value:     []')
+    return False
+
+def handle_aux_volume(unit, args):
+    if len(args) > 0:
+        ch = int(args[0])
+        if ch < 2:
+            if len(args) > 1:
+                value = int(args[1])
+                unit.set_aux_volume(ch, value)
+            else:
+                print(unit.get_aux_volume(ch))
+            return True
+    print('Arguments for aux-volume command:')
+    print('  ch:        [0, 1]')
+    print('  value:     []')
+    return False
+
+def handle_headphone_volume(unit, args):
+    if len(args) > 1:
+        target = args[0]
+        ch = int(args[1])
+        if target in unit.headphone_labels and ch < 2:
+            if len(args) > 2:
+                value = int(args[2])
+                unit.set_headphone_volume(target, ch, value)
+            else:
+                print(unit.get_headphone_volume(target, ch))
+            return True
+    print('Arguments for headphone-volume command:')
+    print('  target:    [{0}]'.format((', ').join(unit.headphone_labels)))
+    print('  ch:        [0, 1]')
+    print('  value:     []')
+    return False
+
+def handle_aux_input(unit, args):
+    if len(args) > 1:
+        target = args[0]
+        ch = int(args[1])
+        if target in unit.input_labels and ch < 2:
+            if len(args) > 2:
+                value = int(args[2])
+                unit.set_aux_input(target, ch, value)
+            else:
+                print(unit.get_aux_input(target, ch))
+            return True
+    print('Arguments for aux-input command:')
+    print('  target:    [{0}]'.format((', ').join(unit.input_labels)))
+    print('  ch:        [0, 1]')
+    print('  value:     []')
+    return False
+
+def handle_mixer_routing(unit, args):
+    if len(args) > 1:
+        mixer = args[0]
+        source = args[1]
+        if mixer in unit.mixer_labels and source in unit.input_labels:
+            if len(args) > 2:
+                value = int(args[2])
+                unit.set_mixer_routing(mixer, source, value)
+            else:
+                print(unit.get_mixer_routing(mixer, source))
+            return True
+    print('Arguments for mixer-routing command:')
+    print('  mixer-routing mixer source [state]')
+    print('  mixer:     {0}'.format(unit.mixer_labels))
+    print('  source:    {0}'.format(unit.input_labels))
+    print('  state:     0, 1')
+    return False
+
+def handle_listen_metering(unit, args):
+    import time
+    import signal
+    # This is handled by another context.
+    def handle_unix_signal(signum, frame):
+        sys.exit()
+    signal.signal(signal.SIGINT, handle_unix_signal)
+    while 1:
+        # At higher sampling rate, this causes timeout frequently.
+        try:
+            meters = unit.get_meters()
+            for name in sorted(meters):
+                print('{0}: {1:04x}'.format(name, meters[name]))
+        except Exception as e:
+            pass
+        print('')
+        time.sleep(0.1)
+    return True
+
+cmds = {
+    'input-volume':     handle_input_volume,
+    'output-volume':    handle_output_volume,
+    'aux-volume':       handle_aux_volume,
+    'headphone-volume': handle_headphone_volume,
+    'aux-input':        handle_aux_input,
+    'mixer-routing':    handle_mixer_routing,
+    'listen-metering':  handle_listen_metering,
+}
+
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = MaudioSpecial(fullpath)
+    CuiKit.dispatch_command(unit, cmds)
