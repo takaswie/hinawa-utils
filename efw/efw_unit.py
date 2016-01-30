@@ -8,9 +8,9 @@ from efw.transactions import EftMonitor
 from efw.transactions import EftIoconf
 
 class EfwUnit(Hinawa.SndEfw):
-    def __init__(self, card):
+    def __init__(self, path):
         super().__init__()
-        self.open('/dev/snd/hwC{0}D0'.format(card))
+        self.open(path)
         self.listen()
         self.info = EftInfo.get_spec(self)
 

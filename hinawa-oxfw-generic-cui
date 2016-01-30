@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import sys
-
+from misc.cui_kit import CuiKit
 from oxfw.oxfw_unit import OxfwUnit
 
 # Helper functions
-def dump_status(unit):
+def handle_current_status(unit, args):
     print('Current status:')
     print('  Packet Streaming:')
     print('    running:          {0}'.format(unit.get_property('streaming')))
@@ -13,79 +12,62 @@ def dump_status(unit):
     print('    sampling-rate:    {0}'.format(fmts['playback']['sampling-rate']))
     print('  Stream formats:')
     print('    playback: {0} PCM'.format(len(fmts['playback']['formation'])))
-    if not unit.playback_only:
+    if fmts['capture']:
         print('    capture:  {0} PCM'.format(len(fmts['capture']['formation'])))
     print('ASIC information:')
     print('  type:             {0}'.format(unit.hw_info['asic-type']))
     print('  ID:               {0}'.format(unit.hw_info['asic-id']))
     print('  firmware version: {0}'.format(unit.hw_info['firmware-version']))
+    return True
 
-def dump_commands(unit):
-    print('  Commands and supported arguments:')
-    print('    status:')
-    print('    commands:')
-    print('    stream-format:')
-    for dir, fmts in unit.supported_stream_formats.items():
-        print('      {0} entries:'.format(dir))
-        for i, fmt in enumerate(fmts):
-            rate = fmt['sampling-rate']
-            ch = len(fmt['formation'])
-            print('        {0}: {1}, {2} PCM'.format(i, rate, ch))
+def dump_stream_format(fmt):
+    print('        sampling-rate: {0}'.format(fmt['sampling-rate']))
+    print('        rate-control:  {0}'.format(fmt['rate-control']))
+    print('        formation:')
+    for num, data_channel in enumerate(fmt['formation']):
+        print('          {0}: {1}'.format(num, data_channel))
 
-# Main routine
-argv = sys.argv
+def handle_stream_format(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0]and len(args) > 1:
+            fmts = unit.supported_stream_formats
+            p_entry = int(args[1])
+            p_fmt = fmts['playback'][p_entry]
+            if 'capture' in fmts:
+                c_entry = int(args[2])
+                c_fmt = fmts['capture'][c_entry]
+            else:
+                c_fmt = None
+            unit.set_stream_formats(p_fmt, c_fmt)
+        else:
+            for dir, fmt in unit.get_current_stream_formats().items():
+                if fmt:
+                    print('{0}:'.format(dir))
+                    dump_stream_format(fmt)
+        return True
+    print('Arguments for stream-format command:')
+    print('  stream-format OPERATION [PLAYBACK-FORMAT-ENTRY [CAPTURE-FORMAT-ENTRY]]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    fmts = unit.supported_stream_formats
+    print('    PLAYBACK-FORMAT-ENTRY:')
+    for num, fmt in enumerate(fmts['playback']):
+        print('      Entry {0}:'.format(num))
+        dump_stream_format(fmt)
+    if 'capture' in fmts and len(fmts['capture']) > 0:
+        print('    CAPTURE-FORMAT-ENTRY:')
+        for num, fmt in enumerate(fmts['capture']):
+            print('      Entry {0}:'.format(num))
+            dump_stream_format(fmt)
+    return False
 
-if len(argv) < 2:
-    print(' hinawa-oxfw-generic-cui CARD COMMAND [SUBCOMMAND [ARGUMENTS]]')
-    print('  CARD: the number as ALSA sound card, see /proc/asound/cards.')
-    print('  COMMAND:')
-    print('    status: output unit status')
-    print('    commands: output available sub-commands and arguments')
-    sys.exit()
+cmds = {
+    'current-status':   handle_current_status,
+    'stream-format':    handle_stream_format,
+}
 
-card = int(argv[1])
-unit = OxfwUnit('/dev/snd/hwC{0}D0'.format(card))
-
-if len(argv) < 3:
-    dump_commands(unit)
-    sys.exit()
-cmd = argv[2]
-
-if cmd == 'status':
-    dump_status(unit)
-elif cmd == 'stream-format':
-    if len(argv) < 4:
-        fmts = unit.get_current_stream_formats()
-        for dir, fmts in unit.get_current_stream_formats().items():
-            if not fmts:
-                continue
-            rate = fmts['sampling-rate']
-            ch = len(fmts['formation'])
-            print('{0}: {1}, {2} PCM'.format(dir, rate, ch))
-        sys.exit()
-    if unit.get_property('streaming'):
-        print('Packet streaming started')
-        sys.exit()
-    playback_entry = int(argv[3])
-    if playback_entry > len(unit.supported_stream_formats['playback']):
-        print('Invalid argument for playback entry')
-        sys.exit()
-    else:
-        pfmt = unit.supported_stream_formats['playback'][playback_entry]
-    if unit.playback_only:
-        cfmt = None
-    elif len(argv) < 5:
-        print('Missing entry for capture')
-        sys.exit()
-    else:
-        capture_entry = int(argv[4])
-        if capture_entry > len(unit.supported_stream_formats['capture']):
-            print('Invalid argument for capture entry')
-            sys.exit()
-        cfmt = unit.supported_stream_formats['capture'][capture_entry]
-        if cfmt['sampling-rate'] != pfmt['sampling-rate']:
-            print('Sampling rate mismatch between playback/capture format')
-            sys.exit()
-    unit.set_stream_formats(pfmt, cfmt)
-else:
-    dump_commands(unit)
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = OxfwUnit(fullpath)
+    CuiKit.dispatch_command(unit, cmds)

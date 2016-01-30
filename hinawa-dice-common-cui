@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import sys
-
+from misc.cui_kit import CuiKit
 from dice.dice_unit import DiceUnit
 
 def handle_current_status(unit, args):
@@ -114,30 +113,7 @@ cmds = {
     'nickname':         handle_nickname,
 }
 
-def dump_commands():
-    print('Available commands:')
-    for name in cmds.keys():
-        print('  {0}'.format(name))
-
-# Main routine
-argv = sys.argv
-if len(argv) < 2:
-    print('hinawa-dice-generic-cui CARD COMMAND [ARGS]')
-    print('  CARD: ALSA sound card number')
-    print('  COMMAND: {0}'.format(', '.join(cmds)))
-    print('  ARGS: depending on COMMAND')
-    sys.exit()
-card = argv[1]
-
-unit = DiceUnit('/dev/snd/hwC{0}D0'.format(card))
-if len(argv) < 3:
-    dump_commands()
-    sys.exit()
-cmd = argv[2]
-
-if cmd in cmds:
-    cmds[cmd](unit, argv[3:])
-else:
-    dump_commands()
-
-sys.exit()
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = DiceUnit(fullpath)
+    CuiKit.dispatch_command(unit, cmds)

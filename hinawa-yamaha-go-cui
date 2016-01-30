@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import sys
-
+from misc.cui_kit import CuiKit
 from bebob.yamaha_go import YamahaGo
 
 def handle_current_status(unit, args):
@@ -191,25 +190,7 @@ cmds = {
     'clock-source':     handle_clock_source,
 }
 
-def dump_commands():
-    print('Available commands:')
-    for name in cmds.keys():
-        print('  {0}'.format(name))
-
-# Main routine
-argv = sys.argv
-if len(argv) < 2:
-    print('help')
-    sys.exit()
-card = argv[1]
-
-unit = YamahaGo('/dev/snd/hwC{0}D0'.format(card))
-if len(argv) < 3:
-    dump_commands()
-    sys.exit()
-cmd = argv[2]
-
-if cmd in cmds:
-    cmds[cmd](unit, argv[3:])
-else:
-    dump_commands()
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = YamahaGo(fullpath)
+    CuiKit.dispatch_command(unit, cmds)

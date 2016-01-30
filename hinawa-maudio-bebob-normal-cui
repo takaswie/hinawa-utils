@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import sys
-
+from misc.cui_kit import CuiKit
 from bebob.maudio_normal import MaudioNormal
 
 def handle_clock_source(unit, args):
@@ -243,25 +242,7 @@ cmds = {
     'listen-metering':      handle_listen_metering,
 }
 
-def dump_commands(unit):
-    print('Available commands:')
-    for name in cmds.keys():
-        print('  {0}'.format(name))
-
-argv = sys.argv
-if len(argv) < 2:
-    print('help')
-    sys.exit()
-card = argv[1]
-
-unit = MaudioNormal('/dev/snd/hwC{0}D0'.format(card))
-if len(argv) < 3:
-    dump_commands(unit)
-    sys.exit()
-cmd = argv[2]
-
-if cmd in cmds:
-    cmds[cmd](unit, argv[3:])
-else:
-    dump_commands(unit)
-
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = MaudioNormal(fullpath)
+    CuiKit.dispatch_command(unit, cmds)

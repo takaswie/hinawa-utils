@@ -139,7 +139,7 @@ class AvcAudio():
         args.append(0x02)   # Control data length is 2
         args.append(vol >> 8)   # Higher part of volume
         args.append(vol & 0xff) # Lower part of volume
-        AvcGeneral.command_control(cls, fcp, args)
+        AvcGeneral.command_control(fcp, args)
 
     @classmethod
     def get_feature_volume_state(cls, fcp, subunit_id, attr, fb_id, ch):

@@ -31,7 +31,8 @@ class AvcStreamFormatInfo():
              'do-not-care',     # 0xff
              'reserved')        # the others
 
-    def _parse_format(params):
+    @classmethod
+    def _parse_format(cls, params):
         if params[0] != 0x90 or params[1] != 0x40:
             raise RuntimeError('Unsupported format')
         fmt = {}

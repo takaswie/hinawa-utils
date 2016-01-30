@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import sys
-
+from misc.cui_kit import CuiKit
 from oxfw.tascam_fireone import TascamFireone
 
 # Helper functions
-def dump_status(unit):
+def handle_current_status(unit, args):
     print('Current status:')
     print('  Packet Streaming:')
     print('    running:          {0}'.format(unit.get_property('streaming')))
@@ -21,104 +20,99 @@ def dump_status(unit):
     print('  firmware version: {0}'.format(unit.hw_info['firmware-version']))
     print('TASCAM firmware information:')
     print('  version:          {0}'.format(unit.firmware_get_version()))
+    return True
 
-def dump_commands(unit):
-    options = {
-        'display-mode': unit.display_modes,
-        'control-mode': unit.control_modes,
-        'input-mode': unit.input_modes,
-    }
-    print('  Commands and supported arguments:')
-    print('    status:')
-    print('    commands:')
-    for name, modes in options.items():
-        print('    {0}:'.format(name))
-        for mode in modes:
-            print('      {0}'.format(mode))
-    print('    sampling-rate:')
-    for fmt in unit.supported_stream_formats['playback']:
-        print('      {0}'.format(fmt['sampling-rate']))
-    print('  Changing device status during packet streaming causes disorder.')
-
-# Main routine
-argv = sys.argv
-
-if len(argv) < 2:
-    print(' hinawa-tascam-fireone-cui CARD COMMAND [SUBCOMMAND [ARGUMENTS]]')
-    print('  CARD: the number as ALSA sound card, see /proc/asound/cards.')
-    print('  COMMAND:')
-    print('    status: output unit status')
-    print('    commands: output available sub-commands and arguments')
-    sys.exit()
-
-card = int(argv[1])
-unit = TascamFireone('/dev/snd/hwC{0}D0'.format(card))
-
-if len(argv) < 3:
-    dump_commands(unit)
-    sys.exit()
-cmd = argv[2]
-
-if cmd == 'status':
-    dump_status(unit)
-    sys.exit()
-elif cmd == 'commands':
-    dump_commands(unit)
-    sys.exit()
-
-if len(argv) < 4:
-    arg = None
-else:
-    arg = argv[3]
-
-if cmd == 'display-mode':
-    if arg == None:
-        print(unit.display_get_mode())
-    else:
-        try:
-            unit.display_set_mode(arg)
-        except Exception as e:
-            print('Invalid argument for display mode: {0}'.format(e))
-elif cmd == 'control-mode':
-    if arg == None:
-        print(unit.control_get_mode())
-    else:
-        try:
-            unit.control_set_mode(arg)
-        except Exception as e:
-            print('Invalid argument for control mode: {0}'.format(e))
-elif cmd == 'input-mode':
-    if arg == None:
-        print(unit.input_get_mode())
-    else:
-        try:
-            unit.input_set_mode(arg)
-        except Exception as e:
-            print('Invalid argument for input mode: {0}'.format(e))
-elif cmd == 'sampling-rate':
-    if arg == None:
-        fmts = unit.get_current_stream_formats()
-        print(fmts['playback']['sampling-rate'])
-    elif unit.get_property('streaming'):
-            print('Packet streaming started')
-    else:
-        rate = int(arg)
-        playback = None
-        for fmt in unit.supported_stream_formats['playback']:
-            if fmt['sampling-rate'] == rate:
-                playback = fmt
-        capture = None
-        for fmt in unit.supported_stream_formats['capture']:
-            if fmt['sampling-rate'] == rate:
-                capture = fmt
-        if playback == None and capture == None:
-            print('Invalid argument for sampling rate')
+def handle_display_mode(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            mode = args[1]
+            unit.display_set_mode(mode)
         else:
-            try:
-                unit.set_stream_formats(playback, capture)
-            except Exception as e:
-                print('Fail to set sampling rate: {0}'.format(e))
-else:
-    print('Invalid arguments')
+            print(unit.display_get_mode())
+        return True
+    print('Arguments for display-mode command:')
+    print('  display-mode OPERATION [MODE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    MODE:     {0}'.format(', '.join(unit.display_modes)))
+    return False
 
-sys.exit()
+def handle_control_mode(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            mode = args[1]
+            unit.control_set_mode(mode)
+        else:
+            print(unit.control_get_mode())
+        return True
+    print('Arguments for control-mode command:')
+    print('  control-mode OPERATION [MODE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    MODE:     {0}'.format(', '.join(unit.control_modes)))
+    return False
+
+def hanel_input_mode(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            mode = args[1]
+            unit.input_set_mode(mode)
+        else:
+            print(unit.input_get_mode())
+        return True
+    print('Arguments for input-mode command:')
+    print('  input-mode OPERATION [MODE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    MODE:     {0}'.format(', '.join(unit.input_modes)))
+    return False
+
+def handle_sampling_rate(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            if unit.get_property('streaming'):
+                print('Packet streaming started.')
+                return False
+            rate = args[1]
+            for fmt in unit.supported_stream_formats['playback']:
+                if fmt['sampling-rate'] == rate:
+                    playback = fmt
+            else:
+                print('Invalid argument for sampling rate')
+                return False
+            for fmt in unit.supported_stream_formats['capture']:
+                if fmt['sampling-rate'] == rate:
+                    capture = fmt
+            else:
+                print('Invalid argument for sampling rate')
+                return False
+            unit.set_stream_formats(playback, capture)
+        else:
+            fmts = unit.get_current_stream_formats()
+            print(fmts['playback']['sampling-rate'])
+        return True
+    print('Arguments for sampling-rate command:')
+    print('  input-mode OPERATION [RATE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    fmts = unit.supported_stream_formats['playback']
+    rates = [str(fmt['sampling-rate']) for fmt in fmts]
+    print('    MODE:     {0}'.format(', '.join(rates)))
+    return True
+
+cmds = {
+    'current-status':   handle_control_mode,
+    'display-mode':     handle_display_mode,
+    'control-mode':     handle_control_mode,
+    'input-mode':       hanel_input_mode,
+    'sampling-rate':    handle_sampling_rate,
+}
+
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = TascamFireone(fullpath)
+    CuiKit.dispatch_command(unit, cmds)

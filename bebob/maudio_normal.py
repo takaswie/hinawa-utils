@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import sys
-
 from bebob.bebob_unit import BebobUnit
 
 from ta1394.general import AvcGeneral
