@@ -62,50 +62,72 @@ class MaudioSpecial(BebobUnit):
                 self._company_ids = info['company-id']
         if model_id < 0:
             raise OSError('Not supported')
-        # Read transactions are not allowed.
-        # TODO: file cache
-        self._cache = [
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            0x7FFE8000,
-            0x7FFE8000,
-            0x7FFE8000,
-            0x7FFE8000,
-            0x7FFE8000,
-            0x7FFE8000,
-            0x7FFE8000,
-            0x7FFE8000,
-            0x7FFE8000,
-            0x80008000,
-            0x80008000,
-            0x80008000,
-            0x80008000,
-            0x80008000,
-            0x80008000,
-            0x80008000,
-            0x80008000,
-            0x80008000,
-            0x80008000,
-            0x80008000,
-            0x00000000,
-            0x00000009,
-            0x00010001,
-            0x00000000]
-        self._write_status(0, self._cache)
+        self.filepath = '/tmp/hinawa-{0:08x}'.format(self.get_property('guid'))
+        self._load_cache()
+
+    # Read transactions are not allowed. We cache data.
+    def _load_cache(self):
+        try:
+            f = open(self.filepath, 'r')
+            if sum(1 for line in f.readline()) != 40:
+                raise
+            self._cache = [0x00000000] * 40
+            index = 0
+            for line in f.readline():
+                self._cache[index] = int(line.strip(), base=16)
+                index = index + 1
+            f.close()
+        except:
+            # This is initial value.
+            self._cache = [
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x00000000,
+                0x7FFE8000,
+                0x7FFE8000,
+                0x7FFE8000,
+                0x7FFE8000,
+                0x7FFE8000,
+                0x7FFE8000,
+                0x7FFE8000,
+                0x7FFE8000,
+                0x7FFE8000,
+                0x80008000,
+                0x80008000,
+                0x80008000,
+                0x80008000,
+                0x80008000,
+                0x80008000,
+                0x80008000,
+                0x80008000,
+                0x80008000,
+                0x80008000,
+                0x80008000,
+                0x00000000,
+                0x00000009,
+                0x00010001,
+                0x00000000]
+        finally:
+            self.write_transact(self.BASE_ADDR, self._cache)
+
+    def store_cache(self):
+        f = open(self.filepath, 'w+')
+        for i, datum in enumerate(self._cache):
+            f.write('{0:08x}\n'.format(datum))
+        f.close()
 
     # Helper functions
     def _get_array(self):
@@ -116,10 +138,12 @@ class MaudioSpecial(BebobUnit):
                 raise RuntimeError('Platform has no representation \
                                     equivalent to quadlet.')
         return arr
-    def _write_status(self, offset, data):
-        self.write_transact(self.BASE_ADDR + offset, data)
-    def _read_status(self, offset, quads):
-        return self.read_transact(self.BASE_ADDR + offset, quads)
+
+    def _write_status(self, index, datum):
+        data = self._get_array()
+        data.append(datum)
+        self.write_transact(self.BASE_ADDR + index * 4, data)
+        self._cache[index] = datum
 
     def _set_volume(self, index, ch, value):
         if ch > 1:
@@ -128,11 +152,7 @@ class MaudioSpecial(BebobUnit):
             datum = (self._cache[index] & 0x0000ffff) | (value << 8)
         else:
             datum = (self._cache[index] & 0xffff0000)| value
-        data = self._get_array()
-        data.append(datum)
-        offset = index * 4
-        self._write_status(offset, data)
-        self._cache[index] = datum
+        self._write_status(index, datum)
     def _get_volume(self, index, ch):
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
@@ -218,10 +238,9 @@ class MaudioSpecial(BebobUnit):
     def _calculate_mixer_bit(self, mixer, source):
         if source.find('stream') == 0:
             pos = 0
-            if source == 'stream-1/2':
+            if source == 'stream-3/4':
                 pos = 2
-            if self.mixer_labels.index(mixer) == 0:
-                pos += 1
+            pos = pos + self.mixer_labels.index(mixer)
         else:
             if source.find('analog') == 0:
                 pos = self.mixer_labels.index(mixer) * 4
@@ -245,7 +264,7 @@ class MaudioSpecial(BebobUnit):
             datum = datum | (1 << pos)
         else:
             datum = datum & ~(1 << pos)
-        print('{0:08x}'.format(datum))
+        self._write_status(index, datum)
     def get_mixer_routing(self, mixer, source):
         if mixer not in self.mixer_labels:
             raise ValueError('invalid argument for mixer stereo pair')

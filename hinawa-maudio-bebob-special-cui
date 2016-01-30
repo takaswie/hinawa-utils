@@ -139,3 +139,4 @@ fullpath = CuiKit.seek_snd_unit_path()
 if fullpath:
     unit = MaudioSpecial(fullpath)
     CuiKit.dispatch_command(unit, cmds)
+    unit.store_cache()
