@@ -10,8 +10,7 @@ class DiceUnit(Hinawa.SndDice):
         if self.get_property('type') != 1:
             raise ValueError('The character device is not for Dice unit')
         self.listen()
-        self._parse_address_space()
-        self._addrs = {}
+        self._addrs = self._parse_address_space()
         self.supported_sampling_rates = []
         self.supported_clock_sources = []
         self._parse_clock_caps()
@@ -39,7 +38,7 @@ class DiceUnit(Hinawa.SndDice):
         for i in range(len(min_sizes)):
             if data[i] < min_sizes[i]:
                 raise OSError('Unsupported value detected in address info')
-        self._addrs = {
+        return {
             'global':   {'addr': data[0] * 4 + 0xffffe0000000, 'size': data[1]},
             'tx':       {'addr': data[2] * 4 + 0xffffe0000000, 'size': data[3]},
             'rx':       {'addr': data[4] * 4 + 0xffffe0000000, 'size': data[5]},
