@@ -194,13 +194,6 @@ class MaudioNormal(BebobUnit):
         ch = targets[index][1][ch]
         return (fb, ch)
 
-    def _set_mute(self, targets, index, ch, value):
-        fb, ch = self._refer_fb_data(targets, index, ch)
-        AvcAudio.set_feature_mute_state(self.fcp, 0, 'current', fb, ch, value)
-    def _get_mute(self, targets, index, ch):
-        fb, ch = self._refer_fb_data(targets, index, ch)
-        return AvcAudio.get_feature_mute_state(self.fcp, 0, 'current', fb, ch)
-
     def _set_volume(self, targets, index, ch, value):
         fb, ch = self._refer_fb_data(targets, index, ch)
         AvcAudio.set_feature_volume_state(self.fcp, 0, 'current', fb, ch, value)
@@ -217,13 +210,6 @@ class MaudioNormal(BebobUnit):
             raise ValueError('Invalid argument for input')
         return self._labels[self._id]['inputs'].index(target)
 
-    def set_input_mute(self, target, ch, value):
-        index = self._refer_input_data(target)
-        self._set_mute(self._inputs[self._id], index, ch, value)
-    def get_input_mute(self, target, ch):
-        index = self._refer_input_data(target)
-        return self._get_mute(self._inputs[self._id], index, ch)
-
     def set_input_volume(self, target, ch, value):
         index = self._refer_input_data(target)
         self._set_volume(self._inputs[self._id], index, ch, value)
@@ -237,13 +223,6 @@ class MaudioNormal(BebobUnit):
             return ()
         return self._labels[self._id]['inputs']
 
-    def set_aux_input_mute(self, target, ch, value):
-        index = self._refer_input_data(target)
-        self._set_mute(self._aux_inputs[self._id], index, ch, value)
-    def get_aux_input_mute(self, target, ch):
-        index = self._refer_input_data(target)
-        return self._get_mute(self._aux_inputs[self._id], index, ch)
-
     def set_aux_input_volume(self, target, ch, value):
         index = self._refer_input_data(target)
         self._set_volume(self._aux_inputs[self._id], index, ch, value)
@@ -251,17 +230,6 @@ class MaudioNormal(BebobUnit):
         index = self._refer_input_data(target)
         return self._get_volume(self._aux_inputs[self._id], index, ch)
 
-
-    def set_aux_master_mute(self, ch, value):
-        if ch > 2:
-            raise ValueError('Invalid argument for master channel')
-        fb = self._aux_output[self._id]
-        AvcAudio.set_feature_mute_state(self.fcp, 0, 'current', fb, ch, value)
-    def get_aux_master_mute(self, ch):
-        if ch > 2:
-            raise ValueError('Invalid argument for master channel')
-        fb = self._aux_output[self._id]
-        return AvcAudio.get_feature_mute_state(self.fcp, 0, 'current', fb, ch)
 
     def set_aux_master_volume(self, ch, value):
         if ch > 2:
@@ -310,13 +278,6 @@ class MaudioNormal(BebobUnit):
         if target not in self._labels[self._id]['outputs']:
             raise ValueError('Invalid argument for output')
         return self._labels[self._id]['outputs'].index(target)
-
-    def set_output_mute(self, target, ch, value):
-        index = self._refer_out_data(target)
-        self._set_mute(self._outputs[self._id], index, ch, value)
-    def get_output_mute(self, target, ch):
-        index = self._refer_out_data(target)
-        return self._get_mute(self._outputs[self._id], index, ch)
 
     def set_output_volume(self, target, ch, value):
         index = self._refer_out_data(target)
@@ -371,13 +332,6 @@ class MaudioNormal(BebobUnit):
         if right != left + 1:
             raise ValueError('Invalid argument for headphone')
         return left
-
-    def set_headphone_mute(self, target, ch, value):
-        index = self._refer_hp_data(target)
-        self._set_mute(self._hp_outs[self._id], index, ch, value)
-    def get_headphone_mute(self, target, ch):
-        index = self._refer_hp_data(target)
-        return self._get_mute(self._hp_outs[self._id], index, ch)
 
     def set_headphone_volume(self, target, ch, value):
         index = self._refer_hp_data(target)

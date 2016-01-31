@@ -13,83 +13,66 @@ def handle_clock_source(unit, args):
             unit.set_clock_source(source)
             return True
     print('Arguments for clock-source command:')
-    print('  clock-source <source>')
+    print('  clock-source source')
     print('    source: {0}'.format(', '.join(unit.get_clock_source_labels())))
     print('  Packet streaming should be stopped.')
 
-def handle_input(unit, args):
-    ops = {
-        'volume':   (unit.set_input_volume, unit.get_input_volume),
-        'mute':     (unit.set_input_mute, unit.get_input_mute),
-    }
-    if len(args) > 2:
+def handle_input_volume(unit, args):
+    if len(args) > 1:
         input = args[0]
-        operation = args[1]
-        ch = int(args[2])
-        if input in unit.get_input_labels() and operation in ops and \
-           ch < 3:
-            if len(args) == 4:
-                value = int(args[3])
-                ops[operation][0](input, ch, value)
+        ch = int(args[1])
+        if input in unit.get_input_labels() and ch < 3:
+            if len(args) == 3:
+                value = int(args[2])
+                unit.set_input_volume(input, ch, value)
             else:
-                print(ops[operation][1](input, ch))
+                print(unit.get_input_volume(input, ch))
             return True
-    print('Arguments for input command:')
-    print('  target:    [{0}]'.format((', ').join(unit.get_input_labels())))
-    print('  operation: [{0}]'.format((', ').join(ops)))
-    print('  ch:        [0, 1]')
-    print('  value:     []')
+    print('Arguments for input-volume command:')
+    print('  input-volume target ch [value]')
+    print('    target:    [{0}]'.format((', ').join(unit.get_input_labels())))
+    print('    ch:        [0, 1]')
+    print('    value:     []')
     return False
 
-def handle_aux_input(unit, args):
-    ops = {
-        'volume':   (unit.set_aux_input_volume, unit.get_aux_input_volume),
-        'mute':     (unit.set_aux_input_mute, unit.get_aux_input_mute),
-    }
-    if len(unit.get_aux_input_labels()) == 0:
-        print('Not supported')
-        return False
-    if len(args) > 2:
-        aux_input = args[0]
-        operation = args[1]
-        ch = int(args[2])
-        if aux_input in unit.get_aux_input_labels() and operation in ops and \
-           ch < 3:
-            if len(args) == 4:
-                value = int(args[3])
-                ops[operation][0](aux_input, ch, value)
-            else:
-                print(ops[operation][1](aux_input, ch))
-            return True
-    print('Arguments for aux-input command:')
-    print('  target:    [{0}]'.format((', ').join(unit.get_aux_input_labels())))
-    print('  operation: [{0}]'.format((', ').join(ops)))
-    print('  ch:        [0, 1]')
-    print('  value:     []')
-    return False
-
-def handle_aux_output(unit, args):
-    ops = {
-        'volume':   (unit.set_aux_master_volume, unit.get_aux_master_volume),
-        'mute':     (unit.set_aux_master_mute, unit.get_aux_master_mute),
-    }
+def handle_aux_input_volume(unit, args):
     if len(unit.get_aux_input_labels()) == 0:
         print('Not supported')
         return False
     if len(args) > 1:
-        operation = args[0]
+        aux_input = args[0]
         ch = int(args[1])
-        if operation in ops and ch < 3:
+        if aux_input in unit.get_aux_input_labels() and ch < 3:
             if len(args) == 3:
                 value = int(args[2])
-                ops[operation][0](ch, value)
+                unit.set_aux_input_volume(aux_input, ch, value)
             else:
-                print(ops[operation][1](ch))
+                print(unit.get_aux_input_volume(aux_input, ch))
             return True
-    print('Arguments for aux-output command:')
-    print('  operation: [{0}]'.format(', '.join(ops)))
-    print('  ch:        [0, 1]')
-    print('  value:     []')
+    print('Arguments for aux-input-volume command:')
+    print('  aux-input-volume aux-input ch [value]')
+    print('    aux-input: {0}'.format((', ').join(unit.get_aux_input_labels())))
+    print('    ch:        0, 1')
+    print('    value:     []')
+    return False
+
+def handle_aux_output_volume(unit, args):
+    if len(unit.get_aux_input_labels()) == 0:
+        print('Not supported')
+        return False
+    if len(args) > 0:
+        ch = int(args[0])
+        if ch < 3:
+            if len(args) == 2:
+                value = int(args[1])
+                unit.set_aux_master_volume(ch, value)
+            else:
+                print(unit.get_aux_master_volume(ch))
+            return True
+    print('Arguments for aux-output-volume command:')
+    print('  aux-output-volume ch [value]')
+    print('    ch:        [0, 1]')
+    print('    value:     []')
     return False
 
 def handle_mixer_routing(unit, args):
@@ -112,34 +95,29 @@ def handle_mixer_routing(unit, args):
                     print(1)
             return True
     print('Arguments for mixer-routing command:')
-    print('  mixer-routing [sink] [source] [value]:')
+    print('  mixer-routing sink source [value]')
     for sink in unit.get_mixer_sink_labels():
         print('    {0} [{1}] [0, 1]'.format(
             sink, ', '.join(unit.get_mixer_source_labels())
         ))
     return False
 
-def handle_output(unit, args):
-    ops = {
-        'volume':   (unit.set_output_volume, unit.get_output_volume),
-        'mute':     (unit.set_output_mute,   unit.get_output_mute),
-    }
-    if len(args) > 2:
+def handle_output_volume(unit, args):
+    if len(args) > 1:
         output = args[0]
-        operation = args[1]
-        ch = int(args[2])
-        if output in unit.get_output_labels() and operation in ops and ch < 3:
-            if len(args) == 4:
-                value = int(args[3])
-                ops[operation][0](output, ch, value)
+        ch = int(args[1])
+        if output in unit.get_output_labels() and ch < 3:
+            if len(args) == 3:
+                value = int(args[2])
+                unit.set_output_volume(output, ch, value)
             else:
-                print(ops[operation][1](output, ch))
+                print(unit.get_output_volume(output, ch))
             return True
-    print('Arguments for output command:')
-    print('  target:    [{0}]'.format((', ').join(unit.get_output_labels())))
-    print('  operation: [{0}]'.format((', ').join(ops)))
-    print('  ch:        [0, 1]')
-    print('  value:     []')
+    print('Arguments for output-volume command:')
+    print('  output-volume output ch [value]')
+    print('    source:    [{0}]'.format((', ').join(unit.get_output_labels())))
+    print('    ch:        [0, 1]')
+    print('    value:     []')
     return False
 
 def handle_output_source(unit, args):
@@ -154,7 +132,7 @@ def handle_output_source(unit, args):
                 print(unit.get_output_source(output))
             return True
     print('Arguments for output-source command:')
-    print('  output-source [output] [source]')
+    print('  output-source output [source]')
     for output in unit.get_output_labels():
         sources = unit.get_output_source_labels(output)
         if len(sources) > 1:
@@ -163,30 +141,24 @@ def handle_output_source(unit, args):
             print('    {0} [{1} (fixed)]'.format(output, sources[0]))
     return False
 
-def handle_headphone(unit, args):
-    ops = {
-        'volume':   (unit.set_headphone_volume, unit.get_headphone_volume),
-        'mute':     (unit.set_headphone_mute,   unit.get_headphone_mute),
-    }
+def handle_headphone_volume(unit, args):
     if len(unit.get_headphone_labels()) == 0:
         print('Not supported')
         return False
-    if len(args) > 2:
+    if len(args) > 1:
         headphone = args[0]
-        operation = args[1]
-        ch = int(args[2])
-        if headphone in unit.get_headphone_labels() and operation in ops and \
-           ch < 3:
-            if len(args) == 4:
-                value = int(args[3])
-                ops[operation][0](headphone, ch, value)
+        ch = int(args[1])
+        if headphone in unit.get_headphone_labels() and ch < 3:
+            if len(args) == 3:
+                value = int(args[2])
+                unit.set_headphone_volume(headphone, ch, value)
             else:
-                print(ops[operation][1](headphone, ch))
+                print(unit.get_headphone_volume(headphone, ch))
             return True
-    print('Arguments for headphone command:')
-    print('  target:    [{0}]'.format((', ').join(unit.get_headphone_labels())))
-    print('  operation: [{0}]'.format((', ').join(ops)))
-    print('  ch:        [0, 1]')
+    print('Arguments for headphone-volume command:')
+    print('  headphone-volume headphone ch [value]')
+    print('  headphone: {0}'.format((', ').join(unit.get_headphone_labels())))
+    print('  ch:        0, 1')
     print('  value:     []')
     return False
 
@@ -205,8 +177,9 @@ def handle_headphone_source(unit, args):
                 print(unit.get_headphone_source(headphone))
             return True
     print('Arguments for headphone-source command:')
-    print('  target: [{0}]'.format(', '.join(unit.get_headphone_labels())))
-    print('  source: [{0}]'.format(', '.join(unit.get_headphone_source_labels())))
+    print('  headphone-source headphone [source]')
+    print('    headphone: {0}'.format(', '.join(unit.get_headphone_labels())))
+    print('    source:    {0}'.format(', '.join(unit.get_headphone_source_labels())))
     return False
 
 def handle_listen_metering(unit, args):
@@ -231,13 +204,13 @@ def handle_listen_metering(unit, args):
 
 cmds = {
     'clock-source':         handle_clock_source,
-    'input':                handle_input,
-    'aux-input':            handle_aux_input,
-    'aux-output':           handle_aux_output,
+    'input-volume':         handle_input_volume,
+    'aux-input-volume':     handle_aux_input_volume,
+    'aux-output-volume':    handle_aux_output_volume,
     'mixer-routing':        handle_mixer_routing,
-    'output':               handle_output,
+    'output-volume':        handle_output_volume,
     'output-source':        handle_output_source,
-    'headphone':            handle_headphone,
+    'headphone-volume':     handle_headphone_volume,
     'headphone-source':     handle_headphone_source,
     'listen-metering':      handle_listen_metering,
 }
