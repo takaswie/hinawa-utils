@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import time
+
 from bebob.bebob_unit import BebobUnit
 
 from ta1394.general import AvcGeneral
@@ -29,6 +31,8 @@ class MaudioSpecial(BebobUnit):
     headphone_labels = ('headphone-1/2', 'headphone-3/4')
 
     mixer_labels = ('mixer-1/2', 'mixer-3/4')
+
+    headphone_source_labels = ('mixer-1/2', 'mixer-3/4', 'aux-1/2')
 
     metering_labels = (
         'analog-in-1', 'analog-in-2', 'analog-in-3', 'analog-in-4',
@@ -62,24 +66,25 @@ class MaudioSpecial(BebobUnit):
                 self._company_ids = info['company-id']
         if model_id < 0:
             raise OSError('Not supported')
-        self.filepath = '/tmp/hinawa-{0:08x}'.format(self.get_property('guid'))
+        # For process local cache.
+        self._cache = [0x00000000] * 40
+        # For permanent cache.
+        self._filepath = '/tmp/hinawa-{0:08x}'.format(self.get_property('guid'))
         self._load_cache()
 
     # Read transactions are not allowed. We cache data.
     def _load_cache(self):
         try:
-            f = open(self.filepath, 'r')
-            if sum(1 for line in f.readline()) != 40:
-                raise
-            self._cache = [0x00000000] * 40
+            f = open(self._filepath, 'r')
+            cache = [0x00000000] * 40
             index = 0
-            for line in f.readline():
-                self._cache[index] = int(line.strip(), base=16)
+            for line in f.readlines():
+                cache[index] = int(line.strip(), base=16)
                 index = index + 1
             f.close()
-        except:
+        except Exception as e:
             # This is initial value.
-            self._cache = [
+            cache = [
                 0x00000000,
                 0x00000000,
                 0x00000000,
@@ -118,13 +123,28 @@ class MaudioSpecial(BebobUnit):
                 0x80008000,
                 0x00000000,
                 0x00000009,
-                0x00010001,
+                0x00020001,
                 0x00000000]
         finally:
-            self.write_transact(self.BASE_ADDR, self._cache)
+            self._write_data(0, cache)
 
-    def store_cache(self):
-        f = open(self.filepath, 'w+')
+    def _write_data(self, index, data):
+        # Write to the unit.
+        count = 0
+        while True:
+            try:
+                self.write_transact(self.BASE_ADDR + index * 4, data)
+                break
+            except:
+                if count > 10:
+                    raise OSError('Fail to communicate to the unit.')
+                count += 1
+                time.sleep(0.2)
+        # Refresh process cache.
+        for i, datum in enumerate(data):
+            self._cache[index + i] = datum
+        # Refresh permanent cache.
+        f = open(self._filepath, 'w+')
         for i, datum in enumerate(self._cache):
             f.write('{0:08x}\n'.format(datum))
         f.close()
@@ -142,8 +162,7 @@ class MaudioSpecial(BebobUnit):
     def _write_status(self, index, datum):
         data = self._get_array()
         data.append(datum)
-        self.write_transact(self.BASE_ADDR + index * 4, data)
-        self._cache[index] = datum
+        self._write_data(index, data)
 
     def _set_volume(self, index, ch, value):
         if ch > 1:
@@ -277,6 +296,67 @@ class MaudioSpecial(BebobUnit):
             index = 36
         datum = self._cache[index]
         return (datum & (1 << pos)) > 0
+
+    def set_headphone_source(self, target, source, value):
+        if target not in self.headphone_labels:
+            raise ValueError('Invalid argument for output stereo pair')
+        if source not in self.headphone_source_labels:
+            raise ValueError('Invalid argument for headphone source')
+        pos = self.headphone_labels.index(target) * 16
+        pos += self.headphone_source_labels.index(source)
+        index = 38
+        datum = self._cache[index]
+        if value > 0:
+            datum = datum | (1 << pos)
+        else:
+            datum = datum & ~(1 << pos)
+        self._write_status(index, datum)
+    def get_headphone_source(self, target, source):
+        if target not in self.headphone_labels:
+            raise ValueError('Invalid argument for output stereo pair')
+        if source not in self.headphone_source_labels:
+            raise ValueError('Invalid argument for headphone source')
+        pos = self.headphone_labels.index(target) * 16
+        pos += self.headphone_source_labels.index(source)
+        index = 38
+        datum = self._cache[index]
+        return (datum & (1 << pos)) > 0
+
+    def get_output_source_labels(self, target):
+        labels = []
+        if target not in self.output_labels:
+            raise ValueError('Invalid argument for output stereo pair')
+        if target.find('1/2') > 0:
+            labels.append('mixer-1/2')
+        else:
+            labels.append('mixer-3/4')
+        labels.append('aux-1/2')
+        return labels
+    def set_output_source(self, target, source):
+        if target not in self.output_labels:
+            raise ValueError('Invalid argument for output stereo pair')
+        labels = self.get_output_source_labels(target)
+        if source not in labels:
+            raise ValueError('Invalid argument for output source pair')
+        index = 39
+        datum = self._cache[index]
+        pos = self.output_labels.index(target)
+        if labels.index(source) > 0:
+            datum = datum | (1 << pos)
+        else:
+            datum = datum & ~(1 << pos)
+        self._write_status(index, datum)
+    def get_output_source(self, target):
+        if target not in self.output_labels:
+            raise ValueError('Invalid argument for output stereo pair')
+        labels = self.get_output_source_labels(target)
+        index = 39
+        datum = self._cache[index]
+        pos = self.output_labels.index(target)
+        if (datum & (1 << pos)) > 0:
+            return labels[1]
+        else:
+            return labels[0]
 
     # 0x0000ffff - 0x7fffffff
     # db = 20 * log10(vol / 0x80000000)

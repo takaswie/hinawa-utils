@@ -106,6 +106,41 @@ def handle_mixer_routing(unit, args):
     print('  state:     0, 1')
     return False
 
+def handle_headphone_source(unit, args):
+    if len(args) > 1:
+        headphone = args[0]
+        source = args[1]
+        if headphone in unit.headphone_labels and \
+           source in unit.headphone_source_labels:
+            if len(args) > 2:
+                value = int(args[2])
+                unit.set_headphone_source(headphone, source, value)
+            else:
+                print(unit.get_headphone_source(headphone, source))
+            return True
+    print('Arguments for headphone-source command:')
+    print('  headphone-source headphone source')
+    print('    headphone: {0}'.format(', '.join(unit.headphone_labels)))
+    print('    source:    {0}'.format(', '.join(unit.headphone_source_labels)))
+    print('    value:     0, 1')
+
+def handle_output_source(unit, args):
+    if len(args) > 0:
+        output = args[0]
+        if output in unit.output_labels:
+            if len(args) > 1:
+                source = args[1]
+                unit.set_output_source(output, source)
+            else:
+                print(unit.get_output_source(output))
+            return True
+    print('Arguments for output-source command:')
+    print('  output-source output source')
+    outputs = unit.output_labels
+    print('    output: {0}'.format(', '.join(outputs)))
+    for output in outputs:
+        print('    source ({0}): {1}'.format(output, unit.get_output_source_labels(output)))
+
 def handle_listen_metering(unit, args):
     import time
     import signal
@@ -132,6 +167,8 @@ cmds = {
     'headphone-volume': handle_headphone_volume,
     'aux-input':        handle_aux_input,
     'mixer-routing':    handle_mixer_routing,
+    'headphone-source': handle_headphone_source,
+    'output-source':    handle_output_source,
     'listen-metering':  handle_listen_metering,
 }
 
@@ -139,4 +176,3 @@ fullpath = CuiKit.seek_snd_unit_path()
 if fullpath:
     unit = MaudioSpecial(fullpath)
     CuiKit.dispatch_command(unit, cmds)
-    unit.store_cache()
