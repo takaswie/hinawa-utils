@@ -3,7 +3,7 @@ from array import array
 
 from gi.repository import Hinawa
 
-class TscmUnit(Hinawa.SndTscm):
+class TscmUnit(Hinawa.SndUnit):
     supported_sampling_rates = (44100, 48000, 88200, 96000)
     supported_clock_sources = ('Internal', 'Word-clock', 'S/PDIF', 'ADAT')
     supported_coax_sources = ('S/PDIF-1/2', 'Analog-1/2')
