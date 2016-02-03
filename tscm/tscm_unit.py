@@ -65,8 +65,9 @@ class TscmUnit(Hinawa.SndUnit):
     def set_clock_source(self, source):
         if source not in self.supported_clock_sources:
             raise ValueError('Invalid argument for clock source.')
+        src = self.supported_clock_sources.index(source) + 1
         data = self._read_transaction(0xffff00000228, 1)
-        data[0] |= self.supported_clock_sources[source] + 1
+        data[0] = (data[0] & 0x0000ff00) | src
         self._write_transaction(0xffff00000228, data)
     def get_clock_source(self):
         data = self._read_transaction(0xffff00000228, 1)
@@ -78,16 +79,16 @@ class TscmUnit(Hinawa.SndUnit):
     def set_sampling_rate(self, rate):
         if rate not in self.supported_sampling_rates:
             raise ValueError('Invalid argument for sampling rate.')
-        data = self._read_transaction(0xffff00000228, 1)
-        data[0] &= 0x00ffffff
         if rate == 44100:
-            data[0] |= 0x01
+            flag = 0x01
         elif rate == 48000:
-            data[0] |= 0x02
+            flag = 0x02
         elif rate == 88200:
-            data[0] |= 0x81
+            flag = 0x81
         elif rate == 96000:
-            data[0] |= 0x82
+            flag = 0x82
+        data = self._read_transaction(0xffff00000228, 1)
+        data[0] = (data[0] & 0x000000ff) | (flag << 8)
         self._write_transaction(0xffff00000228, data)
     def get_sampling_rate(self):
         data = self._read_transaction(0xffff00000228, 1)

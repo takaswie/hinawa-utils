@@ -26,10 +26,9 @@ def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
         op = args[0]
-        if op == ops[0] and len(args) == 3:
-            position = int(ops[1])
-            mode = ops[2]
-            unit.bright_led(position, mode)
+        if op == ops[0] and len(args) == 2:
+            rate = int(args[1])
+            unit.set_sampling_rate(rate)
         else:
             print(unit.get_sampling_rate())
         return True
