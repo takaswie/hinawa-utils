@@ -5,17 +5,26 @@ from gi.repository import Hinawa
 
 class DiceUnit(Hinawa.SndDice):
     def __init__(self, path):
-        super().__init__()
-        self.open(path)
-        if self.get_property('type') != 1:
-            raise ValueError('The character device is not for Dice unit')
-        self.listen()
+        if re.match('/dev/snd/hwC[0-9]*D0', path):
+            super().__init__()
+            self.open(path)
+            if self.get_property('type') != 1:
+                raise ValueError('The character device is not for Dice unit')
+            self.listen()
+            self._on_juju = False
+        elif re.match('/dev/fw[0-9]*', path):
+            # Just using parent class.
+            super(Hinawa.FwUnit, self).__init__()
+            Hinawa.FwUnit.open(self, path)
+            Hinawa.FwUnit.listen(self)
+            self._on_juju = True
+        else:
+            raise ValueError('Invalid argument for character device')
         self._addrs = self._parse_address_space()
         self.supported_sampling_rates = []
         self.supported_clock_sources = []
         self._parse_clock_caps()
 
-    # This should not be imported.
     def _get_array(self):
         # The width with 'L' parameter is depending on environment.
         arr = array('L')
@@ -26,42 +35,53 @@ class DiceUnit(Hinawa.SndDice):
                                     equivalent to quadlet.')
         return arr
 
+    def _read_transaction(self, addr, quads):
+        if self._on_juju:
+            req = Hinawa.FwReq()
+            return req.read(self, addr, quads)
+        else:
+            return self.read_transact(addr, quads)
+
+    def _write_transaction(self, addr, data):
+        if self._on_juju:
+            req = Hinawa.FwReq()
+            req.write(self, addr, data)
+        else:
+            self.write_transact(addr, data)
+
     def _parse_address_space(self):
-        min_sizes = (
-            10, 0x64 // 4,
-            10, 0x18 // 4,
-            10, 0x18 // 4,
-            0, 0,
-            0, 0,
+        addrs = {}
+        params = (
+            ('global',  10, 0x64),
+            ('tx',      10, 0x18),
+            ('rx',      10, 0x18),
+            ('extended', 0, 0),
+            ('reserved', 0, 0),
         )
-        data = self.read_transact(0xffffe0000000, 10)
-        for i in range(len(min_sizes)):
-            if data[i] < min_sizes[i]:
-                raise OSError('Unsupported value detected in address info')
-        return {
-            'global':   {'addr': data[0] * 4 + 0xffffe0000000, 'size': data[1]},
-            'tx':       {'addr': data[2] * 4 + 0xffffe0000000, 'size': data[3]},
-            'rx':       {'addr': data[4] * 4 + 0xffffe0000000, 'size': data[5]},
-            'extended': {'addr': data[6] * 4 + 0xffffe0000000, 'size': data[7]},
-            'reserved': {'addr': data[8] * 4 + 0xffffe0000000, 'size': data[9]},
-        }
+        data = self._read_transaction(0xffffe0000000, 10)
+        for i, param in enumerate(params):
+            if data[i * 2 + 1] > param[2] // 4:
+                addrs[param[0]] = {
+                    'addr': data[i * 2] * 4 + 0xffffe0000000,
+                    'size': data[i * 2 + 1]
+                }
+        return addrs
 
     def write_global(self, offset, data):
         addr = self._addrs['global']['addr'] + offset
-        self.write_transact(addr, data)
+        self._write_transaction(addr, data)
     def read_global(self, offset, quads):
         addr = self._addrs['global']['addr'] + offset
-        return self.read_transact(addr, quads)
-
+        return self._read_transaction(addr, quads)
     def read_tx(self, offset, quads):
         addr = self._addrs['tx']['addr'] + offset
-        return self.read_transact(addr, quads)
+        return self._read_transaction(addr, quads)
     def read_rx(self, offset, quads):
         addr = self._addrs['rx']['addr'] + offset
-        return self.read_transact(addr, quads)
+        return self._read_transaction(addr, quads)
     def read_extended(self, offset, quads):
         addr = self._addrs['extended']['addr'] + offset
-        return self.read_transact(addr, quads)
+        return self._read_transaction(addr, quads)
 
     def read_owner_addr(self):
         data = self.read_global(0x00, 2)
@@ -141,6 +161,8 @@ class DiceUnit(Hinawa.SndDice):
         return self.read_global(0x08, 1)[0]
 
     def set_clock_source(self, source):
+        if self._on_juju:
+            raise ValueError('Hinawa.SndDice object just supports this.')
         if source not in self.supported_clock_sources:
             raise ValueError('Invalid argument for clock source.')
         data = self.read_global(0x4c, 1)
@@ -156,6 +178,8 @@ class DiceUnit(Hinawa.SndDice):
         return self._clock_sources[index]
 
     def set_sampling_rate(self, rate):
+        if self._on_juju:
+            raise ValueError('Hinawa.SndDice object just supports this.')
         if rate not in self.supported_sampling_rates:
             raise ValueError('Invalid argument for sampling rate.')
         data = self.read_global(0x4c, 1)
