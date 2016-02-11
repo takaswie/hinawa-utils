@@ -167,7 +167,7 @@ class DiceUnit(Hinawa.SndDice):
             raise ValueError('Invalid argument for clock source.')
         data = self.read_global(0x4c, 1)
         if data[0] & 0x000000ff != self._clock_sources.index(source):
-            data[0] = (data[0] & 0xffffff00) | (self._clock-source.index(source))
+            data[0] = (data[0] & 0xffffff00) | (self._clock_sources.index(source))
             addr = self._addrs['global']['addr'] + 0x4c
             self.transact(addr, data, 0x00000020)
     def get_clock_source(self):
@@ -270,7 +270,8 @@ class DiceUnit(Hinawa.SndDice):
 
     def get_sync_info(self):
         info = {}
-        if self._addrs['extended']['size'] == 0:
+        if 'extended' not in self._addrs or \
+	   self._addrs['extended']['size'] == 0:
             return info
         data = self.read_extended(0, self._addrs['extended']['size'])
         index = data[0] & 0xff
