@@ -271,7 +271,7 @@ class DiceUnit(Hinawa.SndDice):
     def get_sync_info(self):
         info = {}
         if 'extended' not in self._addrs or \
-	   self._addrs['extended']['size'] == 0:
+           self._addrs['extended']['size'] == 0:
             return info
         data = self.read_extended(0, self._addrs['extended']['size'])
         index = data[0] & 0xff
