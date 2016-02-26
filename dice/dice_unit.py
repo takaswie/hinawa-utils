@@ -231,13 +231,11 @@ class DiceUnit(Hinawa.SndDice):
 
     def get_tx_params(self):
         params = []
-        data = self.read_tx(0x00, 1)
+        data = self.read_tx(0x00, 2)
         count = data[0]
-        offset = 0
+        size = data[1]
         for i in range(count):
-            data = self.read_tx(offset + 0x04, 1)
-            quads = data[0]
-            data = self.read_tx(offset + 0x08, quads)
+            data = self.read_tx(0x08 + size * i, size)
             stream = {'iso-channel':  data[0],
                       'pcm':          data[1],
                       'midi':         data[2],
@@ -246,18 +244,15 @@ class DiceUnit(Hinawa.SndDice):
                       'iec60958':     {'caps':      data[-2],
                                        'enable':    data[-1]}}
             params.append(stream)
-            offset = quads * 4
         return params
 
     def get_rx_params(self):
         params = []
-        data = self.read_rx(0x00, 1)
+        data = self.read_rx(0x00, 2)
         count = data[0]
-        offset = 0
+        size = data[1]
         for i in range(count):
-            data = self.read_rx(offset + 0x04, 1)
-            quads = data[0]
-            data = self.read_rx(offset + 0x08, quads)
+            data = self.read_rx(0x08 + size * i, size)
             stream = {'iso-channel': data[0],
                       'start':       data[1],
                       'pcm':         data[2],
@@ -266,7 +261,6 @@ class DiceUnit(Hinawa.SndDice):
                       'iec60958':    {'caps':       data[-2],
                                       'enable':     data[-1]}}
             params.append(stream)
-            offset = quads * 4
         return params
 
     def get_sync_info(self):
