@@ -235,7 +235,7 @@ class DiceUnit(Hinawa.SndDice):
         count = data[0]
         size = data[1]
         for i in range(count):
-            data = self.read_tx(0x08 + size * i, size)
+            data = self.read_tx(0x08 + size * i * 4, size)
             stream = {'iso-channel':  data[0],
                       'pcm':          data[1],
                       'midi':         data[2],
@@ -252,7 +252,7 @@ class DiceUnit(Hinawa.SndDice):
         count = data[0]
         size = data[1]
         for i in range(count):
-            data = self.read_rx(0x08 + size * i, size)
+            data = self.read_rx(0x08 + size * i * 4, size)
             stream = {'iso-channel': data[0],
                       'start':       data[1],
                       'pcm':         data[2],
