@@ -31,9 +31,9 @@ def handle_sampling_rate(unit, args):
                 print('Packet streaming started.')
                 return False
             rate = int(args[1])
-            unit.set_sampling_rate(rate)
+            unit.set_local_sampling_rate(rate)
         else:
-            print(unit.get_sampling_rate())
+            print(unit.get_local_sampling_rate())
         return True
     print('Arguments for sampling-rate command:')
     print('  sampling-rate OPERATION [RATE]')
