@@ -3,19 +3,30 @@
 from misc.cui_kit import CuiKit
 from efw.efw_unit import EfwUnit
 
+def handle_hardware_info(unit, args):
+    for i, ch in enumerate(unit.info['phys-inputs']):
+        print('{0:02d}: {1}'.format(i, ch))
+    for i, ch in enumerate(unit.info['phys-outputs']):
+        print('{0:02d}: {1}'.format(i, ch))
+
 def handle_clock_source(unit, args):
+    ops = ('get', 'set')
     rate, source = unit.get_clock_state()
     if len(args) > 0:
         source = args[0]
         unit.set_clock_state(rate, source)
     else:
         print(source)
+    print('Arguments for clock-source command:')
+    print('  clock-source OPERATION [SOURCE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    SOURCE:    {0}'.format(', '.join(unit.get_clock_labels())))
     return True
 
 def handle_sampling_rate(unit, args):
     rate, source = unit.get_clock_state()
     if len(args) > 0:
-        rate = int(args)
+        rate = int(args[0])
         unit.set_clock_state(rate, source)
     else:
         print(rate)
@@ -65,12 +76,48 @@ def handle_room_mirroring(unit, args):
         print(unit.get_control_room_mirroring())
     return True
 
-def handle_stream_mapping(unit, args):
+def handle_rx_stream_mapping(unit, args):
+    if not unit.info['features']['rx-mapping']:
+        print('Not supported in this unit.')
+        return False
+    print(unit.info['phys-outputs'])
     if len(args) > 0:
-        value = int(args[0])
-    else:
-        print(unit.get_stream_mapping())
-    return True
+        output = args[0]
+        if len(args) > 1:
+            source = args[1]
+        else:
+            maps = unit.get_stream_mapping()
+            print(maps['rx-map'])
+        return True
+    print('Arguments for xx-stream-mapping command:')
+    print('  rx-stream-mapping output [source]')
+    outputs = unit.info['phys-outputs']
+    ports = []
+    for i, port in enumerate(outputs):
+        if i % 2:
+            ports.append(port)
+    print('    output: {0}')
+    print('    source: {0}')
+
+def handle_tx_stream_mapping(unit, args):
+    if not unit.info['features']['tx-mapping']:
+        print('Not supported in this unit.')
+        return False
+    print(unit.info['phys-inputs'])
+    if len(args) > 0:
+        input = args[0]
+        if len(args) > 1:
+            source = args[1]
+        else:
+            maps = unit.get_stream_mapping()
+            print(maps['tx-map'])
+        return True
+    print('Arguments for tx-stream-mapping command:')
+    print('  tx-stream-mapping input [source]')
+    inputs = unit.info['phys-inputs']
+    print('    input: {0}')
+    print('    source: {0}')
+
 
 def handle_output(unit, args):
     ops = {
@@ -177,18 +224,20 @@ def handle_listen_metering(unit, args):
     return True
 
 cmds = {
-    'clock-source':     handle_clock_source,
-    'sampling-rate':    handle_sampling_rate,
-    'control-room':     handle_room_mirroring,
-    'digital-input':    handle_digital_input,
-    'phantom-powering': handle_phantom_powering,
-    'box-state':        handle_box_state,
-    'stream-mapping':   handle_stream_mapping,
-    'output':           handle_output,
-    'input':            handle_input,
-    'playback':         handle_playback,
-    'monitor':          handle_monitor,
-    'listen-metering':  handle_listen_metering,
+    'hardware-info':        handle_hardware_info,
+    'clock-source':         handle_clock_source,
+    'sampling-rate':        handle_sampling_rate,
+    'control-room':         handle_room_mirroring,
+    'digital-input':        handle_digital_input,
+    'phantom-powering':     handle_phantom_powering,
+    'box-state':            handle_box_state,
+    'rx-stream-mapping':    handle_rx_stream_mapping,
+    'tx-stream-mapping':    handle_tx_stream_mapping,
+    'output':               handle_output,
+    'input':                handle_input,
+    'playback':             handle_playback,
+    'monitor':              handle_monitor,
+    'listen-metering':      handle_listen_metering,
 }
 
 fullpath = CuiKit.seek_snd_unit_path()

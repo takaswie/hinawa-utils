@@ -17,6 +17,8 @@ class EfwUnit(Hinawa.SndEfw):
     def get_metering(self):
         return EftInfo.get_metering(self)
 
+    def get_clock_labels(self):
+        return self.info['clock-sources']
     def set_clock_state(self, rate, src):
         EftHwctl.set_clock(self, rate, src, 0)
     def get_clock_state(self):

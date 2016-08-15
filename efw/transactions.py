@@ -31,6 +31,22 @@ def calculate_vol_to_db(vol):
 # Category No.0, for hardware information
 #
 class EftInfo():
+    supported_models = (
+        'Audiofire2',
+        'Audiofire4',
+        'Audiofire8',
+        'Audiofire8p',
+        'Audiofire12',
+        'Audiofire12HD',
+        'Audiofire12Apple',
+        'FireworksHDMI',
+        'Onyx400F',
+        'Onyx1200f',
+        'Fireworks8',
+        'RobotInterfacePack',
+        'AudioPunk',
+    )
+
     supported_features = (
         'changeable-resp-addr',
         'aesebu-xlr',
@@ -82,6 +98,22 @@ class EftInfo():
         'piezo guitar',
         'guitar string'
     )
+
+    _models = {
+        'Audiofire2':           0x000af2,
+        'Audiofire4':           0x000af4,
+        'Audiofire8':           0x000af8,
+        'Audiofire8p':          0x000af9,
+        'Audiofire12':          0x00af12,
+        'Audiofire12HD':        0x0af12d,
+        'Audiofire12Apple':     0x0af12a,
+        'FireworksHDMI':        0x00afd1,
+        'Onyx400F':             0x00400f,
+        'Onyx1200f':            0x01200f,
+        'Fireworks8':           0x0000f8,
+        'RobotInterfacePack':   0x00afb2,
+        'AudioPunk':            0x00afb9,
+    }
 
     _feature_flags = {
         'changeable-resp-addr':    0x0001,
@@ -237,6 +269,11 @@ class EftInfo():
                 caps[name] = True
             else:
                 caps[name] = False
+        # This is supported just by Onyx F series.
+        if params[3] == 0x00400f or params[3] == 0x01200f:
+            caps['tx-mapping'] = True
+        else:
+            caps['tx-mapping'] = False
         return caps
 
     @classmethod
@@ -261,36 +298,25 @@ class EftInfo():
 
     @classmethod
     def _parse_phys_ports(cls, params):
-        phys_outputs = []
-        phys_inputs = []
-        outputs = (params[27] >> 16, params[27] & 0xffff,
-                   params[28] >> 16, params[28] & 0xffff,
-                   params[29] >> 16, params[29] & 0xffff,
-                   params[30] >> 16, params[30] & 0xffff)
-        inputs = (params[32] >> 16, params[32] & 0xffff,
-                  params[33] >> 16, params[33] & 0xffff,
-                  params[34] >> 16, params[34] & 0xffff,
-                  params[35] >> 16, params[35] & 0xffff)
-        for i in range(params[26]):
-            count = outputs[i] & 0xff
-            index = outputs[i] >> 8
-            if index > len(cls.supported_port_names):
-                name = 'dummy'
-            else:
-                name = cls.supported_port_names[index]
-            for j in range(count):
-                phys_outputs.append(name)
-        for i in range(params[31]):
-            count = inputs[i] & 0xff
-            index = inputs[i] >> 8
-            if index > len(cls.supported_port_names):
-                name = 'dummy'
-            else:
-                name = cls.supported_port_names[index]
-            for j in range(count):
-                phys_inputs.append(name)
-        return {'phys-inputs': phys_inputs,
-                'phys-outputs': phys_outputs}
+        def parse_ports(params):
+            ports = []
+            data = (params[1] >> 16, params[1] & 0xffff,
+                    params[2] >> 16, params[2] & 0xffff,
+                    params[3] >> 16, params[3] & 0xffff,
+                    params[4] >> 16, params[4] & 0xffff)
+            for i in range(params[0]):
+                count = data[i] & 0xff
+                index = data[i] >> 8
+                if index > len(cls.supported_port_names):
+                    name = 'dummy'
+                else:
+                    name = cls.supported_port_names[index]
+                for j in range(count):
+                    ports.append(name)
+            return ports
+
+        return {'phys-inputs': parse_ports(params[26:]),
+                'phys-outputs': parse_ports(params[31:])}
 
     @staticmethod
     def _parse_mixer_channels(params):
@@ -454,13 +480,13 @@ class EftHwctl():
     def set_clock(cls, unit, rate, source, reset):
         if EftInfo.supported_sampling_rates.count(rate) == 0:
             raise ValueError('Invalid argument for sampling rate')
-        if cls.supported_clock_sources.count(source) == 0:
+        if EftInfo.supported_clock_sources.count(source) == 0:
             raise ValueError('Invalid argument for source of clock')
         if reset > 0:
             reset = 0x80000000
         args = get_array()
+        args.append(EftInfo.supported_clock_sources.index(source))
         args.append(rate)
-        args.append(cls.supported_clock_sources[source])
         args.append(reset)
         cls._execute_command(unit, 0, args)
 
