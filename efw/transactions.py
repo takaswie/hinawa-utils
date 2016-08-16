@@ -13,20 +13,6 @@ def get_array():
                                 equivalent to quadlet.')
     return arr
 
-# This should not be imported.
-def calculate_vol_from_db(db):
-    if db <= -144.0:
-        return 0x00000000
-    else:
-        return int(0x01000000 * pow(10, db / 20))
-
-# This should not be imported.
-def calculate_vol_to_db(vol):
-    if vol == 0:
-        return -144.0
-    else:
-        return 20 * log10(vol / 0x01000000)
-
 #
 # Category No.0, for hardware information
 #
@@ -564,7 +550,6 @@ class EftPhysOutput():
     def set_param(cls, unit, operation, channel, value):
         if operation is 'gain':
             cmd = 0
-            value = calculate_vol_from_db(value)
         elif operation is 'mute':
             cmd = 2
             if value > 0:
@@ -593,8 +578,6 @@ class EftPhysOutput():
         args = get_array()
         args.append(channel)
         params = cls._execute_command(unit, cmd, args)
-        if operation is 'gain':
-            params[1] = calculate_vol_to_db(params[1])
         if operation is 'nominal':
             if params[1] == 2:
                 params[1] = 1
@@ -653,7 +636,6 @@ class EftPlayback():
     def set_param(cls, unit, operation, channel, value):
         if operation is 'gain':
             cmd = 0
-            value = calculate_vol_from_db(value)
         elif operation is 'mute':
             cmd = 2
             if value > 0:
@@ -682,8 +664,6 @@ class EftPlayback():
         args = get_array()
         args.append(channel)
         params = cls._execute_command(unit, cmd, args)
-        if operation is 'gain':
-            params[1] = calculate_vol_to_db(params[1])
         return params[1]
 
 class EftCapture():
@@ -711,7 +691,6 @@ class EftMonitor():
     def set_param(cls, unit, operation, in_ch, out_ch, value):
         if operation is 'gain':
             cmd = 0
-            value = calculate_vol_from_db(value)
         elif operation is 'mute':
             cmd = 2
             if value > 0:
@@ -748,8 +727,6 @@ class EftMonitor():
         args.append(in_ch)
         args.append(out_ch)
         params = cls._execute_command(unit, cmd, args)
-        if operation is 'gain':
-            params[2] = calculate_vol_to_db(params[2])
         return params[2]
 
 #
