@@ -1,5 +1,4 @@
 from array import array
-from math import log10
 from gi.repository import Hinawa
 
 # This should not be imported.
@@ -488,9 +487,9 @@ class EftHwctl():
 
     @classmethod
     def set_box_states(cls, unit, states):
-        enable = 0
-        disable = 0
-        for name,state in states:
+        enabled = 0
+        disabled = 0
+        for name,state in states.items():
             if name not in cls._box_state_params:
                 raise ValueError('Invalid value in box states')
             shift   = cls._box_state_params[name][0]
@@ -649,7 +648,7 @@ class EftPlayback():
         args = get_array()
         args.append(channel)
         args.append(value)
-        EftPhysInput._execute_command(unit, cmd, args)
+        cls._execute_command(unit, cmd, args)
 
     @classmethod
     def get_param(cls, unit, operation, channel):

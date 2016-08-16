@@ -6,6 +6,7 @@ from efw.transactions import EftPhysInput
 from efw.transactions import EftPlayback
 from efw.transactions import EftMonitor
 from efw.transactions import EftIoconf
+from math import log10
 
 class EfwUnit(Hinawa.SndEfw):
     def __init__(self, path):
@@ -14,13 +15,12 @@ class EfwUnit(Hinawa.SndEfw):
         self.listen()
         self.info = EftInfo.get_spec(self)
 
-    def _calculate_vol_from_db(db):
+    def _calculate_vol_from_db(self, db):
         if db <= -144.0:
             return 0x00000000
         else:
             return int(0x01000000 * pow(10, db / 20))
-
-    def _calculate_vol_to_db(vol):
+    def _calculate_vol_to_db(self, vol):
         if vol == 0:
             return -144.0
         else:
@@ -29,12 +29,11 @@ class EfwUnit(Hinawa.SndEfw):
     def get_metering(self):
         return EftInfo.get_metering(self)
 
-    def get_clock_labels(self):
-        return self.info['clock-sources']
     def set_clock_state(self, rate, src):
         EftHwctl.set_clock(self, rate, src, 0)
     def get_clock_state(self):
         return EftHwctl.get_clock(self)
+
     def set_box_states(self, name, state):
         states = EftHwctl.get_box_states(self)
         states[name] = state

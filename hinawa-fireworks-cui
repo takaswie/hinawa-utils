@@ -7,33 +7,82 @@ from misc.cui_kit import CuiKit
 from efw.efw_unit import EfwUnit
 
 def handle_hardware_info(unit, args):
+    print('Supported features:')
+    for key, value in unit.info['features'].items():
+        if value:
+            print('    ', key)
+    print('Supported signals for clock source:')
+    for key, value in unit.info['clock-sources'].items():
+        if value:
+            print('    ', key)
+    print('Supported sampling rates:')
+    for key, value in unit.info['sampling-rates'].items():
+        if value:
+            print('    ', key)
+    print('List of physical ports:')
+    print('    Inputs:')
     for i, ch in enumerate(unit.info['phys-inputs']):
-        print('{0:02d}: {1}'.format(i, ch))
+        print('        {0:02d}: {1}'.format(i, ch))
+    print('    Outputs:')
     for i, ch in enumerate(unit.info['phys-outputs']):
-        print('{0:02d}: {1}'.format(i, ch))
+        print('        {0:02d}: {1}'.format(i, ch))
+    print('The number of channels for mixer:')
+    print('    Capture: ', unit.info['capture-channels'])
+    print('    Playback:', unit.info['playback-channels'])
+    print('The number of PCM channels in a stream:')
+    rates = ('44.1/48.0', '88.2/96.0', '176.4/192.0')
+    print('    tx:')
+    for index, rate in enumerate(rates):
+        print('{0:>16}: {1}'.format(rate,
+                                    unit.info['tx-stream-channels'][index]))
+    print('    tx:')
+    for index, rate in enumerate(rates):
+        print('{0:>16}: {1}'.format(rate,
+                                    unit.info['rx-stream-channels'][index]))
+    print('Firmware versions:')
+    for key, value in unit.info['firmware-versions'].items():
+        print('{0:>8}: {1}'.format(key, value))
 
 def handle_clock_source(unit, args):
-    ops = ('get', 'set')
-    rate, source = unit.get_clock_state()
-    if len(args) > 0:
-        source = args[0]
-        unit.set_clock_state(rate, source)
-    else:
-        print(source)
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        rate, source = unit.get_clock_state()
+        if args[0] == ops[0] and len(args) > 1:
+            source = args[1]
+            unit.set_clock_state(rate, source)
+        else:
+            print(source)
+        return True
+    sources = []
+    for key, value in unit.info['clock-sources'].items():
+        if value:
+            sources.append(key)
     print('Arguments for clock-source command:')
     print('  clock-source OPERATION [SOURCE]')
     print('    OPERATION: {0}'.format(', '.join(ops)))
-    print('    SOURCE:    {0}'.format(', '.join(unit.get_clock_labels())))
-    return True
+    print('    SOURCE:    {0}'.format(', '.join(sources)))
+
+    return False
 
 def handle_sampling_rate(unit, args):
-    rate, source = unit.get_clock_state()
-    if len(args) > 0:
-        rate = int(args[0])
-        unit.set_clock_state(rate, source)
-    else:
-        print(rate)
-    return True
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        rate, source = unit.get_clock_state()
+        if args[0] == ops[0] and len(args) > 1:
+            rate = int(args[1])
+            unit.set_clock_state(rate, source)
+        else:
+            print(rate)
+        return True
+    rates = []
+    for key, value in unit.info['sampling-rates'].items():
+        if value:
+            rates.append(key)
+    print('Arguments for sampling-rate command:')
+    print('  clock-source OPERATION [SOURCE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    SOURCE:    {0}'.format(', '.join(map(str, rates))))
+    return False
 
 def handle_control_room_mirroring(unit, args):
     if len(args) > 0:
@@ -57,18 +106,22 @@ def handle_phantom_powering(unit, args):
     return True
 
 def handle_box_state(unit, args):
-    states = unit.get_box_states()
-    if len(args) > 0:
-        name = args[0]
-        if len(args) > 1:
-            value = args[1]
-            unit.set_box_states(name, value)
+    ops = ('set', 'get')
+    values = ('off', 'on')
+    if len(args) > 1:
+        op = args[0]
+        name = args[1]
+        if op == ops[0] and len(args) > 2 and args[2] in values:
+            unit.set_box_states(name, values.index(args[2]))
         else:
-            print(unit.get_box_states(name))
+            states = unit.get_box_states()
+            print(states[name])
         return True
+    states = unit.get_box_states()
     print('Arguments for box-state command:')
-    print('  box-state name [value]')
-    print('    name: {0}'.format(', '.join(states)))
+    print('  box-state NAME [VALUE]')
+    print('    NAME: {0}'.format(', '.join(states)))
+    print('    VALUE: off/on')
     return False
 
 def handle_room_mirroring(unit, args):
