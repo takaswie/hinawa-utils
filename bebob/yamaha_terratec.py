@@ -8,7 +8,7 @@ from bebob.extensions import BcoVendorDependent
 from bebob.extensions import BcoPlugInfo
 from bebob.extensions import BcoStreamFormatInfo
 
-class YamahaGo(BebobUnit):
+class YamahaTerratec(BebobUnit):
     channel_ops = ('volume', 'mute')
     supported_clock_sources = ('Internal', 'S/PDIF')
     supported_sampling_rates = (32000, 44100, 48000, 88200, 96000, 192000)
@@ -16,12 +16,21 @@ class YamahaGo(BebobUnit):
     def __init__(self, path):
         super().__init__(path)
         for quad in self.get_config_rom():
-             if quad >> 24 == 0x17:
+            # Vendor ID
+            if quad >> 24 == 0x03:
+                vendor_id = quad & 0x00ffffff
+                continue
+            # Model ID
+            if quad >> 24 == 0x17:
                 model_id = quad & 0x00ffffff
                 break
         else:
-            raise ValueError('Invalid argument for Yamaha Go unit')
-        if model_id == 0x10000b:
+            raise ValueError('Invalid argument for Yamaha/Terratec unit')
+        # Check vendor ID for Yamaha/Terratec OUI
+        if vendor_id != 0x00a0de and vendor_id != 0x000aac:
+            raise ValueError('Invalid argument for Yamaha/Terratec unit')
+        # Yamaha GO 44 or Terratec Phase 24 FW
+        if model_id == 0x10000b or model_id == 0x000005:
             self.name = 'GO44'
             self._output_sink_labels = (
                 'analog-1/2', 'headphone-1/2', 'digital-1/2')
@@ -30,7 +39,8 @@ class YamahaGo(BebobUnit):
                 'low': 0xf400, 'middle': 0xfd00, 'high': 0x0000,
             }
             self._output_labels = ()
-        elif model_id == 0x10000c:
+        # Yamaha GO 46 or Terratec Phase X24 FW
+        elif model_id == 0x10000c or model_id == 0x000007:
             self.name = 'GO46'
             self._output_sink_labels = (
                 'analog-1/2', 'analog-3/4', 'digital-1/2')
@@ -39,7 +49,7 @@ class YamahaGo(BebobUnit):
             self._input_level_labels = {}
             self._output_labels = ('analog-1/2', 'analog-3/4')
         else:
-            raise ValueError('Invalid argument for Yamaha Go unit')
+            raise ValueError('Invalid argument for Yamaha/Terratec unit')
         unit_info = AvcGeneral.get_unit_info(self.fcp)
         self._company_ids = unit_info['company-id']
 
