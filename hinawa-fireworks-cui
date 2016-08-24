@@ -183,23 +183,39 @@ def handle_rx_stream_mapping(unit, args):
     print('    SOURCE:    {0}'.format(', '.join(sources)))
 
 def handle_tx_stream_mapping(unit, args):
-    if not unit.info['features']['tx-mapping']:
-        print('Not supported in this unit.')
-        return False
-    print(unit.info['phys-inputs'])
-    if len(args) > 0:
-        input = args[0]
-        if len(args) > 1:
-            source = args[1]
+    ops = ('set', 'get')
+    # Generate stereo pair for inputs
+    inputs = []
+    prev = ''
+    num = 0
+    for index, name in enumerate(unit.info['phys-inputs']):
+        if index % 2 == 0:
+            if prev is not name:
+                num = 0
+            inputs.append('{0}-{1}/{2}'.format(name, num * 2 + 1, num * 2 + 2))
+            prev = name
+            num += 1
+    # Generate stereo pair for sinks
+    sinks = []
+    for ch in range(unit.info['tx-stream-channels'][0]):
+        if ch % 2 == 0:
+            sinks.append('stream-{0}/{1}'.format(ch+ 1, ch + 2))
+    maps = unit.get_stream_mapping()
+    if len(args) > 1 and args[0] in ops and args[1] in inputs:
+        op = args[0]
+        input = inputs.index(args[1])
+        if op == ops[0] and len(args) > 2 and args[2] in sinks:
+            sink = sinks.index(args[2]) * 2
+            maps['tx-map'][input] = sink
+            unit.set_stream_mapping(maps['tx-map'], maps['tx-map'])
         else:
-            maps = unit.get_stream_mapping()
-            print(maps['tx-map'])
+            print(sinks[maps['tx-map'][input] // 2])
         return True
     print('Arguments for tx-stream-mapping command:')
-    print('  tx-stream-mapping input [source]')
-    inputs = unit.info['phys-inputs']
-    print('    input: {0}')
-    print('    source: {0}')
+    print('  tx-stream-mapping OPERATION INPUT [SINK]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    INPUT:     {0}'.format(', '.join(inputs)))
+    print('    SINK:      {0}'.format(', '.join(sinks)))
 
 
 def handle_output(unit, args):
