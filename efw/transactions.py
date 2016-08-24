@@ -1,5 +1,6 @@
 from array import array
 from gi.repository import Hinawa
+from math import log10
 
 # This should not be imported.
 def get_array():
@@ -174,13 +175,13 @@ class EftInfo():
             else:
                 metering['clocks'][name] = False
         metering['midi'] = {}
-        for name, flags in cls._midi_flags.items():
+        for name, flag in cls._midi_flags.items():
             if params[0] & flag:
                 metering['midi'][name] = True
             else:
                 metering['midi'][name] = False
         metering['robot'] = {}
-        for name, flags in cls._robot_flags.items():
+        for name, flag in cls._robot_flags.items():
             if params[0] & flag:
                 metering['robot'][name] = True
             else:
