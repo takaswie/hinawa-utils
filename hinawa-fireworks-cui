@@ -92,11 +92,24 @@ def handle_control_room_mirroring(unit, args):
     return True
 
 def handle_digital_input(unit, args):
+    ops = ('set', 'get')
+    avails = ('spdif-coax', 'aesebu-xlr', 'spdif-opt', 'adat-opt')
+    modes = []
+    for avail in avails:
+        if avail in unit.info['features'] and unit.info['features'][avail]:
+            modes.append(avail)
     if len(args) > 0:
-        unit.set_digital_input_mode(args[0])
-    else:
-        print(unit.get_digital_input_mode())
-    return True
+        op = args[0]
+        if op == ops[0] and len(args) > 1 and args[1] in modes:
+            unit.set_digital_input_mode(args[1])
+        else:
+            print(unit.get_digital_input_mode())
+        return True
+    print('Arguments for digital-input command:')
+    print('  digital-input OPERATION [MODE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    MODE:      {0}'.format(', '.join(modes)))
+    return False
 
 def handle_phantom_powering(unit, args):
     if len(args) > 0:
