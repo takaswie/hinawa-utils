@@ -45,18 +45,18 @@ def handle_hardware_info(unit, args):
 
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
+    sources = []
+    for key, value in unit.info['clock-sources'].items():
+        if value:
+            sources.append(key)
     if len(args) > 0 and args[0] in ops:
         rate, source = unit.get_clock_state()
-        if args[0] == ops[0] and len(args) > 1:
+        if args[0] == ops[0] and len(args) > 1 and args[1] in sources:
             source = args[1]
             unit.set_clock_state(rate, source)
         else:
             print(source)
         return True
-    sources = []
-    for key, value in unit.info['clock-sources'].items():
-        if value:
-            sources.append(key)
     print('Arguments for clock-source command:')
     print('  clock-source OPERATION [SOURCE]')
     print('    OPERATION: {0}'.format(', '.join(ops)))
@@ -66,18 +66,18 @@ def handle_clock_source(unit, args):
 
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
+    rates = []
+    for key, value in unit.info['sampling-rates'].items():
+        if value:
+            rates.append(key)
     if len(args) > 0 and args[0] in ops:
         rate, source = unit.get_clock_state()
-        if args[0] == ops[0] and len(args) > 1:
+        if args[0] == ops[0] and len(args) > 1 and int(args[1]) in rates:
             rate = int(args[1])
             unit.set_clock_state(rate, source)
         else:
             print(rate)
         return True
-    rates = []
-    for key, value in unit.info['sampling-rates'].items():
-        if value:
-            rates.append(key)
     print('Arguments for sampling-rate command:')
     print('  clock-source OPERATION [SOURCE]')
     print('    OPERATION: {0}'.format(', '.join(ops)))
