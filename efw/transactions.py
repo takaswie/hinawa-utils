@@ -58,8 +58,8 @@ class EftInfo():
         'syt-match',
         'word-clock',
         'spdif',
-        'ADAT-1',
-        'ADAT-2',
+        'adat1',
+        'adat2',
         'continuous'
     )
 
