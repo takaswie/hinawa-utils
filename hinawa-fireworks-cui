@@ -30,7 +30,9 @@ def handle_hardware_info(unit, args):
     print('    Capture: ', unit.info['capture-channels'])
     print('    Playback:', unit.info['playback-channels'])
     print('The number of PCM channels in a stream:')
-    rates = ('44.1/48.0', '88.2/96.0', '176.4/192.0')
+    rates = ['44.1/48.0', '88.2/96.0']
+    if unit.info['sampling-rates'][176400]:
+        rates.append('176.4/192.0')
     print('    tx:')
     for index, rate in enumerate(rates):
         print('{0:>16}: {1}'.format(rate,
