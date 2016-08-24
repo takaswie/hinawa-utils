@@ -102,9 +102,9 @@ class EftInfo():
 
     _feature_flags = {
         'changeable-resp-addr':    0x0001,
-        'aesebu-xlr':              0x0002,
-        'control-room-mirroring':  0x0004,
-        'spdif-coax':              0x0008,
+        'control-room-mirroring':  0x0002,
+        'spdif-coax':              0x0004,
+        'aesebu-xlr':              0x0008,
         'dsp':                     0x0010,
         'fpga':                    0x0020,
         'phantom-powering':        0x0040,
