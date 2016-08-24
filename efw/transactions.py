@@ -786,18 +786,18 @@ class EftIoconf():
     @classmethod
     def set_stream_mapping(cls, unit, rx_maps, tx_maps):
         args = get_array()
-        params = cls._execute_command(unit, 6, args)
+        params = cls._execute_command(unit, 7, args)
         rx_map_count = params[2]
         if len(rx_maps) > rx_map_count:
             ValueError('Invalid argument for rx stream mapping')
         tx_map_count = params[34]
         if len(tx_maps) > tx_map_count:
             ValueError('Invalid argument for tx stream mapping')
-        for i in range(rx_maps):
+        for i in range(len(rx_maps)):
             params[4 + i] = rx_maps[i]
-        for i in range(tx_maps):
+        for i in range(len(tx_maps)):
             params[36 + i] = tx_maps[i]
-        cls._execute_command(unit, 6, args)
+        cls._execute_command(unit, 6, params)
 
     @classmethod
     def get_stream_mapping(cls, unit):

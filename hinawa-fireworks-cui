@@ -148,27 +148,39 @@ def handle_box_state(unit, args):
     return False
 
 def handle_rx_stream_mapping(unit, args):
-    if not unit.info['features']['rx-mapping']:
-        print('Not supported in this unit.')
-        return False
-    print(unit.info['phys-outputs'])
-    if len(args) > 0:
-        output = args[0]
-        if len(args) > 1:
-            source = args[1]
+    ops = ('set', 'get')
+    # Generate stereo pair for outputs
+    outputs = []
+    prev = ''
+    num = 0
+    for index, name in enumerate(unit.info['phys-outputs']):
+        if index % 2 == 0:
+            if prev is not name:
+                num = 0
+            outputs.append('{0}-{1}/{2}'.format(name, num * 2 + 1, num * 2 + 2))
+            prev = name
+            num += 1
+    # Generate stereo pair for sources
+    sources = []
+    for ch in range(unit.info['rx-stream-channels'][0]):
+        if ch % 2 == 0:
+            sources.append('stream-{0}/{1}'.format(ch+ 1, ch + 2))
+    maps = unit.get_stream_mapping()
+    if len(args) > 1 and args[0] in ops and args[1] in outputs:
+        op = args[0]
+        output = outputs.index(args[1])
+        if op == ops[0] and len(args) > 2 and args[2] in sources:
+            source = sources.index(args[2]) * 2
+            maps['rx-map'][output] = source
+            unit.set_stream_mapping(maps['rx-map'], maps['tx-map'])
         else:
-            maps = unit.get_stream_mapping()
-            print(maps['rx-map'])
+            print(sources[maps['rx-map'][output] // 2])
         return True
-    print('Arguments for xx-stream-mapping command:')
-    print('  rx-stream-mapping output [source]')
-    outputs = unit.info['phys-outputs']
-    ports = []
-    for i, port in enumerate(outputs):
-        if i % 2:
-            ports.append(port)
-    print('    output: {0}')
-    print('    source: {0}')
+    print('Arguments for rx-stream-mapping command:')
+    print('  rx-stream-mapping OPERATION OUTPUT [SOURCE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    OUTPUT:    {0}'.format(', '.join(outputs)))
+    print('    SOURCE:    {0}'.format(', '.join(sources)))
 
 def handle_tx_stream_mapping(unit, args):
     if not unit.info['features']['tx-mapping']:
