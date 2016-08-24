@@ -112,11 +112,21 @@ def handle_digital_input(unit, args):
     return False
 
 def handle_phantom_powering(unit, args):
-    if len(args) > 0:
-        unit.set_phantom_powering(args[0])
-    else:
-        print(unit.get_phantom_powering())
-    return True
+    ops = ('set', 'get')
+    modes = ('off', 'on')
+    if len(args) > 0 and op in ops:
+        op = args[0]
+        if len(args) > 1 and op == ops[0] and args[1] in modes:
+            mode = args[1]
+            unit.set_phantom_powering(modes.index(mode))
+        else:
+            print(modes[unit.get_phantom_powering()])
+        return True
+    print('Arguments for phantom-powering command:')
+    print('  phantom-powering OPERATION [MODE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    MODE:      {0}'.format(', '.join(modes)))
+    return False
 
 def handle_box_state(unit, args):
     ops = ('set', 'get')
