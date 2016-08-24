@@ -84,7 +84,7 @@ def handle_sampling_rate(unit, args):
     print('    SOURCE:    {0}'.format(', '.join(map(str, rates))))
     return False
 
-def handle_control_room_mirroring(unit, args):
+def handle_control_room(unit, args):
     if len(args) > 0:
         unit.set_control_room_mirroring(args[0])
     else:
@@ -146,14 +146,6 @@ def handle_box_state(unit, args):
     print('    NAME: {0}'.format(', '.join(states)))
     print('    VALUE: off/on')
     return False
-
-def handle_room_mirroring(unit, args):
-    if len(args) > 0:
-        value = int(args[0])
-        unit.set_control_room_mirroring(value)
-    else:
-        print(unit.get_control_room_mirroring())
-    return True
 
 def handle_rx_stream_mapping(unit, args):
     if not unit.info['features']['rx-mapping']:
@@ -315,7 +307,7 @@ def get_available_commands(features):
         'listen-metering':      handle_listen_metering,
     }
     if features['control-room-mirroring']:
-        cmds['control-room'] = handle_room_mirroring
+        cmds['control-room'] = handle_control_room
     if features['rx-mapping']:
         cmds['rx-stream-mapping'] = handle_rx_stream_mapping
     if features['tx-mapping']:
