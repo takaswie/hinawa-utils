@@ -279,24 +279,33 @@ def handle_listen_metering(unit, args):
         time.sleep(0.1)
     return True
 
-cmds = {
-    'hardware-info':        handle_hardware_info,
-    'clock-source':         handle_clock_source,
-    'sampling-rate':        handle_sampling_rate,
-    'control-room':         handle_room_mirroring,
-    'digital-input':        handle_digital_input,
-    'phantom-powering':     handle_phantom_powering,
-    'box-state':            handle_box_state,
-    'rx-stream-mapping':    handle_rx_stream_mapping,
-    'tx-stream-mapping':    handle_tx_stream_mapping,
-    'output':               handle_output,
-    'input':                handle_input,
-    'playback':             handle_playback,
-    'monitor':              handle_monitor,
-    'listen-metering':      handle_listen_metering,
-}
+def get_available_commands(features):
+    cmds = {
+        'hardware-info':        handle_hardware_info,
+        'clock-source':         handle_clock_source,
+        'sampling-rate':        handle_sampling_rate,
+        'box-state':            handle_box_state,
+        'output':               handle_output,
+        'input':                handle_input,
+        'playback':             handle_playback,
+        'monitor':              handle_monitor,
+        'listen-metering':      handle_listen_metering,
+    }
+    if features['control-room-mirroring']:
+        cmds['control-room'] = handle_room_mirroring
+    if features['rx-mapping']:
+        cmds['rx-stream-mapping'] = handle_rx_stream_mapping
+    if features['tx-mapping']:
+        cmds['tx-stream-mapping'] = handle_tx_stream_mapping
+    if features['spdif-coax'] or features['aesebu-xlr'] or \
+       features['spdif-opt'] or features['adat-opt']:
+        cmds['digital-input'] = handle_digital_input
+    if features['phantom-powering']:
+        cmds['phantom-powering'] = handle_phantom_powering
+    return cmds
 
 fullpath = CuiKit.seek_snd_unit_path()
 if fullpath:
     unit = EfwUnit(fullpath)
+    cmds = get_available_commands(unit.info['features'])
     CuiKit.dispatch_command(unit, cmds)
