@@ -116,7 +116,7 @@ def handle_digital_input(unit, args):
 def handle_phantom_powering(unit, args):
     ops = ('set', 'get')
     modes = ('off', 'on')
-    if len(args) > 0 and op in ops:
+    if len(args) > 0 and args[0] in ops:
         op = args[0]
         if len(args) > 1 and op == ops[0] and args[1] in modes:
             mode = args[1]
