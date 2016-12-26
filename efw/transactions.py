@@ -2,8 +2,12 @@ from array import array
 from gi.repository import Hinawa
 from math import log10
 
+__all__ = ['EftInfo', 'EftFlash', 'EftTransmit', 'EftHwctl', 'EftPhysOutput',
+           'EftPhysInput', 'EftPlayback', 'EftCapture', 'EftMonitor',
+           'EftIoconf']
+
 # This should not be imported.
-def get_array():
+def _get_array():
     # The width with 'L' parameter is depending on environment.
     arr = array('L')
     if arr.itemsize is not 4:
@@ -151,7 +155,7 @@ class EftInfo():
 
     @classmethod
     def get_spec(cls, unit):
-        args = get_array()
+        args = _get_array()
         params = cls._execute_command(unit, 0, args)
         info = {}
         info['features'] = cls._parse_capability(params)
@@ -165,7 +169,7 @@ class EftInfo():
 
     @classmethod
     def get_metering(cls, unit):
-        args = get_array()
+        args = _get_array()
         params = cls._execute_command(unit, 1, args)
         metering = {}
         metering['clocks'] = {}
@@ -208,14 +212,14 @@ class EftInfo():
 
     @classmethod
     def set_resp_addr(cls, unit, addr):
-        args = get_array()
+        args = _get_array()
         args.append((addr >> 24) & 0xffffffff)
         args.append(addr         & 0xffffffff)
         cls._execute_command(unit, 2, args)
 
     @classmethod
     def read_session_data(cls, unit, offset, quadlets):
-        args = get_array()
+        args = _get_array()
         args.append(offset)
         args.append(quadlets)
         params = cls._execute_command(unit, 3, args)
@@ -223,7 +227,7 @@ class EftInfo():
 
     @classmethod
     def get_debug_info(cls, unit):
-        args = get_array()
+        args = _get_array()
         params = cls._execute_command(unit, 4, args)
 
         # params[00]: isochronous stream 1 flushed
@@ -235,14 +239,14 @@ class EftInfo():
 
     @classmethod
     def test_dsp(cls, unit, value):
-        args = get_array()
+        args = _get_array()
         args.append(value)
         params = cls._execute_command(unit, 5, args)
         return params[0]
 
     @classmethod
     def test_arm(cls, unit, value):
-        args = get_array()
+        args = _get_array()
         args.append(value)
         params = cls._execute_command(unit, 6, args)
         return params[0]
@@ -338,20 +342,20 @@ class EftFlash():
 
     @classmethod
     def erase(cls, unit, offset):
-        args = get_array()
+        args = _get_array()
         args.append(offset)
         cls._execute_command(unit, 0, args)
 
     @classmethod
     def read_block(cls, unit, offset, quadlets):
-        args = get_array()
+        args = _get_array()
         args.append(offset)
         args.append(quadlets)
         return cls._execute_command(unit, 1, args)
 
     @classmethod
     def write_block(cls, unit, offset, data):
-        args = get_array()
+        args = _get_array()
         args.append(offset)
         args.append(len(data))
         for datum in data:
@@ -360,19 +364,19 @@ class EftFlash():
 
     @classmethod
     def get_status(cls, unit):
-        args = get_array()
+        args = _get_array()
         # return status means it.
         cls._execute_command(unit, 3, args)
 
     @classmethod
     def get_session_offset(cls, unit):
-        args = get_array()
+        args = _get_array()
         params = cls._execute_command(unit, 4, args)
         return params[0]
 
     @classmethod
     def set_lock(cls, unit, lock):
-        args = get_array()
+        args = _get_array()
         if lock is not 0:
             args.append(1)
         else:
@@ -399,7 +403,7 @@ class EftTransmit():
     def set_mode(cls, unit, mode):
         if cls.supported_modes.count(mode) == 0:
             raise ValueError('Invalid argument for mode')
-        args = get_array()
+        args = _get_array()
         args.append(cls.supported_modes.index(mode))
         cls._execute_command(unit, 0, args)
 
@@ -415,7 +419,7 @@ class EftTransmit():
         if cls.supported_serial_data_formats(serial_data_format) == 0:
             raise ValueError('Invalid argument for serial data format')
 
-        args = get_array()
+        args = _get_array()
         args.append(playback_drop)
         args.append(record_stretch)
         args.append(serial_bps)
@@ -470,7 +474,7 @@ class EftHwctl():
             raise ValueError('Invalid argument for source of clock')
         if reset > 0:
             reset = 0x80000000
-        args = get_array()
+        args = _get_array()
         args.append(EftInfo.supported_clock_sources.index(source))
         args.append(rate)
         args.append(reset)
@@ -478,7 +482,7 @@ class EftHwctl():
 
     @classmethod
     def get_clock(cls, unit):
-        args = get_array()
+        args = _get_array()
         params = cls._execute_command(unit, 1, args)
         if params[0] >= len(EftInfo.supported_clock_sources):
             raise OSError('Unexpected clock source in response')
@@ -500,14 +504,14 @@ class EftHwctl():
                 disabled |= (1 << shift)
             else:
                 enabled |= (1 << shift)
-        args = get_array()
+        args = _get_array()
         args.append(enabled)
         args.append(disabled)
         cls._execute_command(unit, 3, args)
 
     @classmethod
     def get_box_states(cls, unit):
-        args = get_array()
+        args = _get_array()
         params = cls._execute_command(unit, 4, args)
         state = params[0]
         states = {}
@@ -520,17 +524,17 @@ class EftHwctl():
 
     @classmethod
     def reconnect_phy(cls, unit):
-        args = get_array()
+        args = _get_array()
         cls._execute_command(unit, 6, args)
 
     @classmethod
     def blink_leds(cls, unit):
-        args = get_array()
+        args = _get_array()
         cls._execute_command(unit, 7, args)
 
     @classmethod
     def set_continuous_clock(cls, unit, continuous_rate):
-        args = get_array()
+        args = _get_array()
         args.append(continuous_rate * 512 // 1500)
         cls._execute_command(unit, 8, args)
 
@@ -560,7 +564,7 @@ class EftPhysOutput():
                 value = 2
         else:
             raise ValueError('Invalid argument for operation.')
-        args = get_array()
+        args = _get_array()
         args.append(channel)
         args.append(value)
         cls._execute_command(unit, cmd, args)
@@ -575,7 +579,7 @@ class EftPhysOutput():
             cmd = 9
         else:
             raise ValueError('Invalid argument for operation.')
-        args = get_array()
+        args = _get_array()
         args.append(channel)
         params = cls._execute_command(unit, cmd, args)
         if operation is 'nominal':
@@ -603,7 +607,7 @@ class EftPhysInput():
                 value = 2
         else:
             raise ValueError('Invalid argument for operation')
-        args = get_array()
+        args = _get_array()
         args.append(channel)
         args.append(value)
         cls._execute_command(unit, cmd, args)
@@ -614,7 +618,7 @@ class EftPhysInput():
             cmd = 9
         else:
             raise ValueError('Invalid argumentfor operation')
-        args = get_array()
+        args = _get_array()
         args.append(channel)
         args.append(0xff)
         params = cls._execute_command(unit, cmd, args)
@@ -646,7 +650,7 @@ class EftPlayback():
                 value = 1
         else:
             raise ValueError('Invalid argument for operation.')
-        args = get_array()
+        args = _get_array()
         args.append(channel)
         args.append(value)
         cls._execute_command(unit, cmd, args)
@@ -661,7 +665,7 @@ class EftPlayback():
             cmd = 5
         else:
             raise ValueError('Invalid argument for operation.')
-        args = get_array()
+        args = _get_array()
         args.append(channel)
         params = cls._execute_command(unit, cmd, args)
         return params[1]
@@ -705,7 +709,7 @@ class EftMonitor():
                 raise ValueError('Invalid argument for panning')
         else:
             raise ValueError('Invalid argument for operation.')
-        args = get_array()
+        args = _get_array()
         args.append(in_ch)
         args.append(out_ch)
         args.append(value)
@@ -723,7 +727,7 @@ class EftMonitor():
             cmd = 7
         else:
             raise ValueError('Invalid argument for operation.')
-        args = get_array()
+        args = _get_array()
         args.append(in_ch)
         args.append(out_ch)
         params = cls._execute_command(unit, cmd, args)
@@ -744,13 +748,13 @@ class EftIoconf():
 
     @classmethod
     def set_control_room_mirroring(cls, unit, output_pair):
-        args = get_array()
+        args = _get_array()
         args.append(output_pair)
         cls._execute_command(unit, 0, args)
 
     @classmethod
     def get_control_room_mirroring(cls, unit):
-        args = get_array()
+        args = _get_array()
         params = cls._execute_command(unit, 1, args)
         return params[0]
 
@@ -758,13 +762,13 @@ class EftIoconf():
     def set_digital_input_mode(cls, unit, mode):
         if cls.digital_input_modes.count(mode) == 0:
             raise ValueError('Invalid argument for digital mode')
-        args = get_array()
+        args = _get_array()
         args.append(cls.digital_input_modes.index(mode))
         params = cls._execute_command(unit, 2, args)
 
     @classmethod
     def get_digital_input_mode(cls, unit):
-        args = get_array()
+        args = _get_array()
         params = cls._execute_command(unit, 3, args)
         if params[0] >= len(cls.digital_input_modes):
             raise OSError
@@ -774,19 +778,19 @@ class EftIoconf():
     def set_phantom_powering(cls, unit, state):
         if state > 0:
             state = 1
-        args = get_array()
+        args = _get_array()
         args.append(state)
         cls._execute_command(unit, 4, args)
 
     @classmethod
     def get_phantom_powering(cls, unit):
-        args = get_array()
+        args = _get_array()
         params= cls._execute_command(unit, 5, args)
         return params[0]
 
     @classmethod
     def set_stream_mapping(cls, unit, rx_maps, tx_maps):
-        args = get_array()
+        args = _get_array()
         params = cls._execute_command(unit, 7, args)
         rx_map_count = params[2]
         if len(rx_maps) > rx_map_count:
@@ -802,7 +806,7 @@ class EftIoconf():
 
     @classmethod
     def get_stream_mapping(cls, unit):
-        args = get_array()
+        args = _get_array()
         param = cls._execute_command(unit, 7, args)
         tx_map_count = param[34]
         tx_map = []
