@@ -2,6 +2,8 @@ import re
 
 from gi.repository import Hinawa
 
+__all__ = ['BebobUnit']
+
 class BebobUnit(Hinawa.SndUnit):
     REG_INFO = 0xffffc8020000
 

@@ -1,5 +1,7 @@
 from ta1394.general import AvcGeneral
 
+__all__ = ['AvcStreamFormatInfo']
+
 class AvcStreamFormatInfo():
     plug_direction = ('input', 'output')
     hierarchy_roots = ('DVCR', 'Audio&Music', 'BT.601', 'invalid', 'reserved')

@@ -10,6 +10,8 @@ from ta1394.audio import AvcAudio
 import re
 from math import log10
 
+__all__ = ['MaudioNormal']
+
 class MaudioNormal(BebobUnit):
     _ids = {
         0x00000a: (0, "Ozonic"),

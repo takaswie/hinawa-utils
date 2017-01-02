@@ -1,5 +1,7 @@
 from ta1394.general import AvcGeneral
 
+__all__ = ['AvcCcm']
+
 class AvcCcm():
     plug_mode = ('unit', 'subunit')
     plug_unit_type = ('isoc', 'external')

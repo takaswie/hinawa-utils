@@ -1,6 +1,8 @@
 import sys, string, glob, os.path
 from gi.repository import Hinawa
 
+__all__ = ['CuiKit']
+
 class CuiKit():
     @staticmethod
     def _seek_snd_unit_from_guid(guid):

@@ -6,6 +6,8 @@ from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
 from ta1394.streamformat import AvcStreamFormatInfo
 
+__all__ = ['OxfwUnit']
+
 class OxfwUnit(Hinawa.SndUnit):
     def __init__(self, path):
         if re.match('/dev/snd/hwC[0-9]*D0', path):

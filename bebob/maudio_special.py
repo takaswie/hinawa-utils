@@ -12,6 +12,8 @@ from ta1394.audio import AvcAudio
 from array import array
 from math import log10
 
+__all__ = ['MaudioSpecial']
+
 class MaudioSpecial(BebobUnit):
     BASE_ADDR = 0xffc700700000
     METER_ADDR = 0xffc700600000

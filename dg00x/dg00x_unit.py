@@ -3,6 +3,8 @@ from array import array
 
 from gi.repository import Hinawa
 
+__all__ = ['Dg00xUnit']
+
 class Dg00xUnit(Hinawa.SndDg00x):
     supported_sampling_rates = (44100, 48000, 88200, 96000)
     supported_clock_sources = ('Internal', 'S/PDIF', 'ADAT', 'Word-clock')

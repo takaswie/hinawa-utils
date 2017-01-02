@@ -4,6 +4,8 @@ from oxfw.oxfw_unit import OxfwUnit
 
 from ta1394.general import AvcGeneral
 
+__all__ = ['TascamFireone']
+
 class TascamFireone(OxfwUnit):
     # Available parameters
     display_modes = ('always-off', 'always-on', 'breathe', 'metronome',

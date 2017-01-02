@@ -3,6 +3,9 @@ from ta1394.streamformat import AvcStreamFormatInfo
 
 import time
 
+__all__ = ['BcoPlugInfo', 'BcoSubunitInfo', 'BcoVendorDependent',
+           'BcoStreamFormatInfo']
+
 class BcoPlugInfo():
     addr_dir  = ('input', 'output')
     addr_mode = ('unit', 'subunit', 'function-block')

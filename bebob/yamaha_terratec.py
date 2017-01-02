@@ -8,6 +8,8 @@ from bebob.extensions import BcoVendorDependent
 from bebob.extensions import BcoPlugInfo
 from bebob.extensions import BcoStreamFormatInfo
 
+__all__ = ['YamahaTerratec']
+
 class YamahaTerratec(BebobUnit):
     channel_ops = ('volume', 'mute')
     supported_clock_sources = ('Internal', 'S/PDIF')

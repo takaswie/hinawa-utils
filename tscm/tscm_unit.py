@@ -3,6 +3,8 @@ from array import array
 
 from gi.repository import Hinawa
 
+__all__ = ['TscmUnit']
+
 class TscmUnit(Hinawa.SndUnit):
     supported_sampling_rates = (44100, 48000, 88200, 96000)
     supported_clock_sources = ('Internal', 'Word-clock', 'S/PDIF', 'ADAT')

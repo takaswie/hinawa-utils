@@ -1,5 +1,7 @@
 from gi.repository import Hinawa
 
+__all__ = ['AvcGeneral', 'AvcConnection']
+
 class AvcGeneral():
     subunit_types = ('monitor', 'audio', 'printer', 'disc',
                      'tape-recorder-player', 'tuner', 'ca', 'camera',

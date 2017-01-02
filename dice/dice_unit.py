@@ -3,6 +3,8 @@ from array import array
 
 from gi.repository import Hinawa
 
+__all__ = ['DiceUnit']
+
 class DiceUnit(Hinawa.SndDice):
     def __init__(self, path):
         if re.match('/dev/snd/hwC[0-9]*D0', path):

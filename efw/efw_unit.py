@@ -8,6 +8,8 @@ from efw.transactions import EftMonitor
 from efw.transactions import EftIoconf
 from math import log10
 
+__all__ = ['EfwUnit']
+
 class EfwUnit(Hinawa.SndEfw):
     def __init__(self, path):
         super().__init__()

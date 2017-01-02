@@ -9,6 +9,8 @@ from bebob.extensions import BcoPlugInfo
 from bebob.extensions import BcoSubunitInfo
 from bebob.extensions import BcoStreamFormatInfo
 
+__all__ = ['PlugParser']
+
 class PlugParser(BebobUnit):
     def __init__(self, path):
         super().__init__(path)
