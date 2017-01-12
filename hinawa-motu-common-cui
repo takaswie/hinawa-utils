@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+
+import gi
+gi.require_version('Hinawa', '1.0')
+
+from misc.cui_kit import CuiKit
+from motu.motu_unit import MotuUnit
+
+def handle_opt_iface_mode(uniit, args):
+    ops = ('set', 'get')
+    if len(args) > 2 and args[0] in ops:
+        op = args[0]
+        direction = args[1]
+        index = args[2]
+        if op == ops[0] and len(args) == 4:
+            mode = args[3]
+            unit.set_opt_iface_mode(direction, index, mode)
+        else:
+            print(unit.get_opt_iface_mode(direction, index))
+        return True
+    print('Arguments for optical input interface mode:')
+    print('  opt-iface-mode OPERATION DIRECTION INDEX [MODE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    directions = [str(d) for d in unit.get_supported_opt_iface_directions()]
+    print('    DIRECTION:  {0}'.format(', '.join(directions)))
+    indexes = [str(i) for i in unit.get_opt_iface_indexes()]
+    print('    INDEX:      {0}'.format(', '.join(indexes)))
+    modes = [str(m) for m in unit.get_opt_iface_modes()]
+    print('    MODE:       {0}'.format(', '.join(modes)))
+    return False
+
+def handle_sampling_rate(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            rate = int(args[1])
+            unit.set_sampling_rate(rate)
+        else:
+            print(unit.get_sampling_rate())
+        return True
+    print('Arguments for sampling-rate command:')
+    print('  sampling-rate OPERATION [RATE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    rates = [str(r) for r in unit.get_sampling_rates()]
+    print('    RATE:      {0}'.format(', '.join(rates)))
+    return False
+
+def handle_clock_source(unit, args):
+    ops = ('set', 'get')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == ops[0] and len(args) == 2:
+            source = args[1]
+            unit.set_clock_source(source)
+        else:
+            print(unit.get_clock_source())
+        return True
+    print('Arguments for clock-source command:')
+    print('  clock-source OPERATION [SOURCE]')
+    print('    OPERATION: {0}'.format(', '.join(ops)))
+    sources = unit.get_supported_clock_sources()
+    print('    SOURCE:    {0}'.format(', '.join(sources)))
+    return False
+
+def handle_listen_message(unit, args):
+    from gi.repository import GLib
+    import signal
+    loop = GLib.MainLoop()
+    def handle_unix_signal():
+        loop.quit()
+    def handle_notified(unit, notification):
+        print('{0:08x}'.format(notification))
+    def handle_disconnect(unit, loop):
+        loop.quit()
+    unit.connect('notified', handle_notified)
+    GLib.unix_signal_add(GLib.PRIORITY_HIGH, signal.SIGINT, handle_unix_signal)
+    unit.connect('disconnected', handle_disconnect, loop)
+    loop.run()
+    return True
+
+cmds = {
+    'opt-iface-mode':   handle_opt_iface_mode,
+    'sampling-rate':    handle_sampling_rate,
+    'clock-source':     handle_clock_source,
+    'listen-message':   handle_listen_message,
+}
+
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = MotuUnit(fullpath)
+    CuiKit.dispatch_command(unit, cmds)
