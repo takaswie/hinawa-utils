@@ -8,6 +8,7 @@ __all__ = ['MotuUnit']
 
 class MotuUnit(Hinawa.SndMotu):
     SUPPORTED_MODELS = {
+        0x102802: ('828',       MotuProtocolV1),
     }
     _pcm_frame_fetch_mode = ('Enable', 'Disable')
 
