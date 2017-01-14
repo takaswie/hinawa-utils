@@ -10,6 +10,8 @@ class MotuUnit(Hinawa.SndMotu):
     SUPPORTED_MODELS = {
         0x102802: ('828',       MotuProtocolV1),
         0x101800: ('828mk2',    MotuProtocolV2),
+        0x106800: ('828mk3',    MotuProtocolV3),    # FireWire only
+        0x100800: ('828mk3',    MotuProtocolV3),    # Hybrid
     }
     _pcm_frame_fetch_mode = ('Enable', 'Disable')
 
