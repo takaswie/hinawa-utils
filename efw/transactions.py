@@ -409,7 +409,7 @@ class EftTransmit():
 
     @classmethod
     def set_fw_hdmi(cls, unit, playback_drop, record_stretch_ratio, serial_bps,
-                    data_format):
+                    serial_data_format):
         if cls.supported_playback_drops.count(playback_drop) == 0:
             raise ValueError('Invalid argument for playback drop')
         if cls.supported_record_streatch_ratios(record_stretch_ratio) == 0:
@@ -421,7 +421,7 @@ class EftTransmit():
 
         args = _get_array()
         args.append(playback_drop)
-        args.append(record_stretch)
+        args.append(record_stretch_ratio)
         args.append(serial_bps)
         args.append(cls.supported_serial_data_formats.index(serial_data_format))
         cls._execute_command(unit, 4, args)
@@ -764,7 +764,7 @@ class EftIoconf():
             raise ValueError('Invalid argument for digital mode')
         args = _get_array()
         args.append(cls.digital_input_modes.index(mode))
-        params = cls._execute_command(unit, 2, args)
+        cls._execute_command(unit, 2, args)
 
     @classmethod
     def get_digital_input_mode(cls, unit):

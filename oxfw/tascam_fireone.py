@@ -1,5 +1,3 @@
-from gi.repository import Hinawa
-
 from oxfw.oxfw_unit import OxfwUnit
 
 from ta1394.general import AvcGeneral

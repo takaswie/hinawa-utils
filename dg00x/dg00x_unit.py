@@ -64,7 +64,7 @@ class Dg00xUnit(Hinawa.SndDg00x):
         return self.supported_clock_sources[data[0]]
 
     def set_local_sampling_rate(self, rate):
-        if rate not in supported_sampling_rates:
+        if rate not in self.supported_sampling_rates:
             raise ValueError('Invalid argument for local sampling rate.')
         data = self._get_array()
         data.append(self.supported_sampling_rates.index(rate))

@@ -137,7 +137,7 @@ class TscmUnit(Hinawa.SndUnit):
         return self.supported_coax_sources[index]
 
     def bright_led(self, position, state):
-        if status not in self.supported_led_status:
+        if state not in self.supported_led_status:
             raise ValueError('Invalid argument for LED state.')
         data = self._get_array()
         if self.supported_led_status.index(state) == 0:

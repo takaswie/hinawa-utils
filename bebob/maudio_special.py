@@ -6,11 +6,8 @@ from bebob.bebob_unit import BebobUnit
 
 from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
-from ta1394.ccm import AvcCcm
-from ta1394.audio import AvcAudio
 
 from array import array
-from math import log10
 
 __all__ = ['MaudioSpecial']
 
@@ -372,7 +369,6 @@ class MaudioSpecial(BebobUnit):
                 meters[self.metering_labels[i]] = data[1 + i // 2] >> 16
             else:
                 meters[self.metering_labels[i]] = data[1 + i // 2] & 0x0000ffff
-            misc = data[0]
             meters['switch-0'] = (data[0] >> 24) & 0xff
             meters['rotery-0'] = (data[0] >> 16) & 0xff
             meters['rotery-1'] = (data[0] >>  8) & 0xff

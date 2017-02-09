@@ -182,7 +182,7 @@ class AvcConnection():
         args.append(AvcConnection.sampling_rates.index(rate))
         args.append(0xff)
         args.append(0xff)
-        params = AvcGeneral.command_control(fcp, args)
+        AvcGeneral.command_control(fcp, args)
 
     @classmethod
     def get_plug_signal_format(cls, fcp, direction, plug):

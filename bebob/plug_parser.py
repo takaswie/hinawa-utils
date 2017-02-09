@@ -1,5 +1,3 @@
-from gi.repository import Hinawa
-
 from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
 from ta1394.ccm import AvcCcm
@@ -76,7 +74,6 @@ class PlugParser(BebobUnit):
         subunits = BcoSubunitInfo.get_subunits(self.fcp)
         for subunit in subunits:
             type = subunit['type']
-            id = subunit['id']
             if subunit['id'] != 0:
                 raise RuntimeError('Unsupported number for subunit id')
             if type not in subunit_plugs:
@@ -121,7 +118,6 @@ class PlugParser(BebobUnit):
 
     def _parse_function_block_plugs(self):
         fbs = {}
-        subunits = BcoSubunitInfo.get_subunits(self.fcp)
         for type in self.subunit_plugs.keys():
             subunit_fbs = {}
             entries = []

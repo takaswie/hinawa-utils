@@ -57,7 +57,8 @@ class AvcStreamFormatInfo():
         fmt['formation'] = formation
         return fmt
 
-    def _build_format(fmt):
+    @classmethod
+    def _build_format(cls, fmt):
         if cls.sampling_rates.count(fmt['sampling-rate']) == 0:
             raise ValueError('Invalid argument for sampling rate')
         if cls.rate_controls.count(fmt['rate-control']) == 0:

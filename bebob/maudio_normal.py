@@ -8,7 +8,6 @@ from ta1394.ccm import AvcCcm
 from ta1394.audio import AvcAudio
 
 import re
-from math import log10
 
 __all__ = ['MaudioNormal']
 

@@ -2,7 +2,6 @@ import re
 
 from gi.repository import Hinawa
 
-from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
 from ta1394.streamformat import AvcStreamFormatInfo
 
