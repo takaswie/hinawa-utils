@@ -84,17 +84,15 @@ def handle_opt_iface(unit, args):
 def handle_listen_message(self, args):
     from gi.repository import GLib
     import signal
-    # This is handled by another context.
-    def handle_unix_signal(loop):
+    loop = GLib.MainLoop()
+    def handle_unix_signal():
         loop.quit()
     def handle_message(unit, message):
         print('{0:08x}'.format(message))
     def handle_disconnect(unit, loop):
         loop.quit()
     self.connect('message', handle_message)
-    loop = GLib.MainLoop()
-    GLib.unix_signal_add(GLib.PRIORITY_HIGH, signal.SIGINT, \
-                         handle_unix_signal, loop)
+    GLib.unix_signal_add(GLib.PRIORITY_HIGH, signal.SIGINT, handle_unix_signal)
     self.connect('disconnected', handle_disconnect, loop)
     loop.run()
     return True
