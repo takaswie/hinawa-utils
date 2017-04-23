@@ -259,8 +259,8 @@ class EftInfo():
                 caps[name] = True
             else:
                 caps[name] = False
-        # This is supported just by Onyx F series.
-        if params[3] == 0x00400f or params[3] == 0x01200f:
+        # This is supported just by Onyx 1200F.
+        if params[3] == 0x01200f:
             caps['tx-mapping'] = True
         else:
             caps['tx-mapping'] = False
