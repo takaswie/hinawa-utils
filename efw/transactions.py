@@ -39,9 +39,9 @@ class EftInfo():
 
     supported_features = (
         'changeable-resp-addr',
-        'aesebu-xlr',
         'control-room-mirroring',
         'spdif-coax',
+        'aesebu-xlr',
         'dsp',
         'fpga',
         'phantom-powering',
