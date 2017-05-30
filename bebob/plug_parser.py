@@ -223,12 +223,13 @@ class PlugParser(BebobUnit):
                 continue
             hoge[type] = {}
             for dir, plugs in dir_plugs.items():
-                hoge[type][dir] = []
+                hoge[type][dir] = {}
                 for i, plug in plugs.items():
                     addr = BcoPlugInfo.get_unit_addr(dir, type, i)
                     try:
-                        fmts = BcoStreamFormatInfo.get_entry_list(self.fcp, addr)
-                        hoge[type][dir].append(fmts)
+                        fmts = BcoStreamFormatInfo.get_entry_list(self.fcp,
+                                                                  addr)
+                        hoge[type][dir][i] = fmts
                     except:
                         continue
         return hoge
