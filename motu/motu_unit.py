@@ -1,3 +1,5 @@
+import gi
+gi.require_version('Hinawa', '1.0')
 from gi.repository import Hinawa
 
 from motu.motu_protocol_v1 import MotuProtocolV1

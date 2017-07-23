@@ -1,7 +1,9 @@
+import gi
+gi.require_version('Hinawa', '1.0')
+from gi.repository import Hinawa
+
 import re
 from array import array
-
-from gi.repository import Hinawa
 
 __all__ = ['DiceUnit']
 

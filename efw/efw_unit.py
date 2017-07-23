@@ -1,3 +1,5 @@
+import gi
+gi.require_version('Hinawa', '1.0')
 from gi.repository import Hinawa
 from efw.transactions import EftInfo
 from efw.transactions import EftHwctl

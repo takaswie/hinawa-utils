@@ -1,5 +1,8 @@
-import sys, string, glob, os.path
+import gi
+gi.require_version('Hinawa', '1.0')
 from gi.repository import Hinawa
+
+import sys, string, glob, os.path
 
 __all__ = ['CuiKit']
 
