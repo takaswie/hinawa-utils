@@ -74,17 +74,19 @@ class PlugParser(BebobUnit):
         subunits = BcoSubunitInfo.get_subunits(self.fcp)
         for subunit in subunits:
             type = subunit['type']
-            if subunit['id'] != 0:
-                raise RuntimeError('Unsupported number for subunit id')
+            id = subunit['id']
             if type not in subunit_plugs:
                 subunit_plugs[type] = {}
-                subunit_plugs[type]['output'] = {}
-                subunit_plugs[type]['input'] = {}
+            if id not in subunit_plugs[type]:
+                subunit_plugs[type][id] = {}
+                subunit_plugs[type][id]['output'] = {}
+                subunit_plugs[type][id]['input'] = {}
+
             info = AvcConnection.get_subunit_plug_info(self.fcp, type, 0)
             for dir, num in info.items():
                 for i in range(num):
                     plug = self._parse_subunit_plug(dir, type, 0, i)
-                    subunit_plugs[type][dir][i] = plug
+                    subunit_plugs[type][id][dir][i] = plug
         return subunit_plugs
 
     def _parse_subunit_plug(self, dir, type, id, num):
@@ -117,35 +119,46 @@ class PlugParser(BebobUnit):
         return plug
 
     def _parse_function_block_plugs(self):
-        fbs = {}
-        for type in self.subunit_plugs.keys():
-            subunit_fbs = {}
-            entries = []
-            for i in range(0xff):
-                try:
-                    entries.extend(BcoSubunitInfo.get_subunit_fb_info(self.fcp,
-                                                            type, 0, i, 0xff))
-                except:
-                    break
-            for entry in entries:
-                fb_type = entry['fb-type']
-                if fb_type not in subunit_fbs:
-                    subunit_fbs[fb_type] = {}
-                fb_id = entry['fb-id']
-                if fb_id not in subunit_fbs[fb_type]:
-                    subunit_fbs[fb_type][fb_id] = {}
-                    subunit_fbs[fb_type][fb_id]['output'] = {}
-                    subunit_fbs[fb_type][fb_id]['input'] = {}
-                for i in range(entry['inputs']):
-                    plug = self._parse_fb_plug('input', type, 0,
-                                               fb_type, fb_id, i)
-                    subunit_fbs[fb_type][fb_id]['output'][i] = plug
-                for i in range(entry['outputs']):
-                    plug = self._parse_fb_plug('output', type, 0,
-                                               fb_type, fb_id, i)
-                    subunit_fbs[fb_type][fb_id]['input'][i] = plug
-            fbs[type] = subunit_fbs
-        return fbs
+        subunits = {}
+        for subunit_type, subunit_type_plugs in self.subunit_plugs.items():
+            if subunit_type not in subunits:
+                subunits[subunit_type] = {}
+
+            for subunit_id in subunit_type_plugs.keys():
+                fbs = {}
+
+                entries = []
+                for i in range(0xff):
+                    try:
+                        entries.extend(BcoSubunitInfo.get_subunit_fb_info(
+                                self.fcp, subunit_type, subunit_id, i, 0xff))
+                    except:
+                        break
+
+                for entry in entries:
+                    fb_type = entry['type']
+                    if fb_type not in fbs:
+                        fbs[fb_type] = {}
+                    fb_id = entry['id']
+
+                    fb = {}
+                    fb['purpose'] = entry['purpose']
+                    fb['outputs'] = {}
+                    fb['inputs'] = {}
+                    for i in range(entry['inputs']):
+                        plug = self._parse_fb_plug('input', subunit_type,
+                                                subunit_id, fb_type, fb_id, i)
+                        fb['inputs'][i] = plug
+                    for i in range(entry['outputs']):
+                        plug = self._parse_fb_plug('output', subunit_type,
+                                                subunit_id, fb_type, fb_id, i)
+                        fb['outputs'][i] = plug
+
+                    fbs[fb_type][fb_id] = fb
+
+                subunits[subunit_type][subunit_id] = fbs
+
+        return subunits
 
     def _parse_fb_plug(self, dir, subunit_type, subunit_id, fb_type, fb_id,
                        num):
@@ -180,19 +193,21 @@ class PlugParser(BebobUnit):
 
     def _parse_signal_destination(self):
         dst = []
-        for i, plug in self.subunit_plugs['music']['input'].items():
-            if plug['type'] == 'Sync':
-                dst = AvcCcm.get_subunit_signal_addr('music', 0, i)
+        for subunit_id, subunit_id_plugs in self.subunit_plugs['music'].items():
+            for i, plug in subunit_id_plugs['input'].items():
+                if plug['type'] == 'Sync':
+                    dst = AvcCcm.get_subunit_signal_addr('music', 0, i)
         return dst
 
     def _parse_signal_sources(self):
         srcs = []
         candidates = []
         # This is internal clock source.
-        for i, plug in self.subunit_plugs['music']['output'].items():
-           if plug['type'] == 'Sync':
-                addr = AvcCcm.get_subunit_signal_addr('music', 0, i)
-                candidates.append((addr, plug))
+        for subunit_id, subunit_id_plugs in self.subunit_plugs['music'].items():
+            for i, plug in subunit_id_plugs['output'].items():
+                if plug['type'] == 'Sync':
+                    addr = AvcCcm.get_subunit_signal_addr('music', 0, i)
+                    candidates.append((addr, plug))
         # External source is available.
         for i, plug in self.unit_plugs['external']['input'].items():
             if plug['type'] in ('Sync', 'Digital', 'Clock'):
