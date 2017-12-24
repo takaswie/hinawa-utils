@@ -20,13 +20,11 @@ class TscmUnit(Hinawa.SndUnit):
             if self.get_property('type') != 6:
                 raise ValueError('The character device is not for Tascam unit')
             self.listen()
-            self._on_juju = False,
         elif re.match('/dev/fw[0-9]*', path):
             # Just using parent class.
             super(Hinawa.FwUnit, self).__init__()
             Hinawa.FwUnit.open(self, path)
             Hinawa.FwUnit.listen(self)
-            self._on_juju = True
         else:
             raise ValueError('Invalid argument for character device')
 
@@ -41,18 +39,12 @@ class TscmUnit(Hinawa.SndUnit):
         return arr
 
     def _read_transaction(self, addr, quads):
-        if self._on_juju:
-            req = Hinawa.FwReq()
-            return req.read(self, addr, quads)
-        else:
-            return self.read_transact(addr, quads)
+        req = Hinawa.FwReq()
+        return req.read(self, addr, quads)
 
     def _write_transaction(self, addr, data):
-        if self._on_juju:
-            req = Hinawa.FwReq()
-            return req.write(self, addr, data)
-        else:
-            return self.write_transact(addr, data)
+        req = Hinawa.FwReq()
+        return req.write(self, addr, data)
 
     def get_firmware_versions(self):
         info = {}

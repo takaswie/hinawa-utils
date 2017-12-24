@@ -130,9 +130,10 @@ class MaudioSpecial(BebobUnit):
     def _write_data(self, index, data):
         # Write to the unit.
         count = 0
+        req = Hinawa.FwReq()
         while True:
             try:
-                self.write_transact(self.BASE_ADDR + index * 4, data)
+                req.write(self, self.BASE_ADDR + index * 4, data)
                 break
             except:
                 if count > 10:
@@ -363,7 +364,8 @@ class MaudioSpecial(BebobUnit):
     # may differs analog-in and the others.
     def get_meters(self):
         meters = {}
-        data = self.read_transact(self.METER_ADDR, 21)
+        req = Hinawa.FwReq()
+        data = req.read(self, self.METER_ADDR, 21)
         for i, label in enumerate(self.metering_labels):
             if i % 2:
                 meters[self.metering_labels[i]] = data[1 + i // 2] >> 16

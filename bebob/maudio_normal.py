@@ -382,7 +382,8 @@ class MaudioNormal(BebobUnit):
     def get_meters(self):
         labels = self._labels[self._id]['meters']
         meters = {}
-        current = self.read_transact(0xffc700600000, self._meters[self._id])
+        req = Hinawa.FwReq()
+        current = req.read(self, 0xffc700600000, self._meters[self._id])
         for i, name in enumerate(labels):
             meters[name] = current[i]
         if len(current) > len(labels):

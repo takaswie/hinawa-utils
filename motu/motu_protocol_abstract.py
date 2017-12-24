@@ -29,8 +29,9 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
         self._debug = bool(debug)
 
     def read(self, offset, count):
+        req = Hinawa.FwReq()
         addr = self.BASE_ADDR + offset
-        quads = self._unit.read_transact(addr, count)
+        quads = req.read(self, addr, count)
         if self._debug:
             print('    read: {0:012x}:'.format(addr))
             for i, quad in enumerate(quads):
@@ -38,13 +39,14 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
         return quads
 
     def write(self, offset, quads):
+        req = Hinawa.FwReq()
         addr = self.BASE_ADDR + offset
         if self._debug:
             print('    write: {0:012x}:'.format(addr))
             for i, quad in enumerate(quads):
                 print('        {0:04x}: {1:08x}'.format(offset + i * 4, quad))
 
-        self._unit.write_transact(addr, quads)
+        req.write(self, addr, quads)
 
     @abstractmethod
     def get_supported_sampling_rates(self):

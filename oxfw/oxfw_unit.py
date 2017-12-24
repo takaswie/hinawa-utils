@@ -34,13 +34,9 @@ class OxfwUnit(Hinawa.SndUnit):
         self.supported_stream_formats = self._parse_supported_stream_formats()
 
     def _parse_hardware_info(self):
-        def _read_transaction(addr, quads):
-            if self._on_juju:
-                req = Hinawa.FwReq()
-                return req.read(self, addr, quads)
-            return self.read_transact(addr, quads)
         hw_info = {}
-        params = _read_transaction(0xfffff0050000, 1)
+        req = Hinawa.FwReq()
+        params = req.read(self, 0xfffff0050000, 1)
         val = params[0]
         hw_info['asic-type'] = \
             'FW{0}{1}{2}'.format((val >> 28) & 0xf,
@@ -49,7 +45,7 @@ class OxfwUnit(Hinawa.SndUnit):
         hw_info['firmware-version'] = \
             '{0}.{1}'.format((val >> 8) & 0xf,
                              (val & 0xf))
-        params = _read_transaction(0xfffff0090020, 1)
+        params = req.read(self, 0xfffff0090020, 1)
         val = params[0]
         hw_info['asic-id'] = \
             bytes([(val >> 24) & 0xff,

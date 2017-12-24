@@ -40,18 +40,12 @@ class DiceUnit(Hinawa.SndDice):
         return arr
 
     def _read_transaction(self, addr, quads):
-        if self._on_juju:
-            req = Hinawa.FwReq()
-            return req.read(self, addr, quads)
-        else:
-            return self.read_transact(addr, quads)
+        req = Hinawa.FwReq()
+        return req.read(self, addr, quads)
 
     def _write_transaction(self, addr, data):
-        if self._on_juju:
-            req = Hinawa.FwReq()
-            req.write(self, addr, data)
-        else:
-            self.write_transact(addr, data)
+        req = Hinawa.FwReq()
+        req.write(self, addr, data)
 
     def _parse_address_space(self):
         addrs = {}
