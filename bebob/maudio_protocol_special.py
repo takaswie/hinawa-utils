@@ -1,7 +1,7 @@
 from array import array
 import gi
 
-gi.require_version('Hinawa', '1.0')
+gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
 from bebob.maudio_protocol_abstract import MaudioProtocolAbstract

@@ -1,7 +1,7 @@
 from re import match
 
 import gi
-gi.require_version('Hinawa', '1.0')
+gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
 __all__ = ['BebobUnit']
