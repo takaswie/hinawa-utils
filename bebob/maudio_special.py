@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
 import time
+import gi
+
+gi.require_version('Hinawa', '1.0')
+from gi.repository import Hinawa
 
 from bebob.bebob_unit import BebobUnit
 
@@ -150,17 +154,8 @@ class MaudioSpecial(BebobUnit):
         f.close()
 
     # Helper functions
-    def _get_array(self):
-        arr = array('L')
-        if arr.itemsize is not 4:
-            arr = array('I')
-            if arr.itemsize is not 4:
-                raise RuntimeError('Platform has no representation \
-                                    equivalent to quadlet.')
-        return arr
-
     def _write_status(self, index, datum):
-        data = self._get_array()
+        data = array('I')
         data.append(datum)
         self._write_data(index, data)
 

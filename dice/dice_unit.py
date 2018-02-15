@@ -29,16 +29,6 @@ class DiceUnit(Hinawa.SndDice):
         self.supported_clock_sources = []
         self._parse_clock_caps()
 
-    def _get_array(self):
-        # The width with 'L' parameter is depending on environment.
-        arr = array('L')
-        if arr.itemsize is not 4:
-            arr = array('I')
-            if arr.itemsize is not 4:
-                raise RuntimeError('Platform has no representation \
-                                    equivalent to quadlet.')
-        return arr
-
     def _read_transaction(self, addr, quads):
         req = Hinawa.FwReq()
         return req.read(self, addr, quads)
@@ -197,7 +187,7 @@ class DiceUnit(Hinawa.SndDice):
         byte_literal = name.encode('utf-8')
         if len(byte_literal) > 63:
             raise ValueError('The length of name should be within 63 bytes.')
-        data = self._get_array()
+        data = array('I')
         for i in range(64 // 4):
             data.append(0x00000000)
         for i, b in enumerate(byte_literal):

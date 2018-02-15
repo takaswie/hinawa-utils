@@ -27,16 +27,6 @@ class Dg00xUnit(Hinawa.SndDg00x):
         else:
             raise ValueError('Invalid argument for character device')
 
-    def _get_array(self):
-        # The width with 'L' parameter is depending on environment.
-        arr = array('L')
-        if arr.itemsize is not 4:
-            arr = array('I')
-            if arr.itemsize is not 4:
-                raise RuntimeError('Platform has no representation \
-                                    equivalent to quadlet.')
-        return arr
-
     def _read_transaction(self, addr, quads):
         req = Hinawa.FwReq()
         return req.read(self, addr, quads)
@@ -48,7 +38,7 @@ class Dg00xUnit(Hinawa.SndDg00x):
     def set_clock_source(self, source):
         if source not in self.supported_clock_sources:
             raise ValueError('Invalid argument for clock source.')
-        data = self._get_array()
+        data = array('I')
         data.append(self.supported_clock_sources.index(source))
         self._write_transaction(0xffffe00000118, data)
     def get_clock_source(self):
@@ -60,7 +50,7 @@ class Dg00xUnit(Hinawa.SndDg00x):
     def set_local_sampling_rate(self, rate):
         if rate not in self.supported_sampling_rates:
             raise ValueError('Invalid argument for local sampling rate.')
-        data = self._get_array()
+        data = array('I')
         data.append(self.supported_sampling_rates.index(rate))
         self._write_transaction(0xffffe00000118, data)
     def get_local_sampling_rate(self):
@@ -81,7 +71,7 @@ class Dg00xUnit(Hinawa.SndDg00x):
     def set_opt_iface(self, mode):
         if mode not in self.supported_optical_interfaces:
             raise ValueError('Invalid argument for optical interface mode.')
-        data = self._get_array()
+        data = array('I')
         data.append(self.supported_optical_interfaces.index(mode))
         self._write_transaction(0xffffe000011c, data)
     def get_opt_iface(self):
@@ -95,7 +85,7 @@ class Dg00xUnit(Hinawa.SndDg00x):
             mode = 1
         else:
             mode = 0
-        data = self._get_array()
+        data = array('I')
         data.append(mode)
         self._write_transaction(0xffffe0000124, data)
     def get_mixer_mode(self):

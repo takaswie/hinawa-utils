@@ -28,16 +28,6 @@ class TscmUnit(Hinawa.SndUnit):
         else:
             raise ValueError('Invalid argument for character device')
 
-    def _get_array(self):
-        # The width with 'L' parameter is depending on environment.
-        arr = array('L')
-        if arr.itemsize is not 4:
-            arr = array('I')
-            if arr.itemsize is not 4:
-                raise RuntimeError('Platform has no representation \
-                                    equivalent to quadlet.')
-        return arr
-
     def _read_transaction(self, addr, quads):
         req = Hinawa.FwReq()
         return req.read(self, addr, quads)
@@ -103,7 +93,7 @@ class TscmUnit(Hinawa.SndUnit):
         return rate
 
     def set_master_fader(self, mode):
-        data = self._get_array()
+        data = array('I')
         if mode > 0:
             data.append(0x00004000)
         else:
@@ -117,7 +107,7 @@ class TscmUnit(Hinawa.SndUnit):
             return False
 
     def set_coaxial_source(self, source):
-        data = self._get_array()
+        data = array('I')
         if source not in self.supported_coax_sources:
             raise ValueError('Invalid argument for coaxial source.')
         if self.supported_coax_sources.index(source) == 0:
@@ -133,7 +123,7 @@ class TscmUnit(Hinawa.SndUnit):
     def bright_led(self, position, state):
         if state not in self.supported_led_status:
             raise ValueError('Invalid argument for LED state.')
-        data = self._get_array()
+        data = array('I')
         if self.supported_led_status.index(state) == 0:
             data.append(position)
         else:
