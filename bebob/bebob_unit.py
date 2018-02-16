@@ -1,4 +1,5 @@
 from re import match
+from struct import unpack
 
 import gi
 gi.require_version('Hinawa', '2.0')
@@ -31,64 +32,41 @@ class BebobUnit(Hinawa.SndUnit):
 
     def _get_firmware_info(self):
         def _get_string_literal(params):
-            if params[0] == 0 and params[1] == 0:
+            if 0x00 in params:
                 return '00000000'
-            return bytes([(params[0] >> 24) & 0xff,
-                          (params[0] >> 16) & 0xff,
-                          (params[0] >> 8) & 0xff,
-                           params[0] & 0xff,
-                          (params[1] >> 24) & 0xff,
-                          (params[1] >> 16) & 0xff,
-                          (params[1] >> 8) & 0xff,
-                           params[1] & 0xff]).decode()
+            return params.decode('US-ASCII')
         def _get_time_literal(params):
-            if params[0] == 0 and params[1] == 0:
+            if 0x00 in params:
                 return '000000'
-            return bytes([(params[0] >> 24) & 0xff,
-                          (params[0] >> 16) & 0xff,
-                          (params[0] >> 8) & 0xff,
-                           params[0] & 0xff,
-                          (params[1] >> 24) & 0xff,
-                          (params[1] >> 16) & 0xff]).decode()
-        def _get_version_literal(param):
-            return '{0}.{1}.{2}'.format((param >> 24) & 0xff,
-                                        (param >> 16) & 0xff,
-                                        (param >> 8) & 0xff)
-        def _get_id(param):
-            return int(param >> 24)
+            return params.decode('US-ASCII')
 
         req = Hinawa.FwReq()
-        params = req.read(self, BebobUnit.REG_INFO, 26)
+        params = req.read(self, BebobUnit.REG_INFO, 104)
 
         info = {}
-        info['manufacturer'] = \
-            _get_string_literal(params[0:2])
-        info['protocol-version'] = \
-            _get_version_literal(params[2])
-        info['guid'] = \
-            (params[4] << 32) | params[5]
-        info['model-id'] = \
-            _get_id(params[6])
-        info['model-revision'] = \
-            _get_id(params[7])
+        info['manufacturer']        = _get_string_literal(params[0:8])
+        info['protocol-version']    = unpack('<I', params[8:12])[0]
+        info['guid']                = (unpack('<Q', params[12:20])[0] << 32) | \
+                                      unpack('<I', params[20:24])[0]
+        info['model-id']            = unpack('<I', params[24:28])[0]
+        info['model-revision']      = unpack('<I', params[28:32])[0]
         info['software'] = {
-            'build-date':   _get_string_literal(params[8:10]),
-            'build-time':   _get_time_literal(params[10:12]),
-            'id':           _get_id(params[12]),
-            'version':      _get_version_literal(params[13]),
-            'base-address': int(params[14]),
-            'max-size':     int(params[15]),
+            'build-date':   _get_string_literal(params[32:40]),
+            'build-time':   _get_time_literal(params[40:46]),
+            'id':           unpack('<I', params[48:52])[0],
+            'version':      unpack('<I', params[52:56])[0],
+            'base-address': unpack('<I', params[56:60])[0],
+            'max-size':     unpack('<I', params[60:64])[0],
         }
         info['bootloader'] = {
-            'build-date':   _get_string_literal(params[16:18]),
-            'build-time':   _get_time_literal(params[18:20]),
-            'version':      _get_version_literal(params[3]),
+            'build-date':   _get_string_literal(params[64:72]),
+            'build-time':   _get_time_literal(params[72:80]),
         }
         info['debugger'] = {
-            'build-date':   _get_string_literal(params[20:22]),
-            'build-time':   _get_time_literal(params[22:24]),
-            'id':           _get_id(params[24]),
-            'version':      _get_version_literal(params[25]),
+            'build-date':   _get_string_literal(params[80:88]),
+            'build-time':   _get_string_literal(params[88:96]),
+            'id':           unpack('<I', params[96:100])[0],
+            'version':      unpack('<I', params[100:104])[0],
         }
 
         return info
