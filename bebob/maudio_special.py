@@ -76,13 +76,10 @@ class MaudioSpecial(BebobUnit):
     # Read transactions are not allowed. We cache data.
     def _load_cache(self):
         try:
-            f = open(self._filepath, 'r')
-            cache = [0x00000000] * 40
-            index = 0
-            for line in f.readlines():
-                cache[index] = int(line.strip(), base=16)
-                index = index + 1
-            f.close()
+            with open(self._filepath, 'r') as fd:
+                cache = [0x00000000] * 40
+                for i, line in enumerate(fd):
+                    cache[i] = int(line.strip(), base=16)
         except Exception as e:
             # This is initial value.
             cache = [
@@ -146,10 +143,9 @@ class MaudioSpecial(BebobUnit):
         for i, datum in enumerate(data):
             self._cache[index + i] = datum
         # Refresh permanent cache.
-        f = open(self._filepath, 'w+')
-        for i, datum in enumerate(self._cache):
-            f.write('{0:08x}\n'.format(datum))
-        f.close()
+        with open(self._filepath, 'w+') as fd:
+            for i, datum in enumerate(self._cache):
+                fd.write('{0:08x}\n'.format(datum))
 
     # Helper functions
     def _write_status(self, index, datum):
