@@ -19,12 +19,14 @@ class EfwUnit(Hinawa.SndEfw):
         self.listen()
         self.info = EftInfo.get_spec(self)
 
-    def _calculate_vol_from_db(self, db):
+    @staticmethod
+    def _calcurate_vol_from_db(db):
         if db <= -144.0:
             return 0x00000000
         else:
             return int(0x01000000 * pow(10, db / 20))
-    def _calculate_vol_to_db(self, vol):
+    @staticmethod
+    def _calcurate_vol_to_db(vol):
         if vol == 0:
             return -144.0
         else:
@@ -66,13 +68,13 @@ class EfwUnit(Hinawa.SndEfw):
     def set_phys_out_gain(self, ch, db):
         if ch >= len(self.info['phys-outputs']):
             raise ValueError('Invalid argument for physical output channel')
-        vol = self._calculate_vol_from_db(db)
+        vol = self._calcurate_vol_from_db(db)
         EftPhysOutput.set_param(self, 'gain', ch, vol)
     def get_phys_out_gain(self, ch):
         if ch >= len(self.info['phys-outputs']):
             raise ValueError('Invalid argument for physical output channel')
         vol = EftPhysOutput.get_param(self, 'gain', ch)
-        return self._calculate_vol_to_db(vol)
+        return self._calcurate_vol_to_db(vol)
     def set_phys_out_mute(self, ch, val):
         if ch >= len(self.info['phys-outputs']):
             raise ValueError('Invalid argument for physical output channel')
@@ -102,13 +104,13 @@ class EfwUnit(Hinawa.SndEfw):
     def set_playback_gain(self, ch, db):
         if ch >= self.info['playback-channels']:
             raise ValueError('Invalid argument for playback channel')
-        vol = self._calculate_vol_from_db(db)
+        vol = self._calcurate_vol_from_db(db)
         EftPlayback.set_param(self, 'gain', ch, vol)
     def get_playback_gain(self, ch):
         if ch >= self.info['playback-channels']:
             raise ValueError('Invalid argument for playback channel')
         vol = EftPlayback.get_param(self, 'gain', ch)
-        return self._calculate_vol_to_db(vol)
+        return self._calcurate_vol_to_db(vol)
     def set_playback_mute(self, ch, val):
         if ch >= self.info['playback-channels']:
             raise ValueError('Invalid argument for playback channel')
@@ -131,7 +133,7 @@ class EfwUnit(Hinawa.SndEfw):
             raise ValueError('Invalid argument for capture channel')
         if out_ch >= self.info['playback-channels']:
             raise ValueError('Invalid argument for playback channel')
-        vol = self._calculate_vol_from_db(db)
+        vol = self._calcurate_vol_from_db(db)
         EftMonitor.set_param(self, 'gain', in_ch, out_ch, vol)
     def get_monitor_gain(self, in_ch, out_ch):
         if in_ch >= self.info['capture-channels']:
@@ -139,7 +141,7 @@ class EfwUnit(Hinawa.SndEfw):
         if out_ch >= self.info['playback-channels']:
             raise ValueError('Invalid argument for playback channel')
         vol = EftMonitor.get_param(self, 'gain', in_ch, out_ch)
-        return self._calculate_vol_to_db(vol)
+        return self._calcurate_vol_to_db(vol)
     def set_monitor_mute(self, in_ch, out_ch, val):
         if in_ch >= self.info['capture-channels']:
             raise ValueError('Invalid argument for capture channel')
