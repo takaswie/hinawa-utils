@@ -1,3 +1,5 @@
+from struct import unpack, pack
+
 from ta1394.general import AvcGeneral
 
 __all__ = ['AvcAudio']
@@ -348,3 +350,19 @@ class AvcAudio():
         for i in range(count):
             status.append((params[12 + i * 2] << 8) | params[13 + i * 2])
         return status
+
+    @classmethod
+    def parse_to_db(cls, data):
+        if len(data) != 2:
+            raise ValueError('Invalid argument for byte array')
+        value = unpack('>h', bytearray(data))[0]
+        return value * 128 / 0x7fff
+
+    # MEMO: 0x8000 represents negative infinite. 0x7fff is invalid. However,
+    # in this method, they're used to represent minimum/maximum value.
+    @classmethod
+    def build_from_db(cls, value):
+        if value < -128 or 128 < value:
+            raise ValueError('Invalid argument for value of db')
+        value = int(0x7fff * value / 128)
+        return pack('>h', value)
