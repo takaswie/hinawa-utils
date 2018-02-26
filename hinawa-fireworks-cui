@@ -307,8 +307,7 @@ def handle_monitor(unit, args):
     return False
 
 def handle_listen_metering(unit, args):
-    import time
-    import signal
+    import time, signal, sys
     # This is handled by another context.
     def handle_unix_signal(signum, frame):
         sys.exit()
