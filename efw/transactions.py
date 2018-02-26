@@ -13,7 +13,7 @@ __all__ = ['EftInfo', 'EftFlash', 'EftTransmit', 'EftHwctl', 'EftPhysOutput',
 # Category No.0, for hardware information
 #
 class EftInfo():
-    supported_models = (
+    SUPPORTED_MODELS = (
         'Audiofire2',
         'Audiofire4',
         'Audiofire8',
@@ -29,7 +29,7 @@ class EftInfo():
         'AudioPunk',
     )
 
-    supported_features = (
+    SUPPORTED_FEATURES = (
         'changeable-resp-addr',
         'control-room-mirroring',
         'spdif-coax',
@@ -50,7 +50,7 @@ class EftInfo():
         'tx-mapping',
     )
 
-    supported_clock_sources = (
+    SUPPORTED_CLOCK_SOURCES = (
         'internal',
         'syt-match',
         'word-clock',
@@ -60,15 +60,15 @@ class EftInfo():
         'continuous'
     )
 
-    supported_sampling_rates = (
+    SUPPORTED_SAMPLING_RATES = (
         32000, 44100, 48000,
         88200, 96000,
         176400, 192000
     )
 
-    supported_firmwares = ('ARM', 'DSP', 'FPGA')
+    SUPPORTED_FIRMWARES = ('ARM', 'DSP', 'FPGA')
 
-    supported_port_names = (
+    SUPPORTED_PORT_NAMES = (
         'analog',
         'spdif',
         'adat',
@@ -81,7 +81,7 @@ class EftInfo():
         'guitar string'
     )
 
-    _models = {
+    _MODELS = {
         'Audiofire2':           0x000af2,
         'Audiofire4':           0x000af4,
         'Audiofire8':           0x000af8,
@@ -97,7 +97,7 @@ class EftInfo():
         'AudioPunk':            0x00afb9,
     }
 
-    _feature_flags = {
+    _FEATURE_FLAGS = {
         'changeable-resp-addr':    0x0001,
         'control-room-mirroring':  0x0002,
         'spdif-coax':              0x0004,
@@ -116,7 +116,7 @@ class EftInfo():
         'robot-battery-charge':    0x8000,
     }
 
-    _clock_flags = {
+    _CLOCK_FLAGS = {
         'internal':    0x0001,
         'syt-match':   0x0002,
         'word-clock':  0x0004,
@@ -126,14 +126,14 @@ class EftInfo():
         'continuous':  0x0040,
     }
 
-    _midi_flags = {
+    _MIDI_FLAGS = {
         'midi-in-1':        0x00000100,
         'midi-out-1':       0x00000200,
         'midi-in-2':        0x00000400,
         'midi-out-2':       0x00000800,
     }
 
-    _robot_flags = {
+    _ROBOT_FLAGS = {
         'battery-charging': 0x20000000,
         'stereo-connect':   0x40000000,
         'hex-signal':       0x80000000,
@@ -163,19 +163,19 @@ class EftInfo():
         params = cls._execute_command(unit, 1, None)
         metering = {}
         metering['clocks'] = {}
-        for name, flag in cls._clock_flags.items():
+        for name, flag in cls._CLOCK_FLAGS.items():
             if params[0] & flag:
                 metering['clocks'][name] = True
             else:
                 metering['clocks'][name] = False
         metering['midi'] = {}
-        for name, flag in cls._midi_flags.items():
+        for name, flag in cls._MIDI_FLAGS.items():
             if params[0] & flag:
                 metering['midi'][name] = True
             else:
                 metering['midi'][name] = False
         metering['robot'] = {}
-        for name, flag in cls._robot_flags.items():
+        for name, flag in cls._ROBOT_FLAGS.items():
             if params[0] & flag:
                 metering['robot'][name] = True
             else:
@@ -243,7 +243,7 @@ class EftInfo():
     @classmethod
     def _parse_capability(cls, params):
         caps = {}
-        for name, flag in cls._feature_flags.items():
+        for name, flag in cls._FEATURE_FLAGS.items():
             if params[0] & flag:
                 caps[name] = True
             else:
@@ -258,7 +258,7 @@ class EftInfo():
     @classmethod
     def _parse_clock_source(cls, params):
         srcs = {}
-        for name, flag in cls._clock_flags.items():
+        for name, flag in cls._CLOCK_FLAGS.items():
             if params[21] & flag:
                 srcs[name] = True
             else:
@@ -268,7 +268,7 @@ class EftInfo():
     @classmethod
     def _parse_sampling_rate(cls, params):
         rates = {}
-        for rate in cls.supported_sampling_rates:
+        for rate in cls.SUPPORTED_SAMPLING_RATES:
             if params[39] <= rate and rate <= params[38]:
                 rates[rate] = True
             else:
@@ -286,10 +286,10 @@ class EftInfo():
             for i in range(params[0]):
                 count = data[i] & 0xff
                 index = data[i] >> 8
-                if index > len(cls.supported_port_names):
+                if index > len(cls.SUPPORTED_PORT_NAMES):
                     name = 'dummy'
                 else:
-                    name = cls.supported_port_names[index]
+                    name = cls.SUPPORTED_PORT_NAMES[index]
                 for j in range(count):
                     ports.append(name)
             return ports
@@ -374,11 +374,11 @@ class EftFlash():
 # Category No.2, for transmission control commands
 #
 class EftTransmit():
-    supported_modes = ('windows', 'iec61883-6')
-    supported_playback_drops = (1, 2, 4)
-    supported_record_streatch_ratios = (1, 2, 4)
-    supported_serial_bps = (16, 24)
-    supported_serial_data_formats = ('left-adjusted', 'i2s')
+    SUPPORTED_MODES = ('windows', 'iec61883-6')
+    SUPPORTED_PLAYBACK_DROPS = (1, 2, 4)
+    SUPPORTED_RECORD_STREATCH_RATIOS = (1, 2, 4)
+    SUPPORTED_SERIAL_BPS = (16, 24)
+    SUPPORTED_SERIAL_DATA_FORMATS = ('left-adjusted', 'i2s')
 
     @staticmethod
     def _execute_command(unit, cmd, args):
@@ -388,36 +388,36 @@ class EftTransmit():
 
     @classmethod
     def set_mode(cls, unit, mode):
-        if cls.supported_modes.count(mode) == 0:
+        if cls.SUPPORTED_MODES.count(mode) == 0:
             raise ValueError('Invalid argument for mode')
         args = array('I')
-        args.append(cls.supported_modes.index(mode))
+        args.append(cls.SUPPORTED_MODES.index(mode))
         cls._execute_command(unit, 0, args)
 
     @classmethod
     def set_fw_hdmi(cls, unit, playback_drop, record_stretch_ratio, serial_bps,
                     serial_data_format):
-        if cls.supported_playback_drops.count(playback_drop) == 0:
+        if cls.SUPPORTED_PLAYBACK_DROPS.count(playback_drop) == 0:
             raise ValueError('Invalid argument for playback drop')
-        if cls.supported_record_streatch_ratios(record_stretch_ratio) == 0:
+        if cls.SUPPORTED_RECORD_STREATCH_RATIOS(record_stretch_ratio) == 0:
             raise ValueError('Invalid argument for record stretch')
-        if cls.supported_serial_bps.count(serial_bps) == 0:
+        if cls.SUPPORTED_SERIAL_BPS.count(serial_bps) == 0:
             raise ValueError('Invalid argument for serial bits per second')
-        if cls.supported_serial_data_formats(serial_data_format) == 0:
+        if cls.SUPPORTED_SERIAL_DATA_FORMATS(serial_data_format) == 0:
             raise ValueError('Invalid argument for serial data format')
 
         args = array('I')
         args.append(playback_drop)
         args.append(record_stretch_ratio)
         args.append(serial_bps)
-        args.append(cls.supported_serial_data_formats.index(serial_data_format))
+        args.append(cls.SUPPORTED_SERIAL_DATA_FORMATS.index(serial_data_format))
         cls._execute_command(unit, 4, args)
 
 #
 # Category No.3, for hardware control commands
 #
 class EftHwctl():
-    supported_box_states = (
+    SUPPORTED_BOX_STATES = (
         'internal-multiplexer',
         'spdif-pro',
         'spdif-non-audio',
@@ -432,7 +432,7 @@ class EftHwctl():
     )
 
     # Internal parameters
-    _box_state_params = {
+    _BOX_STATE_PARAMS = {
         # identifier,         shift,        zero,       one
         'internal-multiplexer': ( 0, ('Disabled', 'Enabled')),
         'spdif-pro':            ( 1, ('Disabled', 'Enabled')),
@@ -455,14 +455,14 @@ class EftHwctl():
 
     @classmethod
     def set_clock(cls, unit, rate, source, reset):
-        if EftInfo.supported_sampling_rates.count(rate) == 0:
+        if EftInfo.SUPPORTED_SAMPLING_RATES.count(rate) == 0:
             raise ValueError('Invalid argument for sampling rate')
-        if EftInfo.supported_clock_sources.count(source) == 0:
+        if EftInfo.SUPPORTED_CLOCK_SOURCES.count(source) == 0:
             raise ValueError('Invalid argument for source of clock')
         if reset > 0:
             reset = 0x80000000
         args = array('I')
-        args.append(EftInfo.supported_clock_sources.index(source))
+        args.append(EftInfo.SUPPORTED_CLOCK_SOURCES.index(source))
         args.append(rate)
         args.append(reset)
         cls._execute_command(unit, 0, args)
@@ -470,21 +470,21 @@ class EftHwctl():
     @classmethod
     def get_clock(cls, unit):
         params = cls._execute_command(unit, 1, None)
-        if params[0] >= len(EftInfo.supported_clock_sources):
+        if params[0] >= len(EftInfo.SUPPORTED_CLOCK_SOURCES):
             raise OSError('Unexpected clock source in response')
-        if EftInfo.supported_sampling_rates.count(params[1]) == 0:
+        if EftInfo.SUPPORTED_SAMPLING_RATES.count(params[1]) == 0:
             raise OSError('Unexpected sampling rate in response')
-        return (params[1], EftInfo.supported_clock_sources[params[0]])
+        return (params[1], EftInfo.SUPPORTED_CLOCK_SOURCES[params[0]])
 
     @classmethod
     def set_box_states(cls, unit, states):
         enabled = 0
         disabled = 0
         for name,state in states.items():
-            if name not in cls._box_state_params:
+            if name not in cls._BOX_STATE_PARAMS:
                 raise ValueError('Invalid value in box states')
-            shift   = cls._box_state_params[name][0]
-            values  = cls._box_state_params[name][1]
+            shift   = cls._BOX_STATE_PARAMS[name][0]
+            values  = cls._BOX_STATE_PARAMS[name][1]
             value = values.index(state)
             if value is 0:
                 disabled |= (1 << shift)
@@ -500,7 +500,7 @@ class EftHwctl():
         params = cls._execute_command(unit, 4, None)
         state = params[0]
         states = {}
-        for name,params in cls._box_state_params.items():
+        for name,params in cls._BOX_STATE_PARAMS.items():
             shift = params[0]
             values = params[1]
             index = (state >> shift) & 0x01
@@ -525,7 +525,7 @@ class EftHwctl():
 # Category No.4, for physical output multiplexer commands
 #
 class EftPhysOutput():
-    operations = ('gain', 'mute', 'nominal')
+    OPERATIONS = ('gain', 'mute', 'nominal')
 
     @staticmethod
     def _execute_command(unit, cmd, args):
@@ -574,7 +574,7 @@ class EftPhysOutput():
 # Category No.5, for physical input multiplexer commands
 #
 class EftPhysInput():
-    operations = ('nominal')
+    OPERATIONS = ('nominal')
 
     @staticmethod
     def _execute_command(unit, cmd, args):
@@ -611,7 +611,7 @@ class EftPhysInput():
 # Category No.6, for playback stream multiplexer commands
 #
 class EftPlayback():
-    operations = ('gain', 'mute', 'solo')
+    OPERATIONS = ('gain', 'mute', 'solo')
 
     @staticmethod
     def _execute_command(unit, cmd, args):
@@ -654,7 +654,7 @@ class EftPlayback():
         return params[1]
 
 class EftCapture():
-    operations = ()
+    OPERATIONS = ()
 
     @staticmethod
     def _execute_command(unit, cmd, args):
@@ -666,7 +666,7 @@ class EftCapture():
 # Category No.8, for input monitoring multiplexer commands
 #
 class EftMonitor():
-    operations = ('gain', 'mute', 'solo', 'pan')
+    OPERATIONS = ('gain', 'mute', 'solo', 'pan')
 
     @staticmethod
     def _execute_command(unit, cmd, args):
@@ -721,7 +721,7 @@ class EftMonitor():
 #
 class EftIoconf():
     # NOTE: use the same strings in features of EftInfo.
-    digital_input_modes = ('spdif-coax', 'aesebu-xlr', 'spdif-opt', 'adat-opt')
+    DIGITAL_INPUT_MODES = ('spdif-coax', 'aesebu-xlr', 'spdif-opt', 'adat-opt')
 
     @staticmethod
     def _execute_command(unit, cmd, args):
@@ -742,18 +742,18 @@ class EftIoconf():
 
     @classmethod
     def set_digital_input_mode(cls, unit, mode):
-        if cls.digital_input_modes.count(mode) == 0:
+        if cls.DIGITAL_INPUT_MODES.count(mode) == 0:
             raise ValueError('Invalid argument for digital mode')
         args = array('I')
-        args.append(cls.digital_input_modes.index(mode))
+        args.append(cls.DIGITAL_INPUT_MODES.index(mode))
         cls._execute_command(unit, 2, args)
 
     @classmethod
     def get_digital_input_mode(cls, unit):
         params = cls._execute_command(unit, 3, None)
-        if params[0] >= len(cls.digital_input_modes):
+        if params[0] >= len(cls.DIGITAL_INPUT_MODES):
             raise OSError
-        return cls.digital_input_modes[params[0]]
+        return cls.DIGITAL_INPUT_MODES[params[0]]
 
     @classmethod
     def set_phantom_powering(cls, unit, state):
