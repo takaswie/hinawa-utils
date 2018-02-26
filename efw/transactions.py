@@ -147,8 +147,7 @@ class EftInfo():
 
     @classmethod
     def get_spec(cls, unit):
-        args = array('I')
-        params = cls._execute_command(unit, 0, args)
+        params = cls._execute_command(unit, 0, None)
         info = {}
         info['features'] = cls._parse_capability(params)
         info['clock-sources'] = cls._parse_clock_source(params)
@@ -161,8 +160,7 @@ class EftInfo():
 
     @classmethod
     def get_metering(cls, unit):
-        args = array('I')
-        params = cls._execute_command(unit, 1, args)
+        params = cls._execute_command(unit, 1, None)
         metering = {}
         metering['clocks'] = {}
         for name, flag in cls._clock_flags.items():
@@ -219,8 +217,7 @@ class EftInfo():
 
     @classmethod
     def get_debug_info(cls, unit):
-        args = array('I')
-        params = cls._execute_command(unit, 4, args)
+        params = cls._execute_command(unit, 4, None)
 
         # params[00]: isochronous stream 1 flushed
         # params[01]: isochronous stream 1 underruns
@@ -356,14 +353,12 @@ class EftFlash():
 
     @classmethod
     def get_status(cls, unit):
-        args = array('I')
         # return status means it.
-        cls._execute_command(unit, 3, args)
+        cls._execute_command(unit, 3, none)
 
     @classmethod
     def get_session_offset(cls, unit):
-        args = array('I')
-        params = cls._execute_command(unit, 4, args)
+        params = cls._execute_command(unit, 4, None)
         return params[0]
 
     @classmethod
@@ -474,8 +469,7 @@ class EftHwctl():
 
     @classmethod
     def get_clock(cls, unit):
-        args = array('I')
-        params = cls._execute_command(unit, 1, args)
+        params = cls._execute_command(unit, 1, None)
         if params[0] >= len(EftInfo.supported_clock_sources):
             raise OSError('Unexpected clock source in response')
         if EftInfo.supported_sampling_rates.count(params[1]) == 0:
@@ -503,8 +497,7 @@ class EftHwctl():
 
     @classmethod
     def get_box_states(cls, unit):
-        args = array('I')
-        params = cls._execute_command(unit, 4, args)
+        params = cls._execute_command(unit, 4, None)
         state = params[0]
         states = {}
         for name,params in cls._box_state_params.items():
@@ -516,13 +509,11 @@ class EftHwctl():
 
     @classmethod
     def reconnect_phy(cls, unit):
-        args = array('I')
-        cls._execute_command(unit, 6, args)
+        cls._execute_command(unit, 6, None)
 
     @classmethod
     def blink_leds(cls, unit):
-        args = array('I')
-        cls._execute_command(unit, 7, args)
+        cls._execute_command(unit, 7, None)
 
     @classmethod
     def set_continuous_clock(cls, unit, continuous_rate):
@@ -746,8 +737,7 @@ class EftIoconf():
 
     @classmethod
     def get_control_room_mirroring(cls, unit):
-        args = array('I')
-        params = cls._execute_command(unit, 1, args)
+        params = cls._execute_command(unit, 1, None)
         return params[0]
 
     @classmethod
@@ -760,8 +750,7 @@ class EftIoconf():
 
     @classmethod
     def get_digital_input_mode(cls, unit):
-        args = array('I')
-        params = cls._execute_command(unit, 3, args)
+        params = cls._execute_command(unit, 3, None)
         if params[0] >= len(cls.digital_input_modes):
             raise OSError
         return cls.digital_input_modes[params[0]]
@@ -776,14 +765,12 @@ class EftIoconf():
 
     @classmethod
     def get_phantom_powering(cls, unit):
-        args = array('I')
-        params= cls._execute_command(unit, 5, args)
+        params= cls._execute_command(unit, 5, None)
         return params[0]
 
     @classmethod
     def set_stream_mapping(cls, unit, rx_maps, tx_maps):
-        args = array('I')
-        params = cls._execute_command(unit, 7, args)
+        params = cls._execute_command(unit, 7, None)
         rx_map_count = params[2]
         if len(rx_maps) > rx_map_count:
             ValueError('Invalid argument for rx stream mapping')
@@ -798,8 +785,7 @@ class EftIoconf():
 
     @classmethod
     def get_stream_mapping(cls, unit):
-        args = array('I')
-        param = cls._execute_command(unit, 7, args)
+        param = cls._execute_command(unit, 7, None)
         tx_map_count = param[34]
         tx_map = []
         for i in range(tx_map_count):
