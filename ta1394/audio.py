@@ -130,6 +130,7 @@ class AvcAudio():
             raise ValueError('Invalid argument for function block ID')
         if ch > 255:
             raise ValueError('Invalid argument for channel number')
+        data = pack('>h', vol)
         args = bytearray()
         args.append(0x00)
         args.append(0x08 | (subunit_id & 0x07))
@@ -141,8 +142,8 @@ class AvcAudio():
         args.append(ch)
         args.append(0x02)   # Volume control
         args.append(0x02)   # Control data length is 2
-        args.append(vol >> 8)   # Higher part of volume
-        args.append(vol & 0xff) # Lower part of volume
+        args.append(data[0]) # Higher part of volume
+        args.append(data[1]) # Lower part of volume
         AvcGeneral.command_control(fcp, args)
 
     @classmethod
@@ -169,7 +170,7 @@ class AvcAudio():
         args.append(0xff)   # Higher part of volume
         args.append(0xff)   # Lower part of volume
         params = AvcGeneral.command_status(fcp, args)
-        return (params[10] << 8) | params[11]
+        return unpack('>h', params[10:12])[0]
 
     @classmethod
     def set_feature_lr_state(cls, fcp, subunit_id, attr, fb_id, ch, balance):
@@ -181,6 +182,7 @@ class AvcAudio():
             raise ValueError('Invalid argument for function block ID')
         if ch > 255:
             raise ValueError('Invalid argument for channel number')
+        data = pack('>h', balance)
         args = bytearray()
         args.append(0x00)
         args.append(0x08 | (subunit_id & 0x07))
@@ -192,8 +194,8 @@ class AvcAudio():
         args.append(ch)
         args.append(0x03)   # LR control
         args.append(0x02)   # Control data length is 2
-        args.append(balance >> 8)   # Higher part of balance
-        args.append(balance & 0xff) # Lower part of balance
+        args.append(data[0])   # Higher part of balance
+        args.append(data[1]) # Lower part of balance
         AvcGeneral.command_control(fcp, args)
 
     @classmethod
@@ -220,7 +222,7 @@ class AvcAudio():
         args.append(0xff)   # Higher part of balance
         args.append(0xff)   # Lower part of balance
         params = AvcGeneral.command_status(fcp, args)
-        return (params[10] << 8) | params[11]
+        return unpack('>h', params[10:12])[0]
 
     @classmethod
     def set_processing_mixer_state(cls, fcp, subunit_id, attr, fb_id, in_fb,
@@ -238,6 +240,7 @@ class AvcAudio():
             raise ValueError('Invalid argument for input channel number')
         if out_ch > 255:
             raise ValueError('Invalid argument for output channel number')
+        data = pack('>h', setting)
         args = bytearray()
         args.append(0x00)
         args.append(0x08 | (subunit_id & 0x07))
@@ -251,8 +254,8 @@ class AvcAudio():
         args.append(out_ch)
         args.append(0x03)   # Mixer control
         args.append(0x02)   # Control data is 2
-        args.append(setting >> 8)   # Higher part of setting
-        args.append(setting & 0xff) # Lower part of setting
+        args.append(data[0]) # Higher part of setting
+        args.append(data[1]) # Lower part of setting
         AvcGeneral.command_control(fcp, args)
 
     @classmethod
@@ -287,7 +290,7 @@ class AvcAudio():
         args.append(0xff)   # Higher part of setting
         args.append(0xff)   # Lower part of setting
         params = AvcGeneral.command_status(fcp, args)
-        return (params[12] << 8) | params[13]
+        return unpack('>h', params[12:14])[0]
 
     @classmethod
     def set_processing_mixer_state_all(cls, fcp, subunit_id, attr, fb_id, in_fb,
@@ -301,7 +304,6 @@ class AvcAudio():
             raise ValueError('Invalid argument for function block ID')
         if in_fb > 255:
             raise ValueError('Invalid argument for input function block ID')
-        data_count = len(states) // 2
         args = bytearray()
         args.append(0x00)
         args.append(0x08 | (subunit_id & 0x07))
@@ -314,9 +316,9 @@ class AvcAudio():
         args.append(0xff)
         args.append(0xff)
         args.append(0x03)       # Mixer control
-        args.append(data_count)	# The length of control data
-        for i in range(data_count):
-            args.append((states[i * 2] << 8) | states[i * 2 + 1])
+        args.append(len(states))    # The length of control data
+        for state in states:
+            args.extend(pack('>h', state))
         AvcGeneral.command_control(fcp, args)
 
     @classmethod
@@ -346,23 +348,22 @@ class AvcAudio():
         args.append(0xff)   # The length of control data in response
         params = AvcGeneral.command_status(fcp, args)
         count = params[11] // 2
-        status = []
-        for i in range(count):
-            status.append((params[12 + i * 2] << 8) | params[13 + i * 2])
+        states = []
+        params = params[12:]
+        for i in range(0, count, 2):
+            states.append(unpack('>h', params[i * 2:i * 2 + 1])[0])
         return status
 
     @classmethod
-    def parse_to_db(cls, data):
-        if len(data) != 2:
-            raise ValueError('Invalid argument for byte array')
-        value = unpack('>h', bytearray(data))[0]
+    def parse_to_db(cls, value):
+        if value < 0 or 0xffff < value:
+            raise ValueError('Invalid argument for numerical value')
         return value * 128 / 0x7fff
 
     # MEMO: 0x8000 represents negative infinite. 0x7fff is invalid. However,
     # in this method, they're used to represent minimum/maximum value.
     @classmethod
-    def build_from_db(cls, value):
-        if value < -128 or 128 < value:
+    def build_from_db(cls, db):
+        if db < -128 or 128 < db:
             raise ValueError('Invalid argument for value of db')
-        value = int(0x7fff * value / 128)
-        return pack('>h', value)
+        return pack('>h', int(0x7fff * db/ 128))[0]
