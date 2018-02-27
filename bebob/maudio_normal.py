@@ -1,6 +1,5 @@
 from bebob.bebob_unit import BebobUnit
 
-from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
 from ta1394.ccm import AvcCcm
 from ta1394.audio import AvcAudio
@@ -179,8 +178,6 @@ class MaudioNormal(BebobUnit):
             if quad >> 24 == 0x17:
                 model_id = quad & 0x00ffffff
                 self._id = self._ids[model_id][0]
-                info = AvcGeneral.get_unit_info(self.fcp)
-                self._company_ids = info['company-id']
         if model_id < 0:
             raise OSError('Not supported')
 
