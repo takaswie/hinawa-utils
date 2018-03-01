@@ -102,8 +102,8 @@ class MaudioNormal(BebobUnit):
          ( 0, (7, 8))),
     )
 
-    # = _labels['outputs']
-    _mixer_sinks = (
+    # = _labels['mixers']
+    _mixers = (
         (( 1, (1, 2)), ( 1, (1, 2))),
         (( 1, (1, 2)), ( 1, (3, 4))),
         (( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2)), ( 4, (1, 2))),
@@ -253,9 +253,9 @@ class MaudioNormal(BebobUnit):
         input = self._labels[self._id]['inputs'].index(source)
         in_fb = self._mixer_sources[self._id][input][0]
         in_ch = self._mixer_sources[self._id][input][1][0]   # Use left channel.
-        output = self._labels[self._id]['mixers'].index(sink)
-        out_fb = self._mixer_sinks[self._id][output][0]
-        out_ch = self._mixer_sinks[self._id][output][1][0]  # Use left channel.
+        mixer = self._labels[self._id]['mixers'].index(sink)
+        out_fb = self._mixers[self._id][mixer][0]
+        out_ch = self._mixers[self._id][mixer][1][0]  # Use left channel.
         return (in_fb, in_ch, out_fb, out_ch)
 
     def set_mixer_routing(self, source, sink, value):
