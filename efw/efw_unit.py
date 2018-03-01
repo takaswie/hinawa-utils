@@ -40,6 +40,10 @@ class EfwUnit(Hinawa.SndEfw):
     def get_clock_state(self):
         return EftHwctl.get_clock(self)
 
+    def get_box_state_labels(self, name):
+        if name not in EftHwctl.SUPPORTED_BOX_STATES:
+            raise ValueError('Invalid argument for name of box state')
+        return EftHwctl.SUPPORTED_BOX_STATES[name]
     def set_box_states(self, name, state):
         states = EftHwctl.get_box_states(self)
         states[name] = state

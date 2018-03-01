@@ -84,11 +84,17 @@ def handle_sampling_rate(unit, args):
     return False
 
 def handle_control_room(unit, args):
+    ops = ('set', 'get')
     if len(args) > 0:
-        unit.set_control_room_mirroring(args[0])
+        unit.set_control_room_mirroring(int(args[0]))
+        return True
     else:
         print(unit.get_control_room_mirroring())
-    return True
+        return True
+    print('Arguments for control-room command:')
+    print('  control-room OP []')
+    print('    OP: [{0}]'.format('|'.join(ops)))
+    print('    ')
 
 def handle_digital_input(unit, args):
     ops = ('set', 'get')
@@ -129,21 +135,26 @@ def handle_phantom_powering(unit, args):
 
 def handle_box_state(unit, args):
     ops = ('set', 'get')
-    values = ('off', 'on')
-    if len(args) > 1:
-        op = args[0]
-        name = args[1]
-        if op == ops[0] and len(args) > 2 and args[2] in values:
-            unit.set_box_states(name, values.index(args[2]))
-        else:
-            states = unit.get_box_states()
-            print(states[name])
-        return True
     states = unit.get_box_states()
+    if len(args) > 0 and args[0] in states:
+        name = args[0]
+        if len(args) > 1 and args[1] in ops:
+            op = args[1]
+            labels = unit.get_box_state_labels(name)
+            if len(args) > 2 and op == 'set' and args[2] in labels:
+                unit.set_box_states(name, args[2])
+                return True
+            elif op == 'get':
+                states = unit.get_box_states()
+                print(states[name])
+                return True
     print('Arguments for box-state command:')
-    print('  box-state NAME [VALUE]')
-    print('    NAME: {0}'.format(', '.join(states)))
-    print('    VALUE: off/on')
+    print('  box-state NAME OP [VALUE]')
+    print('    NAME:   [{0}]'.format('|'.join(states)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    for state in states:
+        labels = unit.get_box_state_labels(state)
+        print('    VALUE:  [{0}] if NAME={1}'.format('|'.join(labels), state))
     return False
 
 def handle_rx_stream_mapping(unit, args):

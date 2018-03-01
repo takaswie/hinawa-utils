@@ -417,34 +417,35 @@ class EftTransmit():
 # Category No.3, for hardware control commands
 #
 class EftHwctl():
-    SUPPORTED_BOX_STATES = (
-        'internal-multiplexer',
-        'spdif-pro',
-        'spdif-non-audio',
-        'control-room',
-        'output-level-bypass',
-        'metering-mode-in',
-        'metering-mode-out',
-        'soft-clip',
-        'robot-hex-input',
-        'robot-battery-charge',
-        'phantom-powering'
-    )
+    SUPPORTED_BOX_STATES = {
+        # name                  clear           set
+        'internal-multiplexer': ('Disabled',    'Enabled'),
+        'spdif-pro':            ('Disabled',    'Enabled'),
+        'spdif-non-audio':      ('Disabled',    'Enabled'),
+        'control-room':         ('A',           'B'),
+        'output-level-bypass':  ('Disabled',    'Enabled'),
+        'metering-mode-in':     ('A',           'B'),
+        'metering-mode-out':    ('D1',          'D2'),
+        'soft-clip':            ('Disabled',    'Enabled'),
+        'robot-hex-input':      ('Disabled',    'Enabled'),
+        'robot-battery-charge': ('Disabled',    'Enabled'),
+        'phantom-powering':     ('Disabled',    'Enabled'),
+    }
 
     # Internal parameters
-    _BOX_STATE_PARAMS = {
-        # identifier,         shift,        zero,       one
-        'internal-multiplexer': ( 0, ('Disabled', 'Enabled')),
-        'spdif-pro':            ( 1, ('Disabled', 'Enabled')),
-        'spdif-non-audio':      ( 2, ('Disabled', 'Enabled')),
-        'control-room':         ( 8, ('A', 'B')),
-        'output-level-bypass':  ( 9, ('Disabled', 'Enabled')),
-        'metering-mode-in':     (12, ('A', 'B')),
-        'metering-mode-out':    (13, ('D1', 'D2')),
-        'soft-clip':            (16, ('Disabled', 'Enabled')),
-        'robot-hex-input':      (29, ('Disabled', 'Enabled')),
-        'robot-battery-charge': (30, ('Disabled', 'Enabled')),
-        'phantom-powering':     (31, ('Disabled', 'Enabled')),
+    _BOX_STATE_POSITIONS = {
+        # identifier            shift
+        'internal-multiplexer':  0,
+        'spdif-pro':             1,
+        'spdif-non-audio':       2,
+        'control-room':          8,
+        'output-level-bypass':   9,
+        'metering-mode-in':     12,
+        'metering-mode-out':    13,
+        'soft-clip':            16,
+        'robot-hex-input':      29,
+        'robot-battery-charge': 30,
+        'phantom-powering':     31,
     }
 
     @staticmethod
@@ -478,33 +479,28 @@ class EftHwctl():
 
     @classmethod
     def set_box_states(cls, unit, states):
-        enabled = 0
-        disabled = 0
+        mask_set = 0
+        mask_clear = 0
         for name,state in states.items():
-            if name not in cls._BOX_STATE_PARAMS:
+            if name not in cls.SUPPORTED_BOX_STATES:
                 raise ValueError('Invalid value in box states')
-            shift   = cls._BOX_STATE_PARAMS[name][0]
-            values  = cls._BOX_STATE_PARAMS[name][1]
-            value = values.index(state)
-            if value is 0:
-                disabled |= (1 << shift)
+            shift  = cls._BOX_STATE_POSITIONS[name]
+            if cls.SUPPORTED_BOX_STATES[name].index(state) is 0:
+                mask_clear |= (1 << shift)
             else:
-                enabled |= (1 << shift)
+                mask_set |= (1 << shift)
         args = array('I')
-        args.append(enabled)
-        args.append(disabled)
+        args.append(mask_set)
+        args.append(mask_clear)
         cls._execute_command(unit, 3, args)
 
     @classmethod
     def get_box_states(cls, unit):
         params = cls._execute_command(unit, 4, None)
-        state = params[0]
         states = {}
-        for name,params in cls._BOX_STATE_PARAMS.items():
-            shift = params[0]
-            values = params[1]
-            index = (state >> shift) & 0x01
-            states[name] = values[index]
+        for name, shift in cls._BOX_STATE_POSITIONS.items():
+            index = (params[0] >> shift) & 0x01
+            states[name] = cls.SUPPORTED_BOX_STATES[name][index]
         return states
 
     @classmethod
