@@ -45,7 +45,7 @@ class AvcCcm():
         return False
 
     @classmethod
-    def parse_signal_addr(addr):
+    def parse_signal_addr(cls, addr):
         info = {}
         data = {}
         if addr[0] == 0xff:
