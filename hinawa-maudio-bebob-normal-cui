@@ -99,44 +99,57 @@ def handle_mixer_routing(unit, args):
     return False
 
 def handle_output_source(unit, args):
-    if len(args) > 0:
-        output = args[0]
-        if output in unit.get_output_labels():
-            if len(args) == 2 and \
-               args[1] in unit.get_output_source_labels(output):
-                source = args[1]
-                unit.set_output_source(output, source)
-            else:
-                print(unit.get_output_source(output))
-            return True
+    OPS = ('set', 'get')
+    targets = unit.get_output_labels()
+    if len(args) > 0 and args[0] in targets:
+        target = args[0]
+        if len(args) > 1 and args[1] in OPS:
+            op = args[1]
+            sources = unit.get_output_source_labels(target)
+            if len(args) > 2 and op == 'set' and args[2] in sources:
+                source = args[2]
+                unit.set_output_source(target, source)
+                return True
+            elif op == 'get':
+                print(unit.get_output_source(target))
+                return True
     print('Arguments for output-source command:')
-    print('  output-source output [source]')
-    for output in unit.get_output_labels():
-        sources = unit.get_output_source_labels(output)
-        if len(sources) > 1:
-            print('    {0} [{1}]'.format(output, ', '.join(sources)))
+    print('  output-source TARGET OP [SRC]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    for target in targets:
+        sources = unit.get_output_source_labels(target)
+        if len(sources) > 0:
+            print('    SRC:    [{0}] if TARGET={1} and OP=set'.format(
+                                                    '|'.join(sources), target))
         else:
-            print('    {0} [{1} (fixed)]'.format(output, sources[0]))
+            print('    SRC:    {0}(fixed) if TARGET={1}'.format(
+                                                    '|'.join(sources), target))
     return False
 
 def handle_headphone_source(unit, args):
+    OPS = ('set', 'get')
     if len(unit.get_headphone_labels()) == 0:
         print('Not supported')
         return False
-    if len(args) > 0:
-        headphone = args[0]
-        if headphone in unit.get_headphone_labels():
-            if len(args) == 2 and \
-               args[1] in unit.get_headphone_source_labels():
-                source = args[1]
-                unit.set_headphone_source(headphone, source)
-            else:
-                print(unit.get_headphone_source(headphone))
-            return True
+    targets = unit.get_headphone_labels()
+    sources = unit.get_headphone_source_labels()
+    if len(args) > 0 and args[0] in targets:
+        target = args[0]
+        if len(args) > 1 and args[1] in OPS:
+            op = args[1]
+            if len(args) > 2 and op == 'set' and args[2] in sources:
+                source = args[2]
+                unit.set_headphone_source(target, source)
+                return True
+            elif op == 'get':
+                print(unit.get_headphone_source(target))
+                return True
     print('Arguments for headphone-source command:')
-    print('  headphone-source headphone [source]')
-    print('    headphone: {0}'.format(', '.join(unit.get_headphone_labels())))
-    print('    source:    {0}'.format(', '.join(unit.get_headphone_source_labels())))
+    print('  headphone-source TARGET OP [SRC]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    SRC:    [{0}] if OP=set'.format('|'.join(sources)))
     return False
 
 def handle_listen_metering(unit, args):
