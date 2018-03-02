@@ -31,24 +31,6 @@ def _handle_target_volume(unit, args, cmd, targets_func, set_func, get_func):
     print('    dB:       [-128.00..128.00] if OP=set')
     return False
 
-def handle_clock_source(unit, args):
-    OPS = ('set', 'get')
-    sources = unit.get_clock_source_labels()
-    if len(args) > 0 and args[0] in OPS:
-        op = args[0]
-        if len(args) > 1 and op == 'set' and args[1] in sources:
-            source = args[1]
-            unit.set_clock_source(source)
-            return True
-        elif op == 'get':
-            print(unit.get_clock_source())
-            return True
-    print('Arguments for clock-source command:')
-    print('  clock-source OP [SRC]')
-    print('    OP:     {0}'.format('|'.join(OPS)))
-    print('    SRC:    {0} if OP=set'.format('|'.join(sources)))
-    print('  Packet streaming should be stopped.')
-
 def handle_input_volume(unit, args):
     return _handle_target_volume(unit, args, 'input-volume',
                                  unit.get_input_labels,
@@ -59,6 +41,18 @@ def handle_aux_input_volume(unit, args):
                                  unit.get_aux_input_labels,
                                  unit.set_aux_input_volume,
                                  unit.get_aux_input_volume)
+
+def handle_output_volume(unit, args):
+    return _handle_target_volume(unit, args, 'output-volume',
+                                 unit.get_output_labels,
+                                 unit.set_output_volume,
+                                 unit.get_output_volume)
+
+def handle_headphone_volume(unit, args):
+    return _handle_target_volume(unit, args, 'headphone-volume',
+                                 unit.get_headphone_labels,
+                                 unit.set_headphone_volume,
+                                 unit.get_headphone_volume)
 
 def handle_aux_output_volume(unit, args):
     CHS = (0, 1)
@@ -104,12 +98,6 @@ def handle_mixer_routing(unit, args):
         ))
     return False
 
-def handle_output_volume(unit, args):
-    return _handle_target_volume(unit, args, 'output-volume',
-                                 unit.get_output_labels,
-                                 unit.set_output_volume,
-                                 unit.get_output_volume)
-
 def handle_output_source(unit, args):
     if len(args) > 0:
         output = args[0]
@@ -130,12 +118,6 @@ def handle_output_source(unit, args):
         else:
             print('    {0} [{1} (fixed)]'.format(output, sources[0]))
     return False
-
-def handle_headphone_volume(unit, args):
-    return _handle_target_volume(unit, args, 'headphone-volume',
-                                 unit.get_headphone_labels,
-                                 unit.set_headphone_volume,
-                                 unit.get_headphone_volume)
 
 def handle_headphone_source(unit, args):
     if len(unit.get_headphone_labels()) == 0:
@@ -176,8 +158,26 @@ def handle_listen_metering(unit, args):
         time.sleep(0.1)
     return True
 
+def handle_clock_source(unit, args):
+    OPS = ('set', 'get')
+    sources = unit.get_clock_source_labels()
+    if len(args) > 0 and args[0] in OPS:
+        op = args[0]
+        if len(args) > 1 and op == 'set' and args[1] in sources:
+            source = args[1]
+            unit.set_clock_source(source)
+            return True
+        elif op == 'get':
+            print(unit.get_clock_source())
+            return True
+    print('Arguments for clock-source command:')
+    print('  clock-source OP [SRC]')
+    print('    OP:     {0}'.format('|'.join(OPS)))
+    print('    SRC:    {0} if OP=set'.format('|'.join(sources)))
+    print('  Packet streaming should be stopped.')
+    return False
+
 cmds = {
-    'clock-source':         handle_clock_source,
     'input-volume':         handle_input_volume,
     'aux-input-volume':     handle_aux_input_volume,
     'aux-output-volume':    handle_aux_output_volume,
@@ -187,6 +187,7 @@ cmds = {
     'headphone-volume':     handle_headphone_volume,
     'headphone-source':     handle_headphone_source,
     'listen-metering':      handle_listen_metering,
+    'clock-source':         handle_clock_source,
 }
 
 fullpath = CuiKit.seek_snd_unit_path()
