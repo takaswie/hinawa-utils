@@ -248,7 +248,7 @@ class MaudioNormal(BebobUnit):
 
     def get_mixer_source_labels(self):
         return self._labels[self._id]['inputs']
-    def get_mixer_sink_labels(self):
+    def get_mixer_labels(self):
         return self._labels[self._id]['mixers']
 
     def _refer_mixer_data(self, source, sink):
