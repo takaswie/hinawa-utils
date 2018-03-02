@@ -183,20 +183,33 @@ class EfwUnit(Hinawa.SndEfw):
             raise ValueError('Invalid argument for playback channel')
         return EftMonitor.get_param(self, 'pan', in_ch, out_ch)
 
-    def set_control_room_mirroring(self, output_pair):
+    def get_control_room_source_labels(self):
+        labels = []
+        for i in range(1, self.info['playback-channels'], 2):
+            labels.append('mixer-{0}/{1}'.format(i, i + 1))
+        return labels
+    def set_control_room_mirroring(self, source):
         if self.info['features']['control-room-mirroring'] is False:
             raise RuntimeError('Not supported by this model')
-        EftIoconf.set_control_room_mirroring(self, output_pair)
+        labels = self.get_control_room_source_labels()
+        if source not in labels:
+            raise ValueError('Invalid argument for source')
+        val = labels.index(source) * 2
+        EftIoconf.set_control_room_mirroring(self, val)
     def get_control_room_mirroring(self):
         if self.info['features']['control-room-mirroring'] is False:
             raise RuntimeError('Not supported by this model')
-        return EftIoconf.get_control_room_mirroring(self)
+        val = EftIoconf.get_control_room_mirroring(self)
+        labels = self.get_control_room_source_labels()
+        return labels[val // 2]
+
     def set_digital_input_mode(self, mode):
         if self.info['features'][mode] is False:
             raise RuntimeError('Not supported by this model')
         EftIoconf.set_digital_input_mode(self, mode)
     def get_digital_input_mode(self):
         return EftIoconf.get_digital_input_mode(self)
+
     def set_phantom_powering(self, state):
         if self.info['features']['phantom-powering'] is False:
             raise RuntimeError('Not supported by this model')

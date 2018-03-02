@@ -85,16 +85,20 @@ def handle_sampling_rate(unit, args):
 
 def handle_control_room(unit, args):
     ops = ('set', 'get')
-    if len(args) > 0:
-        unit.set_control_room_mirroring(int(args[0]))
-        return True
-    else:
-        print(unit.get_control_room_mirroring())
-        return True
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if len(args) > 1 and op == 'set':
+            source = args[1]
+            unit.set_control_room_mirroring(source)
+            return True
+        elif op == 'get':
+            print(unit.get_control_room_mirroring())
+            return True
     print('Arguments for control-room command:')
-    print('  control-room OP []')
-    print('    OP: [{0}]'.format('|'.join(ops)))
-    print('    ')
+    print('  control-room OPERATION [SOURCE]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SOURCE: [{0}]'.format('|'.join(unit.get_control_room_source_labels())))
+    return False
 
 def handle_digital_input(unit, args):
     ops = ('set', 'get')
