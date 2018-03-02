@@ -57,8 +57,8 @@ def handle_clock_source(unit, args):
             print(source)
         return True
     print('Arguments for clock-source command:')
-    print('  clock-source OPERATION [SOURCE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('  clock-source OP[SOURCE]')
+    print('    OP:        {0}'.format(', '.join(ops)))
     print('    SOURCE:    {0}'.format(', '.join(sources)))
 
     return False
@@ -78,8 +78,8 @@ def handle_sampling_rate(unit, args):
             print(rate)
         return True
     print('Arguments for sampling-rate command:')
-    print('  clock-source OPERATION [SOURCE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('  clock-source OP [SOURCE]')
+    print('    OP:        {0}'.format(', '.join(ops)))
     print('    SOURCE:    {0}'.format(', '.join(map(str, rates))))
     return False
 
@@ -95,7 +95,7 @@ def handle_control_room(unit, args):
             print(unit.get_control_room_mirroring())
             return True
     print('Arguments for control-room command:')
-    print('  control-room OPERATION [SOURCE]')
+    print('  control-room OP [SOURCE]')
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    SOURCE: [{0}]'.format('|'.join(unit.get_control_room_source_labels())))
     return False
@@ -130,8 +130,8 @@ def handle_phantom_powering(unit, args):
             print(modes[unit.get_phantom_powering()])
         return True
     print('Arguments for phantom-powering command:')
-    print('  phantom-powering OPERATION [MODE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('  phantom-powering OP [MODE]')
+    print('    OP:        {0}'.format(', '.join(ops)))
     print('    MODE:      {0}'.format(', '.join(modes)))
     return False
 
@@ -189,8 +189,8 @@ def handle_rx_stream_mapping(unit, args):
             print(sources[maps['rx-map'][output] // 2])
         return True
     print('Arguments for rx-stream-mapping command:')
-    print('  rx-stream-mapping OPERATION OUTPUT [SOURCE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('  rx-stream-mapping OP OUTPUT [SOURCE]')
+    print('    OP:        {0}'.format(', '.join(ops)))
     print('    OUTPUT:    {0}'.format(', '.join(outputs)))
     print('    SOURCE:    {0}'.format(', '.join(sources)))
 
@@ -224,8 +224,8 @@ def handle_tx_stream_mapping(unit, args):
             print(sinks[maps['tx-map'][input] // 2])
         return True
     print('Arguments for tx-stream-mapping command:')
-    print('  tx-stream-mapping OPERATION INPUT [SINK]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('  tx-stream-mapping OP INPUT [SINK]')
+    print('    OP:        {0}'.format(', '.join(ops)))
     print('    INPUT:     {0}'.format(', '.join(inputs)))
     print('    SINK:      {0}'.format(', '.join(sinks)))
 
