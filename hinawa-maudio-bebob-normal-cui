@@ -82,17 +82,10 @@ def handle_mixer_routing(unit, args):
         if sink in unit.get_mixer_sink_labels() and \
            source in unit.get_mixer_source_labels():
             if len(args) == 3:
-                if int(args[2]) > 0:
-                    value = 0x0000
-                else:
-                    value = 0x8000
-                unit.set_mixer_routing(source, sink, value)
+                enable = bool(int(args[2]))
+                unit.set_mixer_routing(source, sink, enable)
             else:
-                value = unit.get_mixer_routing(source, sink)
-                if value > 0x0000:
-                    print(0)
-                else:
-                    print(1)
+                print(unit.get_mixer_routing(source, sink))
             return True
     print('Arguments for mixer-routing command:')
     print('  mixer-routing sink source [value]')

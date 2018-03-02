@@ -264,14 +264,19 @@ class MaudioNormal(BebobUnit):
         out_ch = self._mixers[self._id][mixer][1][0]  # Use left channel.
         return (in_fb, in_ch, out_fb, out_ch)
 
-    def set_mixer_routing(self, source, sink, value):
+    def set_mixer_routing(self, source, sink, enable):
         in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(source, sink)
+        if enable:
+            data = (0x00, 0x00)
+        else:
+            data = (0x80, 0x00)
         AvcAudio.set_processing_mixer_state(self.fcp, 0, 'current',
-                                            out_fb, in_fb, in_ch, out_ch, value)
+                                            out_fb, in_fb, in_ch, out_ch, data)
     def get_mixer_routing(self, source, sink):
         in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(source, sink)
-        return AvcAudio.get_processing_mixer_state(self.fcp, 0, 'current',
-                                            out_fb, in_fb, in_ch, out_ch)
+        data = AvcAudio.get_processing_mixer_state(self.fcp, 0, 'current',
+                                                   out_fb, in_fb, in_ch, out_ch)
+        return data[0] == 0x00 and data[1] == 0x00
 
     def get_output_labels(self):
         return self._labels[self._id]['outputs']
