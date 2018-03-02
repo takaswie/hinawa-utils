@@ -133,11 +133,11 @@ def handle_headphone_source(unit, args):
         print('Not supported')
         return False
     targets = unit.get_headphone_labels()
-    sources = unit.get_headphone_source_labels()
     if len(args) > 0 and args[0] in targets:
         target = args[0]
         if len(args) > 1 and args[1] in OPS:
             op = args[1]
+            sources = unit.get_headphone_source_labels(target)
             if len(args) > 2 and op == 'set' and args[2] in sources:
                 source = args[2]
                 unit.set_headphone_source(target, source)
@@ -149,7 +149,10 @@ def handle_headphone_source(unit, args):
     print('  headphone-source TARGET OP [SRC]')
     print('    TARGET: [{0}]'.format('|'.join(targets)))
     print('    OP:     [{0}]'.format('|'.join(OPS)))
-    print('    SRC:    [{0}] if OP=set'.format('|'.join(sources)))
+    for target in targets:
+        sources = unit.get_headphone_source_labels(target)
+        print('    SRC:    [{0}] if TARGET={1} and OP=set'.format(
+                                                    '|'.join(sources), target))
     return False
 
 def handle_listen_metering(unit, args):

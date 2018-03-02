@@ -345,7 +345,7 @@ class MaudioNormal(BebobUnit):
         return self._get_volume(self._hp_outs[self._id], index, ch)
 
 
-    def get_headphone_source_labels(self):
+    def get_headphone_source_labels(self, target):
         labels = []
         if len(self._hp_sources[self._id]) > 0:
             for mixer in self._labels[self._id]['mixers']:
