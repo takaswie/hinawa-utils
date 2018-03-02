@@ -203,6 +203,12 @@ class EfwUnit(Hinawa.SndEfw):
         labels = self.get_control_room_source_labels()
         return labels[val // 2]
 
+    def get_digital_input_mode_labels(self):
+        labels = []
+        for mode in EftIoconf.DIGITAL_INPUT_MODES:
+            if mode in self.info['features'] and self.info['features'][mode]:
+                labels.append(mode)
+        return labels
     def set_digital_input_mode(self, mode):
         if self.info['features'][mode] is False:
             raise RuntimeError('Not supported by this model')
