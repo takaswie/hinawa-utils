@@ -245,35 +245,32 @@ class MaudioNormal(BebobUnit):
         fb = self._aux_output[self._id]
         return AvcAudio.get_feature_volume_state(self.fcp, 0, 'current', fb, ch)
 
-
     def get_mixer_source_labels(self):
         return self._labels[self._id]['inputs']
     def get_mixer_labels(self):
         return self._labels[self._id]['mixers']
-
-    def _refer_mixer_data(self, source, sink):
+    def _refer_mixer_data(self, source, target):
         if source not in self._labels[self._id]['inputs']:
             raise ValueError('Invalid argument for mixer input')
-        if sink not in self._labels[self._id]['mixers']:
+        if target not in self._labels[self._id]['mixers']:
             raise ValueError('Invalid argument for mixer output')
         input = self._labels[self._id]['inputs'].index(source)
         in_fb = self._mixer_sources[self._id][input][0]
         in_ch = self._mixer_sources[self._id][input][1][0]   # Use left channel.
-        mixer = self._labels[self._id]['mixers'].index(sink)
+        mixer = self._labels[self._id]['mixers'].index(target)
         out_fb = self._mixers[self._id][mixer][0]
         out_ch = self._mixers[self._id][mixer][1][0]  # Use left channel.
         return (in_fb, in_ch, out_fb, out_ch)
-
-    def set_mixer_routing(self, source, sink, enable):
-        in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(source, sink)
+    def set_mixer_routing(self, source, target, enable):
+        in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(source, target)
         if enable:
             data = (0x00, 0x00)
         else:
             data = (0x80, 0x00)
         AvcAudio.set_processing_mixer_state(self.fcp, 0, 'current',
                                             out_fb, in_fb, in_ch, out_ch, data)
-    def get_mixer_routing(self, source, sink):
-        in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(source, sink)
+    def get_mixer_routing(self, source, target):
+        in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(source, target)
         data = AvcAudio.get_processing_mixer_state(self.fcp, 0, 'current',
                                                    out_fb, in_fb, in_ch, out_ch)
         return data[0] == 0x00 and data[1] == 0x00

@@ -77,21 +77,21 @@ def handle_aux_output_volume(unit, args):
 
 def handle_mixer_routing(unit, args):
     if len(args) > 1:
-        sink = args[0]
+        target = args[0]
         source = args[1]
-        if sink in unit.get_mixer_labels() and \
+        if target in unit.get_mixer_labels() and \
            source in unit.get_mixer_source_labels():
             if len(args) == 3:
                 enable = bool(int(args[2]))
-                unit.set_mixer_routing(source, sink, enable)
+                unit.set_mixer_routing(source, target, enable)
             else:
-                print(unit.get_mixer_routing(source, sink))
+                print(unit.get_mixer_routing(source, target))
             return True
     print('Arguments for mixer-routing command:')
     print('  mixer-routing sink source [value]')
-    for sink in unit.get_mixer_labels():
+    for target in unit.get_mixer_labels():
         print('    {0} [{1}] [0, 1]'.format(
-            sink, ', '.join(unit.get_mixer_source_labels())
+            target, ', '.join(unit.get_mixer_source_labels())
         ))
     return False
 
