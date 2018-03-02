@@ -38,7 +38,9 @@ class YamahaTerratec(BebobUnit):
                 'analog-1/2', 'headphone-1/2', 'digital-1/2')
             self._mixer_output_fb = 1
             self._input_level_labels = {
-                'low': 0xf400, 'middle': 0xfd00, 'high': 0x0000,
+                'low':      (0xf4, 0x00),
+                'middle':   (0xfd, 0x00),
+                'high':     (0x00, 0x00),
             }
             self._output_labels = ()
         # Yamaha GO 46 or Terratec Phase X24 FW
@@ -63,10 +65,11 @@ class YamahaTerratec(BebobUnit):
         fmts['playback'] = BcoStreamFormatInfo.get_entry_list(self.fcp, addr)
         return fmts
 
-    def _set_state(self, op, fb, ch, value):
+    def _set_state(self, op, fb, ch, db):
         if op == 'volume':
+            data = AvcAudio.build_data_from_db(db)
             AvcAudio.set_feature_volume_state(self.fcp, 0, 'current',
-                                              fb, ch, value)
+                                              fb, ch, data)
         elif op == 'mute':
 
             AvcAudio.set_feature_mute_state(self.fcp, 0, 'current',
@@ -75,8 +78,9 @@ class YamahaTerratec(BebobUnit):
             raise ValueError('Invalid argument for channel operation')
     def _get_state(self, op, fb, ch):
         if op == 'volume':
-            return AvcAudio.get_feature_volume_state(self.fcp, 0, 'current',
+            data = AvcAudio.get_feature_volume_state(self.fcp, 0, 'current',
                                                      fb, ch)
+            return AvcAudio.parse_data_to_db(data)
         elif op == 'mute':
             return AvcAudio.get_feature_mute_state(self.fcp, 0, 'current',
                                                    fb, ch)
@@ -90,21 +94,21 @@ class YamahaTerratec(BebobUnit):
             raise OSError('Not supported')
         if level not in self._input_level_labels:
             raise ValueError('Invalid argument for input level.')
-        value = self._input_level_labels[level]
-        AvcAudio.set_feature_volume_state(self.fcp, 0, 'current', 2, 0, value)
+        data = self._input_level_labels[level]
+        AvcAudio.set_feature_volume_state(self.fcp, 0, 'current', 2, 0, data)
     def get_input_level(self):
         if len(self._input_level_labels) == 0:
             raise OSError('Not supported')
-        level = AvcAudio.get_feature_volume_state(self.fcp, 0, 'current', 2, 0)
-        for name, value in self._input_level_labels.items():
-            if value == level:
+        result = AvcAudio.get_feature_volume_state(self.fcp, 0, 'current', 2, 0)
+        for name, data in self._input_level_labels.items():
+            if data == result:
                 return name
         else:
             raise OSError('Unexpected value for input level')
 
     def get_output_labels(self):
         return self._output_labels
-    def set_output(self, op, output, ch, val):
+    def set_output(self, op, output, ch, db):
         if len(self._output_labels) == 0:
             raise ValueError('Not supported')
         if op not in self.channel_ops:
@@ -112,7 +116,7 @@ class YamahaTerratec(BebobUnit):
         if output not in self._output_labels:
             raise ValueError('Invalid argument for channel name')
         ch = self._output_labels.index(output) + ch
-        self._set_state(op, 1, ch, val)
+        self._set_state(op, 1, ch, db)
     def get_output(self, op, output, ch):
         if len(self._output_labels) == 0:
             raise ValueError('Not supported')
@@ -129,13 +133,13 @@ class YamahaTerratec(BebobUnit):
     _mixer_input_fbs = (6, 7, 3, 4, 5)
     def get_mixer_input_labels(self):
         return self._mixer_input_labels
-    def set_mixer_input(self, op, pair, ch, val):
+    def set_mixer_input(self, op, pair, ch, db):
         if op not in self.channel_ops:
             raise ValueError('Invalid argument for channel operation.')
         if pair not in self._mixer_input_labels:
             raise ValueError('Invalid argument for input stereo pair.')
         fb = self._mixer_input_fbs[self._mixer_input_labels.index(pair)]
-        self._set_state(op, fb, ch, val)
+        self._set_state(op, fb, ch, db)
     def get_mixer_input(self, op, pair, ch):
         if op not in self.channel_ops:
             raise ValueError('Invalid argument for channel operation.')
@@ -144,8 +148,8 @@ class YamahaTerratec(BebobUnit):
         fb = self._mixer_input_fbs[self._mixer_input_labels.index(pair)]
         return self._get_state(op, fb, ch)
 
-    def set_mixer_output(self, op, ch, value):
-        self._set_state(op, self._mixer_output_fb, ch, value)
+    def set_mixer_output(self, op, ch, db):
+        self._set_state(op, self._mixer_output_fb, ch, db)
     def get_mixer_output(self, op, ch):
         return self._get_state(op, self._mixer_output_fb, ch)
 

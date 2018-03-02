@@ -7,6 +7,7 @@ from gi.repository import Hinawa
 from bebob.bebob_unit import BebobUnit
 
 from ta1394.general import AvcConnection
+from ta1394.audio import AvcAudio
 
 from array import array
 
@@ -150,30 +151,37 @@ class MaudioSpecial(BebobUnit):
         data.append(datum)
         self._write_data(index, data)
 
-    def _set_volume(self, index, ch, value):
+    def _set_volume(self, index, ch, db):
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
+        data = AvcAudio.build_data_from_db(db)
         if ch == 0:
-            datum = (self._cache[index] & 0x0000ffff) | (value << 8)
+            datum = (self._cache[index] & 0x0000ffff) | \
+                    (data[0] << 24) | (data[1] << 16)
         else:
-            datum = (self._cache[index] & 0xffff0000)| value
+            datum = (self._cache[index] & 0xffff0000)| \
+                    (data[0] << 16) | (data[1] << 8)
         self._write_status(index, datum)
     def _get_volume(self, index, ch):
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
+        data = bytearray()
         datum = self._cache[index]
         if ch == 0:
-            return datum >> 16
+            value = (datum >> 16) & 0x0000ffff
         else:
-            return datum & 0x0000ffff
+            value = datum & 0x0000ffff
+        data.append((value >> 8) & 0xff)
+        data.append(value & 0xff)
+        return AvcAudio.parse_data_to_db(data)
 
-    def set_input_volume(self, target, ch, value):
+    def set_input_volume(self, target, ch, db):
         if target not in self.input_labels:
             raise ValueError('invalid argument for input stereo pair')
         index = self.input_labels.index(target)
         if index > 7:
             index = index + 8
-        self._set_volume(index, ch, value)
+        self._set_volume(index, ch, db)
     def get_input_volume(self, target, ch):
         if target not in self.input_labels:
             raise ValueError('invalid argument for input stereo pair')
@@ -184,13 +192,13 @@ class MaudioSpecial(BebobUnit):
             index = index + 8
         return self._get_volume(index, ch)
 
-    def set_output_volume(self, target, ch, value):
+    def set_output_volume(self, target, ch, db):
         if target not in self.output_labels:
             raise ValueError('invalid argument for output stereo pair')
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
         index = self.input_labels.index(target)
-        self._set_volume(index, ch, value)
+        self._set_volume(index, ch, db)
     def get_output_volume(self, target, ch):
         if target not in self.output_labels:
             raise ValueError('invalid argument for output stereo pair')
@@ -199,24 +207,24 @@ class MaudioSpecial(BebobUnit):
         index = self.input_labels.index(target)
         return self._get_volume(index, ch)
 
-    def set_aux_volume(self, ch, value):
+    def set_aux_volume(self, ch, db):
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
         index = 13
-        self._set_volume(index, ch, value)
+        self._set_volume(index, ch, db)
     def get_aux_volume(self, ch):
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
         index = 13
         return self._get_volume(index, ch)
 
-    def set_headphone_volume(self, target, ch, value):
+    def set_headphone_volume(self, target, ch, db):
         if target not in self.headphone_labels:
             raise ValueError('invalid argument for heaphone stereo pair')
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
         index = 14 + self.headphone_labels.index(target)
-        self._set_volume(index, ch, value)
+        self._set_volume(index, ch, db)
     def get_headphone_volume(self, target, ch):
         if target not in self.headphone_labels:
             raise ValueError('invalid argument for heaphone stereo pair')
@@ -225,13 +233,13 @@ class MaudioSpecial(BebobUnit):
         index = 14 + self.headphone_labels.index(target)
         return self._get_volume(index, ch)
 
-    def set_aux_input(self, target, ch, value):
+    def set_aux_input(self, target, ch, db):
         if target not in self.input_labels:
             raise ValueError('Invalid argument for input stereo pair')
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
         index = 26 + self.input_labels.index(target)
-        self._set_volume(index, ch, value)
+        self._set_volume(index, ch, db)
     def get_aux_input(self, target, ch):
         if target not in self.input_labels:
             raise ValueError('Invalid argument for input stereo pair')

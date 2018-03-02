@@ -58,10 +58,10 @@ def handle_input_level(unit, args):
             print(unit.get_input_level())
         return True
     print('Arguments for input command:')
-    print('  output OPERATION [LEVEL]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
-    print('    LEVEL:     {0}'.format(', '.join(
-                                            unit.get_input_level_labels())))
+    print('  output OP [LEVEL]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    LEVEL:  [{0}] if OP=set'.format('|'.join(
+                                                unit.get_input_level_labels())))
     return False
 
 def handle_analog_output(unit, args):
@@ -73,17 +73,17 @@ def handle_analog_output(unit, args):
         pair = args[1]
         ch = int(args[2])
         if op == unit.channel_ops[0] and len(args) == 4:
-            value = int(args[3])
-            unit.set_output(op, pair, ch, value)
+            db = float(args[3])
+            unit.set_output(op, pair, ch, db)
         else:
             print(unit.get_output(op, pair, ch))
         return True
     print('Arguments for output command:')
-    print('  output OPERATION PAIR CHANNEL [VALUE]')
-    print('    OPERATION: {0}'.format(', '.join(unit.channel_ops)))
-    print('    PAIR:      {0}'.format(', '.join(unit.get_output_labels())))
-    print('    CHANNEL:   1, 2 (0 = both)')
-    print('    VALUE:     {0}'.format(0))
+    print('  output OP PAIR CH [dB]')
+    print('    OP:    [{0}]'.format('|'.join(unit.channel_ops)))
+    print('    PAIR:  [{0}]'.format('|'.join(unit.get_output_labels())))
+    print('    CH:    [0|1|2] (0=both)')
+    print('    dB:    [-128.0..128.0] if OP=set')
     return False
 
 def handle_output_source(unit, args):
@@ -110,17 +110,17 @@ def handle_mixer_input(unit, args):
         input = args[1]
         ch = int(args[2])
         if len(args) == 4:
-            value = int(args[3])
-            unit.set_mixer_input(op, input, ch, value)
+            db = float(args[3])
+            unit.set_mixer_input(op, input, ch, db)
         else:
             print(unit.get_mixer_input(op, input, ch))
         return True
     print('Arguments for mixer-input command:')
-    print('  mixer-input OPERATION INPUT CHANNEL [VALUE]')
-    print('    OPERATION: {0}'.format(', '.join(unit.channel_ops)))
-    print('    INPUT:     {0}'.format(', '.join(unit.get_mixer_input_labels())))
-    print('    CHANNEL:   {0}'.format(0))
-    print('    VALUE:     {0}'.format(0))
+    print('  mixer-input OP INPUT CH [dB]')
+    print('    OP:     [{0}]'.format('|'.join(unit.channel_ops)))
+    print('    INPUT:  [{0}]'.format('|'.join(unit.get_mixer_input_labels())))
+    print('    CH:     [0|1|2] (0=both)')
+    print('    dB:     [-128.0..128.0] if OP=set')
     return False
 
 def handle_mixer_output(unit, args):
@@ -128,16 +128,16 @@ def handle_mixer_output(unit, args):
         op = args[0]
         ch = int(args[1])
         if len(args) == 3:
-            value = int(args[2])
+            value = float(args[2])
             unit.set_mixer_output(op, ch, value)
         else:
             print(unit.get_mixer_output(op, ch))
         return True
     print('Arguments for mixer-output command:')
-    print('  mixer-output OPERATION CHANNEL [VALUE]')
-    print('    OPERATION: {0}'.format(', '.join(unit.channel_ops)))
-    print('    CHANNEL:   1, 2 (0 = both)')
-    print('    VALUE:     ')
+    print('  mixer-output OP CH [dB]')
+    print('    OP: [{0}]'.format('|'.join(unit.channel_ops)))
+    print('    CH: [0|1|2] (0 = both)')
+    print('    dB: [-128.0..128.0] if OP=set')
     return False
 
 def handle_sampling_rate(unit, args):

@@ -195,13 +195,14 @@ class MaudioNormal(BebobUnit):
         ch = targets[index][1][ch]
         return (fb, ch)
 
-    def _set_volume(self, targets, index, ch, value):
+    def _set_volume(self, targets, index, ch, db):
         fb, ch = self._refer_fb_data(targets, index, ch)
-        AvcAudio.set_feature_volume_state(self.fcp, 0, 'current', fb, ch, value)
+        data = AvcAudio.build_data_from_db(db)
+        AvcAudio.set_feature_volume_state(self.fcp, 0, 'current', fb, ch, data)
     def _get_volume(self, targets, index, ch):
         fb, ch = self._refer_fb_data(targets, index, ch)
-        return AvcAudio.get_feature_volume_state(self.fcp, 0, 'current', fb, ch)
-
+        data = AvcAudio.get_feature_volume_state(self.fcp, 0, 'current', fb, ch)
+        return AvcAudio.parse_data_to_db(data)
 
     def get_input_labels(self):
         return self._labels[self._id]['inputs']
@@ -211,9 +212,9 @@ class MaudioNormal(BebobUnit):
             raise ValueError('Invalid argument for input')
         return self._labels[self._id]['inputs'].index(target)
 
-    def set_input_volume(self, target, ch, value):
+    def set_input_volume(self, target, ch, db):
         index = self._refer_input_data(target)
-        self._set_volume(self._inputs[self._id], index, ch, value)
+        self._set_volume(self._inputs[self._id], index, ch, db)
     def get_input_volume(self, target, ch):
         index = self._refer_input_data(target)
         return self._get_volume(self._inputs[self._id], index, ch)
@@ -224,9 +225,9 @@ class MaudioNormal(BebobUnit):
             return ()
         return self._labels[self._id]['inputs']
 
-    def set_aux_input_volume(self, target, ch, value):
+    def set_aux_input_volume(self, target, ch, db):
         index = self._refer_input_data(target)
-        self._set_volume(self._aux_inputs[self._id], index, ch, value)
+        self._set_volume(self._aux_inputs[self._id], index, ch, db)
     def get_aux_input_volume(self, target, ch):
         index = self._refer_input_data(target)
         return self._get_volume(self._aux_inputs[self._id], index, ch)
@@ -280,9 +281,9 @@ class MaudioNormal(BebobUnit):
             raise ValueError('Invalid argument for output')
         return self._labels[self._id]['outputs'].index(target)
 
-    def set_output_volume(self, target, ch, value):
+    def set_output_volume(self, target, ch, db):
         index = self._refer_out_data(target)
-        self._set_volume(self._outputs[self._id], index, ch, value)
+        self._set_volume(self._outputs[self._id], index, ch, db)
     def get_output_volume(self, target, ch):
         index = self._refer_out_data(target)
         return self._get_volume(self._outputs[self._id], index, ch)
@@ -334,9 +335,9 @@ class MaudioNormal(BebobUnit):
             raise ValueError('Invalid argument for headphone')
         return left
 
-    def set_headphone_volume(self, target, ch, value):
+    def set_headphone_volume(self, target, ch, db):
         index = self._refer_hp_data(target)
-        self._set_volume(self._hp_outs[self._id], index, ch, value)
+        self._set_volume(self._hp_outs[self._id], index, ch, db)
     def get_headphone_volume(self, target, ch):
         index = self._refer_hp_data(target)
         return self._get_volume(self._hp_outs[self._id], index, ch)

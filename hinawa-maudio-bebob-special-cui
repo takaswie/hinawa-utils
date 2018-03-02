@@ -11,15 +11,15 @@ def handle_input_volume(unit, args):
         ch = int(args[1])
         if target in unit.input_labels and ch < 2:
             if len(args) > 2:
-                value = int(args[2])
-                unit.set_input_volume(target, ch, value)
+                db = float(args[2])
+                unit.set_input_volume(target, ch, db)
             else:
                 print(unit.get_input_volume(target, ch))
             return True
     print('Arguments for input-volume command:')
     print('  target:    [{0}]'.format((', ').join(unit.input_labels)))
     print('  ch:        [0, 1]')
-    print('  value:     []')
+    print('  dB:        [-128.0..128.0]')
     return False
 
 def handle_output_volume(unit, args):
@@ -28,15 +28,15 @@ def handle_output_volume(unit, args):
         ch = int(args[1])
         if target in unit.output_labels and ch < 2:
             if len(args) > 2:
-                value = int(args[2])
-                unit.set_output_volume(target, ch, value)
+                db = float(args[2])
+                unit.set_output_volume(target, ch, db)
             else:
                 print(unit.get_output_volume(target, ch))
             return True
     print('Arguments for output-volume command:')
     print('  target:    [{0}]'.format((', ').join(unit.output_labels)))
     print('  ch:        [0, 1]')
-    print('  value:     []')
+    print('  dB:        [-128.0..128.0]')
     return False
 
 def handle_aux_volume(unit, args):
@@ -44,14 +44,14 @@ def handle_aux_volume(unit, args):
         ch = int(args[0])
         if ch < 2:
             if len(args) > 1:
-                value = int(args[1])
-                unit.set_aux_volume(ch, value)
+                db = float(args[1])
+                unit.set_aux_volume(ch, db)
             else:
                 print(unit.get_aux_volume(ch))
             return True
     print('Arguments for aux-volume command:')
     print('  ch:        [0, 1]')
-    print('  value:     []')
+    print('  dB:        [-128.0..128.0]')
     return False
 
 def handle_headphone_volume(unit, args):
@@ -60,15 +60,15 @@ def handle_headphone_volume(unit, args):
         ch = int(args[1])
         if target in unit.headphone_labels and ch < 2:
             if len(args) > 2:
-                value = int(args[2])
-                unit.set_headphone_volume(target, ch, value)
+                db = float(args[2])
+                unit.set_headphone_volume(target, ch, db)
             else:
                 print(unit.get_headphone_volume(target, ch))
             return True
     print('Arguments for headphone-volume command:')
     print('  target:    [{0}]'.format((', ').join(unit.headphone_labels)))
     print('  ch:        [0, 1]')
-    print('  value:     []')
+    print('  dB:        [-128.0..128.0]')
     return False
 
 def handle_aux_input(unit, args):
@@ -77,15 +77,15 @@ def handle_aux_input(unit, args):
         ch = int(args[1])
         if target in unit.input_labels and ch < 2:
             if len(args) > 2:
-                value = int(args[2])
-                unit.set_aux_input(target, ch, value)
+                db = float(args[2])
+                unit.set_aux_input(target, ch, db)
             else:
                 print(unit.get_aux_input(target, ch))
             return True
     print('Arguments for aux-input command:')
     print('  target:    [{0}]'.format((', ').join(unit.input_labels)))
     print('  ch:        [0, 1]')
-    print('  value:     []')
+    print('  dB:        [-128.0..128.0]')
     return False
 
 def handle_mixer_routing(unit, args):

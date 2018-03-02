@@ -11,7 +11,8 @@ def handle_current_status(unit, args):
     fmts = unit.get_current_stream_formats()
     print('    sampling-rate:    {0}'.format(fmts['playback']['sampling-rate']))
     print('Channel:')
-    volume = AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current', 1, 0)
+    data = AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current', 1, 0)
+    db = AvcAudio.parse_data_to_db(data)
     print('  volume: {0}'.format(volume))
     if AvcAudio.get_feature_mute_state(unit.fcp, 0, 'current', 1, 0):
         mute = 'on'
@@ -29,15 +30,19 @@ def handle_output_volume(unit, args):
     if len(args) > 0 and args[0] in ops:
         op = args[0]
         if op == ops[0] and len(args) == 2:
-            val = int(args[1])
-            AvcAudio.set_feature_volume_state(unit.fcp, 0, 'current', 1, 0, val)
+            db = float(args[1])
+            data = AvcAudio.parse_data_to_db(db)
+            AvcAudio.set_feature_volume_state(unit.fcp, 0, 'current', 1, 0,
+                                              data)
         else:
-            print(AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current',1,0))
+            data = AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current', 1,
+                                                     0))
+            print(AvcAudio.parse_data_to_db(data))
         return True
     print('Arguments for output-volume command:')
-    print('  output-volume OPERATION CH [VALUE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
-    print('    VALUE:     ')
+    print('  output-volume OP CH [dB]')
+    print('    OP: [{0}]'.format('|'.join(ops)))
+    print('    dB: [-128.0..128.0] if OP=set')
     return False
 
 def handle_output_mute(unit, args):
