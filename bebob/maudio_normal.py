@@ -13,7 +13,7 @@ from ta1394.audio import AvcAudio
 __all__ = ['MaudioNormal']
 
 class MaudioNormal(BebobUnit):
-    _ids = {
+    _IDS = {
         0x00000a: (0, "Ozonic"),
         0x010062: (1, "Firewire Solo"),
         0x010060: (2, "Firewire Audiophile"),
@@ -23,7 +23,7 @@ class MaudioNormal(BebobUnit):
         #   ProFire Lightbridge
     }
 
-    _labels = (
+    _LABELS = (
         {'inputs':  ('analog-1/2', 'analog-3/4', 'stream-1/2', 'stream-3/4'),
          'outputs': ('analog-1/2', 'analog-3/4'),
          'mixers':  ('mixer-1/2', 'mixer-3/4'),
@@ -71,8 +71,8 @@ class MaudioNormal(BebobUnit):
                      'headphone-out-3', 'headphone-out-4')},
     )
 
-    # = _labels['inputs']
-    _inputs = (
+    # = _LABELS['inputs']
+    _INPUTS = (
         (( 3, (1, 2)), ( 4, (1, 2)), ( 1, (1, 2)), ( 2, (1, 2))),
         (( 1, (1, 2)), ( 2, (1, 2)), ( 4, (1, 2)), ( 3, (1, 2))),
         (( 4, (1, 2)), ( 5, (1, 2)), ( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2))),
@@ -80,8 +80,8 @@ class MaudioNormal(BebobUnit):
          ( 2, (1, 2)), ( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8))),
     )
 
-    # = _labels['inputs']
-    _aux_inputs = (
+    # = _LABELS['inputs']
+    _AUX_INPUTS = (
         (),
         (),
         (( 9, (1, 2)), (10, (1, 2)), ( 6, (1, 2)), ( 7, (1, 2)), ( 8, (1, 2))),
@@ -89,15 +89,15 @@ class MaudioNormal(BebobUnit):
          ( 5, (1, 2)), ( 5, (3, 4)), ( 5, (5, 6)), ( 5, (7, 8))),
     )
 
-    _aux_output = (
+    _AUX_OUTPUT = (
         None,
         None,
         11,
          9,
     )
 
-    # = _labels['inputs']
-    _mixer_sources = (
+    # = _LABELS['inputs']
+    _MIXER_SOURCES = (
         (( 2, (1, 2)), ( 3, (1, 2)), ( 0, (1, 2)), ( 1, (1, 2))),
         (( 0, (1, 2)), ( 1, (1, 2)), ( 3, (1, 2)), ( 2, (1, 2))),
         (( 3, (1, 2)), ( 4, (1, 2)), ( 0, (1, 2)), ( 1, (1, 2)), ( 2, (1, 2))),
@@ -106,52 +106,52 @@ class MaudioNormal(BebobUnit):
          ( 0, (7, 8))),
     )
 
-    # = _labels['mixers']
-    _mixers = (
+    # = _LABELS['mixers']
+    _MIXERS = (
         (( 1, (1, 2)), ( 1, (1, 2))),
         (( 1, (1, 2)), ( 1, (3, 4))),
         (( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2))),
         (( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8)), ( 1, (9, 10))),
     )
 
-    # = _labels['outputs']
-    _output_sources = (
+    # = _LABELS['outputs']
+    _OUTPUT_SOURCES = (
         (),
         (),
         ( 1, 2, 3),
         ( 2, 3, 4, 5, 6),
     )
 
-    # = _labels['outputs']
-    _outputs = (
+    # = _LABELS['outputs']
+    _OUTPUTS = (
         (( 5, (1, 2)), ( 6, (1, 2))),
         (( 2, (1, 2)), ( 3, (1, 2))),
         ((12, (1, 2)), (13, (1, 2)), (14, (1, 2))),
         ((10, (1, 2)), (11, (1, 2)), (12, (1, 2)), (13, (1, 2)), (14, (1, 2))),
     )
 
-    _hp_sources = (
+    _HP_SOURCES = (
         (),
         (),
         (( 4, (0, 1, 2, 3)), ),
         (( 7, (2, 3, 4, 5, 6, 7)), ),
     )
 
-    _hp_outs = (
+    _HP_OUTS = (
         (),
         (),
         ((15, (1, 2)), ),
         ((15, (1, 2)), ),
     )
 
-    _meters = (
+    _METERS = (
         48 // 4,
         52 // 4,
         60 // 4,
         76 // 4,
     )
 
-    _clocks = (
+    _CLOCKS = (
         {},
         {'Internal':    AvcCcm.get_subunit_signal_addr('music', 0, 1),
          'S/PDIF':      AvcCcm.get_unit_signal_addr('external', 1)},
@@ -163,15 +163,15 @@ class MaudioNormal(BebobUnit):
     )
 
     def get_clock_source_labels(self):
-        return self._clocks[self._id].keys()
+        return self._CLOCKS[self._id].keys()
     def set_clock_source(self, src):
         dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
-        addr = self._clocks[self._id][src]
+        addr = self._CLOCKS[self._id][src]
         AvcCcm.set_signal_source(self.fcp, addr, dst)
     def get_clock_source(self):
         dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
         curr = AvcCcm.get_signal_source(self.fcp, dst)
-        for name, addr in self._clocks[self._id].items():
+        for name, addr in self._CLOCKS[self._id].items():
             if AvcCcm.compare_addrs(curr, AvcCcm.parse_signal_addr(addr)):
                 return name
 
@@ -181,7 +181,7 @@ class MaudioNormal(BebobUnit):
         for quad in self.get_config_rom():
             if quad >> 24 == 0x17:
                 model_id = quad & 0x00ffffff
-                self._id = self._ids[model_id][0]
+                self._id = self._IDS[model_id][0]
         if model_id < 0:
             raise OSError('Not supported')
 
@@ -204,61 +204,61 @@ class MaudioNormal(BebobUnit):
         return AvcAudio.parse_data_to_db(data)
 
     def get_input_labels(self):
-        return self._labels[self._id]['inputs']
+        return self._LABELS[self._id]['inputs']
 
     def _refer_input_data(self, target):
-        if target not in self._labels[self._id]['inputs']:
+        if target not in self._LABELS[self._id]['inputs']:
             raise ValueError('Invalid argument for input')
-        return self._labels[self._id]['inputs'].index(target)
+        return self._LABELS[self._id]['inputs'].index(target)
 
     def set_input_volume(self, target, ch, db):
         index = self._refer_input_data(target)
-        self._set_volume(self._inputs[self._id], index, ch, db)
+        self._set_volume(self._INPUTS[self._id], index, ch, db)
     def get_input_volume(self, target, ch):
         index = self._refer_input_data(target)
-        return self._get_volume(self._inputs[self._id], index, ch)
+        return self._get_volume(self._INPUTS[self._id], index, ch)
 
 
     def get_aux_input_labels(self):
-        if not self._aux_output[self._id]:
+        if not self._AUX_OUTPUT[self._id]:
             return ()
-        return self._labels[self._id]['inputs']
+        return self._LABELS[self._id]['inputs']
 
     def set_aux_input_volume(self, target, ch, db):
         index = self._refer_input_data(target)
-        self._set_volume(self._aux_inputs[self._id], index, ch, db)
+        self._set_volume(self._AUX_INPUTS[self._id], index, ch, db)
     def get_aux_input_volume(self, target, ch):
         index = self._refer_input_data(target)
-        return self._get_volume(self._aux_inputs[self._id], index, ch)
+        return self._get_volume(self._AUX_INPUTS[self._id], index, ch)
 
 
     def set_aux_master_volume(self, ch, value):
         if ch > 2:
             raise ValueError('Invalid argument for master channel')
-        fb = self._aux_output[self._id]
+        fb = self._AUX_OUTPUT[self._id]
         AvcAudio.set_feature_volume_state(self.fcp, 0, 'current', fb, ch, value)
 
     def get_aux_master_volume(self, ch):
         if ch > 2:
             raise ValueError('Invalid argument for master channel')
-        fb = self._aux_output[self._id]
+        fb = self._AUX_OUTPUT[self._id]
         return AvcAudio.get_feature_volume_state(self.fcp, 0, 'current', fb, ch)
 
     def get_mixer_source_labels(self):
-        return self._labels[self._id]['inputs']
+        return self._LABELS[self._id]['inputs']
     def get_mixer_labels(self):
-        return self._labels[self._id]['mixers']
+        return self._LABELS[self._id]['mixers']
     def _refer_mixer_data(self, source, target):
-        if source not in self._labels[self._id]['inputs']:
+        if source not in self._LABELS[self._id]['inputs']:
             raise ValueError('Invalid argument for mixer input')
-        if target not in self._labels[self._id]['mixers']:
+        if target not in self._LABELS[self._id]['mixers']:
             raise ValueError('Invalid argument for mixer output')
-        input = self._labels[self._id]['inputs'].index(source)
-        in_fb = self._mixer_sources[self._id][input][0]
-        in_ch = self._mixer_sources[self._id][input][1][0]   # Use left channel.
-        mixer = self._labels[self._id]['mixers'].index(target)
-        out_fb = self._mixers[self._id][mixer][0]
-        out_ch = self._mixers[self._id][mixer][1][0]  # Use left channel.
+        input = self._LABELS[self._id]['inputs'].index(source)
+        in_fb = self._MIXER_SOURCES[self._id][input][0]
+        in_ch = self._MIXER_SOURCES[self._id][input][1][0]   # Use left channel.
+        mixer = self._LABELS[self._id]['mixers'].index(target)
+        out_fb = self._MIXERS[self._id][mixer][0]
+        out_ch = self._MIXERS[self._id][mixer][1][0]  # Use left channel.
         return (in_fb, in_ch, out_fb, out_ch)
     def set_mixer_routing(self, source, target, enable):
         in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(source, target)
@@ -275,52 +275,52 @@ class MaudioNormal(BebobUnit):
         return data[0] == 0x00 and data[1] == 0x00
 
     def get_output_labels(self):
-        return self._labels[self._id]['outputs']
+        return self._LABELS[self._id]['outputs']
 
     def _refer_out_data(self, target):
-        if target not in self._labels[self._id]['outputs']:
+        if target not in self._LABELS[self._id]['outputs']:
             raise ValueError('Invalid argument for output')
-        return self._labels[self._id]['outputs'].index(target)
+        return self._LABELS[self._id]['outputs'].index(target)
 
     def set_output_volume(self, target, ch, db):
         index = self._refer_out_data(target)
-        self._set_volume(self._outputs[self._id], index, ch, db)
+        self._set_volume(self._OUTPUTS[self._id], index, ch, db)
     def get_output_volume(self, target, ch):
         index = self._refer_out_data(target)
-        return self._get_volume(self._outputs[self._id], index, ch)
+        return self._get_volume(self._OUTPUTS[self._id], index, ch)
 
 
     def get_output_source_labels(self, target):
         index = self._refer_out_data(target)
         labels = []
-        labels.append(self._labels[self._id]['mixers'][index])
-        if self._aux_output[self._id]:
+        labels.append(self._LABELS[self._id]['mixers'][index])
+        if self._AUX_OUTPUT[self._id]:
             labels.append("aux-1/2")
         return labels
 
     def set_output_source(self, target, source):
         index = self._refer_out_data(target)
-        if source in self._labels[self._id]['mixers'][index]:
+        if source in self._LABELS[self._id]['mixers'][index]:
             value = 0
         elif source.find('aux') == 0:
             value = 1
         else:
             raise ValueError('Invalid argument for output target')
-        fb = self._output_sources[self._id][index]
+        fb = self._OUTPUT_SOURCES[self._id][index]
         AvcAudio.set_selector_state(self.fcp, 0, 'current', fb, value)
 
     def get_output_source(self, target):
         index = self._refer_out_data(target)
-        fb = self._output_sources[self._id][index]
+        fb = self._OUTPUT_SOURCES[self._id][index]
         value = AvcAudio.get_selector_state(self.fcp, 0, 'current', fb)
-        if value == 1 and self._aux_output[self._id]:
+        if value == 1 and self._AUX_OUTPUT[self._id]:
             return 'aux-1/2'
-        return self._labels[self._id]['mixers'][index]
+        return self._LABELS[self._id]['mixers'][index]
 
 
     def get_headphone_labels(self):
         labels = []
-        for i in range(len(self._hp_outs[self._id])):
+        for i in range(len(self._HP_OUTS[self._id])):
             labels.append('headphone-{0}/{1}'.format(i * 2 + 1, i * 2 + 2))
         return labels
 
@@ -338,54 +338,54 @@ class MaudioNormal(BebobUnit):
 
     def set_headphone_volume(self, target, ch, db):
         index = self._refer_hp_data(target)
-        self._set_volume(self._hp_outs[self._id], index, ch, db)
+        self._set_volume(self._HP_OUTS[self._id], index, ch, db)
     def get_headphone_volume(self, target, ch):
         index = self._refer_hp_data(target)
-        return self._get_volume(self._hp_outs[self._id], index, ch)
+        return self._get_volume(self._HP_OUTS[self._id], index, ch)
 
 
     def get_headphone_source_labels(self, target):
         labels = []
-        if len(self._hp_sources[self._id]) > 0:
-            for mixer in self._labels[self._id]['mixers']:
+        if len(self._HP_SOURCES[self._id]) > 0:
+            for mixer in self._LABELS[self._id]['mixers']:
                 labels.append(mixer)
-            if self._aux_output[self._id]:
+            if self._AUX_OUTPUT[self._id]:
                 labels.append("aux-1/2")
         return labels
 
     def set_headphone_source(self, target, source):
         index = self._refer_hp_data(target)
-        if source in self._labels[self._id]['mixers']:
-            ch = self._labels[self._id]['mixers'].index(source)
+        if source in self._LABELS[self._id]['mixers']:
+            ch = self._LABELS[self._id]['mixers'].index(source)
         elif source.find('aux') == 0:
-            ch = len(self._labels[self._id]['mixers'])
+            ch = len(self._LABELS[self._id]['mixers'])
         else:
             raise ValueError('Invalid argument for output target')
-        fb = self._hp_sources[self._id][index][0]
-        value = self._hp_sources[self._id][index][1][ch]
+        fb = self._HP_SOURCES[self._id][index][0]
+        value = self._HP_SOURCES[self._id][index][1][ch]
         AvcAudio.set_selector_state(self.fcp, 0, 'current', fb, value)
 
     def get_headphone_source(self, target):
         index = self._refer_hp_data(target)
-        fb = self._hp_sources[self._id][index][0]
+        fb = self._HP_SOURCES[self._id][index][0]
         value = AvcAudio.get_selector_state(self.fcp, 0, 'current', fb)
-        ch = self._hp_sources[self._id][index][1][value]
-        if ch < len(self._labels[self._id]['mixers']):
-            return self._labels[self._id]['mixers'][ch]
+        ch = self._HP_SOURCES[self._id][index][1][value]
+        if ch < len(self._LABELS[self._id]['mixers']):
+            return self._LABELS[self._id]['mixers'][ch]
         return 'aux-1/2'
 
     def get_meter_labels(self):
-        return self._labels[self._id]['meters']
+        return self._LABELS[self._id]['meters']
 
     # 0x0000ffff - 0x7fffffff
     # db = 20 * log10(vol / 0x80000000)
     # vol = 0, then db = -144.0
     # may differs analog-in and the others.
     def get_meters(self):
-        labels = self._labels[self._id]['meters']
+        labels = self._LABELS[self._id]['meters']
         meters = {}
         req = Hinawa.FwReq()
-        current = req.read(self, 0xffc700600000, self._meters[self._id])
+        current = req.read(self, 0xffc700600000, self._METERS[self._id])
         for i, name in enumerate(labels):
             meters[name] = current[i]
         if len(current) > len(labels):
