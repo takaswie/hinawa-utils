@@ -115,8 +115,8 @@ def _handle_target_source(unit, args, cmd, targets_func, sources_func,
         target = args[0]
         if len(args) >= 2 and args[1] in OPS:
             op = args[1]
-            if len(args) >= 3 and op == 'set' and \
-               args[2] in sources_func(target):
+            if (len(args) >= 3 and op == 'set' and
+                args[2] in sources_func(target)):
                 source = args[2]
                 set_func(target, source)
                 return True
