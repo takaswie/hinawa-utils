@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+import time
+import signal
+import sys
+
 from misc.cui_kit import CuiKit
 from bebob.maudio_normal import MaudioNormal
 
@@ -140,7 +144,6 @@ def handle_output_source(unit, args):
                                  unit.get_output_source)
 
 def handle_listen_metering(unit, args):
-    import time, signal, sys
     # This is handled by another context.
     def handle_unix_signal(signum, frame):
         sys.exit()

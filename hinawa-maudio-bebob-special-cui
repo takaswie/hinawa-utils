@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import time
+import signal
 import sys
 
 from misc.cui_kit import CuiKit
@@ -142,7 +144,6 @@ def handle_output_source(unit, args):
         print('    source ({0}): {1}'.format(output, unit.get_output_source_labels(output)))
 
 def handle_listen_metering(unit, args):
-    import time, signal, sys
     # This is handled by another context.
     def handle_unix_signal(signum, frame):
         sys.exit()

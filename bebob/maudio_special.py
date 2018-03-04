@@ -1,5 +1,6 @@
 import time
 import gi
+from array import array
 
 gi.require_version('Hinawa', '1.0')
 from gi.repository import Hinawa
@@ -8,8 +9,6 @@ from bebob.bebob_unit import BebobUnit
 
 from ta1394.general import AvcConnection
 from ta1394.audio import AvcAudio
-
-from array import array
 
 __all__ = ['MaudioSpecial']
 

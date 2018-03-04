@@ -1,3 +1,4 @@
+import re
 import gi
 
 gi.require_version('Hinawa', '1.0')
@@ -8,8 +9,6 @@ from bebob.bebob_unit import BebobUnit
 from ta1394.general import AvcConnection
 from ta1394.ccm import AvcCcm
 from ta1394.audio import AvcAudio
-
-import re
 
 __all__ = ['MaudioNormal']
 
