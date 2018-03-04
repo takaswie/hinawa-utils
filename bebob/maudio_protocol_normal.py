@@ -6,22 +6,24 @@ from gi.repository import Hinawa
 
 from bebob.bebob_unit import BebobUnit
 
+from bebob.maudio_protocol_abstract import MaudioProtocolAbstract
+
 from ta1394.general import AvcConnection
 from ta1394.ccm import AvcCcm
 from ta1394.audio import AvcAudio
 
-__all__ = ['MaudioNormal']
+__all__ = ['MaudioProtocolNormal']
 
-class MaudioNormal(BebobUnit):
-    _IDS = {
-        0x00000a: (0, "Ozonic"),
-        0x010062: (1, "Firewire Solo"),
-        0x010060: (2, "Firewire Audiophile"),
-        0x010046: (3, "Firewire 410"),
+class MaudioProtocolNormal(MaudioProtocolAbstract):
+    _IDS = (
+        0x00000a,    # Ozonic
+        0x010062,    # Firewire Solo
+        0x010060,    # Firewire Audiophile
+        0x010046,    # Firewire 410
         # Need information.
         #   NRV10
         #   ProFire Lightbridge
-    }
+    )
 
     _LABELS = (
         {'inputs':  ('analog-1/2', 'analog-3/4', 'stream-1/2', 'stream-3/4'),
@@ -124,8 +126,8 @@ class MaudioNormal(BebobUnit):
 
     # = _LABELS['outputs']
     _OUTPUTS = (
-        (( 5, (1, 2)), ( 6, (1, 2))),
-        (( 2, (1, 2)), ( 3, (1, 2))),
+        (),
+        (),
         ((12, (1, 2)), (13, (1, 2)), (14, (1, 2))),
         ((10, (1, 2)), (11, (1, 2)), (12, (1, 2)), (13, (1, 2)), (14, (1, 2))),
     )
@@ -162,15 +164,11 @@ class MaudioNormal(BebobUnit):
          'ADAT':        AvcCcm.get_unit_signal_addr('external', 3)},
     )
 
-    def __init__(self, path):
-        super().__init__(path)
-        model_id = -1
-        for quad in self.get_config_rom():
-            if quad >> 24 == 0x17:
-                model_id = quad & 0x00ffffff
-                index = self._IDS[model_id][0]
-        if model_id < 0:
+    def __init__(self, unit, debug, model_id):
+        super().__init__(unit, debug)
+        if model_id not in self._IDS:
             raise OSError('Not supported')
+        index = self._IDS.index(model_id)
         self._labels = self._LABELS[index]
         self._inputs = self._INPUTS[index]
         self._aux_inputs = self._AUX_INPUTS[index]
@@ -196,10 +194,12 @@ class MaudioNormal(BebobUnit):
     def _set_volume(self, targets, index, ch, db):
         fb, ch = self._refer_fb_data(targets, index, ch)
         data = AvcAudio.build_data_from_db(db)
-        AvcAudio.set_feature_volume_state(self.fcp, 0, 'current', fb, ch, data)
+        AvcAudio.set_feature_volume_state(self._unit.fcp, 0, 'current', fb, ch,
+                                          data)
     def _get_volume(self, targets, index, ch):
         fb, ch = self._refer_fb_data(targets, index, ch)
-        data = AvcAudio.get_feature_volume_state(self.fcp, 0, 'current', fb, ch)
+        data = AvcAudio.get_feature_volume_state(self._unit.fcp, 0, 'current',
+                                                 fb, ch)
         return AvcAudio.parse_data_to_db(data)
 
     def get_input_labels(self):
@@ -216,6 +216,8 @@ class MaudioNormal(BebobUnit):
         return self._get_volume(self._inputs, index, ch)
 
     def get_output_labels(self):
+        if len(self._outputs) == 0:
+            return ()
         return self._labels['outputs']
     def _refer_out_data(self, target):
         if target not in self._labels['outputs']:
@@ -233,13 +235,14 @@ class MaudioNormal(BebobUnit):
             raise ValueError('Invalid argument for master channel')
         fb = self._aux_output
         data = AvcAudio.build_data_from_db(db)
-        AvcAudio.set_feature_volume_state(self.fcp, 0, 'current', fb, ch, data)
+        AvcAudio.set_feature_volume_state(self._unit.fcp, 0, 'current', fb, ch,
+                                          data)
     def get_aux_volume(self, ch):
         if ch > 2:
             raise ValueError('Invalid argument for master channel')
         fb = self._aux_output
-        data = AvcAudio.get_feature_volume_state(self.fcp, 0, 'current', fb,
-                                                 ch)
+        data = AvcAudio.get_feature_volume_state(self._unit.fcp, 0, 'current',
+                                                 fb, ch)
         return AvcAudio.parse_data_to_db(data)
 
     def get_headphone_labels(self):
@@ -296,11 +299,11 @@ class MaudioNormal(BebobUnit):
             data = (0x00, 0x00)
         else:
             data = (0x80, 0x00)
-        AvcAudio.set_processing_mixer_state(self.fcp, 0, 'current',
+        AvcAudio.set_processing_mixer_state(self._unit.fcp, 0, 'current',
                                             out_fb, in_fb, in_ch, out_ch, data)
     def get_mixer_routing(self, target, source):
         in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(target, source)
-        data = AvcAudio.get_processing_mixer_state(self.fcp, 0, 'current',
+        data = AvcAudio.get_processing_mixer_state(self._unit.fcp, 0, 'current',
                                                    out_fb, in_fb, in_ch, out_ch)
         return data[0] == 0x00 and data[1] == 0x00
 
@@ -324,11 +327,11 @@ class MaudioNormal(BebobUnit):
             raise ValueError('Invalid argument for output target')
         fb = self._hp_sources[index][0]
         value = self._hp_sources[index][1][ch]
-        AvcAudio.set_selector_state(self.fcp, 0, 'current', fb, value)
+        AvcAudio.set_selector_state(self._unit.fcp, 0, 'current', fb, value)
     def get_headphone_source(self, target):
         index = self._refer_hp_data(target)
         fb = self._hp_sources[index][0]
-        value = AvcAudio.get_selector_state(self.fcp, 0, 'current', fb)
+        value = AvcAudio.get_selector_state(self._unit.fcp, 0, 'current', fb)
         ch = self._hp_sources[index][1][value]
         if ch < len(self._labels['mixers']):
             return self._labels['mixers'][ch]
@@ -350,11 +353,11 @@ class MaudioNormal(BebobUnit):
         else:
             raise ValueError('Invalid argument for output target')
         fb = self._output_sources[index]
-        AvcAudio.set_selector_state(self.fcp, 0, 'current', fb, value)
+        AvcAudio.set_selector_state(self._unit.fcp, 0, 'current', fb, value)
     def get_output_source(self, target):
         index = self._refer_out_data(target)
         fb = self._output_sources[index]
-        value = AvcAudio.get_selector_state(self.fcp, 0, 'current', fb)
+        value = AvcAudio.get_selector_state(self._unit.fcp, 0, 'current', fb)
         if value == 1 and self._aux_output:
             return 'aux-1/2'
         return self._labels['mixers'][index]
@@ -367,16 +370,21 @@ class MaudioNormal(BebobUnit):
         labels = self._labels['meters']
         meters = {}
         req = Hinawa.FwReq()
-        current = req.read(self, 0xffc700600000, self._meters)
+        current = req.read(self._unit, 0xffc700600000, self._meters)
         for i, name in enumerate(labels):
             meters[name] = current[i]
         if len(current) > len(labels):
             misc = current[len(labels)]
-            meters['switch-0'] = (misc >> 24) & 0x0f
-            meters['switch-1'] = (misc >> 28) & 0x0f
+            # From Audiophile, several bits stand by one operation.
+            meters['switch-0'] = 0
+            meters['switch-1'] = 0
             meters['rotery-0'] = (misc >> 16) & 0x0f
             meters['rotery-1'] = (misc >> 20) & 0x0f
             meters['rotery-2'] = 0
+            if meters['rotery-0'] == 0:
+                meters['switch-0'] = (misc >> 24) & 0x0f
+            if meters['switch-0'] == 0:
+                meters['switch-1'] = (misc >> 28) & 0x0f
             meters['rate'] = AvcConnection.sampling_rates[(misc >> 8) & 0xff]
             meters['sync'] = (misc >> 0) & 0x0f
         return meters
@@ -384,12 +392,24 @@ class MaudioNormal(BebobUnit):
     def get_clock_source_labels(self):
         return self._clocks.keys()
     def set_clock_source(self, src):
+        if self._unit.get_property('streaming'):
+            raise ValueError('Packet streaming already runs.')
         dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
         addr = self._clocks[src]
-        AvcCcm.set_signal_source(self.fcp, addr, dst)
+        AvcCcm.set_signal_source(self._unit.fcp, addr, dst)
     def get_clock_source(self):
         dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
-        curr = AvcCcm.get_signal_source(self.fcp, dst)
+        curr = AvcCcm.get_signal_source(self._unit.fcp, dst)
         for name, addr in self._clocks.items():
             if AvcCcm.compare_addrs(curr, AvcCcm.parse_signal_addr(addr)):
                 return name
+
+    def get_sampling_rate(self):
+        in_rate = AvcConnection.get_plug_signal_format(self._unit.fcp, 'input',
+                                                       0)
+        out_rate = AvcConnection.get_plug_signal_format(self._unit.fcp,
+                                                        'output', 0)
+        if in_rate != out_rate:
+            raise OSError('Unexpected state of the unit: {0}!={1}'.format(
+                                                            in_rate, out_rate))
+        return in_rate

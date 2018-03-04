@@ -1,13 +1,17 @@
 from bebob.bebob_unit import BebobUnit
 
-from bebob.maudio_protocol_abstract import MaudioProtocolAbstract
+from bebob.maudio_protocol_normal import MaudioProtocolNormal
 
 __all__ = ['MaudioUnit']
 
 class MaudioUnit(BebobUnit):
     _SUPPORTED_MODELS = (
         # VendorID, ModelID, ModelName, Protocol
-        (0x000000, 0x000000, MaudioProtocolAbstract),
+        (0x000d6c, 0x00000a, MaudioProtocolNormal),  # Ozonic
+        (0x000d6c, 0x010062, MaudioProtocolNormal),  # Firewire Solo
+        (0x000d6c, 0x010060, MaudioProtocolNormal),  # Firewire Audiophile
+        (0x000d6c, 0x010081, MaudioProtocolNormal),  # NRV10
+        (0x000d6c, 0x0100a1, MaudioProtocolNormal),  # Profire Lightbridge
     )
 
     def __init__(self, path):
