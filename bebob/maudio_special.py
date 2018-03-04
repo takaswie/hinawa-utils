@@ -174,6 +174,8 @@ class MaudioSpecial(BebobUnit):
         data.append(value & 0xff)
         return AvcAudio.parse_data_to_db(data)
 
+    def get_input_labels(self):
+        return self.input_labels
     def set_input_volume(self, target, ch, db):
         if target not in self.input_labels:
             raise ValueError('invalid argument for input stereo pair')
@@ -191,6 +193,8 @@ class MaudioSpecial(BebobUnit):
             index = index + 8
         return self._get_volume(index, ch)
 
+    def get_output_labels(self):
+        return self.output_labels
     def set_output_volume(self, target, ch, db):
         if target not in self.output_labels:
             raise ValueError('invalid argument for output stereo pair')
@@ -217,6 +221,8 @@ class MaudioSpecial(BebobUnit):
         index = 13
         return self._get_volume(index, ch)
 
+    def get_headphone_labels(self):
+        return self.headphone_labels
     def set_headphone_volume(self, target, ch, db):
         if target not in self.headphone_labels:
             raise ValueError('invalid argument for heaphone stereo pair')
@@ -247,6 +253,10 @@ class MaudioSpecial(BebobUnit):
         index = 26 + self.input_labels.index(target)
         return self._get_volume(index, ch)
 
+    def get_mixer_labels(self):
+        return self.mixer_labels
+    def get_mixer_source_labels(self):
+        return self.input_labels
     def _calculate_mixer_bit(self, mixer, source):
         if source.find('stream') == 0:
             pos = 0
@@ -290,6 +300,8 @@ class MaudioSpecial(BebobUnit):
         datum = self._cache[index]
         return (datum & (1 << pos)) > 0
 
+    def get_headphone_source_labels(self, target):
+        return self.headphone_source_labels
     def set_headphone_source(self, target, source, value):
         if target not in self.headphone_labels:
             raise ValueError('Invalid argument for output stereo pair')
