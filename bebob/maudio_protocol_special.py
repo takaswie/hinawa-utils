@@ -4,20 +4,20 @@ import gi
 gi.require_version('Hinawa', '1.0')
 from gi.repository import Hinawa
 
-from bebob.bebob_unit import BebobUnit
+from bebob.maudio_protocol_abstract import MaudioProtocolAbstract
 
 from ta1394.general import AvcConnection
 from ta1394.audio import AvcAudio
 
-__all__ = ['MaudioSpecial']
+__all__ = ['MaudioProtocolSpecial']
 
-class MaudioSpecial(BebobUnit):
+class MaudioProtocolSpecial(MaudioProtocolAbstract):
     BASE_ADDR = 0xffc700700000
     METER_ADDR = 0xffc700600000
-    _IDS = {
-        0x010071: (0, "Firewire 1814"),
-        0x010091: (1, "ProjectMix I/O"),
-    }
+    _IDS = (
+        0x010071,   # Firewire 1814
+        0x010091,   # ProjectMix I/O
+    )
 
     _INPUT_LABELS = (
         'stream-1/2', 'stream-3/4',
@@ -54,19 +54,16 @@ class MaudioSpecial(BebobUnit):
     # Balance Control' in 'AV/C Audio Subunit Specification 1.0 (1394TA
     # 1999008)'.
 
-    def __init__(self, path):
-        super().__init__(path)
-        model_id = -1
-        for quad in self.get_config_rom():
-            if quad >> 24 == 0x17:
-                model_id = quad & 0x00ffffff
-                self._id = self._IDS[model_id][0]
-        if model_id < 0:
+    def __init__(self, unit, debug, model_id):
+        super().__init__(unit, debug)
+        if model_id not in self._IDS:
             raise OSError('Not supported')
+
         # For process local cache.
         self._cache = [0x00000000] * 40
         # For permanent cache.
-        self._filepath = '/tmp/hinawa-{0:08x}'.format(self.get_property('guid'))
+        guid = self._unit.get_property('guid')
+        self._filepath = '/tmp/hinawa-{0:08x}'.format(guid)
         self._load_cache()
 
     # Read transactions are not allowed. We cache data.
@@ -128,7 +125,7 @@ class MaudioSpecial(BebobUnit):
         req = Hinawa.FwReq()
         while True:
             try:
-                req.write(self, self.BASE_ADDR + index * 4, data)
+                req.write(self._unit, self.BASE_ADDR + index * 4, data)
                 break
             except:
                 if count > 10:
@@ -371,7 +368,7 @@ class MaudioSpecial(BebobUnit):
     def get_meters(self):
         meters = {}
         req = Hinawa.FwReq()
-        data = req.read(self, self.METER_ADDR, 21)
+        data = req.read(self._unit, self.METER_ADDR, 21)
         for i, label in enumerate(self._METERING_LABELS):
             if i % 2:
                 meters[self._METERING_LABELS[i]] = data[1 + i // 2] >> 16
@@ -385,3 +382,15 @@ class MaudioSpecial(BebobUnit):
                             AvcConnection.sampling_rates[(data[-1] >> 8) & 0x0f]
             meters['sync'] = (data[-1] & 0x0f) > 0
         return meters
+
+    def get_clock_source_labels(self):
+        return ()
+    def set_clock_source(self, src):
+        print('Not supported. Please use ALSA control interface for this aim.')
+    def get_clock_source(self):
+        print('Not supported. Please use ALSA control interface for this aim.')
+
+    def get_sampling_rate(self):
+        # Current rate is correctly returned from a plug 0 for output direction
+        # only.
+        return AvcConnection.get_plug_signal_format(self._unit.fcp, 'output', 0)

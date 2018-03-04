@@ -14,8 +14,6 @@
     * CUI tool for Lacie FireWire speakers
  * hinawa-maudio-bebob-cui
     * CUI tool for M-Audio FireWire series based on BeBoB solution
- * hinawa-maudio-bebob-special-cui
-    * CUI tool for M-Audio FireWire series with largely customized firmware
  * hinawa-oxfw-generic-cui
     * CUI tool for OXFW generic functionalities
  * hinawa-tascam-fireone-cui
