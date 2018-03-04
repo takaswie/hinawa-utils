@@ -12,6 +12,8 @@
     * CUI tool for Griffin Firewave
  * hinawa-lacie-speakers-cui
     * CUI tool for Lacie FireWire speakers
+ * hinawa-maudio-bebob-cui
+    * CUI tool for M-Audio FireWire series based on BeBoB solution
  * hinawa-maudio-bebob-normal-cui
     * CUI tool for M-Audio FireWire series
  * hinawa-maudio-bebob-special-cui
