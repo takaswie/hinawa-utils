@@ -8,139 +8,196 @@ from misc.cui_kit import CuiKit
 from bebob.maudio_special import MaudioSpecial
 
 def handle_input_volume(unit, args):
-    if len(args) > 1:
+    CHS = (0, 1)
+    OPS = ('set', 'get')
+    targets = unit.get_input_labels()
+    if len(args) >= 1 and args[0] in targets:
         target = args[0]
-        ch = int(args[1])
-        if target in unit.get_input_labels() and ch < 2:
-            if len(args) > 2:
-                db = float(args[2])
-                unit.set_input_volume(target, ch, db)
-            else:
-                print(unit.get_input_volume(target, ch))
-            return True
+        if len(args) >= 2 and int(args[1]) in CHS:
+            ch = int(args[1])
+            if len(args) >= 3 and args[2] in OPS:
+                op = args[2]
+                if len(args) >= 4 and op == 'set':
+                    db = float(args[3])
+                    unit.set_input_volume(target, ch, db)
+                    return True
+                else:
+                    print(unit.get_input_volume(target, ch))
+                    return True
     print('Arguments for input-volume command:')
-    print('  target:    [{0}]'.format((', ').join(unit.get_input_labels())))
-    print('  ch:        [0, 1]')
-    print('  dB:        [-128.0..128.0]')
+    print('  input-volume TARGET CH [dB]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    CH:     [{0}]'.format('|'.join(map(str, CHS))))
+    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    dB:     [-128.0..128.0] if OP=set')
     return False
 
 def handle_output_volume(unit, args):
-    if len(args) > 1:
+    CHS = (0, 1)
+    OPS = ('set', 'get')
+    targets = unit.get_output_labels()
+    if len(args) >= 1 and args[0] in targets:
         target = args[0]
-        ch = int(args[1])
-        if target in unit.get_output_labels() and ch < 2:
-            if len(args) > 2:
-                db = float(args[2])
-                unit.set_output_volume(target, ch, db)
-            else:
-                print(unit.get_output_volume(target, ch))
-            return True
+        if len(args) >= 2 and int(args[1]) in CHS:
+            ch = int(args[1])
+            if len(args) >= 3 and args[2] in OPS:
+                op = args[2]
+                if len(args) >= 4 and op == 'set':
+                    db = float(args[3])
+                    unit.set_output_volume(target, ch, db)
+                    return True
+                elif op == 'get':
+                    print(unit.get_output_volume(target, ch))
+                    return True
     print('Arguments for output-volume command:')
-    print('  target:    [{0}]'.format((', ').join(unit.get_output_labels())))
-    print('  ch:        [0, 1]')
-    print('  dB:        [-128.0..128.0]')
+    print('  output-volume TARGET CH OP [dB]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    CH:     [{0}]'.format('|'.join(map(str, CHS))))
+    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    dB:     [-128.0..128.0] if OP=set')
     return False
 
 def handle_aux_volume(unit, args):
-    if len(args) > 0:
+    CHS = (0, 1)
+    OPS = ('set', 'get')
+    if len(args) >= 1 and int(args[0]) in CHS:
         ch = int(args[0])
-        if ch < 2:
-            if len(args) > 1:
-                db = float(args[1])
+        if len(args) >= 2 and args[1] in OPS:
+            op = args[1]
+            if len(args) >= 3 and op == 'set':
+                db = float(args[2])
                 unit.set_aux_volume(ch, db)
-            else:
+                return True
+            elif op == 'get':
                 print(unit.get_aux_volume(ch))
-            return True
+                return True
     print('Arguments for aux-volume command:')
-    print('  ch:        [0, 1]')
-    print('  dB:        [-128.0..128.0]')
+    print('  aux-volume CH OP [dB]')
+    print('    CH:    [{0}]'.format('|'.join(map(str, CHS))))
+    print('    OP:    [{0}]'.format('|'.join(OPS)))
+    print('    dB:    [-128.0..128.0] if OP=set')
     return False
 
 def handle_headphone_volume(unit, args):
-    if len(args) > 1:
+    CHS = (0, 1)
+    OPS = ('set', 'get')
+    targets = unit.get_headphone_labels()
+    if len(args) >= 1 and args[0] in targets:
         target = args[0]
-        ch = int(args[1])
-        if target in unit.get_headphone_labels() and ch < 2:
-            if len(args) > 2:
-                db = float(args[2])
-                unit.set_headphone_volume(target, ch, db)
-            else:
-                print(unit.get_headphone_volume(target, ch))
-            return True
+        if len(args) >= 2 and int(args[1]) in CHS:
+            ch = int(args[1])
+            if len(args) >= 3 and args[2] in OPS:
+                op = args[2]
+                if len(args) >= 4 and op == 'set':
+                    db = float(args[3])
+                    unit.set_headphone_volume(target, ch, db)
+                    return True
+                elif op == 'get':
+                    print(unit.get_headphone_volume(target, ch))
+                    return True
     print('Arguments for headphone-volume command:')
-    print('  target:    [{0}]'.format((', ').join(unit.get_headphone_labels())))
-    print('  ch:        [0, 1]')
-    print('  dB:        [-128.0..128.0]')
+    print('  headphone-volume TARGET CH [dB]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    CH:     [{0}]'.format('|'.join(map(str, CHS))))
+    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    dB:     [-128.0..128.0] if OP=set')
     return False
 
 def handle_aux_input(unit, args):
-    if len(args) > 1:
+    CHS = (0,1 )
+    OPS = ('set', 'get')
+    targets = unit.get_input_labels()
+    if len(args) >= 1 and args[0] in targets:
         target = args[0]
-        ch = int(args[1])
-        if target in unit.get_input_labels() and ch < 2:
-            if len(args) > 2:
-                db = float(args[2])
-                unit.set_aux_input(target, ch, db)
-            else:
-                print(unit.get_aux_input(target, ch))
-            return True
+        if len(args) >= 2 and int(args[1]) in CHS:
+            ch = int(args[1])
+            if len(args) >= 3 and args[2] in OPS:
+                op = args[2]
+                if len(args) >= 4 and op == 'set':
+                    db = float(args[3])
+                    unit.set_aux_input(target, ch, db)
+                    return True
+                else:
+                    print(unit.get_aux_input(target, ch))
+                    return True
     print('Arguments for aux-input command:')
-    print('  target:    [{0}]'.format((', ').join(unit.get_input_labels())))
-    print('  ch:        [0, 1]')
-    print('  dB:        [-128.0..128.0]')
+    print('  aux-input TARGET CH [dB]')
+    print('    TARGET:  [{0}]'.format('|'.join(targets)))
+    print('    CH:      [{0}]'.format('|'.join(map(str, CHS))))
+    print('    OP:      [{0}]'.format('|'.join(OPS)))
+    print('    dB:      [-128.0..128.0] if OP=set')
     return False
 
 def handle_mixer_routing(unit, args):
-    if len(args) > 1:
-        mixer = args[0]
-        source = args[1]
-        if (mixer in unit.get_mixer_labels() and
-            source in unit.get_mixer_source_labels()):
-            if len(args) > 2:
-                value = int(args[2])
-                unit.set_mixer_routing(mixer, source, value)
-            else:
-                print(unit.get_mixer_routing(mixer, source))
-            return True
+    OPS =  ('set', 'get')
+    targets = unit.get_mixer_labels()
+    sources = unit.get_mixer_source_labels()
+    if len(args) >= 1 and args[0] in targets:
+        target = args[0]
+        if len(args) >= 2 and args[1] in sources:
+            source = args[1]
+            if len(args) >= 3 and args[2] in OPS:
+                op = args[2]
+                if len(args) >= 4 and op == 'set':
+                    enable = bool(int(args[3]))
+                    unit.set_mixer_routing(target, source, enable)
+                    return True
+                elif op == 'get':
+                    print(unit.get_mixer_routing(target, source))
+                    return True
     print('Arguments for mixer-routing command:')
-    print('  mixer-routing mixer source [state]')
-    print('  mixer:     {0}'.format(unit.get_mixer_labels()))
-    print('  source:    {0}'.format(unit.get_input_labels()))
-    print('  state:     0, 1')
+    print('  mixer-routing MIXER SRC OP [ENABLE]')
+    print('    MIXER:  [{0}]'.format('|'.join(targets)))
+    print('    SRC:    [{0}]'.format('|'.join(sources)))
+    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    ENABLE: [0|1]')
     return False
 
 def handle_headphone_source(unit, args):
-    if len(args) > 0:
-        headphone = args[0]
-        if len(args) > 1:
-            source = args[1]
-            unit.set_headphone_source(headphone, source)
-        else:
-            print(unit.get_headphone_source(headphone))
-        return True
+    OPS = ('set', 'get')
+    targets = unit.get_headphone_labels()
+    if len(args) >= 1 and args[0] in targets:
+        target = args[0]
+        if len(args) >= 2 and args[1] in OPS:
+            op = args[1]
+            sources = unit.get_headphone_source_labels(target)
+            if len(args) >= 3 and op == 'set' and args[2] in sources:
+                source = args[2]
+                unit.set_headphone_source(target, source)
+                return True
+            elif op == 'get':
+                print(unit.get_headphone_source(target))
+                return True
     print('Arguments for headphone-source command:')
-    print('  headphone-source headphone source')
-    print('    headphone: {0}'.format(', '.join(unit.get_headphone_labels())))
-    for target in unit.get_headphone_labels():
-        print('    source:    {0}'.format(', '.join(unit.get_headphone_source_labels(target))))
-    return False
+    print('  headphone-source TARGET OP [SRC]')
+    print('    TARGET:  [{0}]'.format('|'.join(targets)))
+    print('    OP:      [{0}]'.format('|'.join(OPS)))
+    for target in targets:
+        sources = unit.get_headphone_source_labels(target)
+        print('    SRC:     [{0}]'.format('|'.join(sources)))
 
 def handle_output_source(unit, args):
-    if len(args) > 0:
-        output = args[0]
-        if output in unit.get_output_labels():
-            if len(args) > 1:
-                source = args[1]
+    OPS = ('set', 'get')
+    targets = unit.get_output_labels()
+    if len(args) >= 1 and args[0] in targets:
+        target = args[0]
+        if len(args) >= 2 and args[1] in OPS:
+            op = args[1]
+            sources = unit.get_output_sources(target)
+            if len(args) >= 3 and op == 'set' and args[2] in sources:
+                source = args[2]
                 unit.set_output_source(output, source)
-            else:
+                return True
+            elif op == 'get':
                 print(unit.get_output_source(output))
-            return True
+                return True
     print('Arguments for output-source command:')
-    print('  output-source output source')
-    outputs = unit.get_output_labels()
-    print('    output: {0}'.format(', '.join(outputs)))
-    for output in outputs:
-        print('    source ({0}): {1}'.format(output, unit.get_output_source_labels(output)))
+    print('  output-source TARGET OP [SRC]')
+    print('    TARGET:  [{0}]'.format('|'.join(targets)))
+    print('    OP:      [{0}]'.format('|'.join(OPS)))
+    for target in targets:
+        sources = unit.get_output_source_labels(target)
+        print('    SRC:     [{0}]'.format('|'.join(sources)))
 
 def handle_listen_metering(unit, args):
     # This is handled by another context.
