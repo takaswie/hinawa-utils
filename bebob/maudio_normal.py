@@ -248,7 +248,7 @@ class MaudioNormal(BebobUnit):
         return self._LABELS[self._id]['inputs']
     def get_mixer_labels(self):
         return self._LABELS[self._id]['mixers']
-    def _refer_mixer_data(self, source, target):
+    def _refer_mixer_data(self, target, source):
         if source not in self._LABELS[self._id]['inputs']:
             raise ValueError('Invalid argument for mixer input')
         if target not in self._LABELS[self._id]['mixers']:
@@ -260,16 +260,16 @@ class MaudioNormal(BebobUnit):
         out_fb = self._MIXERS[self._id][mixer][0]
         out_ch = self._MIXERS[self._id][mixer][1][0]  # Use left channel.
         return (in_fb, in_ch, out_fb, out_ch)
-    def set_mixer_routing(self, source, target, enable):
-        in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(source, target)
+    def set_mixer_routing(self, target, source, enable):
+        in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(target, source)
         if enable:
             data = (0x00, 0x00)
         else:
             data = (0x80, 0x00)
         AvcAudio.set_processing_mixer_state(self.fcp, 0, 'current',
                                             out_fb, in_fb, in_ch, out_ch, data)
-    def get_mixer_routing(self, source, target):
-        in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(source, target)
+    def get_mixer_routing(self, target, source):
+        in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(target, source)
         data = AvcAudio.get_processing_mixer_state(self.fcp, 0, 'current',
                                                    out_fb, in_fb, in_ch, out_ch)
         return data[0] == 0x00 and data[1] == 0x00
