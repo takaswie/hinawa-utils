@@ -35,16 +35,16 @@ def _handle_target_volume(unit, args, cmd, targets_func, set_func, get_func):
     print('    dB:       [-128.00..128.00] if OP=set')
     return False
 
-def handle_input_volume(unit, args):
-    return _handle_target_volume(unit, args, 'input-volume',
+def handle_input_gain(unit, args):
+    return _handle_target_volume(unit, args, 'input-gain',
                                  unit.get_input_labels,
-                                 unit.set_input_volume, unit.get_input_volume)
+                                 unit.set_input_gain, unit.get_input_gain)
 
-def handle_aux_input_volume(unit, args):
+def handle_aux_input(unit, args):
     return _handle_target_volume(unit, args, 'aux-input-volume',
                                  unit.get_aux_input_labels,
-                                 unit.set_aux_input_volume,
-                                 unit.get_aux_input_volume)
+                                 unit.set_aux_input,
+                                 unit.get_aux_input)
 
 def handle_output_volume(unit, args):
     return _handle_target_volume(unit, args, 'output-volume',
@@ -58,7 +58,7 @@ def handle_headphone_volume(unit, args):
                                  unit.set_headphone_volume,
                                  unit.get_headphone_volume)
 
-def handle_aux_output_volume(unit, args):
+def handle_aux_volume(unit, args):
     CHS = (0, 1)
     OPS = ('set', 'get')
     if len(unit.get_aux_input_labels()) == 0:
@@ -70,10 +70,10 @@ def handle_aux_output_volume(unit, args):
             op = args[1]
             if len(args) > 2 and op == 'set':
                 db = float(args[2])
-                unit.set_aux_master_volume(ch, db)
+                unit.set_aux_volume(ch, db)
                 return True
             elif op == 'get':
-                print(unit.get_aux_master_volume(ch))
+                print(unit.get_aux_volume(ch))
                 return True
     print('Arguments for aux-output-volume command:')
     print('  aux-output-volume CH OP [dB]')
@@ -152,7 +152,6 @@ def handle_listen_metering(unit, args):
     def handle_unix_signal(signum, frame):
         sys.exit()
     signal.signal(signal.SIGINT, handle_unix_signal)
-    labels = unit.get_meter_labels()
     while 1:
         # At higher sampling rate, this causes timeout frequently.
         try:
@@ -185,9 +184,9 @@ def handle_clock_source(unit, args):
     return False
 
 cmds = {
-    'input-volume':         handle_input_volume,
-    'aux-input-volume':     handle_aux_input_volume,
-    'aux-output-volume':    handle_aux_output_volume,
+    'input-gain':           handle_input_gain,
+    'aux-input':            handle_aux_input,
+    'aux-volume':           handle_aux_volume,
     'mixer-routing':        handle_mixer_routing,
     'output-volume':        handle_output_volume,
     'output-source':        handle_output_source,

@@ -1,6 +1,5 @@
-import time
-import gi
 from array import array
+import gi
 
 gi.require_version('Hinawa', '1.0')
 from gi.repository import Hinawa
@@ -135,7 +134,6 @@ class MaudioSpecial(BebobUnit):
                 if count > 10:
                     raise OSError('Fail to communicate to the unit.')
                 count += 1
-                time.sleep(0.2)
         # Refresh process cache.
         for i, datum in enumerate(data):
             self._cache[index + i] = datum
@@ -176,14 +174,14 @@ class MaudioSpecial(BebobUnit):
 
     def get_input_labels(self):
         return self._INPUT_LABELS
-    def set_input_volume(self, target, ch, db):
+    def set_input_gain(self, target, ch, db):
         if target not in self._INPUT_LABELS:
             raise ValueError('invalid argument for input stereo pair')
         index = self._INPUT_LABELS.index(target)
         if index > 7:
             index = index + 8
         self._set_volume(index, ch, db)
-    def get_input_volume(self, target, ch):
+    def get_input_gain(self, target, ch):
         if target not in self._INPUT_LABELS:
             raise ValueError('invalid argument for input stereo pair')
         if ch > 1:
@@ -238,6 +236,8 @@ class MaudioSpecial(BebobUnit):
         index = 14 + self._HP_LABELS.index(target)
         return self._get_volume(index, ch)
 
+    def get_aux_input_labels(self):
+        return self._INPUT_LABELS
     def set_aux_input(self, target, ch, db):
         if target not in self._INPUT_LABELS:
             raise ValueError('Invalid argument for input stereo pair')

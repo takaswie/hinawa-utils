@@ -35,10 +35,10 @@ def _handle_target_volume(unit, args, cmd, targets_func, set_func, get_func):
     print('    dB:       [-128.00..128.00] if OP=set')
     return False
 
-def handle_input_volume(unit, args):
-    return _handle_target_volume(unit, args, 'input-volume',
+def handle_input_gain(unit, args):
+    return _handle_target_volume(unit, args, 'input-gain',
                                  unit.get_input_labels,
-                                 unit.set_input_volume, unit.get_input_volume)
+                                 unit.set_input_gain, unit.get_input_gain)
 
 def handle_aux_input(unit, args):
     return _handle_target_volume(unit, args, 'aux-input',
@@ -131,15 +131,18 @@ def _handle_target_source(unit, args, cmd, targets_func, sources_func,
     return False
 
 def handle_headphone_source(unit, args):
-    _handle_target_source(unit, args, 'headphone-source',
-                          unit.get_headphone_labels,
-                          unit.get_headphone_source_labels,
-                          unit.set_headphone_source, unit.get_headphone_source)
+    return _handle_target_source(unit, args, 'headphone-source',
+                                 unit.get_headphone_labels,
+                                 unit.get_headphone_source_labels,
+                                 unit.set_headphone_source,
+                                 unit.get_headphone_source)
 
 def handle_output_source(unit, args):
-    _handle_target_source(unit, args,  'output-source',
-                          unit.get_output_labels, unit.get_output_source_labels,
-                          unit.set_output_source, unit.get_output_source)
+    return _handle_target_source(unit, args,  'output-source',
+                                 unit.get_output_labels,
+                                 unit.get_output_source_labels,
+                                 unit.set_output_source,
+                                 unit.get_output_source)
 
 def handle_listen_metering(unit, args):
     # This is handled by another context.
@@ -159,7 +162,7 @@ def handle_listen_metering(unit, args):
     return True
 
 cmds = {
-    'input-volume':     handle_input_volume,
+    'input-gain':       handle_input_gain,
     'output-volume':    handle_output_volume,
     'aux-volume':       handle_aux_volume,
     'headphone-volume': handle_headphone_volume,
