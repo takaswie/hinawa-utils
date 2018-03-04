@@ -302,30 +302,31 @@ class MaudioSpecial(BebobUnit):
 
     def get_headphone_source_labels(self, target):
         return self._HP_SOURCE_LABELS
-    def set_headphone_source(self, target, source, value):
+    def set_headphone_source(self, target, source):
         if target not in self._HP_LABELS:
             raise ValueError('Invalid argument for output stereo pair')
         if source not in self._HP_SOURCE_LABELS:
             raise ValueError('Invalid argument for headphone source')
         pos = self._HP_LABELS.index(target) * 16
-        pos += self._HP_SOURCE_LABELS.index(source)
         index = 38
         datum = self._cache[index]
-        if value > 0:
-            datum = datum | (1 << pos)
-        else:
-            datum = datum & ~(1 << pos)
+        for i, name in enumerate(self._HP_SOURCE_LABELS):
+            if name == source:
+                datum |= 1 << (pos + i)
+            else:
+                datum &= ~(1 << (pos + i))
         self._write_status(index, datum)
-    def get_headphone_source(self, target, source):
+    def get_headphone_source(self, target):
         if target not in self._HP_LABELS:
             raise ValueError('Invalid argument for output stereo pair')
-        if source not in self._HP_SOURCE_LABELS:
-            raise ValueError('Invalid argument for headphone source')
         pos = self._HP_LABELS.index(target) * 16
-        pos += self._HP_SOURCE_LABELS.index(source)
         index = 38
         datum = self._cache[index]
-        return (datum & (1 << pos)) > 0
+        for i, name in enumerate(self._HP_SOURCE_LABELS):
+            if datum & (1 << (pos + i)):
+                return name
+        else:
+            raise OSError('Unexpected value in register cache')
 
     def get_output_source_labels(self, target):
         labels = []
