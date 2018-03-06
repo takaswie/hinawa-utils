@@ -1,4 +1,4 @@
-import re
+from re import match
 from array import array
 
 import gi
@@ -13,13 +13,13 @@ class Dg00xUnit(Hinawa.SndDg00x):
     supported_optical_interfaces = ('ADAT', 'S/PDIF')
 
     def __init__(self, path):
-        if re.match('/dev/snd/hwC[0-9]*D0', path):
+        if match('/dev/snd/hwC[0-9]*D0', path):
             super().__init__()
             self.open(path)
             if self.get_property('type') != 5:
                 raise ValueError('The character device is not for Dg00x unit')
             self.listen()
-        elif re.match('/dev/fw[0-9]*', path):
+        elif match('/dev/fw[0-9]*', path):
             # Just using parent class.
             super(Hinawa.FwUnit, self).__init__()
             Hinawa.FwUnit.open(self, path)

@@ -1,8 +1,8 @@
+from re import match
+
 import gi
 gi.require_version('Hinawa', '1.0')
 from gi.repository import Hinawa
-
-import re
 
 __all__ = ['BebobUnit']
 
@@ -10,14 +10,14 @@ class BebobUnit(Hinawa.SndUnit):
     REG_INFO = 0xffffc8020000
 
     def __init__(self, path):
-        if re.match('/dev/snd/hwC[0-9]*D0', path):
+        if match('/dev/snd/hwC[0-9]*D0', path):
             super().__init__()
             self.open(path)
             if self.get_property('type') != 3:
                 raise ValueError('The character device is not for BeBoB unit')
             self._on_juju = False,
             self.listen()
-        elif re.match('/dev/fw[0-9]*', path):
+        elif match('/dev/fw[0-9]*', path):
             # Just using parent class.
             super(Hinawa.FwUnit, self).__init__()
             Hinawa.FwUnit.open(self, path)

@@ -1,4 +1,4 @@
-import re
+from re import match
 import gi
 
 gi.require_version('Hinawa', '1.0')
@@ -251,7 +251,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
             labels.append('headphone-{0}/{1}'.format(i * 2 + 1, i * 2 + 2))
         return labels
     def _refer_hp_data(self, target):
-        matches = self._hp_expr.match(target)
+        matches = match('^headphone-([0-9]*)/([0-9]*)$', target)
         if not matches:
             raise ValueError('Invalid argument for headphone')
         left = int(matches.group(1)) // 2
@@ -306,8 +306,6 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         data = AvcAudio.get_processing_mixer_state(self._unit.fcp, 0, 'current',
                                                    out_fb, in_fb, in_ch, out_ch)
         return data[0] == 0x00 and data[1] == 0x00
-
-    _hp_expr = re.compile('^headphone-([0-9]*)/([0-9]*)$')
 
     def get_headphone_source_labels(self, target):
         labels = []
