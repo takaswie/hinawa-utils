@@ -202,7 +202,7 @@ class AvcConnection():
         args.append(0xff)
         args.append(0xff)
         params = AvcGeneral.command_status(fcp, args)
-        param = params[5] & 0x03
+        param = params[5] & 0x07
         if param > len(AvcConnection.sampling_rates):
             raise OSError
         return AvcConnection.sampling_rates[param]
