@@ -1,6 +1,7 @@
 from bebob.bebob_unit import BebobUnit
 
 from bebob.maudio_protocol_normal import MaudioProtocolNormal
+from bebob.maudio_protocol_fw410 import MaudioProtocolFw410
 
 __all__ = ['MaudioUnit']
 
@@ -12,6 +13,7 @@ class MaudioUnit(BebobUnit):
         (0x000d6c, 0x010060, MaudioProtocolNormal),  # Firewire Audiophile
         (0x000d6c, 0x010081, MaudioProtocolNormal),  # NRV10
         (0x000d6c, 0x0100a1, MaudioProtocolNormal),  # Profire Lightbridge
+        (0x0007f5, 0x010046, MaudioProtocolFw410),   # Firewire 410
     )
 
     def __init__(self, path):
