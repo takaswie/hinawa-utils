@@ -68,7 +68,7 @@ class MaudioNormal(BebobUnit):
                      'analog-out-7', 'analog-out-8',
                      'digital-out-1', 'digital-out-2',
                      'headphone-out-1', 'headphone-out-2',
-                     'headphone-out-3', 'headphone-out-4')},
+                     'aux-out-1', 'aux-out-2')},
     )
 
     # = _LABELS['inputs']
