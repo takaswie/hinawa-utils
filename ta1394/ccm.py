@@ -8,7 +8,7 @@ class AvcCcm():
 
     @classmethod
     def get_unit_signal_addr(cls, type, plug):
-        if cls.plug_unit_type.count(type) == 0:
+        if type not in cls.plug_unit_type:
             raise ValueError('Invalid argument for plug unit type')
         if plug >= 30:
             raise ValueError('Invalid argument for plug number')
@@ -22,7 +22,7 @@ class AvcCcm():
 
     @classmethod
     def get_subunit_signal_addr(cls, type, id, plug):
-        if AvcGeneral.subunit_types.count(type) == 0:
+        if type not in AvcGeneral.subunit_types:
             raise ValueError('Invalid argument for subunit type')
         if plug >= 30:
             raise ValueError('Invalid argument for plug number')

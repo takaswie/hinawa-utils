@@ -150,7 +150,7 @@ class AvcConnection():
 
     @classmethod
     def get_subunit_plug_info(cls, fcp, subunit_type, subunit_id):
-        if AvcGeneral.subunit_types.count(subunit_type) == 0:
+        if subunit_type not in AvcGeneral.subunit_types:
             raise ValueError('Invalid argument for subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for subunit id')
@@ -171,9 +171,9 @@ class AvcConnection():
     def set_plug_signal_format(cls, fcp, direction, plug, rate):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
-        if AvcConnection.plug_direction.count(direction) == 0:
+        if direction not in AvcConnection.plug_direction:
             raise ValueError('Invalid argument for plug direction')
-        if AvcConnection.sampling_rates.count(rate) == 0:
+        if rate not in AvcConnection.sampling_rates:
             raise ValueError('Invalid argument for sampling rate')
         args = bytearray()
         args.append(0x00)
@@ -190,7 +190,7 @@ class AvcConnection():
     def get_plug_signal_format(cls, fcp, direction, plug):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
-        if AvcConnection.plug_direction.count(direction) == 0:
+        if direction not in AvcConnection.plug_direction:
             raise ValueError('Invalid argument for plug direction')
         args = bytearray()
         args.append(0x01)
@@ -211,9 +211,9 @@ class AvcConnection():
     def ask_plug_signal_format(cls, fcp, direction, plug, rate):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
-        if AvcConnection.plug_direction.count(direction) == 0:
+        if direction not in AvcConnection.plug_direction:
             raise ValueError('Invalid argument for plug direction')
-        if AvcConnection.sampling_rates.count(rate) == 0:
+        if rate not in AvcConnection.sampling_rates:
             raise ValueError('Invalid argument for sampling rate')
         args = bytearray()
         args.append(0x02)

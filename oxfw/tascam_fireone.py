@@ -42,7 +42,7 @@ class TascamFireone(OxfwUnit):
         return params[4]
 
     def display_set_mode(self, arg):
-        if self.display_modes.count(arg) == 0:
+        if arg not in self.display_modes:
             raise ValueError('Invalid argument for display mode')
         self.command_set_param(0x10, self.display_modes.index(arg))
 
@@ -53,7 +53,7 @@ class TascamFireone(OxfwUnit):
         return self.display_modes[param]
 
     def control_set_mode(self, arg):
-        if self.control_modes.count(arg) == 0:
+        if arg not in self.control_modes:
             raise ValueError('Invalid argument for control mode')
         self.command_set_param(0x11, self.control_modes.index(arg))
             
@@ -64,7 +64,7 @@ class TascamFireone(OxfwUnit):
         return self.control_modes[param]
 
     def input_set_mode(self, arg):
-        if self.input_modes.count(arg) == 0:
+        if arg not in self.input_modes:
             raise ValueError('Invalid argument for input mode')
         self.command_set_param(0x12, self.input_modes.index(arg))
 

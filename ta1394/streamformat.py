@@ -59,9 +59,9 @@ class AvcStreamFormatInfo():
 
     @classmethod
     def _build_format(cls, fmt):
-        if cls.sampling_rates.count(fmt['sampling-rate']) == 0:
+        if fmt['sampling-rate'] not in cls.sampling_rates:
             raise ValueError('Invalid argument for sampling rate')
-        if cls.rate_controls.count(fmt['rate-control']) == 0:
+        if fmt['rate-control'] not in cls.rate_controls:
             raise ValueError('Invalid argument for rate control mode')
         args = bytearray()
         args.append(0x90)
@@ -72,7 +72,7 @@ class AvcStreamFormatInfo():
         prev = ''
         num = -1
         for i, formation in enumerate(fmt['formation']):
-            if cls.types.count(formation) == 0:
+            if formation not in cls.types:
                 raise ValueError('Invalid argument for stream formation type')
             if formation == 'ancillary-data':
                 type = 0x10
@@ -114,7 +114,7 @@ class AvcStreamFormatInfo():
 
     @classmethod
     def get_format(cls, fcp, direction, plug):
-        if cls.plug_direction.count(direction) == 0:
+        if direction not in cls.plug_direction:
             raise ValueError('Invalid argument for plug direction')
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
@@ -137,7 +137,7 @@ class AvcStreamFormatInfo():
 
     @classmethod
     def get_formats(cls, fcp, direction, plug):
-        if cls.plug_direction.count(direction) == 0:
+        if direction not in cls.plug_direction:
             raise ValueError('Invalid argument for plug direction')
         if plug > 255:
             raise ValueError('Invalid argument for plug number')

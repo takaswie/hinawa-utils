@@ -23,7 +23,7 @@ class AvcAudio():
     def set_selector_state(cls, fcp, subunit_id, attr, fb_id, value):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if ('current', 'minimum', 'maximum', 'default').count(attr) == 0:
+        if attr not in ('current', 'minimum', 'maximum', 'default'):
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -45,7 +45,7 @@ class AvcAudio():
     def get_selector_state(cls, fcp, subunit_id, attr, fb_id):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if ('current', 'minimum', 'maximum', 'default').count(attr) == 0:
+        if attr not in ('current', 'minimum', 'maximum', 'default'):
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -125,7 +125,7 @@ class AvcAudio():
     def set_feature_volume_state(cls, fcp, subunit_id, attr, fb_id, ch, data):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if cls.attributes.count(attr) == 0:
+        if attr not in cls.attributes:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -151,7 +151,7 @@ class AvcAudio():
     def get_feature_volume_state(cls, fcp, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if cls.attributes.count(attr) == 0:
+        if attr not in cls.attributes:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -178,7 +178,7 @@ class AvcAudio():
     def set_feature_lr_state(cls, fcp, subunit_id, attr, fb_id, ch, data):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if cls.attributes.count(attr) == 0:
+        if attr not in cls.attributes:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -204,7 +204,7 @@ class AvcAudio():
     def get_feature_lr_state(cls, fcp, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if cls.attributes.count(attr) == 0:
+        if attr not in cls.attributes:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -233,7 +233,7 @@ class AvcAudio():
         attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if attrs.count(attr) == 0:
+        if attr not in attrs:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -267,7 +267,7 @@ class AvcAudio():
         attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if attrs.count(attr) == 0:
+        if attr not in attrs:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -302,7 +302,7 @@ class AvcAudio():
         attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if attrs.count(attr) == 0:
+        if attr not in attrs:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -334,7 +334,7 @@ class AvcAudio():
         attrs = ('current', 'minimum', 'maximum', 'resolution', 'default')
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if attrs.count(attr) == 0:
+        if attr not in attrs:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')

@@ -23,9 +23,9 @@ class BcoPlugInfo():
 
     @classmethod
     def get_unit_addr(cls, addr_dir, addr_unit_type, plug):
-        if cls.addr_dir.count(addr_dir) == 0:
+        if addr_dir not in  cls.addr_dir:
             raise ValueError('Invalid argument for address direction')
-        if cls.addr_unit_type.count(addr_unit_type) == 0:
+        if addr_unit_type not in cls.addr_unit_type:
             raise ValueError('Invalid argument for address unit type')
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
@@ -41,9 +41,9 @@ class BcoPlugInfo():
 
     @classmethod
     def get_subunit_addr(cls, addr_dir, subunit_type, subunit_id, plug):
-        if cls.addr_dir.count(addr_dir) == 0:
+        if addr_dir not in cls.addr_dir:
             raise ValueError('Invalid argument for address direction')
-        if AvcGeneral.subunit_types.count(subunit_type) == 0:
+        if subunit_type not in AvcGeneral.subunit_types:
             raise ValueError('Invalid argument for address subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for address subunit id')
@@ -63,9 +63,9 @@ class BcoPlugInfo():
     @classmethod
     def get_function_block_addr(cls, addr_dir, subunit_type, subunit_id,
                                 fb_type, fb_id, plug):
-        if cls.addr_dir.count(addr_dir) == 0:
+        if addr_dir not in cls.addr_dir:
             raise ValueError('Invalid argument for address direction')
-        if AvcGeneral.subunit_types.count(subunit_type) == 0:
+        if subunit_type not in AvcGeneral.subunit_types:
             raise ValueError('Invalid argument for address subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for address subunit id')
@@ -83,15 +83,15 @@ class BcoPlugInfo():
     @classmethod
     def build_plug_info(cls, info):
         addr = bytearray()
-        if cls.addr_dir.count(info['dir']) == 0:
+        if info['dir'] not in cls.addr_dir:
             raise ValueError('Invalid address direction')
         addr.append(cls.addr_dir.index(info['dir']))
-        if cls.addr_mode.count(info['mode']) == 0:
+        if info['mode'] not in cls.addr_mode:
             raise ValueError('Invalid address mode')
         addr.append(cls.addr_mode.index(info['mode']))
         data = info['data']
         if info['mode'] == 'unit':
-            if cls.addr_unit_type.count(data['unit-type']) == 0:
+            if data['unit-type'] not in cls.addr_unit_type:
                 raise ValueError('Invalid address unit type')
             addr.append(cls.addr_unit_type.index(data['unit-type']))
             addr.append(data['plug'])
@@ -99,7 +99,7 @@ class BcoPlugInfo():
             addr.append(0xff)
             addr.append(0xff)
         else:
-            if AvcGeneral.subunit_types.count(data['subunit-type']) == 0:
+            if data['subunit-type'] not in AvcGeneral.subunit_types:
                 raise ValueError('Invalid address subunit type')
             addr.append(AvcGeneral.subunit_types.index(data['subunit-type']))
             addr.append(data['subunit-id'])
@@ -344,7 +344,7 @@ class BcoSubunitInfo():
 
     @classmethod
     def get_subunit_fb_info(cls, fcp, subunit_type, subunit_id, page, fb_type):
-        if AvcGeneral.subunit_types.count(subunit_type) == 0:
+        if subunit-type not in AvcGeneral.subunit_types:
             raise ValueError('Invalid argument for subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for subunit id')
@@ -503,7 +503,7 @@ class BcoVendorDependent():
 
     @classmethod
     def get_stream_detection(cls, fcp, company_ids, dir, ext_plug):
-        if BcoVendorDependent.addr_dir.count(dir) == 0:
+        if dir not in BcoVendorDependent.addr_dir:
             raise ValueError('Invalid argument for address direction')
         if ext_plug >= 255:
             raise ValueError('Invalid argument for external plug number')

@@ -190,7 +190,7 @@ class YamahaTerratec(BebobUnit):
     def get_clock_source_labels(self):
         return self.supported_clock_sources
     def set_clock_source(self, source):
-        if self.supported_clock_sources.count(source) == 0:
+        if source not in self.supported_clock_sources:
             raise ValueError('Invalid argument for clock source')
         val = self.supported_clock_sources.index(source)
         AvcAudio.set_selector_state(self.fcp, 0, 'current', 4, val)

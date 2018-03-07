@@ -388,7 +388,7 @@ class EftTransmit():
 
     @classmethod
     def set_mode(cls, unit, mode):
-        if cls.SUPPORTED_MODES.count(mode) == 0:
+        if mode not in cls.SUPPORTED_MODES:
             raise ValueError('Invalid argument for mode')
         args = array('I')
         args.append(cls.SUPPORTED_MODES.index(mode))
@@ -397,11 +397,11 @@ class EftTransmit():
     @classmethod
     def set_fw_hdmi(cls, unit, playback_drop, record_stretch_ratio, serial_bps,
                     serial_data_format):
-        if cls.SUPPORTED_PLAYBACK_DROPS.count(playback_drop) == 0:
+        if playback_drop not in cls.SUPPORTED_PLAYBACK_DROPS:
             raise ValueError('Invalid argument for playback drop')
         if cls.SUPPORTED_RECORD_STREATCH_RATIOS(record_stretch_ratio) == 0:
             raise ValueError('Invalid argument for record stretch')
-        if cls.SUPPORTED_SERIAL_BPS.count(serial_bps) == 0:
+        if serial_bps not in cls.SUPPORTED_SERIAL_BPS:
             raise ValueError('Invalid argument for serial bits per second')
         if cls.SUPPORTED_SERIAL_DATA_FORMATS(serial_data_format) == 0:
             raise ValueError('Invalid argument for serial data format')
@@ -456,9 +456,9 @@ class EftHwctl():
 
     @classmethod
     def set_clock(cls, unit, rate, source, reset):
-        if EftInfo.SUPPORTED_SAMPLING_RATES.count(rate) == 0:
+        if rate not in EftInfo.SUPPORTED_SAMPLING_RATES:
             raise ValueError('Invalid argument for sampling rate')
-        if EftInfo.SUPPORTED_CLOCK_SOURCES.count(source) == 0:
+        if source not in EftInfo.SUPPORTED_CLOCK_SOURCES:
             raise ValueError('Invalid argument for source of clock')
         if reset > 0:
             reset = 0x80000000
@@ -473,7 +473,7 @@ class EftHwctl():
         params = cls._execute_command(unit, 1, None)
         if params[0] >= len(EftInfo.SUPPORTED_CLOCK_SOURCES):
             raise OSError('Unexpected clock source in response')
-        if EftInfo.SUPPORTED_SAMPLING_RATES.count(params[1]) == 0:
+        if params[1] not in EftInfo.SUPPORTED_SAMPLING_RATES:
             raise OSError('Unexpected sampling rate in response')
         return (params[1], EftInfo.SUPPORTED_CLOCK_SOURCES[params[0]])
 
@@ -738,7 +738,7 @@ class EftIoconf():
 
     @classmethod
     def set_digital_input_mode(cls, unit, mode):
-        if cls.DIGITAL_INPUT_MODES.count(mode) == 0:
+        if mode not in cls.DIGITAL_INPUT_MODES:
             raise ValueError('Invalid argument for digital mode')
         args = array('I')
         args.append(cls.DIGITAL_INPUT_MODES.index(mode))
