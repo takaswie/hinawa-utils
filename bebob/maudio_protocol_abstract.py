@@ -32,6 +32,14 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     def get_input_gain(self, target, ch):
         pass
 
+    # For input LR balance.
+    def get_input_balance_labels(self):
+        pass
+    def set_input_balance(self, target, ch, balance):
+        pass
+    def get_input_balance(self, target, ch):
+        pass
+
     # For output volumes.
     @abstractmethod
     def get_output_labels(self):

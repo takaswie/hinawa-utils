@@ -188,6 +188,39 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
             index = index + 8
         return self._get_volume(index, ch)
 
+    def get_input_balance_labels(self):
+        labels = []
+        for label in self._INPUT_LABELS:
+            if label.find('stream-') == 0:
+                continue
+            labels.append(label)
+        return labels
+    def set_input_balance(self, target, ch, balance):
+        if target not in self._INPUT_LABELS:
+            raise ValueError('invalid argument for input stereo pair')
+        index = self._INPUT_LABELS.index(target) - 2 + 16
+        data = AvcAudio.build_data_from_db(balance)
+        if ch == 0:
+            datum = (self._cache[index] & 0x0000ffff) | \
+                    (data[0] << 24) | (data[1] << 16)
+        else:
+            datum = (self._cache[index] & 0xffff0000)| \
+                    (data[0] << 8) | data[1]
+        self._write_status(index, datum)
+    def get_input_balance(self, target, ch):
+        if target not in self._INPUT_LABELS:
+            raise ValueError('invalid argument for input stereo pair')
+        index = self._INPUT_LABELS.index(target) - 2 + 16
+        datum = self._cache[index]
+        if ch == 0:
+            value = (datum >> 16) & 0x0000ffff
+        else:
+            value = datum & 0x0000ffff
+        data = bytearray()
+        data.append((value >> 8) & 0xff)
+        data.append(value & 0xff)
+        return AvcAudio.parse_data_to_db(data)
+
     def get_output_labels(self):
         return self._OUTPUT_LABELS
     def set_output_volume(self, target, ch, db):

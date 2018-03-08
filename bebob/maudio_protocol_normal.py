@@ -215,6 +215,26 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         index = self._refer_input_data(target)
         return self._get_volume(self._inputs, index, ch)
 
+    def get_input_balance_labels(self):
+        labels = []
+        for label in self._labels['inputs']:
+            if label.find('stream-') == 0:
+                continue
+            labels.append(label)
+        return labels
+    def set_input_balance(self, target, ch, balance):
+        index = self._refer_input_data(target)
+        fb, ch = self._refer_fb_data(self._inputs, index, ch)
+        data = AvcAudio.build_data_from_db(balance)
+        AvcAudio.set_feature_lr_state(self._unit.fcp, 0, 'current', fb, ch,
+                                      data)
+    def get_input_balance(self, target, ch):
+        index = self._refer_input_data(target)
+        fb, ch = self._refer_fb_data(self._inputs, index, ch)
+        data = AvcAudio.get_feature_lr_state(self._unit.fcp, 0, 'current',
+                                             fb, ch)
+        return AvcAudio.parse_data_to_db(data)
+
     def get_output_labels(self):
         if len(self._outputs) == 0:
             return ()
@@ -243,6 +263,23 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         fb = self._aux_output
         data = AvcAudio.get_feature_volume_state(self._unit.fcp, 0, 'current',
                                                  fb, ch)
+        return AvcAudio.parse_data_to_db(data)
+
+    def set_aux_balance(self, ch, balance):
+        if ch > 2:
+            raise ValueError('Invalid argument for master channel')
+        fb = self._aux_output
+        data = AvcAudio.build_data_from_db(balance)
+        ch += 1
+        AvcAudio.set_feature_lr_state(self._unit.fcp, 0, 'current', fb, ch,
+                                      data)
+    def get_aux_balance(self, ch):
+        if ch > 2:
+            raise ValueError('Invalid argument for master channel')
+        fb = self._aux_output
+        ch += 1
+        data = AvcAudio.get_feature_lr_state(self._unit.fcp, 0, 'current',
+                                             fb, ch)
         return AvcAudio.parse_data_to_db(data)
 
     def get_headphone_labels(self):

@@ -5,7 +5,9 @@ import signal
 import sys
 
 from misc.cui_kit import CuiKit
+
 from bebob.maudio_unit import MaudioUnit
+from bebob.maudio_protocol_normal import MaudioProtocolNormal
 
 def _handle_target_volume(unit, args, cmd, targets_func, set_func, get_func):
     CHS = (0, 1)
@@ -55,6 +57,52 @@ def handle_headphone_volume(unit, args):
                                  unit.protocol.get_headphone_labels,
                                  unit.protocol.set_headphone_volume,
                                  unit.protocol.get_headphone_volume)
+
+def handle_input_balance(unit, args):
+    CHS = (0, 1)
+    OPS = ('set', 'get')
+    targets = unit.protocol.get_input_balance_labels()
+    if len(args) >= 1 and args[0] in targets:
+        target = args[0]
+        if len(args) >= 2 and int(args[1]) in CHS:
+            ch = int(args[1])
+            if len(args) >= 3 and args[2] in OPS:
+                op = args[2]
+                if len(args) >= 4 and op == 'set':
+                    balance = float(args[3])
+                    unit.protocol.set_input_balance(target, ch, balance)
+                    return True
+                elif op == 'get':
+                    print(unit.protocol.get_input_balance(target, ch))
+                    return True
+    print('Arguments for input-balance command')
+    print('  input-balance TARGET CH OP [BALANCE]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    CH:     [{0}]'.format('|'.join(map(str, CHS))))
+    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    BALANCE:[-128.0..128.0] (left-right) if OP=set')
+    return False
+
+def handle_aux_balance(unit, args):
+    CHS = (0, 1)
+    OPS = ('set', 'get')
+    if len(args) >= 1 and int(args[0]) in CHS:
+        ch = int(args[0])
+        if len(args) >= 2 and args[1] in OPS:
+            op = args[1]
+            if len(args) >= 3 and op == 'set':
+                balance = float(args[2])
+                unit.protocol.set_aux_balance(ch, balance)
+                return True
+            else:
+                print(unit.protocol.get_aux_balance(ch))
+                return True
+    print('Arguments for aux-balance command:')
+    print('  aux-balance CH OP [BALANCE]')
+    print('    CH:     [{0}]'.format('|'.join(map(str, CHS))))
+    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    BALACE: [-128.0..128.0] (left-right) if OP=set]')
+    return False
 
 def handle_aux_volume(unit, args):
     CHS = (0, 1)
@@ -198,6 +246,7 @@ def handle_sampling_rate(unit, args):
 
 cmds = {
     'input-gain':           handle_input_gain,
+    'input-balance':        handle_input_balance,
     'mixer-routing':        handle_mixer_routing,
     'listen-metering':      handle_listen_metering,
     'clock-source':         handle_clock_source,
@@ -210,6 +259,8 @@ if fullpath:
     if len(unit.protocol.get_aux_input_labels()) > 0:
         cmds['aux-input'] = handle_aux_input
         cmds['aux-volume'] = handle_aux_volume
+        if isinstance(unit.protocol, MaudioProtocolNormal):
+            cmds['aux-balance'] = handle_aux_balance
     if len(unit.protocol.get_output_labels()) > 0:
         cmds['output-volume'] = handle_output_volume
         cmds['output-source'] = handle_output_source
