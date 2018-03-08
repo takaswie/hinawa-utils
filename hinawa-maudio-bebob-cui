@@ -41,7 +41,7 @@ def handle_input_gain(unit, args):
                                  unit.protocol.get_input_gain)
 
 def handle_aux_input(unit, args):
-    return _handle_target_volume(unit, args, 'aux-input-volume',
+    return _handle_target_volume(unit, args, 'aux-input',
                                  unit.protocol.get_aux_input_labels,
                                  unit.protocol.set_aux_input,
                                  unit.protocol.get_aux_input)
@@ -118,8 +118,8 @@ def handle_aux_volume(unit, args):
             elif op == 'get':
                 print(unit.protocol.get_aux_volume(ch))
                 return True
-    print('Arguments for aux-output-volume command:')
-    print('  aux-output-volume CH OP [dB]')
+    print('Arguments for aux-volume command:')
+    print('  aux-volume CH OP [dB]')
     print('    CH:     [{0}]'.format('|'.join(map(str, CHS))))
     print('    OP:     [{0}]'.format('|'.join(OPS)))
     print('    dB:     [-128.0..128.0] if OP=set')
