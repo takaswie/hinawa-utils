@@ -154,7 +154,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
                     (data[0] << 24) | (data[1] << 16)
         else:
             datum = (self._cache[index] & 0xffff0000)| \
-                    (data[0] << 16) | (data[1] << 8)
+                    (data[0] << 8) | data[1]
         self._write_status(index, datum)
     def _get_volume(self, index, ch):
         if ch > 1:
