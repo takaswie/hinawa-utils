@@ -4,6 +4,7 @@ from misc.cui_kit import CuiKit
 from efw.efw_unit import EfwUnit
 
 def handle_hardware_info(unit, args):
+    print('Mode: {0}'.format(unit.info['model']))
     print('Supported features:')
     for key, value in unit.info['features'].items():
         if value:
@@ -42,52 +43,58 @@ def handle_hardware_info(unit, args):
     for key, value in unit.info['firmware-versions'].items():
         print('{0:>8}: {1}'.format(key, value))
 
+    return True
+
 def handle_clock_source(unit, args):
-    ops = ('set', 'get')
+    _OPS = ('set', 'get')
     sources = []
     for key, value in unit.info['clock-sources'].items():
         if value:
             sources.append(key)
-    if len(args) > 0 and args[0] in ops:
+    if len(args) >= 1 and args[0] in _OPS:
+        op = args[0]
         rate, source = unit.get_clock_state()
-        if args[0] == ops[0] and len(args) > 1 and args[1] in sources:
+        if len(args) >= 2 and op == 'set' and args[1] in sources:
             source = args[1]
             unit.set_clock_state(rate, source)
-        else:
+            return True
+        elif op == 'get':
             print(source)
-        return True
+            return True
     print('Arguments for clock-source command:')
     print('  clock-source OP[SOURCE]')
-    print('    OP:        {0}'.format(', '.join(ops)))
-    print('    SOURCE:    {0}'.format(', '.join(sources)))
-
+    print('    OP:        [{0}]'.format('|'.join(_OPS)))
+    print('    SOURCE:    [{0}]'.format('|'.join(sources)))
     return False
 
 def handle_sampling_rate(unit, args):
-    ops = ('set', 'get')
+    _OPS = ('set', 'get')
     rates = []
     for key, value in unit.info['sampling-rates'].items():
         if value:
             rates.append(key)
-    if len(args) > 0 and args[0] in ops:
+    if len(args) >= 1 and args[0] in _OPS:
+        op = args[0]
         rate, source = unit.get_clock_state()
-        if args[0] == ops[0] and len(args) > 1 and int(args[1]) in rates:
+        if len(args) >= 2 and op == 'set' and int(args[1]) in rates:
             rate = int(args[1])
             unit.set_clock_state(rate, source)
-        else:
+            return True
+        elif op == 'get':
             print(rate)
-        return True
+            return True
     print('Arguments for sampling-rate command:')
     print('  clock-source OP [SOURCE]')
-    print('    OP:        {0}'.format(', '.join(ops)))
-    print('    SOURCE:    {0}'.format(', '.join(map(str, rates))))
+    print('    OP:        [{0}]'.format('|'.join(_OPS)))
+    print('    SOURCE:    [{0}]'.format('|'.join(map(str, rates))))
     return False
 
 def handle_control_room(unit, args):
-    ops = ('set', 'get')
-    if len(args) > 0 and args[0] in ops:
+    _OPS = ('set', 'get')
+    if len(args) >= 1 and args[0] in _OPS:
         op = args[0]
-        if len(args) > 1 and op == 'set':
+        sources = unit.get_control_room_source_labels()
+        if len(args) >= 2 and op == 'set' and args[1] in sources:
             source = args[1]
             unit.set_control_room_mirroring(source)
             return True
@@ -96,16 +103,16 @@ def handle_control_room(unit, args):
             return True
     print('Arguments for control-room command:')
     print('  control-room OP [SOURCE]')
-    print('    OP:     [{0}]'.format('|'.join(ops)))
-    print('    SOURCE: [{0}]'.format('|'.join(unit.get_control_room_source_labels())))
+    print('    OP:     [{0}]'.format('|'.join(_OPS)))
+    print('    SOURCE: [{0}]'.format('|'.join(sources)))
     return False
 
 def handle_digital_input(unit, args):
-    ops = ('set', 'get')
+    _OPS = ('set', 'get')
     modes = unit.get_digital_input_mode_labels()
-    if len(args) > 0 and args[0] in ops:
+    if len(args) >= 1 and args[0] in _OPS:
         op = args[0]
-        if len(args) > 1 and op == 'set' and args[1] in modes:
+        if len(args) >= 2 and op == 'set' and args[1] in modes:
             mode = args[1]
             unit.set_digital_input_mode(args[1])
             return True
@@ -114,36 +121,36 @@ def handle_digital_input(unit, args):
             return True
     print('Arguments for digital-input command:')
     print('  digital-input OP [MODE]')
-    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    OP:     [{0}]'.format('|'.join(_OPS)))
     print('    MODE:   [{0}] if OP=set'.format('|'.join(modes)))
     return False
 
 def handle_phantom_powering(unit, args):
-    ops = ('set', 'get')
-    modes = ('off', 'on')
-    if len(args) > 0 and args[0] in ops:
+    _OPS = ('set', 'get')
+    if len(args) >= 1 and args[0] in _OPS:
         op = args[0]
-        if len(args) > 1 and op == ops[0] and args[1] in modes:
-            mode = args[1]
-            unit.set_phantom_powering(modes.index(mode))
+        if len(args) >= 2 and op == _OPS[0] and int(args[1]) < 2:
+            mode = int(args[1])
+            unit.set_phantom_powering(mode)
+            return True
         else:
-            print(modes[unit.get_phantom_powering()])
-        return True
+            print(unit.get_phantom_powering())
+            return True
     print('Arguments for phantom-powering command:')
-    print('  phantom-powering OP [MODE]')
-    print('    OP:        {0}'.format(', '.join(ops)))
-    print('    MODE:      {0}'.format(', '.join(modes)))
+    print('  phantom-powering OP [ENABLE]')
+    print('    OP:     [{0}]'.format('|'.join(_OPS)))
+    print('    ENABLE: [0|1]')
     return False
 
 def handle_box_state(unit, args):
-    ops = ('set', 'get')
+    _OPS = ('set', 'get')
     states = unit.get_box_states()
-    if len(args) > 0 and args[0] in states:
+    if len(args) >= 1 and args[0] in states:
         name = args[0]
-        if len(args) > 1 and args[1] in ops:
+        if len(args) >= 2 and args[1] in _OPS:
             op = args[1]
             labels = unit.get_box_state_labels(name)
-            if len(args) > 2 and op == 'set' and args[2] in labels:
+            if len(args) >= 3 and op == 'set' and args[2] in labels:
                 unit.set_box_states(name, args[2])
                 return True
             elif op == 'get':
@@ -153,14 +160,14 @@ def handle_box_state(unit, args):
     print('Arguments for box-state command:')
     print('  box-state NAME OP [VALUE]')
     print('    NAME:   [{0}]'.format('|'.join(states)))
-    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    OP:     [{0}]'.format('|'.join(_OPS)))
     for state in states:
         labels = unit.get_box_state_labels(state)
         print('    VALUE:  [{0}] if NAME={1}'.format('|'.join(labels), state))
     return False
 
 def handle_rx_stream_mapping(unit, args):
-    ops = ('set', 'get')
+    _OPS = ('set', 'get')
     # Generate stereo pair for outputs
     outputs = []
     prev = ''
@@ -178,24 +185,26 @@ def handle_rx_stream_mapping(unit, args):
         if ch % 2 == 0:
             sources.append('stream-{0}/{1}'.format(ch+ 1, ch + 2))
     maps = unit.get_stream_mapping()
-    if len(args) > 1 and args[0] in ops and args[1] in outputs:
+    if len(args) > 1 and args[0] in _OPS and args[1] in outputs:
         op = args[0]
         output = outputs.index(args[1])
-        if op == ops[0] and len(args) > 2 and args[2] in sources:
+        if op == _OPS[0] and len(args) > 2 and args[2] in sources:
             source = sources.index(args[2]) * 2
             maps['rx-map'][output] = source
             unit.set_stream_mapping(maps['rx-map'], maps['tx-map'])
+            return True
         else:
             print(sources[maps['rx-map'][output] // 2])
-        return True
+            return True
     print('Arguments for rx-stream-mapping command:')
     print('  rx-stream-mapping OP OUTPUT [SOURCE]')
-    print('    OP:        {0}'.format(', '.join(ops)))
-    print('    OUTPUT:    {0}'.format(', '.join(outputs)))
-    print('    SOURCE:    {0}'.format(', '.join(sources)))
+    print('    OP:     [{0}]'.format('|'.join(_OPS)))
+    print('    OUTPUT: [{0}]'.format('|'.join(outputs)))
+    print('    SOURCE: [{0}]'.format('|'.join(sources)))
+    return False
 
 def handle_tx_stream_mapping(unit, args):
-    ops = ('set', 'get')
+    _OPS = ('set', 'get')
     # Generate stereo pair for inputs
     inputs = []
     prev = ''
@@ -213,110 +222,163 @@ def handle_tx_stream_mapping(unit, args):
         if ch % 2 == 0:
             sinks.append('stream-{0}/{1}'.format(ch+ 1, ch + 2))
     maps = unit.get_stream_mapping()
-    if len(args) > 1 and args[0] in ops and args[1] in inputs:
+    if len(args) > 1 and args[0] in _OPS and args[1] in inputs:
         op = args[0]
         input = inputs.index(args[1])
-        if op == ops[0] and len(args) > 2 and args[2] in sinks:
+        if op == _OPS[0] and len(args) > 2 and args[2] in sinks:
             sink = sinks.index(args[2]) * 2
             maps['tx-map'][input] = sink
             unit.set_stream_mapping(maps['tx-map'], maps['tx-map'])
+            return True
         else:
             print(sinks[maps['tx-map'][input] // 2])
-        return True
+            return True
     print('Arguments for tx-stream-mapping command:')
     print('  tx-stream-mapping OP INPUT [SINK]')
-    print('    OP:        {0}'.format(', '.join(ops)))
-    print('    INPUT:     {0}'.format(', '.join(inputs)))
-    print('    SINK:      {0}'.format(', '.join(sinks)))
-
+    print('    OP:     [{0}]'.format('|'.join(_OPS)))
+    print('    INPUT:  [{0}]'.format('|'.join(inputs)))
+    print('    SINK:   [{0}]'.format('|'.join(sinks)))
+    return False
 
 def handle_output(unit, args):
-    ops = {
+    _OPS = ('set', 'get')
+    _items = {
         'gain':     (unit.set_phys_out_gain, unit.get_phys_out_gain),
         'mute':     (unit.set_phys_out_mute, unit.get_phys_out_mute),
-        'nominal':  (unit.set_phys_out_nominal, unit.get_phys_out_nominal)
     }
-    if len(args) > 1:
-        operation = args[0]
-        ch = int(args[1])
-        if len(args) == 3:
-            value = int(args[2])
-            ops[operation][0](ch, value)
-        else:
-            print(ops[operation][1](ch))
-        return True
+    if unit.info['features']['nominal-output']:
+        _items['nominal'] = (unit.set_phys_out_nominal, unit.get_phys_out_nominal)
+    if len(args) >= 1 and args[0] in _items:
+        item = args[0]
+        set_func = _items[item][0]
+        get_func = _items[item][1]
+        if len(args) >= 2 and int(args[1]) < len(unit.info['phys-outputs']):
+            ch = int(args[1])
+            if len(args) >= 3 and args[2] in _OPS:
+                op = args[2]
+                if len(args) >= 4 and op == 'set':
+                    if item == 'gain':
+                        val = float(args[3])
+                    else:
+                        val = int(args[3])
+                    set_func(ch, val)
+                    return True
+                elif op == 'get':
+                    print(get_func(ch))
+                    return True
     print('Arguments for output command:')
-    print('  output operation ch [value]')
-    print('    operation: {0}'.format(', '.join(ops)))
-    print('    ch: 0-{0}'.format(len(unit.info['phys-outputs']) - 1))
-    print('    value: []')
+    print('  output ITEM CH OP [dB|ENABLE]')
+    print('    ITEM:   [{0}]'.format('|'.join(_items)))
+    print('    CH:     [0-{0}]'.format(len(unit.info['phys-outputs']) - 1))
+    print('    OP:     [{0}]'.format('|'.join(_OPS)))
+    print('    dB:     [-144.0..0.0] if OP=get ITEM=gain')
+    print('    ENABLE: [0|1]         if OP=get ITEM=mute')
+    if 'nominal' in _items:
+        print('    ENABLE: [0|1]         if OP=get ITEM=nominal')
     return False
 
 def handle_input(unit, args):
-    ops = {
+    _ITEMS = {
         'nominal':  (unit.set_phys_in_nominal, unit.get_phys_in_nominal),
     }
-    if len(args) > 1:
-        operation = args[0]
-        ch = int(args[1])
-        if len(args) == 3:
-            value = int(args[2])
-            ops[operation][0](ch, value)
-        else:
-            print(ops[operation][1](ch))
-        return True
+    _OPS = ('set', 'get')
+    if len(args) >= 1 and int(args[0]) < len(unit.info['phys-inputs']):
+        ch = int(args[0])
+        if len(args) >= 2 and args[1] in _ITEMS:
+            item = args[1]
+            set_func = _ITEMS[item][0]
+            get_func = _ITEMS[item][1]
+            if len(args) >= 3 and args[2] in _OPS:
+                op = args[2]
+                if len(args) >= 4 and op == 'set':
+                    val = int(args[3])
+                    set_func(ch, val)
+                    return True
+                elif op == 'get':
+                    print(get_func(ch))
+                    return True
     print('Arguments for input command:')
-    print('  input operation ch [value]')
-    print('    operation: {0}'.format(', '.join(ops)))
-    print('    ch: 0-{0}'.format(len(unit.info['phys-inputs']) - 1))
-    print('    value: []')
+    print('  input CH ITEM OP [ENABLE]')
+    print('    CH:     [0-{0}]'.format(len(unit.info['phys-inputs']) - 1))
+    print('    ITEM:   [{0}]'.format('|'.join(_ITEMS)))
+    print('    OP:     [{0}]'.format('|'.join(_OPS)))
+    print('    ENABLE: [0|1] if OP=set')
     return False
 
 def handle_playback(unit, args):
-    ops = {
+    _ITEMS = {
+        # key: (set_func, get_func, min_val, max_val)
         'gain': (unit.set_playback_gain, unit.get_playback_gain),
         'mute': (unit.set_playback_mute, unit.get_playback_mute),
-        'solo': (unit.set_playback_solo, unit.get_playback_solo)
+        'solo': (unit.set_playback_solo, unit.get_playback_solo),
     }
-    if len(args) > 1:
-        operation = args[0]
-        ch = int(args[1])
-        if len(args) == 3:
-            value = int(args[2])
-            ops[operation][0](ch, value)
-        else:
-            print(ops[operation][1](ch))
-        return True
+    _OPS = ('set', 'get')
+    if len(args) >= 1 and int(args[0]) < unit.info['playback-channels']:
+        ch = int(args[0])
+        if len(args) >= 2 and args[1] in _ITEMS:
+            item = args[1]
+            set_func = _ITEMS[item][0]
+            get_func = _ITEMS[item][1]
+            if len(args) >= 3 and args[2] in _OPS:
+                op = args[2]
+                if len(args) >= 4 and op == 'set':
+                    if item == 'gain':
+                        val = float(args[3])
+                    else:
+                        val = int(args[3])
+                    set_func(ch, val)
+                    return True
+                elif op == 'get':
+                    print(get_func(ch))
+                    return True
     print('Arguments for playback command:')
-    print('  playback operation ch [value]')
-    print('    operation: {0}'.format(', '.join(ops)))
-    print('    ch: 0-{0}'.format(unit.info['playback-channels'] - 1))
-    print('    value: []')
+    print('  playback ITEM CH OP [dB|ENABLE]')
+    print('    CH:     [0-{0}]'.format(unit.info['playback-channels'] - 1))
+    print('    ITEM:   [{0}]'.format('|'.join(_ITEMS)))
+    print('    OP:     [{0}]'.format('|'.join(_OPS)))
+    print('    dB:     [-144.0..0] if OP=set and ITEM=gain')
+    print('    ENABLE: [0|1]       if OP=set and ITEM=mute')
+    print('    ENABLE: [0|1]       if OP=set and ITEM=solo')
     return False
 
 def handle_monitor(unit, args):
-    ops = {
+    _ITEMS = {
         'gain':  (unit.set_monitor_gain, unit.get_monitor_gain),
         'mute':  (unit.set_monitor_mute, unit.get_monitor_mute),
         'solo':  (unit.set_monitor_solo, unit.get_monitor_solo),
         'pan':   (unit.set_monitor_pan, unit.get_monitor_pan,)
     }
-    if len(args) > 2:
-        operation = args[0]
-        input = int(args[1])
-        output = int(args[2])
-        if len(args) == 4:
-            value = int(args[3])
-            ops[operation][0](input, output, value)
-        else:
-            print(ops[operation][1](input, output))
-        return True
+    _OPS = ('set', 'get')
+    if len(args) >= 1 and args[0] in _ITEMS:
+        item = args[0]
+        set_func = _ITEMS[item][0]
+        get_func = _ITEMS[item][1]
+        if len(args) >= 2 and int(args[1]) < len(unit.info['phys-inputs']):
+            input = int(args[1])
+            if len(args) >= 3 and int(args[2]) < len(unit.info['phys-outputs']):
+                output = int(args[2])
+                if len(args) >= 4 and args[3] in _OPS:
+                    op = args[3]
+                    if len(args) >= 5 and op == 'set':
+                        if item == 'gain':
+                            val = float(args[4])
+                        else:
+                            val = int(args[4])
+                        set_func(input, output, val)
+                        return True
+                    elif op == 'get':
+                        print(get_func(input, output))
+                        return True
     print('Arguments for monitor command:')
-    print('  monitor operation ch [value]')
-    print('    operation: {0}'.format(', '.join(ops)))
-    print('    input:   0-{0}'.format(len(unit.info['phys-inputs']) - 1))
-    print('    output:  0-{0}'.format(len(unit.info['phys-outputs']) - 1))
-    print('    value:   []')
+    print('  monitor ITEM INPUT OUTPUT OP [dB|BALANCE|ENABLE]')
+    print('    ITEM:   [{0}]'.format('|'.join(_ITEMS)))
+    print('    INPUT:  [0-{0}]'.format(len(unit.info['phys-inputs']) - 1))
+    print('    OUTPUT: [0-{0}]'.format(len(unit.info['phys-outputs']) - 1))
+    print('    OP:     [{0}]'.format('|'.join(_OPS)))
+    print('    dB:     [-144.0..0.0]           if OP=set and ITEM=gain')
+    print('    ENABLE: [0|1]                   if OP=set and ITEM=mute')
+    print('    ENABLE: [0|1]                   if OP=set and ITEM=solo')
+    print('    BALANCE:[0..255] (left-right)   if OP=set and ITEM=pan')
     return False
 
 def handle_listen_metering(unit, args):
@@ -340,7 +402,6 @@ def get_available_commands(features):
         'sampling-rate':        handle_sampling_rate,
         'box-state':            handle_box_state,
         'output':               handle_output,
-        'input':                handle_input,
         'playback':             handle_playback,
         'monitor':              handle_monitor,
         'listen-metering':      handle_listen_metering,
@@ -356,6 +417,8 @@ def get_available_commands(features):
         cmds['digital-input'] = handle_digital_input
     if features['phantom-powering']:
         cmds['phantom-powering'] = handle_phantom_powering
+    if features['nominal-input']:
+        cmds['input'] = handle_input
     return cmds
 
 fullpath = CuiKit.seek_snd_unit_path()

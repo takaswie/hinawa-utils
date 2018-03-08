@@ -18,6 +18,23 @@ class EfwUnit(Hinawa.SndEfw):
         self.open(path)
         self.listen()
         self.info = EftInfo.get_spec(self)
+        self._fixup_info()
+
+    def _fixup_info(self):
+        # Mapping for channels on tx stream is supported by Onyx1200F only.
+        if self.info['model'] == 'Onyx1200F':
+            self.info['features']['tx-mapping'] = True
+        else:
+            self.info['features']['tx-mapping'] = False
+
+        # S/PDIF on coaxial interfae is available in Onyx400F.
+        if self.info['model'] == 'Onyx400F':
+            self.info['features']['spdif-coax'] = True
+
+        # Nominal level of input/output is always supported by AudioFire series.
+        if self.info['model'].find('Audiofire') == 0:
+            self.info['features']['nominal-input'] = True
+            self.info['features']['nominal-output'] = True
 
     @staticmethod
     def _calcurate_vol_from_db(db):
@@ -55,7 +72,7 @@ class EfwUnit(Hinawa.SndEfw):
            self.info['features']['spdif-opt']:
             states['spdif-pro'] = state_all['spdif-pro']
             states['spdif-non-audio'] = state_all['spdif-non-audio']
-        if self.info['features']['control-room-mirroring']:
+        if self.info['model'] == 'Onyx1200F':
             states['control-room'] = state_all['control-room']
             states['output-level-bypass'] = state_all['output-level-bypass']
             states['metering-mode-in'] = state_all['metering-mode-in']
@@ -88,19 +105,27 @@ class EfwUnit(Hinawa.SndEfw):
             raise ValueError('Invalid argument for physical output channel')
         return EftPhysOutput.get_param(self, 'mute', ch)
     def set_phys_out_nominal(self, ch, val):
+        if not self.info['features']['nominal-output']:
+            raise RuntimeError('Not supported by this model')
         if ch >= len(self.info['phys-outputs']):
             raise ValueError('Invalid argument for physical output channel')
         EftPhysOutput.set_param(self, 'nominal', ch, val)
     def get_phys_out_nominal(self, ch):
+        if not self.info['features']['nominal-output']:
+            raise RuntimeError('Not supported by this model')
         if ch >= len(self.info['phys-outputs']):
             raise ValueError('Invalid argument for physical output channel')
         return EftPhysOutput.get_param(self, 'nominal', ch)
 
     def set_phys_in_nominal(self, ch, val):
+        if not self.info['features']['nominal-input']:
+            raise RuntimeError('Not supported by this model')
         if ch >= len(self.info['phys-inputs']):
             raise ValueError('Invalid argument for physical input channel')
         EftPhysInput.set_param(self, 'nominal', ch, val)
     def get_phys_in_nominal(self, ch):
+        if not self.info['features']['nominal-input']:
+            raise RuntimeError('Not supported by this model')
         if ch >= len(self.info['phys-inputs']):
             raise ValueError('Invalid argument for physical input channel')
         return EftPhysInput.get_param(self, 'nominal', ch)

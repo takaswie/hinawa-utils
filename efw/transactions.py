@@ -149,6 +149,12 @@ class EftInfo():
     def get_spec(cls, unit):
         params = cls._execute_command(unit, 0, None)
         info = {}
+        for model, value in cls._MODELS.items():
+            if value == params[3]:
+                info['model'] = model
+                break
+        else:
+            raise RuntimeError('This model is not supported')
         info['features'] = cls._parse_capability(params)
         info['clock-sources'] = cls._parse_clock_source(params)
         info['sampling-rates'] = cls._parse_sampling_rate(params)
@@ -207,6 +213,7 @@ class EftInfo():
         args.append(addr         & 0xffffffff)
         cls._execute_command(unit, 2, args)
 
+    # 64 quads can be read at once.
     @classmethod
     def read_session_data(cls, unit, offset, quadlets):
         args = array('I')
@@ -248,11 +255,6 @@ class EftInfo():
                 caps[name] = True
             else:
                 caps[name] = False
-        # This is supported just by Onyx 1200F.
-        if params[3] == 0x01200f:
-            caps['tx-mapping'] = True
-        else:
-            caps['tx-mapping'] = False
         return caps
 
     @classmethod
@@ -555,6 +557,7 @@ class EftPhysOutput():
         elif operation is 'mute':
             cmd = 3
         elif operation is 'nominal':
+            print('Unfortunately, this doesn\'t work well...')
             cmd = 9
         else:
             raise ValueError('Invalid argument for operation.')
@@ -594,6 +597,7 @@ class EftPhysInput():
     @classmethod
     def get_param(cls, unit, operation, channel):
         if operation is 'nominal':
+            print('Unfortunately, this doesn\'t work well...')
             cmd = 9
         else:
             raise ValueError('Invalid argumentfor operation')
