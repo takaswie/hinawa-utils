@@ -7,7 +7,6 @@ import sys
 from misc.cui_kit import CuiKit
 
 from bebob.maudio_unit import MaudioUnit
-from bebob.maudio_protocol_normal import MaudioProtocolNormal
 
 def _handle_target_volume(unit, args, cmd, targets_func, set_func, get_func):
     CHS = (0, 1)
@@ -259,7 +258,8 @@ if fullpath:
     if len(unit.protocol.get_aux_input_labels()) > 0:
         cmds['aux-input'] = handle_aux_input
         cmds['aux-volume'] = handle_aux_volume
-        if isinstance(unit.protocol, MaudioProtocolNormal):
+        if (hasattr(unit.protocol, 'set_aux_balance') and
+            hasattr(unit.protocol, 'get_aux_balance')):
             cmds['aux-balance'] = handle_aux_balance
     if len(unit.protocol.get_output_labels()) > 0:
         cmds['output-volume'] = handle_output_volume
