@@ -413,13 +413,18 @@ def get_available_commands(features):
         cmds['rx-stream-mapping'] = handle_rx_stream_mapping
     if features['tx-mapping']:
         cmds['tx-stream-mapping'] = handle_tx_stream_mapping
-    if features['spdif-coax'] or features['aesebu-xlr'] or \
-       features['spdif-opt'] or features['adat-opt']:
-        cmds['digital-input'] = handle_digital_input
     if features['phantom-powering']:
         cmds['phantom-powering'] = handle_phantom_powering
     if features['nominal-input']:
         cmds['input'] = handle_input
+
+    count = 0
+    for iface in ('spdif-coax', 'spdif-opt', 'aesebu-xlr', 'adat-opt'):
+        if iface in features:
+            count += 1
+    if count > 1:
+        cmds['digital-input'] = handle_digital_input
+
     return cmds
 
 fullpath = CuiKit.seek_snd_unit_path()
