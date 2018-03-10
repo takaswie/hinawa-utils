@@ -283,10 +283,10 @@ def handle_input(unit, args):
         'nominal':  (unit.set_phys_in_nominal, unit.get_phys_in_nominal),
     }
     _OPS = ('set', 'get')
-    if len(args) >= 1 and int(args[0]) < len(unit.info['phys-inputs']):
-        ch = int(args[0])
-        if len(args) >= 2 and args[1] in _ITEMS:
-            item = args[1]
+    if len(args) >= 1 and args[0] in _ITEMS:
+        item = args[0]
+        if len(args) >= 2 and int(args[1]) < len(unit.info['phys-inputs']):
+            ch = int(args[1])
             set_func = _ITEMS[item][0]
             get_func = _ITEMS[item][1]
             if len(args) >= 3 and args[2] in _OPS:
@@ -299,9 +299,9 @@ def handle_input(unit, args):
                     print(get_func(ch))
                     return True
     print('Arguments for input command:')
-    print('  input CH ITEM OP [ENABLE]')
-    print('    CH:     [0-{0}]'.format(len(unit.info['phys-inputs']) - 1))
+    print('  input ITEM CH OP [ENABLE]')
     print('    ITEM:   [{0}]'.format('|'.join(_ITEMS)))
+    print('    CH:     [0-{0}]'.format(len(unit.info['phys-inputs']) - 1))
     print('    OP:     [{0}]'.format('|'.join(_OPS)))
     print('    ENABLE: [0|1] if OP=set')
     return False
@@ -314,10 +314,10 @@ def handle_playback(unit, args):
         'solo': (unit.set_playback_solo, unit.get_playback_solo),
     }
     _OPS = ('set', 'get')
-    if len(args) >= 1 and int(args[0]) < unit.info['playback-channels']:
-        ch = int(args[0])
-        if len(args) >= 2 and args[1] in _ITEMS:
-            item = args[1]
+    if len(args) >= 1 and args[0] in _ITEMS:
+        item = args[0]
+        if len(args) >= 2 and int(args[1]) < unit.info['playback-channels']:
+            ch = int(args[1])
             set_func = _ITEMS[item][0]
             get_func = _ITEMS[item][1]
             if len(args) >= 3 and args[2] in _OPS:
@@ -334,8 +334,8 @@ def handle_playback(unit, args):
                     return True
     print('Arguments for playback command:')
     print('  playback ITEM CH OP [dB|ENABLE]')
-    print('    CH:     [0-{0}]'.format(unit.info['playback-channels'] - 1))
     print('    ITEM:   [{0}]'.format('|'.join(_ITEMS)))
+    print('    CH:     [0-{0}]'.format(unit.info['playback-channels'] - 1))
     print('    OP:     [{0}]'.format('|'.join(_OPS)))
     print('    dB:     [-144.0..0] if OP=set and ITEM=gain')
     print('    ENABLE: [0|1]       if OP=set and ITEM=mute')
