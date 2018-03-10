@@ -1,0 +1,187 @@
+# For M-Audio FireWire 1814
+
+input-gain analog-1/2 0 get
+input-gain analog-1/2 1 get
+input-gain digital-1/2 0 get
+input-gain digital-1/2 1 get
+input-gain stream-1/2 0 get
+input-gain stream-1/2 1 get
+input-gain stream-3/4 0 get
+input-gain stream-3/4 1 get
+input-gain stream-5/6 0 get
+input-gain stream-5/6 1 get
+input-gain stream-7/8 0 get
+input-gain stream-7/8 1 get
+input-gain stream-9/10 0 get
+input-gain stream-9/10 1 get
+
+input-gain analog-1/2 0 set -32.0
+input-gain analog-1/2 1 set -32.0
+input-gain digital-1/2 0 set -32.0
+input-gain digital-1/2 1 set -32.0
+input-gain stream-1/2 0 set -32.0
+input-gain stream-1/2 1 set -32.0
+input-gain stream-3/4 0 set -32.0
+input-gain stream-3/4 1 set -32.0
+input-gain stream-5/6 0 set -32.0
+input-gain stream-5/6 1 set -32.0
+input-gain stream-7/8 0 set -32.0
+input-gain stream-7/8 1 set -32.0
+input-gain stream-9/10 0 set -32.0
+input-gain stream-9/10 1 set -32.0
+
+input-balance analog-1/2 0 get
+input-balance analog-1/2 1 get
+input-balance digital-1/2 0 get
+input-balance digital-1/2 1 get
+
+input-balance analog-1/2 0 set -32.0
+input-balance analog-1/2 1 set -32.0
+input-balance digital-1/2 0 set -32.0
+input-balance digital-1/2 1 set -32.0
+
+aux-input analog-1/2 0 get
+aux-input analog-1/2 1 get
+aux-input digital-1/2 0 get
+aux-input digital-1/2 1 get
+aux-input stream-1/2 0 get
+aux-input stream-1/2 1 get
+aux-input stream-3/4 0 get
+aux-input stream-3/4 1 get
+aux-input stream-5/6 0 get
+aux-input stream-5/6 1 get
+aux-input stream-7/8 0 get
+aux-input stream-7/8 1 get
+aux-input stream-9/10 0 get
+aux-input stream-9/10 1 get
+
+aux-input analog-1/2 0 set -32.0
+aux-input analog-1/2 1 set -32.0
+aux-input digital-1/2 0 set -32.0
+aux-input digital-1/2 1 set -32.0
+aux-input stream-1/2 0 set -32.0
+aux-input stream-1/2 1 set -32.0
+aux-input stream-3/4 0 set -32.0
+aux-input stream-3/4 1 set -32.0
+aux-input stream-5/6 0 set -32.0
+aux-input stream-5/6 1 set -32.0
+aux-input stream-7/8 0 set -32.0
+aux-input stream-7/8 1 set -32.0
+aux-input stream-9/10 0 set -32.0
+aux-input stream-9/10 1 set -32.0
+
+aux-volume 0 get
+aux-volume 1 get
+aux-volume 0 get
+aux-volume 1 get
+
+aux-volume 0 set -32.0
+aux-volume 1 set -32.0
+aux-volume 0 set -32.0
+aux-volume 1 set -32.0
+
+output-volume analog-1/2 0 get
+output-volume analog-1/2 1 get
+output-volume analog-3/4 0 get
+output-volume analog-3/4 1 get
+output-volume analog-5/6 0 get
+output-volume analog-5/6 1 get
+output-volume analog-7/8 0 get
+output-volume analog-7/8 1 get
+output-volume digital-1/2 0 get
+output-volume digital-1/2 1 get
+
+output-volume analog-1/2 0 set -32.0
+output-volume analog-1/2 1 set -32.0
+output-volume analog-3/4 0 set -32.0
+output-volume analog-3/4 1 set -32.0
+output-volume analog-5/6 0 set -32.0
+output-volume analog-5/6 1 set -32.0
+output-volume analog-7/8 0 set -32.0
+output-volume analog-7/8 1 set -32.0
+output-volume digital-1/2 0 set -32.0
+output-volume digital-1/2 1 set -32.0
+
+output-source analog-1/2 get
+output-source analog-3/4 get
+output-source analog-5/6 get
+output-source analog-7/8 get
+output-source digital-1/2 get
+
+output-source analog-1/2 set aux-1/2
+output-source analog-3/4 set aux-1/2
+output-source analog-5/6 set aux-1/2
+output-source analog-7/8 set aux-1/2
+output-source digital-1/2 set aux-1/2
+
+headphone-volume headphone-1/2 0 get
+headphone-volume headphone-1/2 1 get
+headphone-volume headphone-1/2 0 set -32.0
+headphone-volume headphone-1/2 1 set -32.0
+
+headphone-source headphone-1/2 get
+headphone-source headphone-1/2 set aux-1/2
+
+mixer-routing mixer-1/2 analog-1/2 get
+mixer-routing mixer-1/2 digital-1/2 get
+mixer-routing mixer-1/2 stream-1/2 get
+mixer-routing mixer-1/2 stream-3/4 get
+mixer-routing mixer-1/2 stream-5/6 get
+mixer-routing mixer-1/2 stream-7/8 get
+mixer-routing mixer-1/2 stream-9/10 get
+mixer-routing mixer-3/4 analog-1/2 get
+mixer-routing mixer-3/4 digital-1/2 get
+mixer-routing mixer-3/4 stream-1/2 get
+mixer-routing mixer-3/4 stream-3/4 get
+mixer-routing mixer-3/4 stream-5/6 get
+mixer-routing mixer-3/4 stream-7/8 get
+mixer-routing mixer-3/4 stream-9/10 get
+mixer-routing mixer-5/6 analog-1/2 get
+mixer-routing mixer-5/6 digital-1/2 get
+mixer-routing mixer-5/6 stream-1/2 get
+mixer-routing mixer-5/6 stream-3/4 get
+mixer-routing mixer-5/6 stream-5/6 get
+mixer-routing mixer-5/6 stream-7/8 get
+mixer-routing mixer-5/6 stream-9/10 get
+mixer-routing mixer-7/8 analog-1/2 get
+mixer-routing mixer-7/8 digital-1/2 get
+mixer-routing mixer-7/8 stream-1/2 get
+mixer-routing mixer-7/8 stream-3/4 get
+mixer-routing mixer-7/8 stream-5/6 get
+mixer-routing mixer-7/8 stream-7/8 get
+mixer-routing mixer-7/8 stream-9/10 get
+
+mixer-routing mixer-1/2 analog-1/2 set 1
+mixer-routing mixer-1/2 digital-1/2 set 1
+mixer-routing mixer-1/2 stream-1/2 set 1
+mixer-routing mixer-1/2 stream-3/4 set 1
+mixer-routing mixer-1/2 stream-5/6 set 1
+mixer-routing mixer-1/2 stream-7/8 set 1
+mixer-routing mixer-1/2 stream-9/10 set 1
+mixer-routing mixer-3/4 analog-1/2 set 1
+mixer-routing mixer-3/4 digital-1/2 set 1
+mixer-routing mixer-3/4 stream-1/2 set 1
+mixer-routing mixer-3/4 stream-3/4 set 1
+mixer-routing mixer-3/4 stream-5/6 set 1
+mixer-routing mixer-3/4 stream-7/8 set 1
+mixer-routing mixer-3/4 stream-9/10 set 1
+mixer-routing mixer-5/6 analog-1/2 set 1
+mixer-routing mixer-5/6 digital-1/2 set 1
+mixer-routing mixer-5/6 stream-1/2 set 1
+mixer-routing mixer-5/6 stream-3/4 set 1
+mixer-routing mixer-5/6 stream-5/6 set 1
+mixer-routing mixer-5/6 stream-7/8 set 1
+mixer-routing mixer-5/6 stream-9/10 set 1
+mixer-routing mixer-7/8 analog-1/2 set 1
+mixer-routing mixer-7/8 digital-1/2 set 1
+mixer-routing mixer-7/8 stream-1/2 set 1
+mixer-routing mixer-7/8 stream-3/4 set 1
+mixer-routing mixer-7/8 stream-5/6 set 1
+mixer-routing mixer-7/8 stream-7/8 set 1
+mixer-routing mixer-7/8 stream-9/10 set 1
+
+sampling-rate get
+sampling-rate set 192000
+
+clock-source get
+clock-source set ADAT
