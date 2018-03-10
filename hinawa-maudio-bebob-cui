@@ -176,18 +176,18 @@ def _handle_target_source(unit, args, cmd, targets_func, sources_func,
     return False
 
 def handle_headphone_source(unit, args):
-    _handle_target_source(unit, args, 'headphone-source',
-                          unit.protocol.get_headphone_labels,
-                          unit.protocol.get_headphone_source_labels,
-                          unit.protocol.set_headphone_source,
-                          unit.protocol.get_headphone_source)
+    return _handle_target_source(unit, args, 'headphone-source',
+                                 unit.protocol.get_headphone_labels,
+                                 unit.protocol.get_headphone_source_labels,
+                                 unit.protocol.set_headphone_source,
+                                 unit.protocol.get_headphone_source)
 
 def handle_output_source(unit, args):
-    _handle_target_source(unit, args,  'output-source',
-                          unit.protocol.get_output_labels,
-                          unit.protocol.get_output_source_labels,
-                          unit.protocol.set_output_source,
-                          unit.protocol.get_output_source)
+    return _handle_target_source(unit, args,  'output-source',
+                                 unit.protocol.get_output_labels,
+                                 unit.protocol.get_output_source_labels,
+                                 unit.protocol.set_output_source,
+                                 unit.protocol.get_output_source)
 
 def handle_clock_source(unit, args):
     OPS = ('set', 'get')
