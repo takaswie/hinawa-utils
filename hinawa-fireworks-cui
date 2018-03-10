@@ -354,9 +354,9 @@ def handle_monitor(unit, args):
         item = args[0]
         set_func = _ITEMS[item][0]
         get_func = _ITEMS[item][1]
-        if len(args) >= 2 and int(args[1]) < len(unit.info['phys-inputs']):
+        if len(args) >= 2 and int(args[1]) < unit.info['capture-channels']:
             input = int(args[1])
-            if len(args) >= 3 and int(args[2]) < len(unit.info['phys-outputs']):
+            if len(args) >= 3 and int(args[2]) < unit.info['playback-channels']:
                 output = int(args[2])
                 if len(args) >= 4 and args[3] in _OPS:
                     op = args[3]
@@ -373,8 +373,8 @@ def handle_monitor(unit, args):
     print('Arguments for monitor command:')
     print('  monitor ITEM INPUT OUTPUT OP [dB|BALANCE|ENABLE]')
     print('    ITEM:   [{0}]'.format('|'.join(_ITEMS)))
-    print('    INPUT:  [0-{0}]'.format(len(unit.info['phys-inputs']) - 1))
-    print('    OUTPUT: [0-{0}]'.format(len(unit.info['phys-outputs']) - 1))
+    print('    INPUT:  [0-{0}]'.format(unit.info['capture-channels'] - 1))
+    print('    OUTPUT: [0-{0}]'.format(unit.info['playback-channels'] - 1))
     print('    OP:     [{0}]'.format('|'.join(_OPS)))
     print('    dB:     [-144.0..0.0]           if OP=set and ITEM=gain')
     print('    ENABLE: [0|1]                   if OP=set and ITEM=mute')
