@@ -53,7 +53,10 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
                             'current',
                             self._PROCESSING_OUT_FB, self._PROCESSING_IN_FB,
                             in_ch, self._PROCESSING_OUT_CH)
+                print(data)
                 if data[0] == 0x00 and data[1] == 0x00:
                     return self._labels['mixers'][i]
 
-        raise OSError('Invalid state of headphone source. Set in advance.')
+        # No sources are set. For convenience, set 'mixer-1/2'.
+        self.set_headphone_source('headphone-1/2', 'mixer-1/2')
+        return 'mixer-1/2'
