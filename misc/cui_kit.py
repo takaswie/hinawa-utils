@@ -74,16 +74,23 @@ class CuiKit():
                 with open(filename) as fd:
                     for i, line in enumerate(fd):
                         args = line.rstrip().split(' ')
-                        if len(args) > 0:
-                            cmd = args[0]
-                            if cmd not in cmds:
-                                print('Invalid command in {0}: {1}: {2}'.format(
+                        if len(args) == 0:
+                            continue
+
+                        cmd = args[0]
+                        if len(cmd) == 0:
+                            continue
+                        if cmd[0] == '#':
+                            continue
+                        if cmd not in cmds:
+                            print('Invalid command in {0}: {1}: {2}'.format(
+                                                        filename, i, cmd))
+                            return False
+
+                        if not cmds[cmd](unit, args[1:]):
+                            print('Invalid arguments in {0}:{1}: {2}'.format(
                                                             filename, i, cmd))
-                                return False
-                            if not cmds[cmd](unit, args[1:]):
-                                print('Invalid arguments in {0}:{1}: {2}'.format(
-                                                                filename, i, cmd))
-                                return False
+                            return False
                 return True
         cls._dump_commands(cmds)
         return False
