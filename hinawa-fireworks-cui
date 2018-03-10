@@ -91,9 +91,9 @@ def handle_sampling_rate(unit, args):
 
 def handle_control_room(unit, args):
     _OPS = ('set', 'get')
+    sources = unit.get_control_room_source_labels()
     if len(args) >= 1 and args[0] in _OPS:
         op = args[0]
-        sources = unit.get_control_room_source_labels()
         if len(args) >= 2 and op == 'set' and args[1] in sources:
             source = args[1]
             unit.set_control_room_mirroring(source)
