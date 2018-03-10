@@ -1,0 +1,90 @@
+# For Yamaha GO46 and Terratec PHASE X24 FW.
+current-status
+firmware-info
+
+output-source analog-1/2 get
+output-source analog-3/4 get
+output-source digital-1/2 get
+
+output-source analog-1/2 set stream-1/2
+output-source analog-3/4 set stream-1/2
+output-source digital-1/2 set stream-1/2
+
+mixer-input volume analog-1/2 1 get
+mixer-input volume analog-1/2 2 get
+mixer-input volume digital-1/2 1 get
+mixer-input volume digital-1/2 2 get
+mixer-input volume stream-1/2 1 get
+mixer-input volume stream-1/2 2 get
+mixer-input volume stream-3/4 1 get
+mixer-input volume stream-3/4 2 get
+mixer-input volume stream-5/6 1 get
+mixer-input volume stream-5/6 2 get
+
+mixer-input volume analog-1/2 1 set -32.0
+mixer-input volume analog-1/2 2 set -32.0
+mixer-input volume digital-1/2 1 set -32.0
+mixer-input volume digital-1/2 2 set -32.0
+mixer-input volume stream-1/2 1 set -32.0
+mixer-input volume stream-1/2 2 set -32.0
+mixer-input volume stream-3/4 1 set -32.0
+mixer-input volume stream-3/4 2 set -32.0
+mixer-input volume stream-5/6 1 set -32.0
+mixer-input volume stream-5/6 2 set -32.0
+
+mixer-input mute analog-1/2 1 get
+mixer-input mute analog-1/2 2 get
+mixer-input mute digital-1/2 1 get
+mixer-input mute digital-1/2 2 get
+mixer-input mute stream-1/2 1 get
+mixer-input mute stream-1/2 2 get
+mixer-input mute stream-3/4 1 get
+mixer-input mute stream-3/4 2 get
+mixer-input mute stream-5/6 1 get
+mixer-input mute stream-5/6 2 get
+
+mixer-input mute analog-1/2 1 set 1
+mixer-input mute analog-1/2 2 set 1
+mixer-input mute digital-1/2 1 set 1
+mixer-input mute digital-1/2 2 set 1
+mixer-input mute stream-1/2 1 set 1
+mixer-input mute stream-1/2 2 set 1
+mixer-input mute stream-3/4 1 set 1
+mixer-input mute stream-3/4 2 set 1
+mixer-input mute stream-5/6 1 set 1
+mixer-input mute stream-5/6 2 set 1
+
+mixer-output volume 1 get
+mixer-output volume 2 get
+mixer-output volume 1 set -32.0
+mixer-output volume 2 set -32.0
+mixer-output mute 1 get
+mixer-output mute 2 get
+mixer-output mute 1 set 1
+mixer-output mute 2 set 1
+
+analog-output volume analog-1/2 1 get
+analog-output volume analog-1/2 2 get
+analog-output volume analog-3/4 1 get
+analog-output volume analog-3/4 2 get
+
+analog-output volume analog-1/2 1 set -32.0
+analog-output volume analog-1/2 2 set -32.0
+analog-output volume analog-3/4 1 set -32.0
+analog-output volume analog-3/4 2 set -32.0
+
+analog-output mute analog-1/2 1 get
+analog-output mute analog-1/2 2 get
+analog-output mute analog-3/4 1 get
+analog-output mute analog-3/4 2 get
+
+analog-output mute analog-1/2 1 set 1
+analog-output mute analog-1/2 2 set 1
+analog-output mute analog-3/4 1 set 1
+analog-output mute analog-3/4 2 set 1
+
+sampling-rate get
+sampling-rate set 88200
+
+clock-source get
+clock-source set S/PDIF
