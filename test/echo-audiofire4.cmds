@@ -1,0 +1,393 @@
+hardware-info
+
+monitor gain 0 0 get
+monitor gain 0 1 get
+monitor gain 0 2 get
+monitor gain 0 3 get
+monitor gain 0 4 get
+monitor gain 0 5 get
+monitor gain 1 0 get
+monitor gain 1 1 get
+monitor gain 1 2 get
+monitor gain 1 3 get
+monitor gain 1 4 get
+monitor gain 1 5 get
+monitor gain 2 0 get
+monitor gain 2 1 get
+monitor gain 2 2 get
+monitor gain 2 3 get
+monitor gain 2 4 get
+monitor gain 2 5 get
+monitor gain 3 0 get
+monitor gain 3 1 get
+monitor gain 3 2 get
+monitor gain 3 3 get
+monitor gain 3 4 get
+monitor gain 3 5 get
+monitor gain 4 0 get
+monitor gain 4 1 get
+monitor gain 4 2 get
+monitor gain 4 3 get
+monitor gain 4 4 get
+monitor gain 4 5 get
+monitor gain 5 0 get
+monitor gain 5 1 get
+monitor gain 5 2 get
+monitor gain 5 3 get
+monitor gain 5 4 get
+monitor gain 5 5 get
+monitor mute 0 0 get
+monitor mute 0 1 get
+monitor mute 0 2 get
+monitor mute 0 3 get
+monitor mute 0 4 get
+monitor mute 0 5 get
+monitor mute 1 0 get
+monitor mute 1 1 get
+monitor mute 1 2 get
+monitor mute 1 3 get
+monitor mute 1 4 get
+monitor mute 1 5 get
+monitor mute 2 0 get
+monitor mute 2 1 get
+monitor mute 2 2 get
+monitor mute 2 3 get
+monitor mute 2 4 get
+monitor mute 2 5 get
+monitor mute 3 0 get
+monitor mute 3 1 get
+monitor mute 3 2 get
+monitor mute 3 3 get
+monitor mute 3 4 get
+monitor mute 3 5 get
+monitor mute 4 0 get
+monitor mute 4 1 get
+monitor mute 4 2 get
+monitor mute 4 3 get
+monitor mute 4 4 get
+monitor mute 4 5 get
+monitor mute 5 0 get
+monitor mute 5 1 get
+monitor mute 5 2 get
+monitor mute 5 3 get
+monitor mute 5 4 get
+monitor mute 5 5 get
+monitor solo 0 0 get
+monitor solo 0 1 get
+monitor solo 0 2 get
+monitor solo 0 3 get
+monitor solo 0 4 get
+monitor solo 0 5 get
+monitor solo 1 0 get
+monitor solo 1 1 get
+monitor solo 1 2 get
+monitor solo 1 3 get
+monitor solo 1 4 get
+monitor solo 1 5 get
+monitor solo 2 0 get
+monitor solo 2 1 get
+monitor solo 2 2 get
+monitor solo 2 3 get
+monitor solo 2 4 get
+monitor solo 2 5 get
+monitor solo 3 0 get
+monitor solo 3 1 get
+monitor solo 3 2 get
+monitor solo 3 3 get
+monitor solo 3 4 get
+monitor solo 3 5 get
+monitor solo 4 0 get
+monitor solo 4 1 get
+monitor solo 4 2 get
+monitor solo 4 3 get
+monitor solo 4 4 get
+monitor solo 4 5 get
+monitor solo 5 0 get
+monitor solo 5 1 get
+monitor solo 5 2 get
+monitor solo 5 3 get
+monitor solo 5 4 get
+monitor solo 5 5 get
+monitor pan 0 0 get
+monitor pan 0 1 get
+monitor pan 0 2 get
+monitor pan 0 3 get
+monitor pan 0 4 get
+monitor pan 0 5 get
+monitor pan 1 0 get
+monitor pan 1 1 get
+monitor pan 1 2 get
+monitor pan 1 3 get
+monitor pan 1 4 get
+monitor pan 1 5 get
+monitor pan 2 0 get
+monitor pan 2 1 get
+monitor pan 2 2 get
+monitor pan 2 3 get
+monitor pan 2 4 get
+monitor pan 2 5 get
+monitor pan 3 0 get
+monitor pan 3 1 get
+monitor pan 3 2 get
+monitor pan 3 3 get
+monitor pan 3 4 get
+monitor pan 3 5 get
+monitor pan 4 0 get
+monitor pan 4 1 get
+monitor pan 4 2 get
+monitor pan 4 3 get
+monitor pan 4 4 get
+monitor pan 4 5 get
+monitor pan 5 0 get
+monitor pan 5 1 get
+monitor pan 5 2 get
+monitor pan 5 3 get
+monitor pan 5 4 get
+monitor pan 5 5 get
+monitor gain 0 0 set -32.0
+monitor gain 0 1 set -32.0
+monitor gain 0 2 set -32.0
+monitor gain 0 3 set -32.0
+monitor gain 0 4 set -32.0
+monitor gain 0 5 set -32.0
+monitor gain 1 0 set -32.0
+monitor gain 1 1 set -32.0
+monitor gain 1 2 set -32.0
+monitor gain 1 3 set -32.0
+monitor gain 1 4 set -32.0
+monitor gain 1 5 set -32.0
+monitor gain 2 0 set -32.0
+monitor gain 2 1 set -32.0
+monitor gain 2 2 set -32.0
+monitor gain 2 3 set -32.0
+monitor gain 2 4 set -32.0
+monitor gain 2 5 set -32.0
+monitor gain 3 0 set -32.0
+monitor gain 3 1 set -32.0
+monitor gain 3 2 set -32.0
+monitor gain 3 3 set -32.0
+monitor gain 3 4 set -32.0
+monitor gain 3 5 set -32.0
+monitor gain 4 0 set -32.0
+monitor gain 4 1 set -32.0
+monitor gain 4 2 set -32.0
+monitor gain 4 3 set -32.0
+monitor gain 4 4 set -32.0
+monitor gain 4 5 set -32.0
+monitor gain 5 0 set -32.0
+monitor gain 5 1 set -32.0
+monitor gain 5 2 set -32.0
+monitor gain 5 3 set -32.0
+monitor gain 5 4 set -32.0
+monitor gain 5 5 set -32.0
+monitor mute 0 0 set 1
+monitor mute 0 1 set 1
+monitor mute 0 2 set 1
+monitor mute 0 3 set 1
+monitor mute 0 4 set 1
+monitor mute 0 5 set 1
+monitor mute 1 0 set 1
+monitor mute 1 1 set 1
+monitor mute 1 2 set 1
+monitor mute 1 3 set 1
+monitor mute 1 4 set 1
+monitor mute 1 5 set 1
+monitor mute 2 0 set 1
+monitor mute 2 1 set 1
+monitor mute 2 2 set 1
+monitor mute 2 3 set 1
+monitor mute 2 4 set 1
+monitor mute 2 5 set 1
+monitor mute 3 0 set 1
+monitor mute 3 1 set 1
+monitor mute 3 2 set 1
+monitor mute 3 3 set 1
+monitor mute 3 4 set 1
+monitor mute 3 5 set 1
+monitor mute 4 0 set 1
+monitor mute 4 1 set 1
+monitor mute 4 2 set 1
+monitor mute 4 3 set 1
+monitor mute 4 4 set 1
+monitor mute 4 5 set 1
+monitor mute 5 0 set 1
+monitor mute 5 1 set 1
+monitor mute 5 2 set 1
+monitor mute 5 3 set 1
+monitor mute 5 4 set 1
+monitor mute 5 5 set 1
+monitor solo 0 0 set 1
+monitor solo 0 1 set 1
+monitor solo 0 2 set 1
+monitor solo 0 3 set 1
+monitor solo 0 4 set 1
+monitor solo 0 5 set 1
+monitor solo 1 0 set 1
+monitor solo 1 1 set 1
+monitor solo 1 2 set 1
+monitor solo 1 3 set 1
+monitor solo 1 4 set 1
+monitor solo 1 5 set 1
+monitor solo 2 0 set 1
+monitor solo 2 1 set 1
+monitor solo 2 2 set 1
+monitor solo 2 3 set 1
+monitor solo 2 4 set 1
+monitor solo 2 5 set 1
+monitor solo 3 0 set 1
+monitor solo 3 1 set 1
+monitor solo 3 2 set 1
+monitor solo 3 3 set 1
+monitor solo 3 4 set 1
+monitor solo 3 5 set 1
+monitor solo 4 0 set 1
+monitor solo 4 1 set 1
+monitor solo 4 2 set 1
+monitor solo 4 3 set 1
+monitor solo 4 4 set 1
+monitor solo 4 5 set 1
+monitor solo 5 0 set 1
+monitor solo 5 1 set 1
+monitor solo 5 2 set 1
+monitor solo 5 3 set 1
+monitor solo 5 4 set 1
+monitor solo 5 5 set 1
+monitor pan 0 0 set 32
+monitor pan 0 1 set 32
+monitor pan 0 2 set 32
+monitor pan 0 3 set 32
+monitor pan 0 4 set 32
+monitor pan 0 5 set 32
+monitor pan 1 0 set 32
+monitor pan 1 1 set 32
+monitor pan 1 2 set 32
+monitor pan 1 3 set 32
+monitor pan 1 4 set 32
+monitor pan 1 5 set 32
+monitor pan 2 0 set 32
+monitor pan 2 1 set 32
+monitor pan 2 2 set 32
+monitor pan 2 3 set 32
+monitor pan 2 4 set 32
+monitor pan 2 5 set 32
+monitor pan 3 0 set 32
+monitor pan 3 1 set 32
+monitor pan 3 2 set 32
+monitor pan 3 3 set 32
+monitor pan 3 4 set 32
+monitor pan 3 5 set 32
+monitor pan 4 0 set 32
+monitor pan 4 1 set 32
+monitor pan 4 2 set 32
+monitor pan 4 3 set 32
+monitor pan 4 4 set 32
+monitor pan 4 5 set 32
+monitor pan 5 0 set 32
+monitor pan 5 1 set 32
+monitor pan 5 2 set 32
+monitor pan 5 3 set 32
+monitor pan 5 4 set 32
+monitor pan 5 5 set 32
+
+output gain 0 get
+output gain 1 get
+output gain 2 get
+output gain 3 get
+output gain 4 get
+output gain 5 get
+output mute 0 get
+output mute 1 get
+output mute 2 get
+output mute 3 get
+output mute 4 get
+output mute 5 get
+output nominal 0 get
+output nominal 1 get
+output nominal 2 get
+output nominal 3 get
+output nominal 4 get
+output nominal 5 get
+output gain 0 set -32.0
+output gain 1 set -32.0
+output gain 2 set -32.0
+output gain 3 set -32.0
+output gain 4 set -32.0
+output gain 5 set -32.0
+output mute 0 set 1
+output mute 1 set 1
+output mute 2 set 1
+output mute 3 set 1
+output mute 4 set 1
+output mute 5 set 1
+output nominal 0 set 1
+output nominal 1 set 1
+output nominal 2 set 1
+output nominal 3 set 1
+output nominal 4 set 1
+output nominal 5 set 1
+
+playback 0 gain get
+playback 1 gain get
+playback 2 gain get
+playback 3 gain get
+playback 4 gain get
+playback 5 gain get
+playback 0 mute get
+playback 1 mute get
+playback 2 mute get
+playback 3 mute get
+playback 4 mute get
+playback 5 mute get
+playback 0 solo get
+playback 1 solo get
+playback 2 solo get
+playback 3 solo get
+playback 4 solo get
+playback 5 solo get
+playback 0 gain set -32.0
+playback 1 gain set -32.0
+playback 2 gain set -32.0
+playback 3 gain set -32.0
+playback 4 gain set -32.0
+playback 5 gain set -32.0
+playback 0 mute set 1
+playback 1 mute set 1
+playback 2 mute set 1
+playback 3 mute set 1
+playback 4 mute set 1
+playback 5 mute set 1
+playback 0 solo set 1
+playback 1 solo set 1
+playback 2 solo set 1
+playback 3 solo set 1
+playback 4 solo set 1
+playback 5 solo set 1
+
+input 0 nominal get
+input 1 nominal get
+input 2 nominal get
+input 3 nominal get
+input 4 nominal get
+input 5 nominal get
+input 0 nominal set 1
+input 1 nominal set 1
+input 2 nominal set 1
+input 3 nominal set 1
+input 4 nominal set 1
+input 5 nominal set 1
+
+box-state internal-multiplexer get
+box-state internal-multiplexer set Disabled
+
+rx-stream-mapping analog-1/2 get
+rx-stream-mapping analog-3/4 get
+rx-stream-mapping spdif-1/2 get
+rx-stream-mapping analog-1/2 set stream-1/2
+rx-stream-mapping analog-3/4 set stream-3/4
+rx-stream-mapping spdif-1/2 set stream-5/6
+
+sampling-rate get
+sampling-rate set 96000
+
+clock-source get
+clock-source set spdif
