@@ -169,14 +169,14 @@ def handle_box_state(unit, args):
 def handle_rx_stream_mapping(unit, args):
     _OPS = ('set', 'get')
     # Generate stereo pair for outputs
-    outputs = []
+    targets = []
     prev = ''
     num = 0
     for index, name in enumerate(unit.info['phys-outputs']):
         if index % 2 == 0:
             if prev is not name:
                 num = 0
-            outputs.append('{0}-{1}/{2}'.format(name, num * 2 + 1, num * 2 + 2))
+            targets.append('{0}-{1}/{2}'.format(name, num * 2 + 1, num * 2 + 2))
             prev = name
             num += 1
     # Generate stereo pair for sources
@@ -185,21 +185,22 @@ def handle_rx_stream_mapping(unit, args):
         if ch % 2 == 0:
             sources.append('stream-{0}/{1}'.format(ch+ 1, ch + 2))
     maps = unit.get_stream_mapping()
-    if len(args) > 1 and args[0] in _OPS and args[1] in outputs:
-        op = args[0]
-        output = outputs.index(args[1])
-        if op == _OPS[0] and len(args) > 2 and args[2] in sources:
-            source = sources.index(args[2]) * 2
-            maps['rx-map'][output] = source
-            unit.set_stream_mapping(maps['rx-map'], maps['tx-map'])
-            return True
-        else:
-            print(sources[maps['rx-map'][output] // 2])
-            return True
+    if len(args) >= 1 and args[0] in targets:
+        target = args[0]
+        if len(args) >= 2 and args[1] in _OPS:
+            op = args[1]
+            if len(args) >= 3 and op == 'set' and args[2] in sources:
+                source = sources.index(args[2]) * 2
+                maps['rx-map'][targets.index(target)] = source
+                unit.set_stream_mapping(maps['rx-map'], maps['tx-map'])
+                return True
+            elif op == 'get':
+                print(sources[maps['rx-map'][targets.index(target)] // 2])
+                return True
     print('Arguments for rx-stream-mapping command:')
-    print('  rx-stream-mapping OP OUTPUT [SOURCE]')
+    print('  rx-stream-mapping TARGETS OP [SOURCE]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
     print('    OP:     [{0}]'.format('|'.join(_OPS)))
-    print('    OUTPUT: [{0}]'.format('|'.join(outputs)))
     print('    SOURCE: [{0}]'.format('|'.join(sources)))
     return False
 
