@@ -405,7 +405,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         labels = self._labels['meters']
         meters = {}
         req = Hinawa.FwReq()
-        current = req.read(self._unit, 0xffc700600000, self._meters)
+        current = req.read(self._unit, self._ADDR_FOR_METERING, self._meters)
         for i, name in enumerate(labels):
             meters[name] = current[i]
         if len(current) > len(labels):

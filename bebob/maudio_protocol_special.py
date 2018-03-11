@@ -13,7 +13,6 @@ __all__ = ['MaudioProtocolSpecial']
 
 class MaudioProtocolSpecial(MaudioProtocolAbstract):
     BASE_ADDR = 0xffc700700000
-    METER_ADDR = 0xffc700600000
     _IDS = (
         0x010071,   # Firewire 1814
         0x010091,   # ProjectMix I/O
@@ -401,7 +400,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
     def get_meters(self):
         meters = {}
         req = Hinawa.FwReq()
-        data = req.read(self._unit, self.METER_ADDR, 21)
+        data = req.read(self._unit, self._ADDR_FOR_METERING, 21)
         for i, label in enumerate(self._METERING_LABELS):
             if i % 2:
                 meters[self._METERING_LABELS[i]] = data[1 + i // 2] >> 16

@@ -17,6 +17,7 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
                      'switch-0', 'switch-1'
                      'rotery-0', 'rotery-1', 'rotery-2'
                      'rate', 'sync')
+    _ADDR_FOR_METERING = 0xffc700600000
 
     def __init__(self, unit, debug):
         self._unit = unit
