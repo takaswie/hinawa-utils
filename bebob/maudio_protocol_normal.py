@@ -410,16 +410,11 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
             meters[name] = current[i]
         if len(current) > len(labels):
             misc = current[len(labels)]
-            # From Audiophile, several bits stand by one operation.
-            meters['switch-0'] = 0
-            meters['switch-1'] = 0
             meters['rotery-0'] = (misc >> 16) & 0x0f
             meters['rotery-1'] = (misc >> 20) & 0x0f
+            meters['switch-0'] = (misc >> 24) & 0x0f
+            meters['switch-1'] = (misc >> 28) & 0x0f
             meters['rotery-2'] = 0
-            if meters['rotery-0'] == 0:
-                meters['switch-0'] = (misc >> 24) & 0x0f
-            if meters['switch-0'] == 0:
-                meters['switch-1'] = (misc >> 28) & 0x0f
             meters['rate'] = AvcConnection.sampling_rates[(misc >> 8) & 0xff]
             meters['sync'] = (misc >> 0) & 0x0f
         return meters
