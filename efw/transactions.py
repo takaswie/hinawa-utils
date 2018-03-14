@@ -296,8 +296,8 @@ class EftInfo():
                     ports.append(name)
             return ports
 
-        return {'phys-inputs': parse_ports(params[26:]),
-                'phys-outputs': parse_ports(params[31:])}
+        return {'phys-inputs': parse_ports(params[31:]),
+                'phys-outputs': parse_ports(params[26:])}
 
     @staticmethod
     def _parse_mixer_channels(params):
