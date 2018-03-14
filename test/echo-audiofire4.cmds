@@ -326,55 +326,55 @@ output nominal 3 set 1
 output nominal 4 set 1
 output nominal 5 set 1
 
-playback 0 gain get
-playback 1 gain get
-playback 2 gain get
-playback 3 gain get
-playback 4 gain get
-playback 5 gain get
-playback 0 mute get
-playback 1 mute get
-playback 2 mute get
-playback 3 mute get
-playback 4 mute get
-playback 5 mute get
-playback 0 solo get
-playback 1 solo get
-playback 2 solo get
-playback 3 solo get
-playback 4 solo get
-playback 5 solo get
-playback 0 gain set -32.0
-playback 1 gain set -32.0
-playback 2 gain set -32.0
-playback 3 gain set -32.0
-playback 4 gain set -32.0
-playback 5 gain set -32.0
-playback 0 mute set 1
-playback 1 mute set 1
-playback 2 mute set 1
-playback 3 mute set 1
-playback 4 mute set 1
-playback 5 mute set 1
-playback 0 solo set 1
-playback 1 solo set 1
-playback 2 solo set 1
-playback 3 solo set 1
-playback 4 solo set 1
-playback 5 solo set 1
+playback gain 0 get
+playback gain 1 get
+playback gain 2 get
+playback gain 3 get
+playback gain 4 get
+playback gain 5 get
+playback mute 0 get
+playback mute 1 get
+playback mute 2 get
+playback mute 3 get
+playback mute 4 get
+playback mute 5 get
+playback solo 0 get
+playback solo 1 get
+playback solo 2 get
+playback solo 3 get
+playback solo 4 get
+playback solo 5 get
+playback gain 0 set -32.0
+playback gain 1 set -32.0
+playback gain 2 set -32.0
+playback gain 3 set -32.0
+playback gain 4 set -32.0
+playback gain 5 set -32.0
+playback mute 0 set 1
+playback mute 1 set 1
+playback mute 2 set 1
+playback mute 3 set 1
+playback mute 4 set 1
+playback mute 5 set 1
+playback solo 0 set 1
+playback solo 1 set 1
+playback solo 2 set 1
+playback solo 3 set 1
+playback solo 4 set 1
+playback solo 5 set 1
 
-input 0 nominal get
-input 1 nominal get
-input 2 nominal get
-input 3 nominal get
-input 4 nominal get
-input 5 nominal get
-input 0 nominal set 1
-input 1 nominal set 1
-input 2 nominal set 1
-input 3 nominal set 1
-input 4 nominal set 1
-input 5 nominal set 1
+input nominal 0 get
+input nominal 1 get
+input nominal 2 get
+input nominal 3 get
+input nominal 4 get
+input nominal 5 get
+input nominal 0 set 1
+input nominal 1 set 1
+input nominal 2 set 1
+input nominal 3 set 1
+input nominal 4 set 1
+input nominal 5 set 1
 
 box-state internal-multiplexer get
 box-state internal-multiplexer set Disabled
