@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+import sys
+import time
+import signal
+
 from misc.cui_kit import CuiKit
 from efw.efw_unit import EfwUnit
 
@@ -383,7 +387,6 @@ def handle_monitor(unit, args):
     return False
 
 def handle_listen_metering(unit, args):
-    import time, signal, sys
     # This is handled by another context.
     def handle_unix_signal(signum, frame):
         sys.exit()
