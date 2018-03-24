@@ -4,16 +4,16 @@ from misc.cui_kit import CuiKit
 from dice.dice_unit import DiceUnit
 
 def handle_current_status(unit, args):
-    print('owner address: {0:016x}'.format(unit.read_owner_addr()))
-    print('global enabled: {0}'.format(unit.read_enabled()))
+    print('owner address: {0:016x}'.format(unit.get_owner_addr()))
+    print('global enabled: {0}'.format(unit.get_enabled()))
     print('clock status:')
-    for name, value in unit.read_clock_status().items():
+    for name, value in unit.get_clock_status().items():
         print('  {0}: {1}'.format(name, value))
     print('clock source detection:')
-    for name, value in unit.read_clock_detection().items():
+    for name, value in unit.get_external_clock_states().items():
         print('  {0}: {1}'.format(name, ', '.join(value)))
-    print('measured rate: {0}'.format(unit.read_measured_rate()))
-    print('dice version: {0}'.format(unit.read_dice_version()))
+    print('measured rate: {0}'.format(unit.get_measured_sampling_rate()))
+    print('dice version: {0}'.format(unit.get_dice_version()))
     print('latest notification: 0x{0:08x}'.format(unit.get_latest_notification()))
     print('clock source: {0}'.format(unit.get_clock_source()))
     print('sampling rate: {0}'.format(unit.get_sampling_rate()))
@@ -21,7 +21,7 @@ def handle_current_status(unit, args):
     print('Transmitted streams:')
     for i, params in enumerate(unit.get_tx_params()):
         print('  Stream {0}:'.format(i))
-        print('    iso-channel: {0}'.format(params['iso-channel']))
+        print('    iso-channel: 0x{0:08x}'.format(params['iso-channel']))
         print('    speed:       {0}'.format(params['speed']))
         print('    pcm:         {0}'.format(params['pcm']))
         print('    midi:        {0}'.format(params['midi']))
@@ -34,7 +34,7 @@ def handle_current_status(unit, args):
     print('Received streams:')
     for i, params in enumerate(unit.get_rx_params()):
         print('  Stream {0}:'.format(i))
-        print('    iso-channel: {0}'.format(params['iso-channel']))
+        print('    iso-channel: 0x{0:08x}'.format(params['iso-channel']))
         print('    start:       {0}'.format(params['start']))
         print('    pcm:         {0}'.format(params['pcm']))
         print('    midi:        {0}'.format(params['midi']))
@@ -44,24 +44,26 @@ def handle_current_status(unit, args):
         print('    formation:')
         for j, name in enumerate(params['formation']):
             print('      {0}:         {1}'.format(j, name))
-    sync_info = unit.get_sync_info()
-    if len(sync_info) > 0:
+    sync_clock_source = unit.get_external_sync_clock_source()
+    if sync_clock_source != '':
+        sync_locked = unit.get_external_sync_locked()
+        sync_rate = unit.get_external_sync_rate()
+        sync_adat_status = unit.get_external_sync_adat_status()
+
         print('Synchronization infomation:')
-        print('  clock-source:  {0}'.format(sync_info['clock-source']))
-        print('  locked:        {0}'.format(sync_info['locked']))
-        print('  sampling-rate: {0}'.format(sync_info['sampling-rate']))
-        print('    ADAT:')
-        print('      data-bits: {0}'.format(sync_info['adat']['data-bits']))
-        print('      no-data:   {0}'.format(sync_info['adat']['no-data']))
+        print('  clock-source:  {0}'.format(sync_clock_source))
+        print('  locked:        {0}'.format(sync_locked))
+        print('  sampling-rate: {0}'.format(sync_rate))
+        print('  adat-status:   {0:x}'.format(sync_adat_status))
+
+    return True
 
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
+    rates = unit.get_supported_sampling_rates()
     if len(args) > 0 and args[0] in ops:
         op = args[0]
         if op == ops[0] and len(args) == 2:
-            if unit.get_property('streaming'):
-                print('Packet streaming started.')
-                sys.exit()
             rate = int(args[1])
             unit.set_sampling_rate(rate)
         else:
@@ -69,19 +71,16 @@ def handle_sampling_rate(unit, args):
         return True
     print('Arguments for sampling-rate command:')
     print('  sampling-rate OPERATION [RATE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
-    rates = ', '.join(str(r) for r in unit.supported_sampling_rates)
-    print('    RATE:      {0}'.format(rates))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    RATE:   [{0}]'.format('|'.join(map(str, rates))))
     return False
 
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
+    sources = unit.get_supported_clock_sources()
     if len(args) > 0 and args[0] in ops:
         op = args[0]
         if op == ops[0] and len(args) == 2:
-            if unit.get_property('streaming'):
-                print('Packet streaming started.')
-                sys.exit()
             source = args[1]
             unit.set_clock_source(source)
         else:
@@ -89,8 +88,8 @@ def handle_clock_source(unit, args):
         return True
     print('Arguments for clock-source command:')
     print('  clock-source OPERATION [SOURCE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
-    print('    SOURCE:    {0}'.format(', '.join(unit.supported_clock_sources)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SOURCE: [{0}]'.format('|'.join(sources)))
 
 def handle_nickname(unit, args):
     ops = ('set', 'get')
