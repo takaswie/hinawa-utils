@@ -46,8 +46,9 @@ class DiceUnit(Hinawa.SndDice):
     def get_supported_clock_sources(self):
         req = Hinawa.FwReq()
         labels = []
-        for label in self._protocol.read_clock_source_names(req):
-            if label != 'Unused':
+        clk_srcs = self._protocol.get_supported_clock_sources()
+        for i, label in enumerate(self._protocol.read_clock_source_names(req)):
+            if label != 'Unused' and self._protocol.CLOCK_BITS[i] in clk_srcs:
                 labels.append(label)
         return labels
 
