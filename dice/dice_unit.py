@@ -24,7 +24,8 @@ class DiceUnit(Hinawa.SndDice):
         else:
             raise ValueError('Invalid argument for character device')
 
-        self._protocol = TcatProtocolGeneral(self)
+        req = Hinawa.FwReq()
+        self._protocol = TcatProtocolGeneral(self, req)
 
     def get_owner_addr(self):
         req = Hinawa.FwReq()

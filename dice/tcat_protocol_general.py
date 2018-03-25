@@ -1,10 +1,6 @@
 from struct import pack, unpack
 from array import array
 
-import gi
-gi.require_version('Hinawa', '1.0')
-from gi.repository import Hinawa
-
 __all__ = ['TcatProtocolGeneral']
 
 class TcatProtocolGeneral():
@@ -39,10 +35,9 @@ class TcatProtocolGeneral():
         0x0c:   'internal',
     }
 
-    def __init__(self, unit):
+    def __init__(self, unit, req):
         self._unit = unit
 
-        req = Hinawa.FwReq()
         self._general_layout = self._detect_address_space(req)
         self._clock_source_labels = self.read_clock_source_names(req)
         self._sampling_rates, self._clock_sources = self._parse_clock_caps(req)
