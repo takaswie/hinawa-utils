@@ -251,15 +251,15 @@ class TcatProtocolGeneral():
 
         data = self._read_section_offset(req, 'global', 0x64, 4)
 
-        masks = unpack('>H', data[0:2])[0]
+        flags = unpack('>H', data[0:2])[0]
         for index, name in self.CLOCK_BITS.items():
             label = self._clock_source_labels[index]
-            if (1 << index) & masks and label != 'Unused':
+            if (1 << index) & flags and label != 'Unused':
                 clks.append(name)
 
-        masks = unpack('>H', data[2:4])[0]
+        flags = unpack('>H', data[2:4])[0]
         for index, rate in self.RATE_BITS.items():
-            if (1 << index) & masks:
+            if (1 << index) & flags:
                 rates.append(rate)
 
         return rates, clks
