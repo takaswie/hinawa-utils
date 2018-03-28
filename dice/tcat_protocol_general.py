@@ -39,7 +39,7 @@ class TcatProtocolGeneral():
         self._unit = unit
 
         self._general_layout = self._detect_address_space(req)
-        self._clock_source_labels = self.read_clock_source_names(req)
+        self._clock_source_labels = self._parse_clock_source_names(req)
         self._sampling_rates, self._clock_sources = self._parse_clock_caps(req)
 
     def _read_transaction(self, req, offset, length):
@@ -265,9 +265,12 @@ class TcatProtocolGeneral():
         return rates, clks
 
     # GLOBAL_CLOCK_SOURCE_NAMES: global:0x68
-    def read_clock_source_names(self, req):
+    def _parse_clock_source_names(self, req):
         data = self._read_section_offset(req, 'global', 0x68, 256)
         return self._parse_string_bytes(data).split('\\')[0:-2]
+
+    def get_clock_source_names(self):
+        return self._clock_source_labels
 
     # TX stream settings.
     def read_tx_params(self, req):

@@ -47,7 +47,7 @@ class DiceUnit(Hinawa.SndDice):
         req = Hinawa.FwReq()
         labels = []
         clk_srcs = self._protocol.get_supported_clock_sources()
-        for i, label in enumerate(self._protocol.read_clock_source_names(req)):
+        for i, label in enumerate(self._protocol.get_clock_source_names()):
             if label != 'Unused' and self._protocol.CLOCK_BITS[i] in clk_srcs:
                 labels.append(label)
         return labels
@@ -58,7 +58,7 @@ class DiceUnit(Hinawa.SndDice):
         if self._on_juju:
             raise RuntimeError('This operation is not supported withou ALSA.')
         req = Hinawa.FwReq()
-        labels = self._protocol.read_clock_source_names(req)
+        labels = self._protocol.get_clock_source_names()
         if source not in labels or source == 'Unused':
             raise ValueError('Invalid argument for clock source.')
         alias = self._protocol.CLOCK_BITS[labels.index(source)]
@@ -66,7 +66,7 @@ class DiceUnit(Hinawa.SndDice):
 
     def get_clock_source(self):
         req = Hinawa.FwReq()
-        labels = self._protocol.read_clock_source_names(req)
+        labels = self._protocol.get_clock_source_names()
         src = self._protocol.read_clock_source(req)
         index = {v: k for k, v in self._protocol.CLOCK_BITS.items()}[src]
         return labels[index]
