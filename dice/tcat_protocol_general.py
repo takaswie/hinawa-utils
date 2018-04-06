@@ -5,6 +5,7 @@ __all__ = ['TcatProtocolGeneral']
 
 class TcatProtocolGeneral():
     _BASE_ADDR = 0xffffe0000000
+    _MAXIMUM_TRX_LENGTH = 512
     RATE_BITS = {
         0x00:   32000,
         0x01:   44100,
@@ -42,33 +43,45 @@ class TcatProtocolGeneral():
         self._clock_source_labels = self._parse_clock_source_names(req)
         self._sampling_rates, self._clock_sources = self._parse_clock_caps(req)
 
-    def _read_transaction(self, req, offset, length):
+    def _write_transactions(self, req, offset, data):
+        quads = array('I')
+
+        addr = self._BASE_ADDR + offset
+
+        for i in range(0, len(data), 4):
+            quads.append(unpack('>I', data[i:i + 4])[0])
+
+        while len(quads) > 0:
+            quad_count = len(quads)
+            if quad_count >= self._MAXIMUM_TRX_LENGTH // 4:
+                quad_count = self._MAXIMUM_TRX_LENGTH // 4
+            req.write(self._unit, addr, quads[0:quad_count])
+            quads = quads[quad_count:]
+            addr += quad_count * 4
+
+    def _read_transactions(self, req, offset, length):
         data = bytearray()
 
-        quad_count = length // 4
-        quads = req.read(self._unit, self._BASE_ADDR + offset, quad_count)
+        addr = self._BASE_ADDR + offset
 
-        for quad in quads:
-            data.extend(pack('>I', quad))
+        while len(data) < length:
+            quad_count = (length - len(data)) // 4
+            if quad_count >= self._MAXIMUM_TRX_LENGTH // 4:
+                quad_count = self._MAXIMUM_TRX_LENGTH // 4
+            quads = req.read(self._unit, addr, quad_count)
+            for quad in quads:
+                data.extend(pack('>I', quad))
+            addr += quad_count * 4
 
         return data
 
-    def _write_transaction(self, req, offset, data):
-        quads = array('I')
-
-        for i in range(0, len(data), 4):
-            quads.append(unpack('>I', data[0:4])[0])
-            data = data[4:]
-
-        req.write(self._unit, self._BASE_ADDR + offset, quads)
-
     def _read_section_offset(self, req, section, offset, length):
         offset += self._general_layout[section]['offset']
-        return self._read_transaction(req, offset, length)
+        return self._read_transactions(req, offset, length)
 
     def _write_section_offset(self, req, section, offset, data):
         offset += self._general_layout[section]['offset']
-        self._write_transaction(req, offset, data)
+        self._write_transactions(req, offset, data)
 
     def _detect_address_space(self, req):
         PARAMS = (
@@ -80,7 +93,7 @@ class TcatProtocolGeneral():
         )
         layout = {}
 
-        data = self._read_transaction(req, 0, len(PARAMS) * 8)
+        data = self._read_transactions(req, 0, len(PARAMS) * 8)
         for i, param in enumerate(PARAMS):
             offset = unpack('>I', data[0:4])[0]
             count = unpack('>I', data[4:8])[0]
