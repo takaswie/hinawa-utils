@@ -40,6 +40,7 @@ class TcatProtocolGeneral():
         self._unit = unit
 
         self._general_layout = self._detect_address_space(req)
+        self._version = self._parse_dice_version(req)
         self._clock_source_labels = self._parse_clock_source_names(req)
         self._sampling_rates, self._clock_sources = self._parse_clock_caps(req)
 
@@ -253,14 +254,22 @@ class TcatProtocolGeneral():
         return unpack('>I', data)[0]
 
     # GLOBAL_VERSION: global:0x60
-    def read_dice_version(self, req):
+    def _parse_dice_version(self, req):
+        if self._general_layout['global']['length'] < 0x64:
+            return '1.0.2'
         data = self._read_section_offset(req, 'global', 0x60, 4)
         return '{0}.{1}.{2}.{3}'.format(data[0], data[1], data[2], data[3])
+
+    def get_dice_version(self):
+        return self._version
 
     # GLOBAL_CLOCK_CAPABILITIES: global:0x64
     def _parse_clock_caps(self, req):
         rates = []
         clks = []
+
+        if self._version == '1.0.2':
+            return [44100, 48000], ['arx1', 'internal']
 
         data = self._read_section_offset(req, 'global', 0x64, 4)
 
@@ -279,6 +288,16 @@ class TcatProtocolGeneral():
 
     # GLOBAL_CLOCK_SOURCE_NAMES: global:0x68
     def _parse_clock_source_names(self, req):
+        if self._version == '1.0.2':
+            names = []
+            for key, name in self.CLOCK_BITS.items():
+                if name == 'arx1':
+                    names.append('Firewire')
+                elif name == 'internal':
+                    names.append('Internal')
+                else:
+                    names.append('Unused')
+            return names
         data = self._read_section_offset(req, 'global', 0x68, 256)
         return self._parse_string_bytes(data).split('\\')[0:-2]
 

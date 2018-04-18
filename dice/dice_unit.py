@@ -104,7 +104,7 @@ class DiceUnit(Hinawa.SndDice):
 
     def get_dice_version(self):
         req = Hinawa.FwReq()
-        return self._protocol.read_dice_version(req)
+        return self._protocol.get_dice_version()
 
     def get_tx_params(self):
         req = Hinawa.FwReq()
