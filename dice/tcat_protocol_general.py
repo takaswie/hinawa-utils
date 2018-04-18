@@ -211,7 +211,7 @@ class TcatProtocolGeneral():
         status = {}
 
         data = self._read_section_offset(req, 'global', 0x54, 4)
-        status['locked'] = bool(data[0])
+        status['locked'] = bool(data[3])
         status['rate'] = self.RATE_BITS[data[2]]
 
         return status
