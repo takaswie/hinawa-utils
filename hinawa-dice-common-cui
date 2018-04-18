@@ -25,9 +25,10 @@ def handle_current_status(unit, args):
         print('    speed:       {0}'.format(params['speed']))
         print('    pcm:         {0}'.format(params['pcm']))
         print('    midi:        {0}'.format(params['midi']))
-        print('    iec60958:')
-        print('      caps:      {0}'.format(params['iec60958']['caps']))
-        print('      enable:    {0}'.format(params['iec60958']['enable']))
+        if 'iec60958' in params:
+            print('    iec60958:')
+            print('      caps:      {0}'.format(params['iec60958']['caps']))
+            print('      enable:    {0}'.format(params['iec60958']['enable']))
         print('    formation:')
         for j, name in enumerate(params['formation']):
             print('      {0}:         {1}'.format(j, name))
@@ -38,9 +39,10 @@ def handle_current_status(unit, args):
         print('    start:       {0}'.format(params['start']))
         print('    pcm:         {0}'.format(params['pcm']))
         print('    midi:        {0}'.format(params['midi']))
-        print('    iec60958:')
-        print('      caps:      {0}'.format(params['iec60958']['caps']))
-        print('      enable:    {0}'.format(params['iec60958']['enable']))
+        if 'iec60958' in params:
+            print('    iec60958:')
+            print('      caps:      {0}'.format(params['iec60958']['caps']))
+            print('      enable:    {0}'.format(params['iec60958']['enable']))
         print('    formation:')
         for j, name in enumerate(params['formation']):
             print('      {0}:         {1}'.format(j, name))

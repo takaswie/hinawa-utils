@@ -303,11 +303,12 @@ class TcatProtocolGeneral():
                 'midi':        unpack('>I', data[8:12])[0],
                 'speed':       unpack('>I', data[12:16])[0],
                 'formation':   pcm_formation,
-                'iec60958':    {
+            }
+            if length >= 280:
+                stream['iec60958'] = {
                     'caps':    unpack('>I', data[272:276])[0],
                     'enable':  unpack('>I', data[276:280])[0],
                 }
-            }
             params.append(stream)
         return params
 
@@ -329,11 +330,12 @@ class TcatProtocolGeneral():
                 'pcm':          pcm_count,
                 'midi':         unpack('>I', data[12:16])[0],
                 'formation':    pcm_formation,
-                'iec60958':     {
-                    'caps':     unpack('>I', data[272:276])[0],
-                    'enable':   unpack('>I', data[276:280])[0],
-                }
             }
+            if length >= 280:
+                stream['iec60958'] = {
+                    'caps':    unpack('>I', data[272:276])[0],
+                    'enable':  unpack('>I', data[276:280])[0],
+                }
             params.append(stream)
         return params
 
