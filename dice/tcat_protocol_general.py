@@ -367,7 +367,7 @@ class TcatProtocolGeneral():
         val = unpack('>I', data)[0]
         if (val not in self.CLOCK_BITS or
                 self._clock_source_labels[val] == 'Unused'):
-            raise OSError('Unexpected return value for clock source.')
+            return ''
         return self.CLOCK_BITS[val]
 
     def read_external_sync_locked(self, req):
