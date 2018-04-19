@@ -86,9 +86,9 @@ class TcatProtocolGeneral():
 
     def _detect_address_space(self, req):
         PARAMS = (
-            ('global',  10, 0x64),
-            ('tx',      10, 0x18),
-            ('rx',      10, 0x18),
+            ('global',  40, 0x60),
+            ('tx',      40, 0x18),
+            ('rx',      40, 0x18),
             ('external', 0, 0),
             ('reserved', 0, 0),
         )
@@ -96,13 +96,13 @@ class TcatProtocolGeneral():
 
         data = self._read_transactions(req, 0, len(PARAMS) * 8)
         for i, param in enumerate(PARAMS):
-            offset = unpack('>I', data[0:4])[0]
-            count = unpack('>I', data[4:8])[0]
+            offset = unpack('>I', data[0:4])[0] * 4
+            count = unpack('>I', data[4:8])[0] * 4
             data = data[8:]
             if offset >= param[1] or count >= param[2]:
                 layout[param[0]] = {
-                    'offset':   offset * 4,
-                    'length':   count * 4,
+                    'offset':   offset,
+                    'length':   count,
                 }
         return layout
 
