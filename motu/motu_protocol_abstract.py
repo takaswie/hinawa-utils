@@ -1,5 +1,9 @@
 from abc import ABCMeta, abstractmethod
 
+import gi
+gi.require_version('Hinawa', '1.0')
+from gi.repository import Hinawa
+
 __all__ = ['MotuProtocolAbstract']
 
 class MotuProtocolAbstract(metaclass=ABCMeta):
@@ -31,7 +35,7 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
     def read(self, offset, count):
         req = Hinawa.FwReq()
         addr = self.BASE_ADDR + offset
-        quads = req.read(self, addr, count)
+        quads = req.read(self._unit, addr, count)
         if self._debug:
             print('    read: {0:012x}:'.format(addr))
             for i, quad in enumerate(quads):
@@ -46,7 +50,7 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
             for i, quad in enumerate(quads):
                 print('        {0:04x}: {1:08x}'.format(offset + i * 4, quad))
 
-        req.write(self, addr, quads)
+        req.write(self._unit, addr, quads)
 
     @abstractmethod
     def get_supported_sampling_rates(self):
