@@ -1,0 +1,15 @@
+clock-source get
+clock-source set ADAT
+clock-source set S/PDIF
+clock-source set Internal
+sampling-rate get
+sampling-rate set 48000
+sampling-rate set 88200
+sampling-rate set 96000
+sampling-rate set 44100
+mixer-mode get
+mixer-mode set 0
+mixer-mode set 1
+optical-interface get
+optical-interface set ADAT
+optical-interface set S/PDIF
