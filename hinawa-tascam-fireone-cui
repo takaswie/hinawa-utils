@@ -54,7 +54,7 @@ def handle_control_mode(unit, args):
     print('    MODE:     {0}'.format(', '.join(unit.control_modes)))
     return False
 
-def hanel_input_mode(unit, args):
+def handle_input_mode(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
         op = args[0]
@@ -78,16 +78,18 @@ def handle_sampling_rate(unit, args):
             if unit.get_property('streaming'):
                 print('Packet streaming started.')
                 return False
-            rate = args[1]
+            rate = int(args[1])
             for fmt in unit.supported_stream_formats['playback']:
                 if fmt['sampling-rate'] == rate:
                     playback = fmt
+                    break
             else:
                 print('Invalid argument for sampling rate')
                 return False
             for fmt in unit.supported_stream_formats['capture']:
                 if fmt['sampling-rate'] == rate:
                     capture = fmt
+                    break
             else:
                 print('Invalid argument for sampling rate')
                 return False
@@ -105,10 +107,10 @@ def handle_sampling_rate(unit, args):
     return True
 
 cmds = {
-    'current-status':   handle_control_mode,
+    'current-status':   handle_current_status,
     'display-mode':     handle_display_mode,
     'control-mode':     handle_control_mode,
-    'input-mode':       hanel_input_mode,
+    'input-mode':       handle_input_mode,
     'sampling-rate':    handle_sampling_rate,
 }
 
