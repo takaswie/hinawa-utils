@@ -38,7 +38,7 @@ def handle_output_volume(unit, args):
                                               data)
         else:
             data = AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current',
-                                                     1, ch))
+                                                     1, ch)
             print(AvcAudio.parse_data_to_db(data))
         return True
     print('Arguments for output-volume command:')
@@ -53,15 +53,15 @@ def handle_ouptut_mute(unit, args):
     if len(args) > 0 and args[0] in ops:
         op = args[0]
         if op == ops[0] and len(args) == 2:
-            value = int(args[1])
-            AvcAudio.set_feature_mute_state(unit.fcp, 0, 'current', 1, 0, value)
+            mute = int(args[1])
+            AvcAudio.set_feature_mute_state(unit.fcp, 0, 'current', 1, 0, mute)
         else:
             print(AvcAudio.get_feature_mute_state(unit.fcp, 0, 'current', 1, 0))
         return True
     print('Arguments for output-mute command:')
-    print('  output-mute OPERATION CH [VALUE]')
+    print('  output-mute OPERATION [MUTE]')
     print('    OPERATION: {0}'.format(', '.join(ops)))
-    print('    VALUE:     0, 1')
+    print('    MUTE:      0, 1')
     return False
 
 cmds = {
