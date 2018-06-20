@@ -36,7 +36,7 @@ class OxfwUnit(Hinawa.SndUnit):
     def _parse_hardware_info(self):
         hw_info = {}
         req = Hinawa.FwReq()
-        params = req.read(self, 0xfffff0050000, 1)
+        params = req.read(self, 0xfffff0050000, 4)
         val = params[0]
         hw_info['asic-type'] = \
             'FW{0}{1}{2}'.format((val >> 28) & 0xf,
@@ -45,7 +45,7 @@ class OxfwUnit(Hinawa.SndUnit):
         hw_info['firmware-version'] = \
             '{0}.{1}'.format((val >> 8) & 0xf,
                              (val & 0xf))
-        params = req.read(self, 0xfffff0090020, 1)
+        params = req.read(self, 0xfffff0090020, 4)
         val = params[0]
         hw_info['asic-id'] = \
             bytes([(val >> 24) & 0xff,
