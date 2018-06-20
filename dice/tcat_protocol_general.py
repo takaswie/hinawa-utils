@@ -45,20 +45,17 @@ class TcatProtocolGeneral():
         self._sampling_rates, self._clock_sources = self._parse_clock_caps(req)
 
     def _write_transactions(self, req, offset, data):
-        quads = array('I')
-
         addr = self._BASE_ADDR + offset
 
-        for i in range(0, len(data), 4):
-            quads.append(unpack('>I', data[i:i + 4])[0])
+        length = len(data)
 
-        while len(quads) > 0:
-            quad_count = len(quads)
-            if quad_count >= self._MAXIMUM_TRX_LENGTH // 4:
-                quad_count = self._MAXIMUM_TRX_LENGTH // 4
-            req.write(self._unit, addr, quads[0:quad_count])
-            quads = quads[quad_count:]
-            addr += quad_count * 4
+        while length > 0:
+            count = length
+            if count >= self._MAXIMUM_TRX_LENGTH:
+                count -= self._MAXIMUM_TRX_LENGTH
+            req.write(self._unit, addr, data[0:count])
+            data = data[count:]
+            length -= count
 
     def _read_transactions(self, req, offset, length):
         data = bytearray()
@@ -66,13 +63,11 @@ class TcatProtocolGeneral():
         addr = self._BASE_ADDR + offset
 
         while len(data) < length:
-            quad_count = (length - len(data)) // 4
-            if quad_count >= self._MAXIMUM_TRX_LENGTH // 4:
-                quad_count = self._MAXIMUM_TRX_LENGTH // 4
-            quads = req.read(self._unit, addr, quad_count)
-            for quad in quads:
-                data.extend(pack('>I', quad))
-            addr += quad_count * 4
+            count = length
+            if length >= self._MAXIMUM_TRX_LENGTH:
+                count = length - self._MAXIMUM_TRX_LENGTH
+            data.extend(req.read(self._unit, addr, count))
+            length -= count
 
         return data
 
@@ -145,8 +140,7 @@ class TcatProtocolGeneral():
         return self._parse_string_bytes(data).rstrip()
 
     def _clock_select_transaction(self, data):
-        quads = array('I')
-        quads.append(unpack('>I', data)[0])
+        quads = unpack('>I', data)
         offset = self._general_layout['global']['offset'] + 0x4c
         self._unit.transact(self._BASE_ADDR + offset, quads, 0x00000020)
 
