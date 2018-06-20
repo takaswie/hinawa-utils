@@ -1,0 +1,25 @@
+current-status
+
+display-mode get
+display-mode set always-off
+display-mode set always-on
+display-mode set breathe
+display-mode set metronome
+display-mode set MIDI-clock-rotate
+display-mode set MIDI-clock-flash
+display-mode set jog-slow-rotate
+display-mode set jog-track
+
+control-mode get
+control-mode set mackie-HUI-emulation
+control-mode set native
+
+input-mode get
+input-mode set monaural
+input-mode set stereo
+
+sampling-rate get
+sampling-rate set 44100
+sampling-rate set 48000
+sampling-rate set 88200
+sampling-rate set 96000
