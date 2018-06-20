@@ -1,0 +1,18 @@
+current-status
+output-volume get 1
+output-volume get 2
+output-volume get 3
+output-volume get 4
+output-volume get 5
+output-volume get 6
+output-volume get 0
+output-volume set 1 0
+output-volume set 2 0
+output-volume set 3 0
+output-volume set 4 0
+output-volume set 5 0
+output-volume set 6 0
+output-volume set 0 0
+output-mute get
+output-mute set 1
+output-mute set 0
