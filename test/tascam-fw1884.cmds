@@ -1,0 +1,32 @@
+firmware-versions
+
+clock-source get
+clock-source set Word-clock
+clock-source set S/PDIF
+clock-source set ADAT
+clock-source set Internal
+
+sampling-rate get
+sampling-rate set 48000
+sampling-rate set 88200
+sampling-rate set 96000
+sampling-rate set 44100
+
+master-fader get
+master-fader set 1
+master-fader set 0
+
+coaxial-source get
+coaxial-source set S/PDIF-1/2
+coaxial-source set Analog-1/2
+
+bright-led 83 on
+bright-led 84 on
+bright-led 85 on
+bright-led 86 on
+bright-led 87 on
+bright-led 83 off
+bright-led 84 off
+bright-led 85 off
+bright-led 86 off
+bright-led 87 off
