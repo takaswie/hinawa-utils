@@ -1,5 +1,5 @@
 from re import match
-from array import array
+from struct import unpack
 
 import gi
 gi.require_version('Hinawa', '2.0')
@@ -28,36 +28,34 @@ class TscmUnit(Hinawa.SndUnit):
         else:
             raise ValueError('Invalid argument for character device')
 
-    def _read_transaction(self, addr, quads):
-        req = Hinawa.FwReq()
-        return req.read(self, addr, quads)
-
-    def _write_transaction(self, addr, data):
-        req = Hinawa.FwReq()
-        return req.write(self, addr, data)
-
     def get_firmware_versions(self):
         info = {}
-        data = self._read_transaction(0xffff00000000, 1)
-        info['Register'] = data[0]
-        data = self._read_transaction(0xffff00000004, 1)
-        info['FPGA'] = data[0]
-        data = self._read_transaction(0xffff00000008, 1)
-        info['ARM'] = data[0]
-        data = self._read_transaction(0xffff0000000c, 1)
-        info['HW'] = data[0]
+        req = Hinawa.FwReq()
+        data = req.read(self, 0xffff00000000, 4)
+        info['Register'] = unpack('>I', data)[0]
+        data = req.read(self, 0xffff00000004, 4)
+        info['FPGA'] = unpack('>I', data)[0]
+        data = req.read(self, 0xffff00000008, 4)
+        info['ARM'] = unpack('>I', data)[0]
+        data = req.read(self, 0xffff0000000c, 4)
+        info['HW'] = unpack('>I', data)[0]
         return info
 
     def set_clock_source(self, source):
         if source not in self.supported_clock_sources:
             raise ValueError('Invalid argument for clock source.')
         src = self.supported_clock_sources.index(source) + 1
-        data = self._read_transaction(0xffff00000228, 1)
-        data[0] = (data[0] & 0x0000ff00) | src
-        self._write_transaction(0xffff00000228, data)
+        req = Hinawa.FwReq()
+        data = req.read(self, 0xffff00000228, 4)
+        data = bytearray(data)
+        data[0] = 0
+        data[1] = 0
+        data[3] = src
+        req.write(self, 0xffff00000228, data)
     def get_clock_source(self):
-        data = self._read_transaction(0xffff00000228, 1)
-        index = ((data[0] & 0x00ff0000) >> 16) - 1
+        req = Hinawa.FwReq()
+        data = req.read(self, 0xffff00000228, 4)
+        index = data[1] - 1
         if index >= len(self.supported_clock_sources):
             raise OSError('Unexpected value for clock source.')
         return self.supported_clock_sources[index]
@@ -73,59 +71,61 @@ class TscmUnit(Hinawa.SndUnit):
             flag = 0x81
         elif rate == 96000:
             flag = 0x82
-        data = self._read_transaction(0xffff00000228, 1)
-        data[0] = (data[0] & 0x000000ff) | (flag << 8)
-        self._write_transaction(0xffff00000228, data)
+        req = Hinawa.FwReq()
+        data = req.read(self, 0xffff00000228, 4)
+        data = bytearray(data)
+        data[3] = flag
+        req.write(self, 0xffff00000228, data)
     def get_sampling_rate(self):
-        data = self._read_transaction(0xffff00000228, 1)
-        value = (data[0] & 0xff000000) >> 24
-        if (value & 0x0f) == 0x01:
+        req = Hinawa.FwReq()
+        data = req.read(self, 0xffff00000228, 4)
+        if (data[1] & 0x0f) == 0x01:
             rate = 44100
-        elif (value & 0x0f) == 0x02:
+        elif (data[1] & 0x0f) == 0x02:
             rate = 48000
         else:
             raise OSError('Unexpected value for sampling rate.')
-        if (value & 0xf0) == 0x80:
+        if (data[1] & 0xf0) == 0x80:
             rate *= 2
-        elif (value & 0xf0) != 0x00:
-            print(value)
+        elif (data[1] & 0xf0) != 0x00:
             raise OSError('Unexpected value for sampling rate.')
         return rate
 
     def set_master_fader(self, mode):
-        data = array('I')
-        if mode > 0:
-            data.append(0x00004000)
+        data = bytearray(4)
+        if mode:
+            data[2] = 0x40
         else:
-            data.append(0x00400000)
-        self._write_transaction(0xffff0000022c, data)
+            data[1] = 0x40
+        req = Hinawa.FwReq()
+        req.write(self, 0xffff0000022c, data)
     def get_master_fader(self):
-        data = self._read_transaction(0xffff0000022c, 1)
-        if data[0] & 0x00000040:
-            return True
-        else:
-            return False
+        req = Hinawa.FwReq()
+        data = req.read(self, 0xffff0000022c, 4)
+        return bool(data[3] & 0x40)
 
     def set_coaxial_source(self, source):
-        data = array('I')
+        data = bytearray(4)
         if source not in self.supported_coax_sources:
             raise ValueError('Invalid argument for coaxial source.')
         if self.supported_coax_sources.index(source) == 0:
-            data.append(0x00020000)
+            data[1] = 0x02
         else:
-            data.append(0x00000200)
-        self._write_transaction(0xffff0000022c, data)
+            data[2] = 0x02
+        req = Hinawa.FwReq()
+        req.write(self, 0xffff0000022c, data)
     def get_coaxial_source(self):
-        data = self._read_transaction(0xffff0000022c, 1)
-        index = data[0] & 0x00000002 > 0
+        req = Hinawa.FwReq()
+        data = req.read(self, 0xffff0000022c, 4)
+        index = data[3] & 0x02 > 0
         return self.supported_coax_sources[index]
 
     def bright_led(self, position, state):
         if state not in self.supported_led_status:
             raise ValueError('Invalid argument for LED state.')
-        data = array('I')
-        if self.supported_led_status.index(state) == 0:
-            data.append(position)
-        else:
-            data.append(0x00010000 | position)
-        self._write_transaction(0xffff00000404, data)
+        data = bytearray(4)
+        data[3] = position
+        if self.supported_led_status.index(state) == 1:
+            data[1] = 0x01
+        req = Hinawa.FwReq()
+        req.write(self, 0xffff00000404, data)

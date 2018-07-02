@@ -79,9 +79,10 @@ def handle_coax_src(unit, args):
     return False
 
 def handle_bright_led(unit, args):
-    if len(args) == 2:
-        rate = args[1]
-        unit.bright_led(rate)
+    if len(args) > 1:
+        pos = int(args[0])
+        state = args[1]
+        unit.bright_led(pos, state)
         return True
     print('Arguments for coaxial-source command:')
     print('  coaxial-source POSITION STATE')
