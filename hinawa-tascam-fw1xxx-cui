@@ -17,9 +17,9 @@ def handle_clock_source(unit, args):
             print(unit.get_clock_source())
         return True
     print('Arguments for clock-source command:')
-    print('  clock-source OPERATION [SOURCE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
-    print('    SOURCE:    {0}'.format(', '.join(unit.supported_clock_sources)))
+    print('  clock-source OP [SRC]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SRC:    [{0}]'.format('|'.join(unit.supported_clock_sources)))
     return False
 
 def handle_sampling_rate(unit, args):
@@ -33,10 +33,10 @@ def handle_sampling_rate(unit, args):
             print(unit.get_sampling_rate())
         return True
     print('Arguments for sampling-rate command:')
-    print('  sampling-rate OPERATION [RATE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('  sampling-rate OP [RATE]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
     rates = [str(r) for r in unit.supported_sampling_rates]
-    print('    RATE:      {0}'.format(', '.join(rates)))
+    print('    RATE:   [{0}]'.format('|'.join(rates)))
     return False
 
 def handle_firmware_versions(unit, args):
@@ -50,16 +50,15 @@ def handle_master_fader(unit, args):
     if len(args) > 0 and args[0] in ops:
         op = args[0]
         if op == ops[0] and len(args) == 2:
-            rate = int(args[1])
-            unit.set_master_fader(rate)
+            mode = int(args[1])
+            unit.set_master_fader(mode)
         else:
             print(unit.get_master_fader())
         return True
     print('Arguments for master-fader command:')
-    print('  master-fader OPERATION [RATE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
-    rates = [str(r) for r in unit.supported_sampling_rates]
-    print('    RATE:      {0}'.format(', '.join(rates)))
+    print('  master-fader OP [MODE]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    MODE:   [0|1]')
     return False
 
 def handle_coax_src(unit, args):
@@ -73,9 +72,9 @@ def handle_coax_src(unit, args):
             print(unit.get_coaxial_source())
         return True
     print('Arguments for coaxial-source command:')
-    print('  coaxial-source OPERATION [RATE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
-    print('    RATE:      {0}'.format(', '.join(unit.supported_coax_sources)))
+    print('  coaxial-source OP [RATE]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    RATE:   [{0}]'.format('|'.join(unit.supported_coax_sources)))
     return False
 
 def handle_bright_led(unit, args):
@@ -85,9 +84,9 @@ def handle_bright_led(unit, args):
         unit.bright_led(pos, state)
         return True
     print('Arguments for coaxial-source command:')
-    print('  coaxial-source POSITION STATE')
-    print('    POSITION:  0-???')
-    print('    STATE: {0}'.format(', '.join(unit.supported_led_status)))
+    print('  coaxial-source POS STATE')
+    print('    POS:    [0-???]')
+    print('    STATE:  [{0}]'.format('|'.join(unit.supported_led_status)))
     return False
 
 cmds = {
