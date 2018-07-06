@@ -96,17 +96,6 @@ class TscmUnit(Hinawa.SndUnit):
             raise OSError('Unexpected value for sampling rate.')
         return rate
 
-    def set_master_fader(self, mode):
-        frames = bytearray(4)
-        if mode:
-            frames[2] = 0x40
-        else:
-            frames[1] = 0x40
-        self.write_quadlet(0x022c, frames)
-    def get_master_fader(self):
-        frames = self.read_quadlet(0x022c)
-        return bool(frames[3] & 0x40)
-
     def set_coaxial_source(self, source):
         frames = bytearray(4)
         if source not in self.supported_coax_sources:
@@ -120,12 +109,3 @@ class TscmUnit(Hinawa.SndUnit):
         frames = self.read_quadlet(0x022c)
         index = frames[3] & 0x02 > 0
         return self.supported_coax_sources[index]
-
-    def bright_led(self, position, state):
-        if state not in self.supported_led_status:
-            raise ValueError('Invalid argument for LED state.')
-        frames = bytearray(4)
-        frames[3] = position
-        if self.supported_led_status.index(state) == 1:
-            frames[1] = 0x01
-        self.write_quadlet(0x0404, frames)

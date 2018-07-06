@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from misc.cui_kit import CuiKit
-from tscm.tscm_unit import TscmUnit
+from tscm.tscm_rack_unit import TscmRackUnit
 
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
@@ -45,22 +45,6 @@ def handle_firmware_versions(unit, args):
         print('{0}: {1}'.format(name, value))
     return True
 
-def handle_master_fader(unit, args):
-    ops = ('set', 'get')
-    if len(args) > 0 and args[0] in ops:
-        op = args[0]
-        if op == ops[0] and len(args) == 2:
-            mode = int(args[1])
-            unit.set_master_fader(mode)
-        else:
-            print(unit.get_master_fader())
-        return True
-    print('Arguments for master-fader command:')
-    print('  master-fader OP [MODE]')
-    print('    OP:     [{0}]'.format('|'.join(ops)))
-    print('    MODE:   [0|1]')
-    return False
-
 def handle_coax_src(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
@@ -77,28 +61,56 @@ def handle_coax_src(unit, args):
     print('    RATE:   [{0}]'.format('|'.join(unit.supported_coax_sources)))
     return False
 
-def handle_bright_led(unit, args):
-    if len(args) > 1:
-        pos = int(args[0])
-        state = args[1]
-        unit.bright_led(pos, state)
-        return True
-    print('Arguments for coaxial-source command:')
-    print('  coaxial-source POS STATE')
-    print('    POS:    [0-???]')
-    print('    STATE:  [{0}]'.format('|'.join(unit.supported_led_status)))
+def handle_monitor_input(unit, args):
+    _OPS = ('set', 'get')
+    _ITEMS = {
+        'gain':     (unit.set_gain,     unit.get_gain),
+        'mute':     (unit.set_mute,     unit.get_mute),
+        'balance':  (unit.set_balance,  unit.get_balance),
+    }
+    labels = unit.get_channel_labels()
+
+    if len(args) >= 1 and args[0] in labels:
+        ch = args[0]
+        if len(args) >= 2 and args[1] in _ITEMS:
+            item = args[1]
+            set_func, get_func = _ITEMS[item]
+            if len(args) >= 3 and args[2] in _OPS:
+                op = args[2]
+                if len(args) >= 4 and op == 'set':
+                    val = None
+                    if item == 'gain':
+                        val = float(args[3])
+                    elif item == 'mute':
+                        val = bool(int(args[3]))
+                    elif item == 'balance':
+                        val = int(args[3])
+                    if val != None:
+                        set_func(ch, val)
+                        return True
+                elif op == 'get':
+                    print(get_func(ch))
+                    return True
+    print('Arguments for monitor-input command:')
+    print('  monitor-input CH ITEM OP [dB|MUTE|BALANCE]')
+    print('    CH:     [{0}]'.format('|'.join(labels)))
+    print('    ITEM:   [{0}]'.format('|'.join(_ITEMS)))
+    print('    OP:     [set|get]')
+    print('    dB:     [0-99] (percentage) if OP=set')
+    print('    MUTE:   [0|1] if OP=set')
+    print('    BALANCE:[0-99] (left-to-right, percentage) if OP=set')
     return False
 
 cmds = {
     'clock-source':         handle_clock_source,
     'sampling-rate':        handle_sampling_rate,
     'firmware-versions':    handle_firmware_versions,
-    'master-fader':         handle_master_fader,
     'coaxial-source':       handle_coax_src,
-    'bright-led':           handle_bright_led,
+
+    'monitor-input':        handle_monitor_input,
 }
 
 fullpath = CuiKit.seek_snd_unit_path()
 if fullpath:
-    unit = TscmUnit(fullpath)
+    unit = TscmRackUnit(fullpath)
     CuiKit.dispatch_command(unit, cmds)
