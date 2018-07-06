@@ -1,0 +1,129 @@
+firmware-versions
+
+clock-source get
+clock-source set S/PDIF
+clock-source set Internal
+
+sampling-rate get
+sampling-rate set 48000
+sampling-rate set 88200
+sampling-rate set 96000
+sampling-rate set 44100
+
+coaxial-source get
+coaxial-source set S/PDIF-1/2
+coaxial-source set Analog-1/2
+
+monitor-input Analog-1 mute get
+monitor-input Analog-2 mute get
+monitor-input Analog-3 mute get
+monitor-input Analog-4 mute get
+monitor-input Analog-5 mute get
+monitor-input Analog-6 mute get
+monitor-input Analog-7 mute get
+monitor-input Analog-8 mute get
+monitor-input ADAT-1 mute get
+monitor-input ADAT-2 mute get
+monitor-input ADAT-3 mute get
+monitor-input ADAT-4 mute get
+monitor-input ADAT-5 mute get
+monitor-input ADAT-6 mute get
+monitor-input ADAT-7 mute get
+monitor-input ADAT-8 mute get
+monitor-input S/PDIF-1 mute get
+monitor-input S/PDIF-2 mute get
+
+monitor-input Analog-1 mute set 1
+monitor-input Analog-2 mute set 1
+monitor-input Analog-3 mute set 1
+monitor-input Analog-4 mute set 1
+monitor-input Analog-5 mute set 1
+monitor-input Analog-6 mute set 1
+monitor-input Analog-7 mute set 1
+monitor-input Analog-8 mute set 1
+monitor-input ADAT-1 mute set 1
+monitor-input ADAT-2 mute set 1
+monitor-input ADAT-3 mute set 1
+monitor-input ADAT-4 mute set 1
+monitor-input ADAT-5 mute set 1
+monitor-input ADAT-6 mute set 1
+monitor-input ADAT-7 mute set 1
+monitor-input ADAT-8 mute set 1
+monitor-input S/PDIF-1 mute set 1
+monitor-input S/PDIF-2 mute set 1
+
+monitor-input Analog-1 balance get
+monitor-input Analog-2 balance get
+monitor-input Analog-3 balance get
+monitor-input Analog-4 balance get
+monitor-input Analog-5 balance get
+monitor-input Analog-6 balance get
+monitor-input Analog-7 balance get
+monitor-input Analog-8 balance get
+monitor-input ADAT-1 balance get
+monitor-input ADAT-2 balance get
+monitor-input ADAT-3 balance get
+monitor-input ADAT-4 balance get
+monitor-input ADAT-5 balance get
+monitor-input ADAT-6 balance get
+monitor-input ADAT-7 balance get
+monitor-input ADAT-8 balance get
+monitor-input S/PDIF-1 balance get
+monitor-input S/PDIF-2 balance get
+
+monitor-input Analog-1 balance set 50
+monitor-input Analog-2 balance set 50
+monitor-input Analog-3 balance set 50
+monitor-input Analog-4 balance set 50
+monitor-input Analog-5 balance set 50
+monitor-input Analog-6 balance set 50
+monitor-input Analog-7 balance set 50
+monitor-input Analog-8 balance set 50
+monitor-input ADAT-1 balance set 50
+monitor-input ADAT-2 balance set 50
+monitor-input ADAT-3 balance set 50
+monitor-input ADAT-4 balance set 50
+monitor-input ADAT-5 balance set 50
+monitor-input ADAT-6 balance set 50
+monitor-input ADAT-7 balance set 50
+monitor-input ADAT-8 balance set 50
+monitor-input S/PDIF-1 balance set 50
+monitor-input S/PDIF-2 balance set 50
+
+monitor-input Analog-1 gain get
+monitor-input Analog-2 gain get
+monitor-input Analog-3 gain get
+monitor-input Analog-4 gain get
+monitor-input Analog-5 gain get
+monitor-input Analog-6 gain get
+monitor-input Analog-7 gain get
+monitor-input Analog-8 gain get
+monitor-input ADAT-1 gain get
+monitor-input ADAT-2 gain get
+monitor-input ADAT-3 gain get
+monitor-input ADAT-4 gain get
+monitor-input ADAT-5 gain get
+monitor-input ADAT-6 gain get
+monitor-input ADAT-7 gain get
+monitor-input ADAT-8 gain get
+monitor-input S/PDIF-1 gain get
+monitor-input S/PDIF-2 gain get
+
+monitor-input Analog-1 gain set 50
+monitor-input Analog-2 gain set 50
+monitor-input Analog-3 gain set 50
+monitor-input Analog-4 gain set 50
+monitor-input Analog-5 gain set 50
+monitor-input Analog-6 gain set 50
+monitor-input Analog-7 gain set 50
+monitor-input Analog-8 gain set 50
+monitor-input ADAT-1 gain set 50
+monitor-input ADAT-2 gain set 50
+monitor-input ADAT-3 gain set 50
+monitor-input ADAT-4 gain set 50
+monitor-input ADAT-5 gain set 50
+monitor-input ADAT-6 gain set 50
+monitor-input ADAT-7 gain set 50
+monitor-input ADAT-8 gain set 50
+monitor-input S/PDIF-1 gain set 50
+monitor-input S/PDIF-2 gain set 50
