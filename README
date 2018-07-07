@@ -12,16 +12,21 @@
     * CUI tool for Griffin Firewave
  * hinawa-lacie-speakers-cui
     * CUI tool for Lacie FireWire speakers
+ * hinawa-motu-common-cui
+    * CUI tool for MOTU FireWire series
  * hinawa-maudio-bebob-cui
     * CUI tool for M-Audio FireWire series based on BeBoB solution
  * hinawa-oxfw-generic-cui
     * CUI tool for OXFW generic functionalities
  * hinawa-tascam-fireone-cui
     * CUI tool for Tascam FireOne
- * hinawa-tscm-fw-cui
-    * CUI tool for Tascam FireWire series
- * hinawa-yamaha-go-cui
-    * CUI tool for Yamaha GO series
+ * hinawa-tascam-fw-rack-cui
+    * CUI tool for rack models of Tascam FireWire series (FW1804)
+ * hinawa-tascam-fw-console-cui
+    * CUI tool for console models of Tascam FireWire series (FW1082/1884)
+ * hinawa-yamaha-terratec-cui
+    * CUI tool for Yamaha GO series and Terratec PHASE series
 
-All of them are libhinawa applications. Please install libhinawa in advance.
+All of them are libhinawa applications. Please install libhinawa version 1 or
+later in advance.
  * https://github.com/takaswie/libhinawa
