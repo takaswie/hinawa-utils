@@ -13,7 +13,7 @@ def handle_current_status(unit, args):
     print('Channel:')
     data = AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current', 1, 0)
     db = AvcAudio.parse_data_to_db(data)
-    print('  volume: {0}'.format(volume))
+    print('  volume: {0}'.format(db))
     if AvcAudio.get_feature_mute_state(unit.fcp, 0, 'current', 1, 0):
         mute = 'on'
     else:
@@ -31,7 +31,7 @@ def handle_output_volume(unit, args):
         op = args[0]
         if op == ops[0] and len(args) == 2:
             db = float(args[1])
-            data = AvcAudio.parse_data_to_db(db)
+            data = AvcAudio.build_data_from_db(db)
             AvcAudio.set_feature_volume_state(unit.fcp, 0, 'current', 1, 0,
                                               data)
         else:
