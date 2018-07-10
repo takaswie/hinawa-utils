@@ -26,6 +26,8 @@
     * CUI tool for console models of Tascam FireWire series (FW1082/1884)
  * hinawa-yamaha-terratec-cui
     * CUI tool for Yamaha GO series and Terratec PHASE series
+ * hinawa-focusrite-saffirepro-io-cui
+    * CUI tool for Focusrite SaffirePro IO series
 
 All of them are libhinawa applications. Please install libhinawa version 1 or
 later in advance.

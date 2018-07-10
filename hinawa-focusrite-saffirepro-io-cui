@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+
+from misc.cui_kit import CuiKit
+from bebob.focusrite_saffirepro_io import FocusriteSaffireproIoUnit
+
+def handle_mixer_input(unit, args):
+    ITEMS = {
+        'balance':  (unit.set_mixer_input_balance,
+                     unit.get_mixer_input_balance),
+        'gain':     (unit.set_mixer_input_gain,
+                     unit.get_mixer_input_gain),
+    }
+    CHS = (1, 2)
+    OPS = ('set', 'get')
+    targets = unit.get_mixer_input_labels()
+    if len(args) >= 1 and args[0] in targets:
+        target = args[0]
+        if len(args) >= 2 and args[1] in ITEMS:
+            set_func, get_func = ITEMS[args[1]]
+            if len(args) >= 3 and int(args[2]) in CHS:
+                ch = int(args[2])
+                if len(args) >= 4 and args[3] in OPS:
+                    op = args[3]
+                    if len(args) >= 5 and op == 'set':
+                        val = float(args[4])
+                        set_func(target, ch, val)
+                        return True
+                    elif op == 'get':
+                        print(get_func(target, ch))
+                        return True
+    print('Arguments for mixer-input command:')
+    print('  mixer-input TARGET ITEM CH OP [dB|BALANCE]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    ITEMS:  [{0}]'.format('|'.join(ITEMS)))
+    print('    CH:     [{0}] (0=both)'.format('|'.join(map(str, CHS))))
+    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    dB:     [-128.0..128.0] if ITEM=gain and OP=set')
+    print('    BALANCE:[0..99] (left-to-right) if ITEM=balance and OP=set')
+    return False
+
+
+def handle_output_volume(unit, args):
+    OPS = ('set', 'get')
+    targets = unit.get_output_labels()
+    if len(args) >= 1 and args[0] in targets:
+        target = args[0]
+        if len(args) >= 2 and args[1] in OPS:
+            op = args[1]
+            if len(args) >= 3 and op == 'set':
+                db = float(args[2])
+                unit.set_output_volume(target, db)
+                return True
+            elif op == 'get':
+                print(unit.get_output_volume(target))
+                return True
+    print('Arguments for output-volume command:')
+    print('  output-volume TARGET OP [dB]')
+    print('    TARGET:   [{0}]'.format('|'.join(targets)))
+    print('    OP:       [{0}]'.format('|'.join(OPS)))
+    print('    dB:       [-128.00..128.00] if OP=set')
+    return False
+
+def handle_output_source(unit, args):
+    OPS = ('set', 'get')
+    targets = unit.get_output_labels()
+    if len(args) >= 1 and args[0] in targets:
+        target = args[0]
+        if len(args) >= 2 and args[1] in OPS:
+            op = args[1]
+            sources = unit.get_output_source_labels(target)
+            if len(args) >= 3 and op == 'set' and args[2] in sources:
+                source = args[2]
+                unit.set_output_source(target, source)
+                return True
+            elif op == 'get':
+                print(unit.get_output_source(target))
+                return True
+    print('Arguments for output-source command:')
+    print('  output-source TARGET OP [SRC]')
+    print('    TARGET:    [{0}]'.format('|'.join(targets)))
+    print('    OP:        [{0}]'.format('|'.join(OPS)))
+    for target in targets:
+        sources = unit.get_output_source_labels(target)
+        print('    SRC:       [{0}] if TARGET={1} and OP=set'.format(
+                                                '|'.join(sources), target))
+    return False
+
+cmds = {
+    'mixer-input':      handle_mixer_input,
+    'output-volume':    handle_output_volume,
+    'output-source':    handle_output_source,
+}
+
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = FocusriteSaffireproIoUnit(fullpath)
+    CuiKit.dispatch_command(unit, cmds)
