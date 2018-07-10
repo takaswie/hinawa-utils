@@ -1,3 +1,5 @@
+from struct import unpack
+
 import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
@@ -24,11 +26,18 @@ class MotuUnit(Hinawa.SndMotu):
             raise ValueError('The character device is not for Motu unit.')
         self.listen()
 
-        # TODO: apply more intelligent way and pick up more information.
-        model_id = self.get_config_rom()[13]
-        if model_id >> 24 == 17:
-            raise OSError('Unknown model for Motu unit.')
-        model_id &= 0x00ffffff
+        model_id = -1
+        data = self.get_config_rom()
+        quad_count = len(data) // 4
+        for i in range(quad_count):
+            quad = unpack('>I', data[:4])[0]
+            if quad >> 24 == 0x17:
+                model_id = quad & 0x00ffffff
+                break
+            data = data[4:]
+        if model_id < 0:
+            raise OSError('Invalid design of config rom.')
+
         if model_id in self.SUPPORTED_MODELS:
             self.name = self.SUPPORTED_MODELS[model_id][0]
             self._protocol = self.SUPPORTED_MODELS[model_id][1](self, False)
