@@ -49,7 +49,7 @@ class Ta1394ConfigRom(Ieee1394ConfigRom):
         )
         info = {}
 
-        entries = super().get_root_directory(rom)
+        entries = self.get_root_directory(rom)
         for entry in entries:
             for parser in PARSERS:
                 key, type, label, handler = parser
