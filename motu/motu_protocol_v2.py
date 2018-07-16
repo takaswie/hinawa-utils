@@ -5,29 +5,31 @@ __all__ = ['MotuProtocolV2']
 class MotuProtocolV2(MotuProtocolAbstract):
     # direction/index/mask/shift
     OPT_IFACE_MODE_ATTRS = {
-        'in':   (0x00000300, 8),
-        'out':  (0x00000c00, 10),
+        'in':   (2, 0x03, 0),
+        'out':  (2, 0x0c, 2),
     }
 
     PACKET_SIZE_ATTRS = {
-        'in':   (0x00000080, 7),
-        'out':  (0x00000040, 6),
+        'in':   (3, 0x80, 7),
+        'out':  (3, 0x40, 6),
     }
 
     def get_supported_sampling_rates(self):
-        if self._unit.name == '828mk2':
+        if self._unit.name in ('828mk2', ):
             return self.SUPPORTED_SAMPLING_RATES_X2
+        if self._unit.name in ('Traveler', ):
+            return self.SUPPORTED_SAMPLING_RATES_X4
 
     def get_sampling_rate(self):
-        quads = self.read(0x0b14, 1)
-        val = (quads[0] & 0x00000038) >> 3
+        frames = self.read(0x0b14, 4)
+        val = (frames[3] & 0x38) >> 3
         return self.SUPPORTED_SAMPLING_RATES_X4[val]
 
     def set_sampling_rate(self, rate):
-        quads = self.read(0x0b14, 1)
-        quads[0] &= ~0x00000038
-        quads[0] |= self.SUPPORTED_SAMPLING_RATES_X4.index(rate) << 3
-        self.write(0x0b14, quads)
+        frames = self.read(0x0b14, 4)
+        frames[3]  &= ~0x00000038
+        frames[3] |= self.SUPPORTED_SAMPLING_RATES_X4.index(rate) << 3
+        self.write(0x0b14, frames)
 
     def get_supported_clock_sources(self):
         sources = [
@@ -45,9 +47,9 @@ class MotuProtocolV2(MotuProtocolAbstract):
         return sources
 
     def get_clock_source(self):
-        quads = self.read(0x0b14, 1)
+        frames = self.read(0x0b14, 4)
 
-        val = quads[0] & 0x00000007
+        val = frames[3] & 0x07
         if val == 0:
             return self.CLOCK_INTERNAL
         elif val == 1:
@@ -64,22 +66,22 @@ class MotuProtocolV2(MotuProtocolAbstract):
                 return self.CLOCK_SPDIF_ON_COAX
 
     def set_clock_source(self, source):
-        quads = self.read(0x0b14, 1)
+        frames = self.read(0x0b14, 4)
 
-        quads[0] &= ~0x00000007
+        frames[3] &= ~0x07
         if source == self.CLOCK_ADAT_ON_OPT:
-            quads[0] |= 0x01
+            frames[3] |= 0x01
         elif source == self.CLOCK_WORD_ON_BNC:
-            quads[0] |= 0x04
+            frames[3] |= 0x04
         elif source == self.CLOCK_ADAT_ON_DSUB:
-            quads[0] |= 0x05
+            frames[3] |= 0x05
         elif source in (self.CLOCK_SPDIF_ON_OPT, self.CLOCK_SPDIF_ON_COAX):
             mode = self.get_opt_iface_mode('in', 'A')
             if source == self.CLOCK_SPDIF_ON_OPT and mode != 'S/PDIF':
                 raise ValueError('This mode is currently unavailable.')
-            quads[0] |= 0x02
+            frames[3] |= 0x02
 
-        self.write(0x0b14, quads)
+        self.write(0x0b14, frames)
 
     def get_supported_opt_iface_indexes(self):
         if self._unit.name == '828mk2':
@@ -88,10 +90,10 @@ class MotuProtocolV2(MotuProtocolAbstract):
             return self.SUPPORTED_OPT_IFACE_INDEXES
 
     def get_opt_iface_mode(self, direction, index):
-        quads = self.read(0x0c04, 1)
+        frames = self.read(0x0c04, 4)
 
-        mask, shift = self.OPT_IFACE_MODE_ATTRS[direction]
-        val = (quads[0] & mask) >> shift
+        pos, mask, shift = self.OPT_IFACE_MODE_ATTRS[direction]
+        val = (frames[pos] & mask) >> shift
         if val >= len(self.SUPPORTED_OPT_IFACE_MODES):
             raise OSError('Unexpected value for opt iface mode.')
 
@@ -102,7 +104,7 @@ class MotuProtocolV2(MotuProtocolAbstract):
         return self.SUPPORTED_OPT_IFACE_MODES[val]
 
     def set_opt_iface_mode(self, direction, index, mode):
-        quads = self.read(0x0c04, 1)
+        frames = self.read(0x0c04, 4)
 
         idx = self.SUPPORTED_OPT_IFACE_MODES.index(mode)
         if idx == 1:
@@ -110,16 +112,16 @@ class MotuProtocolV2(MotuProtocolAbstract):
         elif idx == 2:
             idx = 1
 
-        mask, shift = self.OPT_IFACE_MODE_ATTRS[direction]
-        quads[0] &= ~mask
-        quads[0] |= idx << shift
+        pos, mask, shift = self.OPT_IFACE_MODE_ATTRS[direction]
+        frames[pos] &= ~mask
+        frames[pos] |= idx << shift
 
-        self.write(0x0c04, quads)
+        self.write(0x0c04, frames)
 
-        mask, shift = self.PACKET_SIZE_ATTRS[direction]
-        quads = self.read(0x0b10, 1)
-        quads[0] &= ~mask
+        pos, mask, shift = self.PACKET_SIZE_ATTRS[direction]
+        frames = self.read(0x0b10, 4)
+        frames[pos] &= ~mask
         if mode != 'ADAT':
-            quads[0] |= 1 << shift
+            frames[pos] |= 1 << shift
 
-        self.write(0x0b10, quads)
+        self.write(0x0b10, frames)

@@ -32,25 +32,25 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
         self._unit = unit
         self._debug = bool(debug)
 
-    def read(self, offset, count):
+    def read(self, offset, size):
         req = Hinawa.FwReq()
         addr = self.BASE_ADDR + offset
-        quads = req.read(self._unit, addr, count)
+        frames = req.read(self._unit, addr, size)
         if self._debug:
             print('    read: {0:012x}:'.format(addr))
-            for i, quad in enumerate(quads):
-                print('        {0:04x}: {1:08x}'.format(offset + i * 4, quad))
-        return quads
+            for i, frame in enumerate(frames):
+                print('        {0:04x}: {1:02x}'.format(offset + i, frame))
+        return bytearray(frames)
 
-    def write(self, offset, quads):
+    def write(self, offset, frames):
         req = Hinawa.FwReq()
         addr = self.BASE_ADDR + offset
         if self._debug:
             print('    write: {0:012x}:'.format(addr))
-            for i, quad in enumerate(quads):
-                print('        {0:04x}: {1:08x}'.format(offset + i * 4, quad))
+            for i, frame in enumerate(frames):
+                print('        {0:04x}: {1:02x}'.format(offset + i, frame))
 
-        req.write(self._unit, addr, quads)
+        req.write(self._unit, addr, frames)
 
     @abstractmethod
     def get_supported_sampling_rates(self):
