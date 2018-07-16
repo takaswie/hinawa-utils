@@ -7,6 +7,7 @@ from gi.repository import Hinawa
 from motu.motu_protocol_v1 import MotuProtocolV1
 from motu.motu_protocol_v2 import MotuProtocolV2
 from motu.motu_protocol_v3 import MotuProtocolV3
+from motu.config_rom import MotuConfigRom
 
 __all__ = ['MotuUnit']
 
@@ -26,21 +27,13 @@ class MotuUnit(Hinawa.SndMotu):
             raise ValueError('The character device is not for Motu unit.')
         self.listen()
 
-        model_id = -1
-        data = self.get_config_rom()
-        quad_count = len(data) // 4
-        for i in range(quad_count):
-            quad = unpack('>I', data[:4])[0]
-            if quad >> 24 == 0x17:
-                model_id = quad & 0x00ffffff
-                break
-            data = data[4:]
-        if model_id < 0:
-            raise OSError('Invalid design of config rom.')
+        parser = MotuConfigRom()
+        data = parser.parse_root_directory(self.get_config_rom())
 
-        if model_id in self.SUPPORTED_MODELS:
-            self.name = self.SUPPORTED_MODELS[model_id][0]
-            self._protocol = self.SUPPORTED_MODELS[model_id][1](self, False)
+        if data['model-id'] in self.SUPPORTED_MODELS:
+            name, protocol = self.SUPPORTED_MODELS[data['model-id']]
+            self.name = name
+            self._protocol = protocol(self, False)
         else:
             raise OSError('Unsupported model')
 
