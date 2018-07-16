@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+
+import sys, gi, pprint
+
+gi.require_version('Hinawa', '2.0')
+from gi.repository import Hinawa
+
+from ieee1394.config_rom import Ieee1394ConfigRom
+
+if len(sys.argv) == 1:
+    print('At least one argument is required for firewire character device.')
+    sys.exit()
+path = sys.argv[1]
+
+vendor_entry_defs = {
+    0x08: ('manufacturer', (0x00, )), # Echo Fireworks.
+};
+
+pp = pprint.PrettyPrinter(indent=2, compact=False)
+
+unit = Hinawa.FwUnit()
+unit.open(path)
+
+rom = unit.get_config_rom()
+parser = Ieee1394ConfigRom(None, vendor_entry_defs)
+
+bus_info = parser.get_bus_info(rom)
+root = parser.get_root_directory(rom)
+
+pp.pprint(bus_info)
+pp.pprint(root)
