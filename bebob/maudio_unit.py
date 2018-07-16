@@ -25,24 +25,9 @@ class MaudioUnit(BebobUnit):
     def __init__(self, path):
         super().__init__(path)
 
-        vendor_id = -1
-        model_id = -1
-        data = self.get_config_rom()
-        quad_count = len(data) // 4
-        for i in range(quad_count):
-            quad = unpack('>I', data[:4])[0]
-            if quad >> 24 == 0x03:
-                vendor_id = quad & 0x00ffffff
-            if quad >> 24 == 0x17:
-                model_id = quad & 0x00ffffff
-                break
-            data = data[4:]
-        if vendor_id < 0 or model_id < 0:
-            raise OSError('Invalid design of config rom.')
-
         for entry in self._SUPPORTED_MODELS:
-            if entry[0] == vendor_id and entry[1] == model_id:
-                self.protocol = entry[2](self, False, model_id)
+            if entry[0] == self.vendor_id and entry[1] == self.model_id:
+                self.protocol = entry[2](self, False)
                 break
         else:
             raise OSError('Not supported.')

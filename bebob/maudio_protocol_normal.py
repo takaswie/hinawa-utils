@@ -164,11 +164,13 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
          'ADAT':        AvcCcm.get_unit_signal_addr('external', 3)},
     )
 
-    def __init__(self, unit, debug, model_id):
-        super().__init__(unit, debug)
-        if model_id not in self._IDS:
+    def __init__(self, unit, debug):
+        if unit.model_id not in self._IDS:
             raise OSError('Not supported')
-        index = self._IDS.index(model_id)
+
+        super().__init__(unit, debug)
+
+        index = self._IDS.index(unit.model_id)
         self._labels = self._LABELS[index]
         self._inputs = self._INPUTS[index]
         self._aux_inputs = self._AUX_INPUTS[index]

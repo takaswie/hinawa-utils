@@ -54,10 +54,11 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
     # Balance Control' in 'AV/C Audio Subunit Specification 1.0 (1394TA
     # 1999008)'.
 
-    def __init__(self, unit, debug, model_id):
-        super().__init__(unit, debug)
-        if model_id not in self._IDS:
+    def __init__(self, unit, debug):
+        if unit.model_id not in self._IDS:
             raise OSError('Not supported')
+
+        super().__init__(unit, debug)
 
         # For process local cache.
         self._cache = bytearray(160)
