@@ -43,7 +43,7 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
         return bytearray(frames)
 
     def write(self, offset, frames):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq(timeout=100)
         addr = self.BASE_ADDR + offset
         if self._debug:
             print('    write: {0:012x}:'.format(addr))
