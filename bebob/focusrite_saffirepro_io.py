@@ -6,6 +6,7 @@ from gi.repository import Hinawa
 
 from bebob.bebob_unit import BebobUnit
 from ta1394.audio import AvcAudio
+from ta1394.general import AvcConnection
 
 __all__ = ['FocusriteSaffireproIoUnit']
 
@@ -33,7 +34,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         'Analog-3/4',
         'Analog-5/6',
         'Analog-7/8',
-        'Analog-9/10',
+        'S/PDIF-1/2',
     )
 
     _MIXER_INPUT_OFFSETS = {
@@ -59,7 +60,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         'Analog-3/4':   (0xe0,  3),
         'Analog-5/6':   (0xf8,  3),
         'Analog-7/8':   (0x110, 3),
-        'Analog-9/10':  (0x128, 3),
+        'S/PDIF-1/2':   (0x128, 3),
     }
 
     _OUTPUT_PARAMS_OFFSETS = {
@@ -68,8 +69,50 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         'Analog-3/4':   0x144,
         'Analog-5/6':   0x148,
         'Analog-7/8':   0x14c,
-        'Analog-9/10':  0x150,  # TODO: ?
     }
+
+    _RATE_MODES = {
+        'low':      ( 44100,  48000),
+        'middle':   ( 88200,  96000),
+        'high':     (176400, 192000),
+    }
+
+    _RATE_BITS = {
+        44100:  1,
+        48000:  2,
+        88200:  3,
+        96000:  4,
+        176400: 5,
+        192000: 6,
+    }
+
+    _CLOCK_BITS = {
+        'Internal':     0,
+        'S/PDIF':       2,
+        'ADAT1':        3,
+        'ADAT2':        4,
+        'Word-clock':   5,
+    }
+
+    _IO10_CAPS = {
+        'rate-modes':   ('low', 'middle'),
+        'clocks':       ('Internal', 'S/PDIF'),
+    }
+
+    _IO26_CAPS = {
+        'rate-modes':   ('low', 'middle', 'high'),
+        'clocks':       ('Internal', 'S/PDIF', 'ADAT1', 'ADAT2', 'Word-clock'),
+    }
+
+    def __init__(self, path):
+        CAPS = {
+            0x000006: self._IO10_CAPS,
+            0x000003: self._IO26_CAPS,
+        }
+        super().__init__(path)
+        if self.model_id not in CAPS:
+            raise OSError('Unsupported unit.')
+        self._caps = CAPS[self.model_id]
 
     def _write_quads(self, offset, quads):
         frames = []
@@ -132,7 +175,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         data = pack('>H', total)
         return AvcAudio.parse_data_to_db(data)
 
-    def get_output_labels(self):
+    def get_output_destination_labels(self):
         return self._OUTPUTS
     def get_output_source_labels(self, target):
         labels = []
@@ -165,20 +208,134 @@ class FocusriteSaffireproIoUnit(BebobUnit):
                 return labels[i]
         return None
 
-    def set_output_volume(self, target, db):
-        if target not in self._OUTPUTS:
+    def get_output_labels(self):
+        return list(self._OUTPUT_PARAMS_OFFSETS.keys())
+    def _write_output_quad(self, target, quads):
+        if target not in self._OUTPUT_PARAMS_OFFSETS:
             raise ValueError('Invalid value for output target.')
         offset = self._OUTPUT_PARAMS_OFFSETS[target]
-        quads = self._read_quads(offset, 1)
+        self._write_quads(offset, quads)
+    def _read_output_quad(self, target):
+        if target not in self._OUTPUT_PARAMS_OFFSETS:
+            raise ValueError('Invalid value for output target.')
+        offset = self._OUTPUT_PARAMS_OFFSETS[target]
+        return self._read_quads(offset, 1)
+    def set_output_volume(self, target, db):
+        quads = self._read_output_quad(target)
         data = AvcAudio.build_data_from_db(db)
         quads[0] &= ~0x0000ffff
         quads[0] |= unpack('>H', data)[0]
-        self._write_quads(offset, quads)
-
+        self._write_output_quad(target, quads)
     def get_output_volume(self, target):
-        if target not in self._OUTPUTS:
-            raise ValueError('Invalid value for output target.')
-        offset = self._OUTPUT_PARAMS_OFFSETS[target]
-        quads = self._read_quads(offset, 1)
+        quads = self._read_output_quad(target)
         data = pack('>I', quads[0])
         return AvcAudio.parse_data_to_db(data[2:])
+    def set_output_mute(self, target, enable):
+        quads = self._read_output_quad(target)
+        if enable:
+            quads[0] |= 1 << 24
+        else:
+            quads[0] &= ~(1 << 24)
+        self._write_output_quad(target, quads)
+    def get_output_mute(self, target):
+        quads = self._read_output_quad(target)
+        return bool(quads[0] & (1 << 24))
+    def set_output_hwctl(self, target, enable):
+        quads = self._read_output_quad(target)
+        if enable:
+            quads[0] |= 1 << 26
+        else:
+            quads[0] &= ~(1 << 26)
+        self._write_output_quad(target, quads)
+    def get_output_hwctl(self, target):
+        quads = self._read_output_quad(target)
+        return bool(quads[0] & (1 << 26))
+    def set_output_pad(self, target, enable):
+        quads = self._read_output_quad(target)
+        if enable:
+            quads[0] |= 1 << 27
+        else:
+            quads[0] &= ~(1 << 27)
+        self._write_output_quad(target, quads)
+    def get_output_pad(self, target):
+        quads = self._read_output_quad(target)
+        return bool(quads[0] & (1 << 27))
+    def set_output_dim(self, target, enable):
+        quads = self._read_output_quad(target)
+        if enable:
+            quads[0] |= 1 << 28
+        else:
+            quads[0] &= ~(1 << 28)
+        self._write_output_quad(target, quads)
+    def get_output_dim(self, target):
+        quads = self._read_output_quad(target)
+        return bool(quads[0] & (1 << 28))
+
+    def get_supported_rate_modes(self):
+        return self._caps['rate-modes']
+    def set_rate_mode(self, mode):
+        if self.get_property('streaming'):
+            raise OSError('Packet streaming starts')
+        if mode not in self._caps['rate-modes']:
+            raise ValueError('Invalid argument for frequency mode.')
+        quads = []
+        quads.append(self._RATE_BITS[self._RATE_MODES[mode][0]])
+        # This corresponds to bus reset and the unit disappears from the bus,
+        # then appears with a set mode.
+        self._write_quads(0x150, quads)
+    def get_rate_mode(self):
+        rate = AvcConnection.get_plug_signal_format(self.fcp, 'input', 0)
+        for mode, rates in self._RATE_MODES.items():
+            if rate in rates and mode in self._caps['rate-modes']:
+                break
+        else:
+            raise OSError('Invalid state for sampling rate.')
+        return mode
+
+    def get_supported_sampling_rates(self):
+        rate = AvcConnection.get_plug_signal_format(self.fcp, 'input', 0)
+        for mode, rates in self._RATE_MODES.items():
+            if rate in rates and mode in self._caps['rate-modes']:
+                break
+        else:
+            raise OSError('Invalid state for sampling rate.')
+        return rates
+    def set_sampling_rate(self, rate):
+        if self.get_property('streaming'):
+            raise OSError('Packet streaming starts')
+        curr_rate = AvcConnection.get_plug_signal_format(self.fcp, 'input', 0)
+        for mode, rates in self._RATE_MODES.items():
+            if curr_rate in rates:
+                break
+        else:
+            raise OSError('Invalid state for sampling rate.')
+        if rate not in rates:
+            raise ValueError('Invalid argument for sampling rate.')
+        AvcConnection.set_plug_signal_format(self.fcp, 'input', 0, rate)
+        AvcConnection.set_plug_signal_format(self.fcp, 'output', 0, rate)
+    def get_sampling_rate(self):
+        in_rate = AvcConnection.get_plug_signal_format(self.fcp, 'input', 0)
+        out_rate = AvcConnection.get_plug_signal_format(self.fcp, 'output', 0)
+        if in_rate != out_rate:
+            raise OSError('Sampling rate mismatch: ', in_rate, out_rate)
+        return in_rate
+
+    def get_supported_clock_sources(self):
+        return self._caps['clocks']
+    def set_clock_source(self, source):
+        if self.get_property('streaming'):
+            raise OSError('Packet streaming starts')
+        if source not in self._caps['clocks']:
+            raise ValueError('Invalid argument for clock source.')
+        quads = []
+        quads.append(self._CLOCK_BITS[source])
+        self._write_quads(0x0174, quads)
+    def get_clock_source(self):
+        quads = self._read_quads(0x0174, 1)
+        quads[0] & 0xff
+        for key, val in self._CLOCK_BITS.items():
+            if val == quads[0] & 0xff:
+                break
+        else:
+            raise OSError('Invalid state of clock source.')
+        return key
