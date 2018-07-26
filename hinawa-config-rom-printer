@@ -1,31 +1,87 @@
 #!/usr/bin/env python3
 
-import sys, gi, pprint
+import sys
+import errno
+from pprint import PrettyPrinter
 
+from ieee1212.config_rom_lexer import Ieee1212ConfigRomLexer
+from ieee1394.config_rom_parser import Ieee1394ConfigRomParser
+
+import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
-from ieee1394.config_rom import Ieee1394ConfigRom
-
-if len(sys.argv) == 1:
+if len(sys.argv) < 2:
     print('At least one argument is required for firewire character device.')
-    sys.exit()
+    sys.exit(errno.EINVAL)
 path = sys.argv[1]
 
-vendor_entry_defs = {
-    0x08: ('manufacturer', (0x00, )), # Echo Fireworks.
-};
+ops = ('parse', 'lex')
+if len(sys.argv) < 3:
+    op = 'parse'
+elif sys.argv[2] in ops:
+    op = sys.argv[2]
+else:
+    print('Invalid operation: {0}'.format(sys.argv[2]))
+    sys.exit()
 
-pp = pprint.PrettyPrinter(indent=2, compact=False)
+def handle_echoaudio_keys(key_id, type_name, data):
+    OUI_COMPANIES = {
+        0x000ff2: 'Loud Technologies Inc.',
+        0x001486: 'Echo Digital Audio Corporation',
+    }
+    if key_id == 0x08 and type_name == 'IMMEDIATE':
+        if data in OUI_COMPANIES:
+            name = OUI_COMPANIES[data]
+        else:
+            name = data
+        return ['MANUFACTURER', name]
+
+    return None
+
+def handle_iidc_v1_30_keys(key_id, type_name, data):
+    if key_id == 0x00 and type_name == 'CSR_OFFSET':
+        return ['IIDC_COMMAND_REGS_BASE', data]
+    return None
+def handle_isight_audio_keys(key_id, type_name, data):
+    if key_id == 0x00 and type_name == 'CSR_OFFSET':
+        return ['ISIGHT_AUDIO_REG_BASE', data]
+    return None
+def handle_isight_factory_keys(key_id, type_name, data):
+    LABELS = {
+        0x01: 'ISIGHT_FACTORY_REG_A',
+        0x02: 'ISIGHT_FACTORY_REG_B',
+        0x04: 'ISIGHT_FACTORY_REG_C',
+        0x05: 'ISIGHT_FACTORY_REG_D',
+    }
+    if type_name == 'CSR_OFFSET' and key_id in LABELS:
+        return [LABELS[key_id], data]
+    elif key_id == 0x38 and type_name == 'IMMEDIATE':
+        return ['ISIGHT_FACTORY_DATA', data]
+    return None
+def handle_isight_iris_keys(key_id, type_name, data):
+    if key_id == 0x3c and type_name == 'IMMEDIATE':
+        return ['ISIGHT_IRIS_DATA', data]
+    elif key_id == 0x00 and type_name == 'CSR_OFFSET':
+        return ['ISIGHT_IRIS_REGS_BASE', data]
+    return None
+
+pp = PrettyPrinter(indent=2, compact=False)
 
 unit = Hinawa.FwUnit()
 unit.open(path)
 
-rom = unit.get_config_rom()
-parser = Ieee1394ConfigRom(None, vendor_entry_defs)
+data = unit.get_config_rom()
 
-bus_info = parser.get_bus_info(rom)
-root = parser.get_root_directory(rom)
-
-pp.pprint(bus_info)
-pp.pprint(root)
+if op == 'lex':
+    entries = Ieee1212ConfigRomLexer.detect_entries(data)
+    pp.pprint(entries)
+else:
+    parser = Ieee1394ConfigRomParser()
+    parser.add_vendor_dep_handle(0x001486, handle_echoaudio_keys)
+    parser.add_spec_dep_handle(0x00a02d, 0x000102, handle_iidc_v1_30_keys)
+    parser.add_spec_dep_handle(0x000a27, 0x000010, handle_isight_audio_keys)
+    parser.add_spec_dep_handle(0x000a27, 0x000011, handle_isight_factory_keys)
+    parser.add_spec_dep_handle(0x000a27, 0x000012, handle_isight_iris_keys)
+    info = parser.parse_rom(data)
+    pp.pprint(info)
