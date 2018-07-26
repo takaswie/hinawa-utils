@@ -14,6 +14,11 @@ class TascamFireone(OxfwUnit):
 
     def __init__(self, path):
         super().__init__(path)
+
+        if self.vendor_name != 'TASCAM' or self.model_name != 'FireOne':
+            raise ValueError('Unsupported model: {0}, {1}'.format(
+                                            self.vendor_name, self.model_name))
+
         unit_info = AvcGeneral.get_unit_info(self.fcp)
         self.company_ids = unit_info['company-id']
 

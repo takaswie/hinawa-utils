@@ -3,6 +3,7 @@ gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
 from dice.tcat_protocol_general import TcatProtocolGeneral
+from ta1394.config_rom_parser import Ta1394ConfigRomParser
 
 __all__ = ['DiceUnit']
 
@@ -23,6 +24,11 @@ class DiceUnit(Hinawa.SndDice):
             self._on_juju = True
         else:
             raise ValueError('Invalid argument for character device')
+
+        parser = Ta1394ConfigRomParser()
+        info = parser.parse_rom(self.get_config_rom())
+        self.vendor_id = info['vendor-id']
+        self.model_id = info['model-id']
 
         req = Hinawa.FwReq()
         self._protocol = TcatProtocolGeneral(self, req)

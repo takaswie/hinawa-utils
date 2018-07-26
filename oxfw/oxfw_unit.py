@@ -4,6 +4,7 @@ import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
+from ta1394.config_rom_parser import Ta1394ConfigRomParser
 from ta1394.general import AvcConnection
 from ta1394.streamformat import AvcStreamFormatInfo
 
@@ -26,6 +27,12 @@ class OxfwUnit(Hinawa.SndUnit):
             self._on_juju = True
         else:
             raise ValueError('Invalid argument for character device')
+
+        parser = Ta1394ConfigRomParser()
+        info = parser.parse_rom(self.get_config_rom())
+        self.vendor_name = info['vendor-name']
+        self.model_name = info['model-name']
+
         self.fcp = Hinawa.FwFcp()
         self.fcp.listen(self)
 
