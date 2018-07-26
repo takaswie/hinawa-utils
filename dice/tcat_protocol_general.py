@@ -51,11 +51,12 @@ class TcatProtocolGeneral():
 
         while length > 0:
             count = length
-            if count >= self._MAXIMUM_TRX_LENGTH:
-                count -= self._MAXIMUM_TRX_LENGTH
+            if count > self._MAXIMUM_TRX_LENGTH:
+                count = self._MAXIMUM_TRX_LENGTH
             req.write(self._unit, addr, data[0:count])
             data = data[count:]
             length -= count
+            addr += count
 
     def _read_transactions(self, req, offset, length):
         data = bytearray()
@@ -64,10 +65,11 @@ class TcatProtocolGeneral():
 
         while len(data) < length:
             count = length
-            if length >= self._MAXIMUM_TRX_LENGTH:
-                count = length - self._MAXIMUM_TRX_LENGTH
+            if count > self._MAXIMUM_TRX_LENGTH:
+                count = self._MAXIMUM_TRX_LENGTH
             data.extend(req.read(self._unit, addr, count))
             length -= count
+            addr += count
 
         return data
 
