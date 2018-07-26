@@ -7,7 +7,7 @@ from gi.repository import Hinawa
 from motu.motu_protocol_v1 import MotuProtocolV1
 from motu.motu_protocol_v2 import MotuProtocolV2
 from motu.motu_protocol_v3 import MotuProtocolV3
-from motu.config_rom import MotuConfigRom
+from motu.config_rom_parser import MotuConfigRomParser
 
 __all__ = ['MotuUnit']
 
@@ -29,11 +29,11 @@ class MotuUnit(Hinawa.SndMotu):
             raise ValueError('The character device is not for Motu unit.')
         self.listen()
 
-        parser = MotuConfigRom()
-        data = parser.parse_root_directory(self.get_config_rom())
+        parser = MotuConfigRomParser()
+        info = parser.parse_rom(self.get_config_rom())
 
-        if data['model-id'] in self.SUPPORTED_MODELS:
-            name, protocol = self.SUPPORTED_MODELS[data['model-id']]
+        if info['model-id'] in self.SUPPORTED_MODELS:
+            name, protocol = self.SUPPORTED_MODELS[info['model-id']]
             self.name = name
             self._protocol = protocol(self, False)
         else:
