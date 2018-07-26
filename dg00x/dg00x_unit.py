@@ -4,6 +4,8 @@ import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
+from dg00x.config_rom_parser import Dg00xConfigRomParser
+
 __all__ = ['Dg00xUnit']
 
 class Dg00xUnit(Hinawa.SndDg00x):
@@ -25,6 +27,10 @@ class Dg00xUnit(Hinawa.SndDg00x):
             Hinawa.FwUnit.listen(self)
         else:
             raise ValueError('Invalid argument for character device')
+
+        parser = Dg00xConfigRomParser()
+        info = parser.parse_rom(self.get_config_rom())
+        self._model_name = info['model-name']
 
     def _read_transaction(self, addr, quads):
         req = Hinawa.FwReq()
