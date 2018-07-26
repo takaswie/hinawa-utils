@@ -5,7 +5,7 @@ import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
-from bebob.config_rom import BebobConfigRom
+from bebob.config_rom_parser import BebobConfigRomParser
 
 __all__ = ['BebobUnit']
 
@@ -29,10 +29,10 @@ class BebobUnit(Hinawa.SndUnit):
         else:
             raise ValueError('Invalid argument for character device')
 
-        parser = BebobConfigRom()
-        data = parser.parse_root_directory(self.get_config_rom())
-        self.vendor_id = data['vendor-id']
-        self.model_id = data['model-id']
+        parser = BebobConfigRomParser()
+        info = parser.parse_rom(self.get_config_rom())
+        self.vendor_id = info['vendor-id']
+        self.model_id = info['model-id']
 
         self.fcp = Hinawa.FwFcp()
         self.fcp.listen(self)
