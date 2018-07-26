@@ -1,5 +1,7 @@
 = Utilities for audio and music units on IEEE 1394 bus
 
+ * hinawa-config-rom-printer
+    * A lexer/parser of configuration ROM on IEEE 1394 bus
  * hinawa-bebob-parser
     * Plug structure parser for BeBoB firmware
  * hinawa-dg00x-cui
