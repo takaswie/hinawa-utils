@@ -10,6 +10,9 @@ class TscmConsoleUnit(TscmUnit):
     def __init__(self, path):
         super().__init__(path)
 
+        if self.model_name not in ('FW-1082', 'FW-1884'):
+            raise ValueError('Unsupported model: {0}'.format(self.model_name))
+
     def bright_led(self, position, state):
         if state not in self.supported_led_status:
             raise ValueError('Invalid argument for LED state.')

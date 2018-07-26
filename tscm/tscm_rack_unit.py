@@ -23,6 +23,9 @@ class TscmRackUnit(TscmUnit):
     def __init__(self, path):
         super().__init__(path)
 
+        if self.model_name != 'FW-1804':
+            raise ValueError('Unsupported model: {0}'.format(self.model_name))
+
         # For permanent cache.
         guid = self.get_property('guid')
         self._filepath = '/tmp/hinawa-{0:08x}'.format(guid)

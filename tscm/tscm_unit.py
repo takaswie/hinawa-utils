@@ -5,6 +5,8 @@ import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
+from tscm.config_rom_parser import TscmConfigRomParser
+
 __all__ = ['TscmUnit']
 
 class TscmUnit(Hinawa.SndUnit):
@@ -29,6 +31,10 @@ class TscmUnit(Hinawa.SndUnit):
             Hinawa.FwUnit.listen(self)
         else:
             raise ValueError('Invalid argument for character device')
+
+        parser = TscmConfigRomParser()
+        info = parser.parse_rom(self.get_config_rom())
+        self.model_name = info['model-name']
 
     def read_quadlet(self, offset):
         req = Hinawa.FwReq()
