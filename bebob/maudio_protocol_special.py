@@ -1,4 +1,3 @@
-from array import array
 import gi
 from struct import unpack, pack
 
