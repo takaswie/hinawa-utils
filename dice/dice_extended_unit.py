@@ -10,6 +10,7 @@ from dice.tcat_protocol_extension import ExtCtlSpace, ExtCapsSpace, ExtCmdSpace,
 
 from dice.tcat_tcd22xx_spec import TcatTcd22xxSpec
 from dice.maudio_profire_spec import MaudioProfireSpec
+from dice.focusrite_saffirepro_spec import FocusriteSaffireproSpec
 
 __all__ = ['DiceExtendedUnit']
 
@@ -22,6 +23,7 @@ class DiceExtendedUnit(DiceUnit):
 
     _SPECS = (
         MaudioProfireSpec,
+        FocusriteSaffireproSpec,
     )
 
     def __init__(self, fullpath):
