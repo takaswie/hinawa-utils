@@ -6,7 +6,7 @@ from dice.tcat_protocol_general import TcatProtocolGeneral
 
 __all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace', 'ExtMixerSpace',
            'ExtNewRouterSpace', 'ExtPeakSpace', 'ExtNewStreamConfigSpace',
-           'ExtCurrentConfigSpace', 'ExtStandaloneSpace']
+           'ExtCurrentConfigSpace', 'ExtStandaloneSpace', 'ExtAppSpace']
 
 # '3.1 External control private space'
 class ExtCtlSpace():
@@ -626,3 +626,18 @@ class ExtStandaloneSpace():
                         params[name] = option
 
         return params
+
+# '3.10 Application space'
+class ExtAppSpace():
+    @classmethod
+    def set(cls, protocol, req, offset, data):
+        if len(data) >= protocol._ext_layout['application']['length']:
+            raise ValueError('Invalid argument for data.')
+        ExtCtlSpace.write_section(protocol, req, 'application', offset, data)
+
+    @classmethod
+    def get(cls, protocol, req, offset, length):
+        if length >= protocol._ext_layout['application']['length']:
+            raise ValueError('Invalid argument for data.')
+        return ExtCtlSpace.read_section(protocol, req, 'application', offset,
+                                        length)
