@@ -1,10 +1,11 @@
-from struct import unpack
+from struct import unpack, pack
 from time import sleep
 from math import log10, pow
 
 from dice.tcat_protocol_general import TcatProtocolGeneral
 
-__all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace', 'ExtMixerSpace']
+__all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace', 'ExtMixerSpace',
+           'ExtNewRouterSpace']
 
 # '3.1 External control private space'
 class ExtCtlSpace():
@@ -269,3 +270,109 @@ class ExtMixerSpace():
         data = ExtCtlSpace.read_section(protocol, req, 'mixer', offset, 4)
 
         return unpack('>H', data[2:4])[0]
+
+# '3.6 New router space'
+class ExtNewRouterSpace():
+    _SRC_BLK_IDS = (
+        'aes', 'adat', 'mixer', 'reserved0',
+        'ins0', 'ins1', 'reserved1', 'reserved2',
+        'reserved3', 'reserved4', 'arm-apr-audio', 'avs0',
+        'avs1', 'reserved5', 'reserved6', 'mute',
+    )
+    _DST_BLK_IDS = (
+        'aes', 'adat', 'mixer-tx0', 'mixer-tx1',
+        'ins0', 'ins1', 'reserved0', 'reserved1',
+        'reserved2', 'reserved3', 'arm-apb-audio', 'avs0',
+        'avs1', 'reserved4', 'reserved5', 'reserved6',
+    )
+
+    # '5.1.3 ROUTERn_ENTRYm' in 'TCD22xx Users Guide'.
+    @classmethod
+    def parse_entry_data(cls, data):
+        # '5.1.4 Source Block ID’s' in 'TCD22xx Users Guide'.
+        entry = {}
+
+        src_blk_id = data[0] >> 4
+        if src_blk_id >= len(cls._SRC_BLK_IDS):
+            raise IOError('Invalid id for source block in router entry')
+        entry['src-blk'] = cls._SRC_BLK_IDS[src_blk_id]
+        entry['src-ch'] = data[0] & 0x0f
+
+        dst_blk_id = data[1] >> 4
+        if dst_blk_id >= len(cls._DST_BLK_IDS):
+            raise IOError('Invalid id for destination block in router entry')
+        entry['dst-blk'] = cls._DST_BLK_IDS[dst_blk_id]
+        entry['dst-ch'] = data[1] & 0x0f
+
+        return entry
+
+    @classmethod
+    def parse_data(cls, protocol, req, section, offset, length):
+        entries = []
+
+        data = ExtCtlSpace.read_section(protocol, req, section, offset, 4)
+        count = unpack('>I', data[0:4])[0]
+        if count >= length // 4:
+            count = length // 4
+
+        offset += 4
+        data = ExtCtlSpace.read_section(protocol, req, section, offset,
+                                        count * 4)
+        if count > 0:
+            for i in range(0, 4 * count, 4):
+                entry = cls.parse_entry_data(data[2:4])
+                entry['peak'] = unpack('>H', data[0:2])[0]
+                entries.append(entry)
+                data = data[4:]
+
+        return entries
+
+    @classmethod
+    def _build_entry_data(cls, entry):
+        KEYS = ('peak', 'src-blk', 'src-ch', 'dst-blk', 'dst-ch')
+
+        # Check keys.
+        for key in KEYS:
+            if key not in entry:
+                raise ValueError('Invalid argument for entry data.')
+
+        data = bytearray()
+        data.extend(pack('>H', entry['peak']))
+
+        src = (cls._SRC_BLK_IDS.index(entry['src-blk']) << 4) | entry['src-ch']
+        data.append(src)
+
+        dst = (cls._DST_BLK_IDS.index(entry['dst-blk']) << 4) | entry['dst-ch']
+        data.append(dst)
+
+        return data
+
+    @classmethod
+    def _build_data(cls, length, entries):
+        data = bytearray()
+        data.extend(pack('>I', len(entries)))
+        for entry in entries:
+            data.extend(cls._build_entry_data(entry))
+        # Padding with zero byte.
+        for i in range(len(data), length, 4):
+            data.extend((0x00, 0x00, 0x00, 0x00))
+        return data
+
+    @classmethod
+    def set_entries(cls, protocol, req, entries):
+        if (not protocol._ext_caps['router']['is-exposed'] or
+                protocol._ext_caps['router']['is-readonly']):
+            raise IOError('This feature is not available.')
+        length = protocol._ext_layout['new-router']['length']
+        if (len(entries) >= protocol._ext_caps['router']['maximum-routes'] or
+                len(entries) >= length // 4):
+            raise ValueError('Too much entries.')
+        data = cls._build_data(length, entries)
+        ExtCtlSpace.write_section(protocol, req, 'new-router', 0, data)
+
+    @classmethod
+    def get_entries(cls, protocol, req):
+        if not protocol._ext_caps['router']['is-exposed']:
+            raise IOError('This feature is not available.')
+        length = protocol._ext_layout['new-router']['length']
+        return cls.parse_data(protocol, req, 'new-router', 0, length)
