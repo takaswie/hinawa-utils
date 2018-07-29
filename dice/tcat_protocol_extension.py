@@ -5,7 +5,8 @@ from math import log10, pow
 from dice.tcat_protocol_general import TcatProtocolGeneral
 
 __all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace', 'ExtMixerSpace',
-           'ExtNewRouterSpace', 'ExtPeakSpace', 'ExtNewStreamConfigSpace']
+           'ExtNewRouterSpace', 'ExtPeakSpace', 'ExtNewStreamConfigSpace',
+           'ExtCurrentConfigSpace']
 
 # '3.1 External control private space'
 class ExtCtlSpace():
@@ -457,3 +458,31 @@ class ExtNewStreamConfigSpace():
         length = protocol._ext_layout['new-stream-config']['length']
         return ExtNewStreamConfigSpace.parse_data(protocol, req, section,
                                                   offset, length)
+
+# '3.8 Current config space'
+class ExtCurrentConfigSpace():
+    _RATE_MODES = {
+        'low':      0x0000,
+        'middle':   0x2000,
+        'high':     0x4000,
+    }
+
+    @classmethod
+    def read_router_config(cls, protocol, req, mode):
+        if mode not in cls._RATE_MODES:
+            raise ValueError('Invalid argument for rate mode.')
+
+        offset = cls._RATE_MODES[mode]
+
+        return ExtNewRouterSpace.parse_data(protocol, req, 'current-config',
+                                            offset, 0x1000)
+
+    @classmethod
+    def read_stream_config(cls, protocol, req, mode):
+        if mode not in cls._RATE_MODES:
+            raise ValueError('Invalid argument for rate mode.')
+
+        offset = cls._RATE_MODES[mode] + 0x1000
+
+        return ExtNewStreamConfigSpace.parse_data(protocol, req,
+                                            'current-config', offset, 0x1000)
