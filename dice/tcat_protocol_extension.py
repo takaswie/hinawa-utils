@@ -1,9 +1,10 @@
 from struct import unpack
 from time import sleep
+from math import log10, pow
 
 from dice.tcat_protocol_general import TcatProtocolGeneral
 
-__all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace']
+__all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace', 'ExtMixerSpace']
 
 # '3.1 External control private space'
 class ExtCtlSpace():
@@ -188,3 +189,83 @@ class ExtCmdSpace():
                                         cls._OFFSET_RETURN, 4)
         if data[3] != cls._RETURN_SUCCESS:
             raise IOError('Fail to execute requested operation.')
+
+# '3.4 Mixer space'
+class ExtMixerSpace():
+    # These are TCD-2200/2210 specification.
+    MIXER_IN_MAX_PORTS = {
+        'mixer-tx0': 16,
+        'mixer-tx1':  2,
+    }
+    MIXER_OUT_MAX_PORTS = {
+        'low':      16,
+        'middle':   16,
+        'high':     8,
+    }
+    _MAX_COEFF = 0x3fff
+
+    # '5.11 Audio Mixer' in 'TCD22xx Users Guide'.
+    @classmethod
+    def parse_val_to_db(cls, val):
+        if val == 0:
+            return float('-inf')
+        return 20 * log10(val / cls._MAX_COEFF)
+
+    @classmethod
+    def build_val_from_db(cls, db):
+        if db > 4:
+            raise ValueError('Invalid argument for dB value.')
+        if db == float('-inf'):
+            return 0
+        return int(cls._MAX_COEFF * pow(10, db / 20))
+
+    @classmethod
+    def _calcurate_offset(cls, protocol, out_ch, in_ch):
+        if out_ch >= protocol._ext_caps['mixer']['output-channels']:
+            raise ValueError('Invalid value for output channel')
+        if in_ch >= protocol._ext_caps['mixer']['input-channels']:
+            raise ValueError('Invalid value for input channel')
+        offset = (out_ch * protocol._ext_caps['mixer']['input-channels'] + in_ch) * 4
+        if offset >= protocol._ext_layout['mixer']['length']:
+            raise OSError('Inconsistency between channels and length of space')
+
+        return 4 + offset
+
+    @classmethod
+    def read_saturation(cls, protocol, req, mode):
+        if not protocol._ext_caps['mixer']['is-exposed']:
+            raise IOError('This feature is not available.')
+
+        data = ExtCtlSpace.read_section(protocol, req, 'mixer', 0, 4)
+        bits = unpack('>I', data)[0]
+        outputs = cls.MIXER_OUT_MAX_PORTS[mode]
+
+        saturations = []
+        for i in range(outputs):
+            saturations.append(bool(bits & (1 << i)))
+        return saturations
+
+    @classmethod
+    def write_gain(cls, protocol, req, out_ch, in_ch, val):
+        if not protocol._ext_caps['mixer']['is-exposed']:
+            raise IOError('This feature is not available.')
+
+        offset = cls._calcurate_offset(protocol, out_ch, in_ch)
+
+        data = bytearray()
+        data.append(0x00)
+        data.append(0x00)
+        data.extend(pack('>H', val))
+
+        return ExtCtlSpace.write_section(protocol, req, 'mixer', offset, data)
+
+    @classmethod
+    def read_gain(cls, protocol, req, out_ch, in_ch):
+        if not protocol._ext_caps['mixer']['is-exposed']:
+            raise IOError('This feature is not available.')
+
+        offset = cls._calcurate_offset(protocol, out_ch, in_ch)
+
+        data = ExtCtlSpace.read_section(protocol, req, 'mixer', offset, 4)
+
+        return unpack('>H', data[2:4])[0]
