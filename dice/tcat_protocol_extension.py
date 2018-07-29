@@ -6,7 +6,7 @@ from dice.tcat_protocol_general import TcatProtocolGeneral
 
 __all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace', 'ExtMixerSpace',
            'ExtNewRouterSpace', 'ExtPeakSpace', 'ExtNewStreamConfigSpace',
-           'ExtCurrentConfigSpace']
+           'ExtCurrentConfigSpace', 'ExtStandaloneSpace']
 
 # '3.1 External control private space'
 class ExtCtlSpace():
@@ -486,3 +486,143 @@ class ExtCurrentConfigSpace():
 
         return ExtNewStreamConfigSpace.parse_data(protocol, req,
                                             'current-config', offset, 0x1000)
+
+# '3.9 Stand alone config space'
+class ExtStandaloneSpace():
+    _AES_EXT_OPTIONS = {
+        'high-rate': {
+            'off':  0x00,
+            'on':   0x01,
+        },
+    }
+    _ADAT_EXT_OPTIONS = {
+        'mode': {
+            'normal':   0x00,
+            'smux-ii':  0x01,
+            'smux-iv':  0x02,
+            'auto':     0x03,
+        },
+    }
+    _WC_EXT_OPTIONS = {
+        'mode': {
+            'normal':   0x00,
+            'low':      0x01,
+            'middle':   0x02,
+            'high':     0x03,
+        },
+        'mul': 0x3fff,
+        'div': 0xffff,
+    }
+    _STANDALONE_SPACE_OFFSETS = {
+        'aes1':         0x04,
+        'aes2':         0x04,
+        'aes3':         0x04,
+        'aes4':         0x04,
+        'aes-any':      0x04,
+        'adat':         0x08,
+        'tdif':         0x08,
+        'word-clock':   0x0c,
+        'internal':     0x10,
+    }
+
+    @classmethod
+    def write_clock_source(cls, protocol, req, source):
+        if source not in protocol._clock_sources:
+            raise ValueError('Invalid argument for clock source.')
+        val = {v: k for k, v in protocol.CLOCK_BITS.items()}[source]
+
+        data = ExtCtlSpace.read_section(protocol, req, 'standalone-config', 0, 4)
+        if val != data[3]:
+            data[3] = val
+            ExtCtlSpace.write_section(protocol, req, 'standalone-config', 0, data)
+
+    @classmethod
+    def read_clock_source(cls, protocol, req):
+        layout = protocol._ext_layout['standalone-config']
+        data = ExtCtlSpace.read_section(protocol, req, 'standalone-config', 0, 4)
+        val = data[3]
+        if (val not in protocol.CLOCK_BITS or
+                protocol._clock_source_labels[val] == 'Unused'):
+            raise OSError('Unexpected return value for clock source.')
+
+        return protocol.CLOCK_BITS[val]
+
+    @classmethod
+    def get_source_param_options(self, protocol, source):
+        OPTIONS = {
+            'aes1':         ExtStandaloneSpace._AES_EXT_OPTIONS,
+            'aes2':         ExtStandaloneSpace._AES_EXT_OPTIONS,
+            'aes3':         ExtStandaloneSpace._AES_EXT_OPTIONS,
+            'aes4':         ExtStandaloneSpace._AES_EXT_OPTIONS,
+            'aes-any':      ExtStandaloneSpace._AES_EXT_OPTIONS,
+            'adat':         ExtStandaloneSpace._ADAT_EXT_OPTIONS,
+            'tdif':         ExtStandaloneSpace._ADAT_EXT_OPTIONS,
+            'word-clock':   ExtStandaloneSpace._WC_EXT_OPTIONS,
+            'arx1':         None,
+            'arx2':         None,
+            'arx3':         None,
+            'arx4':         None,
+            'internal':     {'rate': protocol._sampling_rates, }
+        }
+        if source not in protocol._clock_sources or source not in OPTIONS:
+            raise ValueError('Invalid argument for clock source.')
+
+        return OPTIONS[source]
+
+    @classmethod
+    def write_clock_source_params(cls, protocol, req, source, params):
+        if source not in protocol._clock_sources:
+            raise ValueError('Invalid argument for clock source.')
+        param_options = cls.get_source_param_options(protocol, source)
+        for name, param_option in param_options.items():
+            if name not in params:
+                raise ValueError('Required parameter not in param argument.')
+
+        if source == 'word-clock':
+            val = cls._WC_EXT_OPTIONS['mode'][params['mode']]
+            val |= (params['mul'] - 1) << 2
+            val |= (params['div'] - 1) << 16
+        elif source == 'internal':
+            val = {v:k for k, v in protocol.RATE_BITS.items()}[params['rate']]
+        else:
+            for name, param_option in param_options.items():
+                for option, flag in param_option.items():
+                    if params[name] == option:
+                        val = flag
+                        break
+
+        data = pack('>I', val)
+
+        offset = cls._STANDALONE_SPACE_OFFSETS[source]
+        ExtCtlSpace.write_section(protocol, req, 'standalone-config', offset, data)
+
+    @classmethod
+    def read_clock_source_params(cls, protocol, req, source):
+        if source not in protocol._clock_sources:
+            raise ValueError('Invalid argument for clock source.')
+        offset = cls._STANDALONE_SPACE_OFFSETS[source]
+
+        data = ExtCtlSpace.read_section(protocol, req, 'standalone-config',
+                                        offset, 4)
+        val = unpack('>I', data)[0]
+
+        params = {}
+        param_options = cls.get_source_param_options(protocol, source)
+        if source == 'word-clock':
+            mode = {v:k for k,v in param_options['mode'].items()}[val & 0x03]
+            params['mode'] = mode
+            params['mul'] =  ((val >> 2) & 0x3fff) + 1
+            params['div'] =  (val >> 16) + 1
+        elif source == 'internal':
+            index = val & 0x0f
+            if index not in protocol.RATE_BITS:
+                raise IOError('Unexpected state of internal clock rate.')
+            params['rate'] = protocol.RATE_BITS[index]
+        else:
+            val &= 0x0f
+            for name, param_option in param_options.items():
+                for option, flag in param_option.items():
+                    if val == flag:
+                        params[name] = option
+
+        return params
