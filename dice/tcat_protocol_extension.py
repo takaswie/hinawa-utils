@@ -5,7 +5,7 @@ from math import log10, pow
 from dice.tcat_protocol_general import TcatProtocolGeneral
 
 __all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace', 'ExtMixerSpace',
-           'ExtNewRouterSpace']
+           'ExtNewRouterSpace', 'ExtPeakSpace']
 
 # '3.1 External control private space'
 class ExtCtlSpace():
@@ -376,3 +376,20 @@ class ExtNewRouterSpace():
             raise IOError('This feature is not available.')
         length = protocol._ext_layout['new-router']['length']
         return cls.parse_data(protocol, req, 'new-router', 0, length)
+
+# '3.5 Peak space'
+class ExtPeakSpace():
+    @classmethod
+    def get(cls, protocol, req):
+        if not protocol._ext_caps['general']['peak-available']:
+            raise IOError('This feature is not available.')
+
+        entries = []
+        length = protocol._ext_layout['peak']['length']
+        data = ExtCtlSpace.read_section(protocol, req, 'peak', 0, length)
+        for i in range(0, len(data), 4):
+            entry = ExtNewRouterSpace.parse_entry_data(data[2:4])
+            entry['peak'] = unpack('>H', data[0:2])[0]
+            entries.append(entry)
+            data = data[4:]
+        return entries
