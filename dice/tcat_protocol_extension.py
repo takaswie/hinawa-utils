@@ -5,7 +5,7 @@ from math import log10, pow
 from dice.tcat_protocol_general import TcatProtocolGeneral
 
 __all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace', 'ExtMixerSpace',
-           'ExtNewRouterSpace', 'ExtPeakSpace']
+           'ExtNewRouterSpace', 'ExtPeakSpace', 'ExtNewStreamConfigSpace']
 
 # '3.1 External control private space'
 class ExtCtlSpace():
@@ -393,3 +393,67 @@ class ExtPeakSpace():
             entries.append(entry)
             data = data[4:]
         return entries
+
+# '3.7 New stream config space'
+class ExtNewStreamConfigSpace():
+    @classmethod
+    def _parse_entry(cls, data):
+        stream = {}
+
+        stream['pcm'] = unpack('>I', data[0:4])[0]
+        data = data[4:]
+
+        stream['midi'] = unpack('>I', data[0:4])[0]
+        data = data[4:]
+
+        letters = bytearray()
+        for i in range(0, 256, 4):
+            letters.extend(list(reversed(data[0:4])))
+            data = data[4:]
+        stream['formation'] = letters.decode('utf-8').split('\\')[0:-2]
+
+        stream['ac3'] = data[0]
+
+        return stream
+
+    @classmethod
+    def parse_data(cls, protocol, req, section, offset, length):
+        confs = {}
+
+        data = ExtCtlSpace.read_section(protocol, req, section, offset, 8)
+        tx_count = unpack('>I', data[0:4])[0]
+        rx_count = unpack('>I', data[4:8])[0]
+
+        offset += 8
+        if tx_count > 0:
+            confs['tx'] = []
+        for i in range(tx_count):
+            data = ExtCtlSpace.read_section(protocol, req, section,
+                                            offset + 268 * i, 268)
+            conf = cls._parse_entry(data)
+            if conf['pcm'] > 0 or conf['midi'] > 0:
+                confs['tx'].append(conf)
+
+        offset += 268 * tx_count
+        if rx_count > 0:
+            confs['rx'] = []
+        for i in range(rx_count):
+            data = ExtCtlSpace.read_section(protocol, req, section,
+                                            offset + 268 * i, 268)
+            conf = cls._parse_entry(data)
+            if conf['pcm'] > 0 or conf['midi'] > 0:
+                confs['rx'].append(conf)
+
+        return confs
+
+    @classmethod
+    def set_entries(cls, protocol, req, config):
+        if not protocol._ext_caps['general']['dynamic-stream-conf']:
+            raise IOError('This feature is not available.')
+
+    @classmethod
+    def get_entries(cls, protocol, req):
+        offset = protocol._ext_layout['new-stream-config']['offset']
+        length = protocol._ext_layout['new-stream-config']['length']
+        return ExtNewStreamConfigSpace.parse_data(protocol, req, section,
+                                                  offset, length)
