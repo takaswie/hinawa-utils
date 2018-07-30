@@ -3,20 +3,21 @@ from ieee1394.config_rom_parser import Ieee1394ConfigRomParser
 __all__ = ['EfwConfigRomParser']
 
 class EfwConfigRomParser(Ieee1394ConfigRomParser):
-    _OUI_COMPANIES = {
+    _OUI_ECHO = 0x001486
+    _MANUFACTURER_OUI = {
         0x000ff2:   'Loud Technologies Inc.',
-        0x001486:   'Echo Digital Audio Corporation',
+        _OUI_ECHO:  'Echo Digital Audio Corporation',
     }
 
     def __init__(self):
         super().__init__()
-        self.add_vendor_dep_handle(0x001486, self._handle_echoaudio_keys)
+        self.add_vendor_dep_handle(self._OUI_ECHO, self._handle_echoaudio_keys)
 
     def _handle_echoaudio_keys(self, key_id, type_name, data):
         if key_id != 0x08 or type_name != 'IMMEDIATE':
             return None
-        if data in self._OUI_COMPANIES:
-            name = self._OUI_COMPANIES[data]
+        if data in self._MANUFACTURER_OUI:
+            name = self._MANUFACTURER_OUI[data]
         else:
             name = data
         return ['MANUFACTURER', name]
