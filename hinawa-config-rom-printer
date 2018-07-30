@@ -66,6 +66,26 @@ def handle_isight_iris_keys(key_id, type_name, data):
         return ['ISIGHT_IRIS_REGS_BASE', data]
     return None
 
+def handle_teac_keys(key_id, type_name, data):
+    if key_id == 0x02 and type_name == 'LEAF':
+        content = data[8:].decode('US-ASCII') + '\0'
+        return ['MODEL_NAME', content[:content.find('\0')]]
+    return None
+
+def handle_microsoft_keys(key_id, type_name, data):
+    if key_id == 0x01 and type_name == 'LEAF':
+        width = data[0] >> 4
+        character_set = ((data[0] & 0x0f) << 8) | data[1]
+        language = unpack('>H', data[2:4])[0]
+
+        if character_set != 0x00 or language != 0x00:
+            raise ValueError('Invalid data in descriptor leaf.')
+
+        content = data[4:].decode('US-ASCII') + '\0'
+        return content[:content.find('\0')]
+
+    return None
+
 pp = PrettyPrinter(indent=2, compact=False)
 
 unit = Hinawa.FwUnit()
@@ -83,5 +103,9 @@ else:
     parser.add_spec_dep_handle(0x000a27, 0x000010, handle_isight_audio_keys)
     parser.add_spec_dep_handle(0x000a27, 0x000011, handle_isight_factory_keys)
     parser.add_spec_dep_handle(0x000a27, 0x000012, handle_isight_iris_keys)
+    parser.add_spec_dep_handle(0x00022e, 0x800000, handle_teac_keys)
+    parser.add_spec_dep_handle(0x00022e, 0x800003, handle_teac_keys)
+    parser.add_spec_dep_handle(0x00022e, 0x800004, handle_teac_keys)
+    parser.add_vendor_dep_handle(0x0050f2, handle_microsoft_keys)
     info = parser.parse_rom(data)
     pp.pprint(info)
