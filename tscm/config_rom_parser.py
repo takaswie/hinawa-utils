@@ -7,6 +7,11 @@ class TscmConfigRomParser(Ieee1394ConfigRomParser):
 
     def __init__(self):
         super().__init__()
+        # FW-1884
+        self.add_spec_dep_handle(self._OUI, 0x800000, self._handle_teac_keys)
+        # FW-1082
+        self.add_spec_dep_handle(self._OUI, 0x800003, self._handle_teac_keys)
+        # FW-1804
         self.add_spec_dep_handle(self._OUI, 0x800004, self._handle_teac_keys)
 
     def _handle_teac_keys(self, key_id, type_name, data):
