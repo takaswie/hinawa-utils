@@ -5,12 +5,15 @@ __all__ = ['1394taConfigRomParser']
 # TA Document 1999027 Configuration ROM for AV/C Devices 1.0
 # http://1394ta.org/specifications/
 class Ta1394ConfigRomParser(Ieee1394ConfigRomParser):
+    OUI_1394TA  = 0x00a02d
+    VERSION_AVC = 0x010001
+
     def parse_rom(self, data):
         entries = super().parse_rom(data)
         return self._parse_entries(entries['root-directory'])
 
     def _parse_entries(self, entries):
-        # Typical layout.
+        # Recommended layout.
         FIELDS = (
             ('VENDOR',              'vendor-id'),
             ('DESCRIPTOR',          'vendor-name'),
