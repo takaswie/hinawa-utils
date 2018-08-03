@@ -1,3 +1,4 @@
+from struct import unpack
 from re import match
 
 import gi
@@ -42,23 +43,16 @@ class OxfwUnit(Hinawa.SndUnit):
 
     def _parse_hardware_info(self):
         hw_info = {}
+
         req = Hinawa.FwReq()
-        params = req.read(self, 0xfffff0050000, 4)
-        val = params[0]
-        hw_info['asic-type'] = \
-            'FW{0}{1}{2}'.format((val >> 28) & 0xf,
-                                 (val >> 24) & 0xf,
-                                 (val >> 20) & 0xf)
-        hw_info['firmware-version'] = \
-            '{0}.{1}'.format((val >> 8) & 0xf,
-                             (val & 0xf))
-        params = req.read(self, 0xfffff0090020, 4)
-        val = params[0]
-        hw_info['asic-id'] = \
-            bytes([(val >> 24) & 0xff,
-                   (val >> 16) & 0xff,
-                   (val >>  8) & 0xff,
-                   (val >>  0) & 0xff]).decode().rstrip('\0')
+
+        data = req.read(self, 0xfffff0050000, 4)
+        hw_info['asic-type'] = 'FW{0:x}'.format(unpack('>H', data[0:2])[0] >> 4)
+        hw_info['firmware-version'] = '{0}.{1}'.format(data[2], data[3])
+
+        data = req.read(self, 0xfffff0090020, 4)
+        hw_info['asic-id'] = data.decode('US-ASCII').rstrip('\0')
+
         return hw_info
 
     def _parse_supported_sampling_rates(self):
