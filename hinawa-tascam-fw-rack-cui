@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from misc.cui_kit import CuiKit
-from tscm.tscm_rack_unit import TscmRackUnit
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.tscm.tscm_rack_unit import TscmRackUnit
 
 def handle_clock_source(unit, args):
     ops = ('set', 'get')

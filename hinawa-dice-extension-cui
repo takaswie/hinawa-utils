@@ -7,8 +7,8 @@ from time import sleep
 from signal import signal, SIGINT
 from json import dumps
 
-from misc.cui_kit import CuiKit
-from dice.dice_extended_unit import DiceExtendedUnit
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.dice.dice_extended_unit import DiceExtendedUnit
 
 def _print_stream_params(direction, index, params):
     print('{0} stream {1}:'.format(direction.upper(), index))

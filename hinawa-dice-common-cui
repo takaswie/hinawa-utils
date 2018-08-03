@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from misc.cui_kit import CuiKit
-from dice.dice_unit import DiceUnit
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.dice.dice_unit import DiceUnit
 
 def handle_current_status(unit, args):
     print('owner address: {0:016x}'.format(unit.get_owner_addr()))

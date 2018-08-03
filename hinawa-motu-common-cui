@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from misc.cui_kit import CuiKit
-from motu.motu_unit import MotuUnit
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.motu.motu_unit import MotuUnit
 
 def handle_opt_iface_mode(uniit, args):
     ops = ('set', 'get')

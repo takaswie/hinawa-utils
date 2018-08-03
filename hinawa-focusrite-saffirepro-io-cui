@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from misc.cui_kit import CuiKit
-from bebob.focusrite_saffirepro_io import FocusriteSaffireproIoUnit
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.bebob.focusrite_saffirepro_io import FocusriteSaffireproIoUnit
 
 def handle_mixer_input(unit, args):
     ITEMS = {

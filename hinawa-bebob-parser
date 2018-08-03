@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from bebob.plug_parser import PlugParser
+from hinawa_utils.bebob.plug_parser import PlugParser
 
 import sys
 import json

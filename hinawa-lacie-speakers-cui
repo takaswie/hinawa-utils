@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from misc.cui_kit import CuiKit
-from oxfw.oxfw_unit import OxfwUnit
-from ta1394.audio import AvcAudio
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.oxfw.oxfw_unit import OxfwUnit
+from hinawa_utils.ta1394.audio import AvcAudio
 
 def handle_current_status(unit, args):
     print('Current status:')

@@ -6,8 +6,8 @@ import sys
 import time
 import signal
 
-from misc.cui_kit import CuiKit
-from efw.efw_unit import EfwUnit
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.efw.efw_unit import EfwUnit
 
 def handle_hardware_info(unit, args):
     print('Mode: {0}'.format(unit.info['model']))

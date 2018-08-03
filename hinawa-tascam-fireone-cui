@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from misc.cui_kit import CuiKit
-from oxfw.tascam_fireone import TascamFireone
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.oxfw.tascam_fireone import TascamFireone
 
 # Helper functions
 def handle_current_status(unit, args):

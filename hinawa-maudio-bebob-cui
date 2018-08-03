@@ -6,9 +6,9 @@ import time
 import signal
 import sys
 
-from misc.cui_kit import CuiKit
+from hinawa_utils.misc.cui_kit import CuiKit
 
-from bebob.maudio_unit import MaudioUnit
+from hinawa_utils.bebob.maudio_unit import MaudioUnit
 
 def _handle_target_volume(unit, args, cmd, targets_func, set_func, get_func):
     CHS = (0, 1)
