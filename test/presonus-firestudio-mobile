@@ -1,0 +1,632 @@
+current-status
+
+current-routing graphviz
+current-routing json
+current-routing pretty
+
+stream-params 32000
+stream-params 44100
+stream-params 48000
+stream-params 88200
+stream-params 96000
+
+router-entries 32000
+router-entries 44100
+router-entries 48000
+router-entries 88200
+router-entries 96000
+
+output-source Analog-1/2 get
+output-source Analog-3/4 get
+output-source S/PDIF-1/2 get
+output-source Analog-1/2 set Stream-1/2
+output-source Analog-3/4 set Stream-3/4
+output-source S/PDIF-1/2 set Stream-5/6
+
+capture-source Stream-1/2 get
+capture-source Stream-3/4 get
+capture-source Stream-5/6 get
+capture-source Stream-7/8 get
+capture-source Stream-9/10 get
+capture-source Stream-1/2 set Analog-1/2
+capture-source Stream-3/4 set Analog-3/4
+capture-source Stream-5/6 set Analog-5/6
+capture-source Stream-7/8 set Analog-7/8
+capture-source Stream-9/10 set S/PDIF-1/2
+
+mixer-source Mixer-1/2 get
+mixer-source Mixer-3/4 get
+mixer-source Mixer-5/6 get
+mixer-source Mixer-7/8 get
+mixer-source Mixer-9/10 get
+mixer-source Mixer-11/12 get
+mixer-source Mixer-13/14 get
+mixer-source Mixer-15/16 get
+mixer-source Mixer-17/18 get
+mixer-source Mixer-1/2 set Analog-1/2
+mixer-source Mixer-3/4 set Analog-3/4
+mixer-source Mixer-5/6 set Analog-5/6
+mixer-source Mixer-7/8 set Analog-7/8
+mixer-source Mixer-9/10 set S/PDIF-1/2
+mixer-source Mixer-11/12 set Stream-1/2
+mixer-source Mixer-13/14 set Stream-3/4
+mixer-source Mixer-15/16 set Stream-5/6
+mixer-source Mixer-17/18 set S/PDIF-1/2
+
+mixer-gain Mixer-1/2 Mixer-1/2 0 get
+mixer-gain Mixer-1/2 Mixer-1/2 1 get
+mixer-gain Mixer-1/2 Mixer-3/4 0 get
+mixer-gain Mixer-1/2 Mixer-3/4 1 get
+mixer-gain Mixer-1/2 Mixer-5/6 0 get
+mixer-gain Mixer-1/2 Mixer-5/6 1 get
+mixer-gain Mixer-1/2 Mixer-7/8 0 get
+mixer-gain Mixer-1/2 Mixer-7/8 1 get
+mixer-gain Mixer-1/2 Mixer-9/10 0 get
+mixer-gain Mixer-1/2 Mixer-9/10 1 get
+mixer-gain Mixer-1/2 Mixer-11/12 0 get
+mixer-gain Mixer-1/2 Mixer-11/12 1 get
+mixer-gain Mixer-1/2 Mixer-13/14 0 get
+mixer-gain Mixer-1/2 Mixer-13/14 1 get
+mixer-gain Mixer-1/2 Mixer-15/16 0 get
+mixer-gain Mixer-1/2 Mixer-15/16 1 get
+mixer-gain Mixer-1/2 Mixer-17/18 0 get
+mixer-gain Mixer-1/2 Mixer-17/18 1 get
+mixer-gain Mixer-3/4 Mixer-1/2 0 get
+mixer-gain Mixer-3/4 Mixer-1/2 1 get
+mixer-gain Mixer-3/4 Mixer-3/4 0 get
+mixer-gain Mixer-3/4 Mixer-3/4 1 get
+mixer-gain Mixer-3/4 Mixer-5/6 0 get
+mixer-gain Mixer-3/4 Mixer-5/6 1 get
+mixer-gain Mixer-3/4 Mixer-7/8 0 get
+mixer-gain Mixer-3/4 Mixer-7/8 1 get
+mixer-gain Mixer-3/4 Mixer-9/10 0 get
+mixer-gain Mixer-3/4 Mixer-9/10 1 get
+mixer-gain Mixer-3/4 Mixer-11/12 0 get
+mixer-gain Mixer-3/4 Mixer-11/12 1 get
+mixer-gain Mixer-3/4 Mixer-13/14 0 get
+mixer-gain Mixer-3/4 Mixer-13/14 1 get
+mixer-gain Mixer-3/4 Mixer-15/16 0 get
+mixer-gain Mixer-3/4 Mixer-15/16 1 get
+mixer-gain Mixer-3/4 Mixer-17/18 0 get
+mixer-gain Mixer-3/4 Mixer-17/18 1 get
+mixer-gain Mixer-5/6 Mixer-1/2 0 get
+mixer-gain Mixer-5/6 Mixer-1/2 1 get
+mixer-gain Mixer-5/6 Mixer-3/4 0 get
+mixer-gain Mixer-5/6 Mixer-3/4 1 get
+mixer-gain Mixer-5/6 Mixer-5/6 0 get
+mixer-gain Mixer-5/6 Mixer-5/6 1 get
+mixer-gain Mixer-5/6 Mixer-7/8 0 get
+mixer-gain Mixer-5/6 Mixer-7/8 1 get
+mixer-gain Mixer-5/6 Mixer-9/10 0 get
+mixer-gain Mixer-5/6 Mixer-9/10 1 get
+mixer-gain Mixer-5/6 Mixer-11/12 0 get
+mixer-gain Mixer-5/6 Mixer-11/12 1 get
+mixer-gain Mixer-5/6 Mixer-13/14 0 get
+mixer-gain Mixer-5/6 Mixer-13/14 1 get
+mixer-gain Mixer-5/6 Mixer-15/16 0 get
+mixer-gain Mixer-5/6 Mixer-15/16 1 get
+mixer-gain Mixer-5/6 Mixer-17/18 0 get
+mixer-gain Mixer-5/6 Mixer-17/18 1 get
+mixer-gain Mixer-7/8 Mixer-1/2 0 get
+mixer-gain Mixer-7/8 Mixer-1/2 1 get
+mixer-gain Mixer-7/8 Mixer-3/4 0 get
+mixer-gain Mixer-7/8 Mixer-3/4 1 get
+mixer-gain Mixer-7/8 Mixer-5/6 0 get
+mixer-gain Mixer-7/8 Mixer-5/6 1 get
+mixer-gain Mixer-7/8 Mixer-7/8 0 get
+mixer-gain Mixer-7/8 Mixer-7/8 1 get
+mixer-gain Mixer-7/8 Mixer-9/10 0 get
+mixer-gain Mixer-7/8 Mixer-9/10 1 get
+mixer-gain Mixer-7/8 Mixer-11/12 0 get
+mixer-gain Mixer-7/8 Mixer-11/12 1 get
+mixer-gain Mixer-7/8 Mixer-13/14 0 get
+mixer-gain Mixer-7/8 Mixer-13/14 1 get
+mixer-gain Mixer-7/8 Mixer-15/16 0 get
+mixer-gain Mixer-7/8 Mixer-15/16 1 get
+mixer-gain Mixer-7/8 Mixer-17/18 0 get
+mixer-gain Mixer-7/8 Mixer-17/18 1 get
+mixer-gain Mixer-9/10 Mixer-1/2 0 get
+mixer-gain Mixer-9/10 Mixer-1/2 1 get
+mixer-gain Mixer-9/10 Mixer-3/4 0 get
+mixer-gain Mixer-9/10 Mixer-3/4 1 get
+mixer-gain Mixer-9/10 Mixer-5/6 0 get
+mixer-gain Mixer-9/10 Mixer-5/6 1 get
+mixer-gain Mixer-9/10 Mixer-7/8 0 get
+mixer-gain Mixer-9/10 Mixer-7/8 1 get
+mixer-gain Mixer-9/10 Mixer-9/10 0 get
+mixer-gain Mixer-9/10 Mixer-9/10 1 get
+mixer-gain Mixer-9/10 Mixer-11/12 0 get
+mixer-gain Mixer-9/10 Mixer-11/12 1 get
+mixer-gain Mixer-9/10 Mixer-13/14 0 get
+mixer-gain Mixer-9/10 Mixer-13/14 1 get
+mixer-gain Mixer-9/10 Mixer-15/16 0 get
+mixer-gain Mixer-9/10 Mixer-15/16 1 get
+mixer-gain Mixer-9/10 Mixer-17/18 0 get
+mixer-gain Mixer-9/10 Mixer-17/18 1 get
+mixer-gain Mixer-11/12 Mixer-1/2 0 get
+mixer-gain Mixer-11/12 Mixer-1/2 1 get
+mixer-gain Mixer-11/12 Mixer-3/4 0 get
+mixer-gain Mixer-11/12 Mixer-3/4 1 get
+mixer-gain Mixer-11/12 Mixer-5/6 0 get
+mixer-gain Mixer-11/12 Mixer-5/6 1 get
+mixer-gain Mixer-11/12 Mixer-7/8 0 get
+mixer-gain Mixer-11/12 Mixer-7/8 1 get
+mixer-gain Mixer-11/12 Mixer-9/10 0 get
+mixer-gain Mixer-11/12 Mixer-9/10 1 get
+mixer-gain Mixer-11/12 Mixer-11/12 0 get
+mixer-gain Mixer-11/12 Mixer-11/12 1 get
+mixer-gain Mixer-11/12 Mixer-13/14 0 get
+mixer-gain Mixer-11/12 Mixer-13/14 1 get
+mixer-gain Mixer-11/12 Mixer-15/16 0 get
+mixer-gain Mixer-11/12 Mixer-15/16 1 get
+mixer-gain Mixer-11/12 Mixer-17/18 0 get
+mixer-gain Mixer-11/12 Mixer-17/18 1 get
+mixer-gain Mixer-13/14 Mixer-1/2 0 get
+mixer-gain Mixer-13/14 Mixer-1/2 1 get
+mixer-gain Mixer-13/14 Mixer-3/4 0 get
+mixer-gain Mixer-13/14 Mixer-3/4 1 get
+mixer-gain Mixer-13/14 Mixer-5/6 0 get
+mixer-gain Mixer-13/14 Mixer-5/6 1 get
+mixer-gain Mixer-13/14 Mixer-7/8 0 get
+mixer-gain Mixer-13/14 Mixer-7/8 1 get
+mixer-gain Mixer-13/14 Mixer-9/10 0 get
+mixer-gain Mixer-13/14 Mixer-9/10 1 get
+mixer-gain Mixer-13/14 Mixer-11/12 0 get
+mixer-gain Mixer-13/14 Mixer-11/12 1 get
+mixer-gain Mixer-13/14 Mixer-13/14 0 get
+mixer-gain Mixer-13/14 Mixer-13/14 1 get
+mixer-gain Mixer-13/14 Mixer-15/16 0 get
+mixer-gain Mixer-13/14 Mixer-15/16 1 get
+mixer-gain Mixer-13/14 Mixer-17/18 0 get
+mixer-gain Mixer-13/14 Mixer-17/18 1 get
+mixer-gain Mixer-15/16 Mixer-1/2 0 get
+mixer-gain Mixer-15/16 Mixer-1/2 1 get
+mixer-gain Mixer-15/16 Mixer-3/4 0 get
+mixer-gain Mixer-15/16 Mixer-3/4 1 get
+mixer-gain Mixer-15/16 Mixer-5/6 0 get
+mixer-gain Mixer-15/16 Mixer-5/6 1 get
+mixer-gain Mixer-15/16 Mixer-7/8 0 get
+mixer-gain Mixer-15/16 Mixer-7/8 1 get
+mixer-gain Mixer-15/16 Mixer-9/10 0 get
+mixer-gain Mixer-15/16 Mixer-9/10 1 get
+mixer-gain Mixer-15/16 Mixer-11/12 0 get
+mixer-gain Mixer-15/16 Mixer-11/12 1 get
+mixer-gain Mixer-15/16 Mixer-13/14 0 get
+mixer-gain Mixer-15/16 Mixer-13/14 1 get
+mixer-gain Mixer-15/16 Mixer-15/16 0 get
+mixer-gain Mixer-15/16 Mixer-15/16 1 get
+mixer-gain Mixer-15/16 Mixer-17/18 0 get
+mixer-gain Mixer-15/16 Mixer-17/18 1 get
+mixer-gain Mixer-1/2 Mixer-1/2 0 set 0
+mixer-gain Mixer-1/2 Mixer-1/2 1 set 0
+mixer-gain Mixer-1/2 Mixer-3/4 0 set 0
+mixer-gain Mixer-1/2 Mixer-3/4 1 set 0
+mixer-gain Mixer-1/2 Mixer-5/6 0 set 0
+mixer-gain Mixer-1/2 Mixer-5/6 1 set 0
+mixer-gain Mixer-1/2 Mixer-7/8 0 set 0
+mixer-gain Mixer-1/2 Mixer-7/8 1 set 0
+mixer-gain Mixer-1/2 Mixer-9/10 0 set 0
+mixer-gain Mixer-1/2 Mixer-9/10 1 set 0
+mixer-gain Mixer-1/2 Mixer-11/12 0 set 0
+mixer-gain Mixer-1/2 Mixer-11/12 1 set 0
+mixer-gain Mixer-1/2 Mixer-13/14 0 set 0
+mixer-gain Mixer-1/2 Mixer-13/14 1 set 0
+mixer-gain Mixer-1/2 Mixer-15/16 0 set 0
+mixer-gain Mixer-1/2 Mixer-15/16 1 set 0
+mixer-gain Mixer-1/2 Mixer-17/18 0 set 0
+mixer-gain Mixer-1/2 Mixer-17/18 1 set 0
+mixer-gain Mixer-3/4 Mixer-1/2 0 set 0
+mixer-gain Mixer-3/4 Mixer-1/2 1 set 0
+mixer-gain Mixer-3/4 Mixer-3/4 0 set 0
+mixer-gain Mixer-3/4 Mixer-3/4 1 set 0
+mixer-gain Mixer-3/4 Mixer-5/6 0 set 0
+mixer-gain Mixer-3/4 Mixer-5/6 1 set 0
+mixer-gain Mixer-3/4 Mixer-7/8 0 set 0
+mixer-gain Mixer-3/4 Mixer-7/8 1 set 0
+mixer-gain Mixer-3/4 Mixer-9/10 0 set 0
+mixer-gain Mixer-3/4 Mixer-9/10 1 set 0
+mixer-gain Mixer-3/4 Mixer-11/12 0 set 0
+mixer-gain Mixer-3/4 Mixer-11/12 1 set 0
+mixer-gain Mixer-3/4 Mixer-13/14 0 set 0
+mixer-gain Mixer-3/4 Mixer-13/14 1 set 0
+mixer-gain Mixer-3/4 Mixer-15/16 0 set 0
+mixer-gain Mixer-3/4 Mixer-15/16 1 set 0
+mixer-gain Mixer-3/4 Mixer-17/18 0 set 0
+mixer-gain Mixer-3/4 Mixer-17/18 1 set 0
+mixer-gain Mixer-5/6 Mixer-1/2 0 set 0
+mixer-gain Mixer-5/6 Mixer-1/2 1 set 0
+mixer-gain Mixer-5/6 Mixer-3/4 0 set 0
+mixer-gain Mixer-5/6 Mixer-3/4 1 set 0
+mixer-gain Mixer-5/6 Mixer-5/6 0 set 0
+mixer-gain Mixer-5/6 Mixer-5/6 1 set 0
+mixer-gain Mixer-5/6 Mixer-7/8 0 set 0
+mixer-gain Mixer-5/6 Mixer-7/8 1 set 0
+mixer-gain Mixer-5/6 Mixer-9/10 0 set 0
+mixer-gain Mixer-5/6 Mixer-9/10 1 set 0
+mixer-gain Mixer-5/6 Mixer-11/12 0 set 0
+mixer-gain Mixer-5/6 Mixer-11/12 1 set 0
+mixer-gain Mixer-5/6 Mixer-13/14 0 set 0
+mixer-gain Mixer-5/6 Mixer-13/14 1 set 0
+mixer-gain Mixer-5/6 Mixer-15/16 0 set 0
+mixer-gain Mixer-5/6 Mixer-15/16 1 set 0
+mixer-gain Mixer-5/6 Mixer-17/18 0 set 0
+mixer-gain Mixer-5/6 Mixer-17/18 1 set 0
+mixer-gain Mixer-7/8 Mixer-1/2 0 set 0
+mixer-gain Mixer-7/8 Mixer-1/2 1 set 0
+mixer-gain Mixer-7/8 Mixer-3/4 0 set 0
+mixer-gain Mixer-7/8 Mixer-3/4 1 set 0
+mixer-gain Mixer-7/8 Mixer-5/6 0 set 0
+mixer-gain Mixer-7/8 Mixer-5/6 1 set 0
+mixer-gain Mixer-7/8 Mixer-7/8 0 set 0
+mixer-gain Mixer-7/8 Mixer-7/8 1 set 0
+mixer-gain Mixer-7/8 Mixer-9/10 0 set 0
+mixer-gain Mixer-7/8 Mixer-9/10 1 set 0
+mixer-gain Mixer-7/8 Mixer-11/12 0 set 0
+mixer-gain Mixer-7/8 Mixer-11/12 1 set 0
+mixer-gain Mixer-7/8 Mixer-13/14 0 set 0
+mixer-gain Mixer-7/8 Mixer-13/14 1 set 0
+mixer-gain Mixer-7/8 Mixer-15/16 0 set 0
+mixer-gain Mixer-7/8 Mixer-15/16 1 set 0
+mixer-gain Mixer-7/8 Mixer-17/18 0 set 0
+mixer-gain Mixer-7/8 Mixer-17/18 1 set 0
+mixer-gain Mixer-9/10 Mixer-1/2 0 set 0
+mixer-gain Mixer-9/10 Mixer-1/2 1 set 0
+mixer-gain Mixer-9/10 Mixer-3/4 0 set 0
+mixer-gain Mixer-9/10 Mixer-3/4 1 set 0
+mixer-gain Mixer-9/10 Mixer-5/6 0 set 0
+mixer-gain Mixer-9/10 Mixer-5/6 1 set 0
+mixer-gain Mixer-9/10 Mixer-7/8 0 set 0
+mixer-gain Mixer-9/10 Mixer-7/8 1 set 0
+mixer-gain Mixer-9/10 Mixer-9/10 0 set 0
+mixer-gain Mixer-9/10 Mixer-9/10 1 set 0
+mixer-gain Mixer-9/10 Mixer-11/12 0 set 0
+mixer-gain Mixer-9/10 Mixer-11/12 1 set 0
+mixer-gain Mixer-9/10 Mixer-13/14 0 set 0
+mixer-gain Mixer-9/10 Mixer-13/14 1 set 0
+mixer-gain Mixer-9/10 Mixer-15/16 0 set 0
+mixer-gain Mixer-9/10 Mixer-15/16 1 set 0
+mixer-gain Mixer-9/10 Mixer-17/18 0 set 0
+mixer-gain Mixer-9/10 Mixer-17/18 1 set 0
+mixer-gain Mixer-11/12 Mixer-1/2 0 set 0
+mixer-gain Mixer-11/12 Mixer-1/2 1 set 0
+mixer-gain Mixer-11/12 Mixer-3/4 0 set 0
+mixer-gain Mixer-11/12 Mixer-3/4 1 set 0
+mixer-gain Mixer-11/12 Mixer-5/6 0 set 0
+mixer-gain Mixer-11/12 Mixer-5/6 1 set 0
+mixer-gain Mixer-11/12 Mixer-7/8 0 set 0
+mixer-gain Mixer-11/12 Mixer-7/8 1 set 0
+mixer-gain Mixer-11/12 Mixer-9/10 0 set 0
+mixer-gain Mixer-11/12 Mixer-9/10 1 set 0
+mixer-gain Mixer-11/12 Mixer-11/12 0 set 0
+mixer-gain Mixer-11/12 Mixer-11/12 1 set 0
+mixer-gain Mixer-11/12 Mixer-13/14 0 set 0
+mixer-gain Mixer-11/12 Mixer-13/14 1 set 0
+mixer-gain Mixer-11/12 Mixer-15/16 0 set 0
+mixer-gain Mixer-11/12 Mixer-15/16 1 set 0
+mixer-gain Mixer-11/12 Mixer-17/18 0 set 0
+mixer-gain Mixer-11/12 Mixer-17/18 1 set 0
+mixer-gain Mixer-13/14 Mixer-1/2 0 set 0
+mixer-gain Mixer-13/14 Mixer-1/2 1 set 0
+mixer-gain Mixer-13/14 Mixer-3/4 0 set 0
+mixer-gain Mixer-13/14 Mixer-3/4 1 set 0
+mixer-gain Mixer-13/14 Mixer-5/6 0 set 0
+mixer-gain Mixer-13/14 Mixer-5/6 1 set 0
+mixer-gain Mixer-13/14 Mixer-7/8 0 set 0
+mixer-gain Mixer-13/14 Mixer-7/8 1 set 0
+mixer-gain Mixer-13/14 Mixer-9/10 0 set 0
+mixer-gain Mixer-13/14 Mixer-9/10 1 set 0
+mixer-gain Mixer-13/14 Mixer-11/12 0 set 0
+mixer-gain Mixer-13/14 Mixer-11/12 1 set 0
+mixer-gain Mixer-13/14 Mixer-13/14 0 set 0
+mixer-gain Mixer-13/14 Mixer-13/14 1 set 0
+mixer-gain Mixer-13/14 Mixer-15/16 0 set 0
+mixer-gain Mixer-13/14 Mixer-15/16 1 set 0
+mixer-gain Mixer-13/14 Mixer-17/18 0 set 0
+mixer-gain Mixer-13/14 Mixer-17/18 1 set 0
+mixer-gain Mixer-15/16 Mixer-1/2 0 set 0
+mixer-gain Mixer-15/16 Mixer-1/2 1 set 0
+mixer-gain Mixer-15/16 Mixer-3/4 0 set 0
+mixer-gain Mixer-15/16 Mixer-3/4 1 set 0
+mixer-gain Mixer-15/16 Mixer-5/6 0 set 0
+mixer-gain Mixer-15/16 Mixer-5/6 1 set 0
+mixer-gain Mixer-15/16 Mixer-7/8 0 set 0
+mixer-gain Mixer-15/16 Mixer-7/8 1 set 0
+mixer-gain Mixer-15/16 Mixer-9/10 0 set 0
+mixer-gain Mixer-15/16 Mixer-9/10 1 set 0
+mixer-gain Mixer-15/16 Mixer-11/12 0 set 0
+mixer-gain Mixer-15/16 Mixer-11/12 1 set 0
+mixer-gain Mixer-15/16 Mixer-13/14 0 set 0
+mixer-gain Mixer-15/16 Mixer-13/14 1 set 0
+mixer-gain Mixer-15/16 Mixer-15/16 0 set 0
+mixer-gain Mixer-15/16 Mixer-15/16 1 set 0
+mixer-gain Mixer-15/16 Mixer-17/18 0 set 0
+mixer-gain Mixer-15/16 Mixer-17/18 1 set 0
+
+mixer-panning Mixer-1/2 Mixer-1/2 0 get
+mixer-panning Mixer-1/2 Mixer-1/2 1 get
+mixer-panning Mixer-1/2 Mixer-3/4 0 get
+mixer-panning Mixer-1/2 Mixer-3/4 1 get
+mixer-panning Mixer-1/2 Mixer-5/6 0 get
+mixer-panning Mixer-1/2 Mixer-5/6 1 get
+mixer-panning Mixer-1/2 Mixer-7/8 0 get
+mixer-panning Mixer-1/2 Mixer-7/8 1 get
+mixer-panning Mixer-1/2 Mixer-9/10 0 get
+mixer-panning Mixer-1/2 Mixer-9/10 1 get
+mixer-panning Mixer-1/2 Mixer-11/12 0 get
+mixer-panning Mixer-1/2 Mixer-11/12 1 get
+mixer-panning Mixer-1/2 Mixer-13/14 0 get
+mixer-panning Mixer-1/2 Mixer-13/14 1 get
+mixer-panning Mixer-1/2 Mixer-15/16 0 get
+mixer-panning Mixer-1/2 Mixer-15/16 1 get
+mixer-panning Mixer-1/2 Mixer-17/18 0 get
+mixer-panning Mixer-1/2 Mixer-17/18 1 get
+mixer-panning Mixer-3/4 Mixer-1/2 0 get
+mixer-panning Mixer-3/4 Mixer-1/2 1 get
+mixer-panning Mixer-3/4 Mixer-3/4 0 get
+mixer-panning Mixer-3/4 Mixer-3/4 1 get
+mixer-panning Mixer-3/4 Mixer-5/6 0 get
+mixer-panning Mixer-3/4 Mixer-5/6 1 get
+mixer-panning Mixer-3/4 Mixer-7/8 0 get
+mixer-panning Mixer-3/4 Mixer-7/8 1 get
+mixer-panning Mixer-3/4 Mixer-9/10 0 get
+mixer-panning Mixer-3/4 Mixer-9/10 1 get
+mixer-panning Mixer-3/4 Mixer-11/12 0 get
+mixer-panning Mixer-3/4 Mixer-11/12 1 get
+mixer-panning Mixer-3/4 Mixer-13/14 0 get
+mixer-panning Mixer-3/4 Mixer-13/14 1 get
+mixer-panning Mixer-3/4 Mixer-15/16 0 get
+mixer-panning Mixer-3/4 Mixer-15/16 1 get
+mixer-panning Mixer-3/4 Mixer-17/18 0 get
+mixer-panning Mixer-3/4 Mixer-17/18 1 get
+mixer-panning Mixer-5/6 Mixer-1/2 0 get
+mixer-panning Mixer-5/6 Mixer-1/2 1 get
+mixer-panning Mixer-5/6 Mixer-3/4 0 get
+mixer-panning Mixer-5/6 Mixer-3/4 1 get
+mixer-panning Mixer-5/6 Mixer-5/6 0 get
+mixer-panning Mixer-5/6 Mixer-5/6 1 get
+mixer-panning Mixer-5/6 Mixer-7/8 0 get
+mixer-panning Mixer-5/6 Mixer-7/8 1 get
+mixer-panning Mixer-5/6 Mixer-9/10 0 get
+mixer-panning Mixer-5/6 Mixer-9/10 1 get
+mixer-panning Mixer-5/6 Mixer-11/12 0 get
+mixer-panning Mixer-5/6 Mixer-11/12 1 get
+mixer-panning Mixer-5/6 Mixer-13/14 0 get
+mixer-panning Mixer-5/6 Mixer-13/14 1 get
+mixer-panning Mixer-5/6 Mixer-15/16 0 get
+mixer-panning Mixer-5/6 Mixer-15/16 1 get
+mixer-panning Mixer-5/6 Mixer-17/18 0 get
+mixer-panning Mixer-5/6 Mixer-17/18 1 get
+mixer-panning Mixer-7/8 Mixer-1/2 0 get
+mixer-panning Mixer-7/8 Mixer-1/2 1 get
+mixer-panning Mixer-7/8 Mixer-3/4 0 get
+mixer-panning Mixer-7/8 Mixer-3/4 1 get
+mixer-panning Mixer-7/8 Mixer-5/6 0 get
+mixer-panning Mixer-7/8 Mixer-5/6 1 get
+mixer-panning Mixer-7/8 Mixer-7/8 0 get
+mixer-panning Mixer-7/8 Mixer-7/8 1 get
+mixer-panning Mixer-7/8 Mixer-9/10 0 get
+mixer-panning Mixer-7/8 Mixer-9/10 1 get
+mixer-panning Mixer-7/8 Mixer-11/12 0 get
+mixer-panning Mixer-7/8 Mixer-11/12 1 get
+mixer-panning Mixer-7/8 Mixer-13/14 0 get
+mixer-panning Mixer-7/8 Mixer-13/14 1 get
+mixer-panning Mixer-7/8 Mixer-15/16 0 get
+mixer-panning Mixer-7/8 Mixer-15/16 1 get
+mixer-panning Mixer-7/8 Mixer-17/18 0 get
+mixer-panning Mixer-7/8 Mixer-17/18 1 get
+mixer-panning Mixer-9/10 Mixer-1/2 0 get
+mixer-panning Mixer-9/10 Mixer-1/2 1 get
+mixer-panning Mixer-9/10 Mixer-3/4 0 get
+mixer-panning Mixer-9/10 Mixer-3/4 1 get
+mixer-panning Mixer-9/10 Mixer-5/6 0 get
+mixer-panning Mixer-9/10 Mixer-5/6 1 get
+mixer-panning Mixer-9/10 Mixer-7/8 0 get
+mixer-panning Mixer-9/10 Mixer-7/8 1 get
+mixer-panning Mixer-9/10 Mixer-9/10 0 get
+mixer-panning Mixer-9/10 Mixer-9/10 1 get
+mixer-panning Mixer-9/10 Mixer-11/12 0 get
+mixer-panning Mixer-9/10 Mixer-11/12 1 get
+mixer-panning Mixer-9/10 Mixer-13/14 0 get
+mixer-panning Mixer-9/10 Mixer-13/14 1 get
+mixer-panning Mixer-9/10 Mixer-15/16 0 get
+mixer-panning Mixer-9/10 Mixer-15/16 1 get
+mixer-panning Mixer-9/10 Mixer-17/18 0 get
+mixer-panning Mixer-9/10 Mixer-17/18 1 get
+mixer-panning Mixer-11/12 Mixer-1/2 0 get
+mixer-panning Mixer-11/12 Mixer-1/2 1 get
+mixer-panning Mixer-11/12 Mixer-3/4 0 get
+mixer-panning Mixer-11/12 Mixer-3/4 1 get
+mixer-panning Mixer-11/12 Mixer-5/6 0 get
+mixer-panning Mixer-11/12 Mixer-5/6 1 get
+mixer-panning Mixer-11/12 Mixer-7/8 0 get
+mixer-panning Mixer-11/12 Mixer-7/8 1 get
+mixer-panning Mixer-11/12 Mixer-9/10 0 get
+mixer-panning Mixer-11/12 Mixer-9/10 1 get
+mixer-panning Mixer-11/12 Mixer-11/12 0 get
+mixer-panning Mixer-11/12 Mixer-11/12 1 get
+mixer-panning Mixer-11/12 Mixer-13/14 0 get
+mixer-panning Mixer-11/12 Mixer-13/14 1 get
+mixer-panning Mixer-11/12 Mixer-15/16 0 get
+mixer-panning Mixer-11/12 Mixer-15/16 1 get
+mixer-panning Mixer-11/12 Mixer-17/18 0 get
+mixer-panning Mixer-11/12 Mixer-17/18 1 get
+mixer-panning Mixer-13/14 Mixer-1/2 0 get
+mixer-panning Mixer-13/14 Mixer-1/2 1 get
+mixer-panning Mixer-13/14 Mixer-3/4 0 get
+mixer-panning Mixer-13/14 Mixer-3/4 1 get
+mixer-panning Mixer-13/14 Mixer-5/6 0 get
+mixer-panning Mixer-13/14 Mixer-5/6 1 get
+mixer-panning Mixer-13/14 Mixer-7/8 0 get
+mixer-panning Mixer-13/14 Mixer-7/8 1 get
+mixer-panning Mixer-13/14 Mixer-9/10 0 get
+mixer-panning Mixer-13/14 Mixer-9/10 1 get
+mixer-panning Mixer-13/14 Mixer-11/12 0 get
+mixer-panning Mixer-13/14 Mixer-11/12 1 get
+mixer-panning Mixer-13/14 Mixer-13/14 0 get
+mixer-panning Mixer-13/14 Mixer-13/14 1 get
+mixer-panning Mixer-13/14 Mixer-15/16 0 get
+mixer-panning Mixer-13/14 Mixer-15/16 1 get
+mixer-panning Mixer-13/14 Mixer-17/18 0 get
+mixer-panning Mixer-13/14 Mixer-17/18 1 get
+mixer-panning Mixer-15/16 Mixer-1/2 0 get
+mixer-panning Mixer-15/16 Mixer-1/2 1 get
+mixer-panning Mixer-15/16 Mixer-3/4 0 get
+mixer-panning Mixer-15/16 Mixer-3/4 1 get
+mixer-panning Mixer-15/16 Mixer-5/6 0 get
+mixer-panning Mixer-15/16 Mixer-5/6 1 get
+mixer-panning Mixer-15/16 Mixer-7/8 0 get
+mixer-panning Mixer-15/16 Mixer-7/8 1 get
+mixer-panning Mixer-15/16 Mixer-9/10 0 get
+mixer-panning Mixer-15/16 Mixer-9/10 1 get
+mixer-panning Mixer-15/16 Mixer-11/12 0 get
+mixer-panning Mixer-15/16 Mixer-11/12 1 get
+mixer-panning Mixer-15/16 Mixer-13/14 0 get
+mixer-panning Mixer-15/16 Mixer-13/14 1 get
+mixer-panning Mixer-15/16 Mixer-15/16 0 get
+mixer-panning Mixer-15/16 Mixer-15/16 1 get
+mixer-panning Mixer-15/16 Mixer-17/18 0 get
+mixer-panning Mixer-15/16 Mixer-17/18 1 get
+mixer-panning Mixer-1/2 Mixer-1/2 0 set 50
+mixer-panning Mixer-1/2 Mixer-1/2 1 set 50
+mixer-panning Mixer-1/2 Mixer-3/4 0 set 50
+mixer-panning Mixer-1/2 Mixer-3/4 1 set 50
+mixer-panning Mixer-1/2 Mixer-5/6 0 set 50
+mixer-panning Mixer-1/2 Mixer-5/6 1 set 50
+mixer-panning Mixer-1/2 Mixer-7/8 0 set 50
+mixer-panning Mixer-1/2 Mixer-7/8 1 set 50
+mixer-panning Mixer-1/2 Mixer-9/10 0 set 50
+mixer-panning Mixer-1/2 Mixer-9/10 1 set 50
+mixer-panning Mixer-1/2 Mixer-11/12 0 set 50
+mixer-panning Mixer-1/2 Mixer-11/12 1 set 50
+mixer-panning Mixer-1/2 Mixer-13/14 0 set 50
+mixer-panning Mixer-1/2 Mixer-13/14 1 set 50
+mixer-panning Mixer-1/2 Mixer-15/16 0 set 50
+mixer-panning Mixer-1/2 Mixer-15/16 1 set 50
+mixer-panning Mixer-1/2 Mixer-17/18 0 set 50
+mixer-panning Mixer-1/2 Mixer-17/18 1 set 50
+mixer-panning Mixer-3/4 Mixer-1/2 0 set 50
+mixer-panning Mixer-3/4 Mixer-1/2 1 set 50
+mixer-panning Mixer-3/4 Mixer-3/4 0 set 50
+mixer-panning Mixer-3/4 Mixer-3/4 1 set 50
+mixer-panning Mixer-3/4 Mixer-5/6 0 set 50
+mixer-panning Mixer-3/4 Mixer-5/6 1 set 50
+mixer-panning Mixer-3/4 Mixer-7/8 0 set 50
+mixer-panning Mixer-3/4 Mixer-7/8 1 set 50
+mixer-panning Mixer-3/4 Mixer-9/10 0 set 50
+mixer-panning Mixer-3/4 Mixer-9/10 1 set 50
+mixer-panning Mixer-3/4 Mixer-11/12 0 set 50
+mixer-panning Mixer-3/4 Mixer-11/12 1 set 50
+mixer-panning Mixer-3/4 Mixer-13/14 0 set 50
+mixer-panning Mixer-3/4 Mixer-13/14 1 set 50
+mixer-panning Mixer-3/4 Mixer-15/16 0 set 50
+mixer-panning Mixer-3/4 Mixer-15/16 1 set 50
+mixer-panning Mixer-3/4 Mixer-17/18 0 set 50
+mixer-panning Mixer-3/4 Mixer-17/18 1 set 50
+mixer-panning Mixer-5/6 Mixer-1/2 0 set 50
+mixer-panning Mixer-5/6 Mixer-1/2 1 set 50
+mixer-panning Mixer-5/6 Mixer-3/4 0 set 50
+mixer-panning Mixer-5/6 Mixer-3/4 1 set 50
+mixer-panning Mixer-5/6 Mixer-5/6 0 set 50
+mixer-panning Mixer-5/6 Mixer-5/6 1 set 50
+mixer-panning Mixer-5/6 Mixer-7/8 0 set 50
+mixer-panning Mixer-5/6 Mixer-7/8 1 set 50
+mixer-panning Mixer-5/6 Mixer-9/10 0 set 50
+mixer-panning Mixer-5/6 Mixer-9/10 1 set 50
+mixer-panning Mixer-5/6 Mixer-11/12 0 set 50
+mixer-panning Mixer-5/6 Mixer-11/12 1 set 50
+mixer-panning Mixer-5/6 Mixer-13/14 0 set 50
+mixer-panning Mixer-5/6 Mixer-13/14 1 set 50
+mixer-panning Mixer-5/6 Mixer-15/16 0 set 50
+mixer-panning Mixer-5/6 Mixer-15/16 1 set 50
+mixer-panning Mixer-5/6 Mixer-17/18 0 set 50
+mixer-panning Mixer-5/6 Mixer-17/18 1 set 50
+mixer-panning Mixer-7/8 Mixer-1/2 0 set 50
+mixer-panning Mixer-7/8 Mixer-1/2 1 set 50
+mixer-panning Mixer-7/8 Mixer-3/4 0 set 50
+mixer-panning Mixer-7/8 Mixer-3/4 1 set 50
+mixer-panning Mixer-7/8 Mixer-5/6 0 set 50
+mixer-panning Mixer-7/8 Mixer-5/6 1 set 50
+mixer-panning Mixer-7/8 Mixer-7/8 0 set 50
+mixer-panning Mixer-7/8 Mixer-7/8 1 set 50
+mixer-panning Mixer-7/8 Mixer-9/10 0 set 50
+mixer-panning Mixer-7/8 Mixer-9/10 1 set 50
+mixer-panning Mixer-7/8 Mixer-11/12 0 set 50
+mixer-panning Mixer-7/8 Mixer-11/12 1 set 50
+mixer-panning Mixer-7/8 Mixer-13/14 0 set 50
+mixer-panning Mixer-7/8 Mixer-13/14 1 set 50
+mixer-panning Mixer-7/8 Mixer-15/16 0 set 50
+mixer-panning Mixer-7/8 Mixer-15/16 1 set 50
+mixer-panning Mixer-7/8 Mixer-17/18 0 set 50
+mixer-panning Mixer-7/8 Mixer-17/18 1 set 50
+mixer-panning Mixer-9/10 Mixer-1/2 0 set 50
+mixer-panning Mixer-9/10 Mixer-1/2 1 set 50
+mixer-panning Mixer-9/10 Mixer-3/4 0 set 50
+mixer-panning Mixer-9/10 Mixer-3/4 1 set 50
+mixer-panning Mixer-9/10 Mixer-5/6 0 set 50
+mixer-panning Mixer-9/10 Mixer-5/6 1 set 50
+mixer-panning Mixer-9/10 Mixer-7/8 0 set 50
+mixer-panning Mixer-9/10 Mixer-7/8 1 set 50
+mixer-panning Mixer-9/10 Mixer-9/10 0 set 50
+mixer-panning Mixer-9/10 Mixer-9/10 1 set 50
+mixer-panning Mixer-9/10 Mixer-11/12 0 set 50
+mixer-panning Mixer-9/10 Mixer-11/12 1 set 50
+mixer-panning Mixer-9/10 Mixer-13/14 0 set 50
+mixer-panning Mixer-9/10 Mixer-13/14 1 set 50
+mixer-panning Mixer-9/10 Mixer-15/16 0 set 50
+mixer-panning Mixer-9/10 Mixer-15/16 1 set 50
+mixer-panning Mixer-9/10 Mixer-17/18 0 set 50
+mixer-panning Mixer-9/10 Mixer-17/18 1 set 50
+mixer-panning Mixer-11/12 Mixer-1/2 0 set 50
+mixer-panning Mixer-11/12 Mixer-1/2 1 set 50
+mixer-panning Mixer-11/12 Mixer-3/4 0 set 50
+mixer-panning Mixer-11/12 Mixer-3/4 1 set 50
+mixer-panning Mixer-11/12 Mixer-5/6 0 set 50
+mixer-panning Mixer-11/12 Mixer-5/6 1 set 50
+mixer-panning Mixer-11/12 Mixer-7/8 0 set 50
+mixer-panning Mixer-11/12 Mixer-7/8 1 set 50
+mixer-panning Mixer-11/12 Mixer-9/10 0 set 50
+mixer-panning Mixer-11/12 Mixer-9/10 1 set 50
+mixer-panning Mixer-11/12 Mixer-11/12 0 set 50
+mixer-panning Mixer-11/12 Mixer-11/12 1 set 50
+mixer-panning Mixer-11/12 Mixer-13/14 0 set 50
+mixer-panning Mixer-11/12 Mixer-13/14 1 set 50
+mixer-panning Mixer-11/12 Mixer-15/16 0 set 50
+mixer-panning Mixer-11/12 Mixer-15/16 1 set 50
+mixer-panning Mixer-11/12 Mixer-17/18 0 set 50
+mixer-panning Mixer-11/12 Mixer-17/18 1 set 50
+mixer-panning Mixer-13/14 Mixer-1/2 0 set 50
+mixer-panning Mixer-13/14 Mixer-1/2 1 set 50
+mixer-panning Mixer-13/14 Mixer-3/4 0 set 50
+mixer-panning Mixer-13/14 Mixer-3/4 1 set 50
+mixer-panning Mixer-13/14 Mixer-5/6 0 set 50
+mixer-panning Mixer-13/14 Mixer-5/6 1 set 50
+mixer-panning Mixer-13/14 Mixer-7/8 0 set 50
+mixer-panning Mixer-13/14 Mixer-7/8 1 set 50
+mixer-panning Mixer-13/14 Mixer-9/10 0 set 50
+mixer-panning Mixer-13/14 Mixer-9/10 1 set 50
+mixer-panning Mixer-13/14 Mixer-11/12 0 set 50
+mixer-panning Mixer-13/14 Mixer-11/12 1 set 50
+mixer-panning Mixer-13/14 Mixer-13/14 0 set 50
+mixer-panning Mixer-13/14 Mixer-13/14 1 set 50
+mixer-panning Mixer-13/14 Mixer-15/16 0 set 50
+mixer-panning Mixer-13/14 Mixer-15/16 1 set 50
+mixer-panning Mixer-13/14 Mixer-17/18 0 set 50
+mixer-panning Mixer-13/14 Mixer-17/18 1 set 50
+mixer-panning Mixer-15/16 Mixer-1/2 0 set 50
+mixer-panning Mixer-15/16 Mixer-1/2 1 set 50
+mixer-panning Mixer-15/16 Mixer-3/4 0 set 50
+mixer-panning Mixer-15/16 Mixer-3/4 1 set 50
+mixer-panning Mixer-15/16 Mixer-5/6 0 set 50
+mixer-panning Mixer-15/16 Mixer-5/6 1 set 50
+mixer-panning Mixer-15/16 Mixer-7/8 0 set 50
+mixer-panning Mixer-15/16 Mixer-7/8 1 set 50
+mixer-panning Mixer-15/16 Mixer-9/10 0 set 50
+mixer-panning Mixer-15/16 Mixer-9/10 1 set 50
+mixer-panning Mixer-15/16 Mixer-11/12 0 set 50
+mixer-panning Mixer-15/16 Mixer-11/12 1 set 50
+mixer-panning Mixer-15/16 Mixer-13/14 0 set 50
+mixer-panning Mixer-15/16 Mixer-13/14 1 set 50
+mixer-panning Mixer-15/16 Mixer-15/16 0 set 50
+mixer-panning Mixer-15/16 Mixer-15/16 1 set 50
+mixer-panning Mixer-15/16 Mixer-17/18 0 set 50
+mixer-panning Mixer-15/16 Mixer-17/18 1 set 50
