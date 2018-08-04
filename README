@@ -1,4 +1,41 @@
-= Utilities for audio and music units on IEEE 1394 bus
+# hinawa-utils
+
+2018/08/04
+Takashi Sakamoto
+
+## Introduction
+
+This batch of Python 3 codes consists of modules and scripts to control
+Audio and Music units on IEEE 1394 bus, with PyGObject to use libhinawa
+APIs with a help of gobject-introspection.
+
+The modules include applications of below specifications:
+
+ * IEEE 1212:2001 - IEEE Standard for a Control and Status Registers (CSR)
+   Architecture for Microcomputer Buses
+ * IEEE 1394:2008 - IEEE Standard for a High-Performance Serial Bus
+ * AV/C Digital Interface Command Set General Specification Version 4.2
+   (Sep. 2004, 1394 Trade Association)
+ * AV/C Audio Subunit Specification 1.0 (Oct. 2000, 1394 Trade Association)
+ * AV/C Connection and Compatibility Management Specification 1.1
+   (Mar. 2003, 1394 Trade Associtation)
+ * Configuration ROM for AV/C Devices 1.0 (Dec. 2000, 1394 Trade Association)
+ * AV/C Stream Format Information Specification 1.1 - Working draft
+   revision 0.5 (Apr. 2005, 1394 Trade Association)
+ * Vendor specific protocols:
+    * Some protocols for BridgeCo Enhanced Break Out Box (BeBoB) of
+      BridgeCo AG.
+    * General and extended protocol for Digital Interface Communication
+      Engine (DICE) of TC Applied Technologies and ASICs of DiceII,
+      TCD2210 (Dice Mini), TCD2220 (Dice Jr.).
+    * Protocol for Fireworks board module of Echo Audio corporation.
+    * Protocol for Digi 00x series of Digidesign.
+    * Protocol for FireWire series of TEAC (TASCAM).
+    * Common protocol for each generation of FireWire series of Mark of
+      the Unicorn (MOTU).
+    * Some protocols specific to manufacturer.
+
+## CUI tools to control Audio and Music unit on IEEE 1394 bus
 
  * hinawa-config-rom-printer
     * A lexer/parser of configuration ROM on IEEE 1394 bus
@@ -8,6 +45,8 @@
     * CUI tool for Digidesign Digi 00x family
  * hinawa-dice-common-cui
     * CUI tool for Dice common functionalities
+ * hinawa-dice-extension-cui
+    * CUI tool for Dice extended functionalities
  * hinawa-fireworks-cui
     * CUI tool for Echo Audio Fireworks module
  * hinawa-griffin-firewave-cui
@@ -31,6 +70,20 @@
  * hinawa-focusrite-saffirepro-io-cui
     * CUI tool for Focusrite SaffirePro IO series
 
-All of them are libhinawa applications. Please install libhinawa version 1 or
-later in advance.
- * https://github.com/takaswie/libhinawa
+## Requirements
+
+ * Python 3.4 or later
+    * https://docs.python.org/3/library/enum.html
+    * https://docs.python.org/3/library/pathlib.html
+ * PyGObject
+    * https://gitlab.gnome.org/GNOME/pygobject
+ * libhinawa with gir support
+    * https://github.com/takaswie/libhinawa
+
+## License
+
+ * All modules are licensed under GNU Lesser General Public License version 3 or
+   later.
+ * All scripts are licensed under GNU General Public License version 3 or later.
+
+End
