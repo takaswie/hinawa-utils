@@ -1,0 +1,54 @@
+# For M-Audio FireWire 1814
+
+sampling-rate get
+sampling-rate set 48000
+sampling-rate set 88200
+sampling-rate set 96000
+sampling-rate set 44100
+
+clock-source get
+clock-source set S/PDIF
+clock-source set Internal
+
+input-gain analog-1/2 0 get
+input-gain analog-1/2 1 get
+input-gain digital-1/2 0 get
+input-gain digital-1/2 1 get
+input-gain stream-1/2 0 get
+input-gain stream-1/2 1 get
+input-gain stream-3/4 0 get
+input-gain stream-3/4 1 get
+input-gain analog-1/2 0 set 0
+input-gain analog-1/2 1 set 0
+input-gain digital-1/2 0 set 0
+input-gain digital-1/2 1 set 0
+input-gain stream-1/2 0 set 0
+input-gain stream-1/2 1 set 0
+input-gain stream-3/4 0 set 0
+input-gain stream-3/4 1 set 0
+
+input-balance analog-1/2 0 get
+input-balance analog-1/2 1 get
+input-balance digital-1/2 0 get
+input-balance digital-1/2 1 get
+input-balance analog-1/2 0 set 0
+input-balance analog-1/2 1 set 0
+input-balance digital-1/2 0 set 0
+input-balance digital-1/2 1 set 0
+
+mixer-routing mixer-1/2 analog-1/2 get
+mixer-routing mixer-1/2 digital-1/2 get
+mixer-routing mixer-1/2 stream-1/2 get
+mixer-routing mixer-1/2 stream-3/4 get
+mixer-routing mixer-3/4 analog-1/2 get
+mixer-routing mixer-3/4 digital-1/2 get
+mixer-routing mixer-3/4 stream-1/2 get
+mixer-routing mixer-3/4 stream-3/4 get
+mixer-routing mixer-1/2 analog-1/2 set 1
+mixer-routing mixer-1/2 digital-1/2 set 1
+mixer-routing mixer-1/2 stream-1/2 set 1
+mixer-routing mixer-1/2 stream-3/4 set 1
+mixer-routing mixer-3/4 analog-1/2 set 1
+mixer-routing mixer-3/4 digital-1/2 set 1
+mixer-routing mixer-3/4 stream-1/2 set 1
+mixer-routing mixer-3/4 stream-3/4 set 1
