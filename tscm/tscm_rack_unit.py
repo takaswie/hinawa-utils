@@ -1,4 +1,5 @@
 from struct import pack, unpack
+from pathlib import Path
 
 from tscm.tscm_unit import TscmUnit
 
@@ -24,7 +25,7 @@ class TscmRackUnit(TscmUnit):
 
         # For permanent cache.
         guid = self.get_property('guid')
-        self._filepath = '/tmp/hinawa-{0:08x}'.format(guid)
+        self._path = Path('/tmp/hinawa-{0:08x}'.format(guid))
 
         # For process local cache.
         self._cache = bytearray(len(self._CH_LABELS) * self._CH_FRAME_SIZE)
@@ -34,11 +35,7 @@ class TscmRackUnit(TscmUnit):
         self._write_cache()
 
     def _load_cache(self):
-        try:
-            with open(self._filepath, 'r') as f:
-                for i, line in enumerate(f):
-                    self._cache[i] = int(line.strip(), base=16)
-        except Exception as e:
+        if not self._path.exists() or not self._path.is_file():
             # This is initial values.
             for i in range(len(self._CH_LABELS)):
                 pos = i * self._CH_FRAME_SIZE
@@ -49,13 +46,17 @@ class TscmRackUnit(TscmUnit):
                     self._cache[pos + 1] = 0xff
                 self._cache[pos + 2] = 0x7f
                 self._cache[pos + 3] = 0xff
-        finally:
-            for i in range(len(self._CH_LABELS)):
-                pos = i * self._CH_FRAME_SIZE
-                self.write_quadlet(0x0408, self._cache[pos:pos + 4])
+        else:
+            with self._path.open(mode='r') as f:
+                for i, line in enumerate(f):
+                    self._cache[i] = int(line.strip(), base=16)
+
+        for i in range(len(self._CH_LABELS)):
+            pos = i * self._CH_FRAME_SIZE
+            self.write_quadlet(0x0408, self._cache[pos:pos + 4])
 
     def _write_cache(self):
-        with open(self._filepath, 'w+') as fd:
+        with self._path.open(mode='w+') as fd:
             for i, frame in enumerate(self._cache):
                 fd.write('{0:02x}\n'.format(frame))
 

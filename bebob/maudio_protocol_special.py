@@ -1,6 +1,7 @@
-import gi
 from struct import unpack, pack
+from pathlib import Path
 
+import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
@@ -63,17 +64,12 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         self._cache = bytearray(160)
         # For permanent cache.
         guid = self._unit.get_property('guid')
-        self._filepath = '/tmp/hinawa-{0:08x}'.format(guid)
+        self._path = Path('/tmp/hinawa-{0:08x}'.format(guid))
         self._load_cache()
 
     # Read transactions are not allowed. We cache data.
     def _load_cache(self):
-        try:
-            cache = bytearray(160)
-            with open(self._filepath, 'r') as f:
-                for i, line in enumerate(f):
-                    cache[i] = int(line.strip(), base=16)
-        except Exception as e:
+        if not self._path.exists() or not self._path.is_file():
             # This is initial value.
             cache = [
                 0x00, 0x00, 0x00, 0x00, # gain of inputs from stream 1/2
@@ -116,8 +112,13 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
                 0x00, 0x00, 0x00, 0x09, # inputs of stream for mixer
                 0x00, 0x02, 0x00, 0x01, # source for headphone out 1/2 and 3/4
                 0x00, 0x00, 0x00, 0x00] # source for analog out 1/2 and 3/4
-        finally:
-            self._write_data(0, cache)
+        else:
+            cache = bytearray(160)
+            with self._path.open(mode='r') as f:
+                for i, line in enumerate(f):
+                    cache[i] = int(line.strip(), base=16)
+
+        self._write_data(0, cache)
 
     def _write_data(self, offset, data):
         # Write to the unit.
@@ -135,7 +136,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         for i, datum in enumerate(data):
             self._cache[offset + i] = datum
         # Refresh permanent cache.
-        with open(self._filepath, 'w+') as fd:
+        with self._path.open(mode='w+') as fd:
             for i, datum in enumerate(self._cache):
                 fd.write('{0:02x}\n'.format(datum))
 
