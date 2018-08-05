@@ -376,9 +376,8 @@ class DiceExtendedUnit(DiceUnit):
             left = total
             right = 0
         else:
-            balance /= 100
-            left = int(total / (100 - balance) / 100)
-            right = int(total / balance / 100)
+            left = int(total * (100 - balance) / 100)
+            right = int(total * balance / 100)
         gains[ch]['val'] = left
         gains[ch + 2]['val'] = right
         for gain in gains:
