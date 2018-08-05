@@ -378,4 +378,4 @@ class AvcAudio():
         elif db == -128.0:
             return (0x80, 0x00)
         else:
-            return pack('>h', int(0x7fff * db/ 128))
+            return pack('>h', int(0x7fff * db / 128))

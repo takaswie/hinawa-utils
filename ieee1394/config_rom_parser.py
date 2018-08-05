@@ -35,7 +35,7 @@ class Ieee1394ConfigRomParser(Ieee1212RootDirectoryParser):
 
         return info
 
-    def _handle_bus_dep_keys(key_id, type, data):
+    def _handle_bus_dep_keys(self, key_id, type, data):
         pass
 
     def parse_rom(self, data):

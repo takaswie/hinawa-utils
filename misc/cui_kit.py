@@ -2,7 +2,10 @@ import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
-import sys, string, glob, os.path
+import sys
+import string
+import glob
+import os.path
 
 __all__ = ['CuiKit']
 
@@ -15,7 +18,7 @@ class CuiKit():
                 unit.open(fullpath)
                 if unit.get_property('guid') == guid:
                     return fullpath
-            except:
+            except Exception as e:
                 pass
             finally:
                 del unit

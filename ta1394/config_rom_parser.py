@@ -1,6 +1,6 @@
 from ieee1394.config_rom_parser import Ieee1394ConfigRomParser
 
-__all__ = ['1394taConfigRomParser']
+__all__ = ['Ta1394ConfigRomParser']
 
 # TA Document 1999027 Configuration ROM for AV/C Devices 1.0
 # http://1394ta.org/specifications/
@@ -34,8 +34,8 @@ class Ta1394ConfigRomParser(Ieee1394ConfigRomParser):
                 entry = entry[1]
                 if (entry[0][0] != 'SPECIFIER_ID' or
                     entry[1][0] != 'VERSION' or
-                    entry[2] != ['MODEL',        info['model-id']] or
-                    entry[3] != ['DESCRIPTOR',   info['model-name']]):
+                    entry[2] != ['MODEL',      info['model-id']] or
+                    entry[3] != ['DESCRIPTOR', info['model-name']]):
                     raise ValueError('Invalid data of config ROM.')
                 info['spec-id'] = entry[0][1]
                 info['spec-version'] = entry[1][1]

@@ -134,7 +134,7 @@ class TcatTcd22xxSpec():
         count = 0
         for src in protocol._clock_sources:
             if src.find('aes') == 0:
-                index = {v:k for k, v in protocol.CLOCK_BITS.items()}[src]
+                index = {v: k for k, v in protocol.CLOCK_BITS.items()}[src]
                 name = protocol._clock_source_labels[index]
                 if has_suffix:
                     label = '{0}-{1:c}'.format(name, count + 0x41)

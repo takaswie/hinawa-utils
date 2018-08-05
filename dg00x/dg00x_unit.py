@@ -94,5 +94,5 @@ class Dg00xUnit(Hinawa.SndDg00x):
         data[3] = mode
         self._write_transaction(0xffffe0000124, data)
     def get_mixer_mode(self):
-        data =self._read_transaction(0xffffe0000124, 4)
+        data = self._read_transaction(0xffffe0000124, 4)
         return (data[3] > 0)

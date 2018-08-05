@@ -1,7 +1,3 @@
-import gi
-gi.require_version('Hinawa', '2.0')
-from gi.repository import Hinawa
-
 from tscm.tscm_unit import TscmUnit
 
 __all__ = ['TscmConsoleUnit']

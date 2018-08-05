@@ -18,6 +18,9 @@ class Dg00xConfigRomParser(Ieee1394ConfigRomParser):
             character_set = ((data[0] & 0x0f) << 8) | data[1]
             language = unpack('>H', data[2:4])[0]
 
+            if width != 0x00:
+                raise OSError('Width {0} is not supported.'.format(width))
+
             if character_set != 0x00 or language != 0x00:
                 raise ValueError('Invalid data in descriptor leaf.')
 

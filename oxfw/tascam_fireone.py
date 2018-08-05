@@ -61,7 +61,7 @@ class TascamFireone(OxfwUnit):
         if arg not in self.control_modes:
             raise ValueError('Invalid argument for control mode')
         self.command_set_param(0x11, self.control_modes.index(arg))
-            
+
     def control_get_mode(self):
         param = self.command_get_param(0x11)
         if param >= len(self.control_modes):

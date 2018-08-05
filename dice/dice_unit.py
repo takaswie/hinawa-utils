@@ -50,7 +50,6 @@ class DiceUnit(Hinawa.SndDice):
         return self._protocol.read_nickname(req)
 
     def get_supported_clock_sources(self):
-        req = Hinawa.FwReq()
         labels = []
         clk_srcs = self._protocol.get_supported_clock_sources()
         for i, label in enumerate(self._protocol.get_clock_source_names()):
@@ -109,7 +108,6 @@ class DiceUnit(Hinawa.SndDice):
         return self._protocol.read_measured_sampling_rate(req)
 
     def get_dice_version(self):
-        req = Hinawa.FwReq()
         return self._protocol.get_dice_version()
 
     def get_tx_params(self):

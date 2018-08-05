@@ -1,8 +1,4 @@
-from struct import pack,unpack
-
-import gi
-gi.require_version('Hinawa', '2.0')
-from gi.repository import Hinawa
+from struct import pack, unpack
 
 from tscm.tscm_unit import TscmUnit
 

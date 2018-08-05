@@ -1,4 +1,4 @@
-from struct import pack, unpack
+from struct import unpack
 
 __all__ = ['TcatProtocolGeneral']
 

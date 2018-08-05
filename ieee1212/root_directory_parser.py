@@ -1,7 +1,7 @@
 from struct import unpack
 from enum import Enum, auto
 
-from ieee1212.config_rom_lexer import EntryType, Ieee1212ConfigRomLexer
+from ieee1212.config_rom_lexer import EntryType
 
 __all__ = ['Ieee1212RootDirectoryParser']
 
@@ -88,7 +88,7 @@ class Ieee1212RootDirectoryParser():
     def __init__(self):
         self._bus_dep_handles = {}
         self._spec_dep_handles = {}
-        self._vendor_dep_handles= {}
+        self._vendor_dep_handles = {}
         self._keyword_dep_handles = {}
 
     def add_bus_dep_handle(self, name, handle):
@@ -152,7 +152,6 @@ class Ieee1212RootDirectoryParser():
     def _parse_icon_descriptor(self, data):
         raise OSError('Icon descriptor is not supported.')
 
-
     #
     # 7.5.4 Descriptors
     #
@@ -177,7 +176,7 @@ class Ieee1212RootDirectoryParser():
             for handle in self._vendor_dep_handles[specifier_id]:
                 elem = handle(KeyType.DESCRIPTOR.value, EntryType.LEAF.name,
                               data)
-                if elem != None:
+                if elem:
                     return elem
 
         return None
@@ -198,7 +197,7 @@ class Ieee1212RootDirectoryParser():
             for handle in self._vendor_dep_handles[self._vendor_id]:
                 elem = handle(KeyType.VENDOR.value, EntryType.IMMEDIATE.name,
                               data)
-                if elem != None:
+                if elem:
                     return elem
         return None
 
@@ -216,7 +215,7 @@ class Ieee1212RootDirectoryParser():
             for handle in self._vendor_dep_handles[self._vendor_id]:
                 elem = handle(KeyType.VENDOR.value, EntryType.IMMEDIATE.name,
                               data)
-                if elem != None:
+                if elem:
                     return elem
         return None
 
@@ -305,13 +304,13 @@ class Ieee1212RootDirectoryParser():
     def _parse_vendor_directory(self, ctx, key_type, entries):
         # See explanation of Table 8 – Key ID allocations.
         for entry in entries:
-            if entry[0] == (KeyType.SPECIFIER_ID.value. EntryType.IMMEDIATE):
-                vendor_id = data
+            if entry[0] == (KeyType.SPECIFIER_ID.value, EntryType.IMMEDIATE):
+                vendor_id = entry[1]
                 break
         else:
             for entry in entries:
                 if entry[0] == (KeyType.VENDOR.value, EntryType.IMMEDIATE):
-                    vendor_id = data
+                    vendor_id = entry[1]
                     break
             else:
                 vendor_id = self._vendor_id
@@ -329,12 +328,12 @@ class Ieee1212RootDirectoryParser():
         # See explanation of Table 8 – Key ID allocations.
         for entry in entries:
             if entry[0] == (KeyType.SPECIFIER_ID.value. EntryType.IMMEDIATE):
-                vendor_id = data
+                vendor_id = entry[1]
                 break
         else:
             for entry in entries:
                 if entry[0] == (KeyType.VENDOR.value, EntryType.IMMEDIATE):
-                    vendor_id = data
+                    vendor_id = entry[1]
                     break
             else:
                 vendor_id = self._vendor_id

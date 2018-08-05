@@ -161,6 +161,6 @@ class AvcStreamFormatInfo():
                 params = AvcGeneral.command_status(fcp, args)
                 fmt = cls._parse_format(params[11:])
                 fmts.append(fmt)
-            except:
+            except Exception as e:
                 break
         return fmts

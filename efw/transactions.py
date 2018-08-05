@@ -317,8 +317,8 @@ class EftInfo():
 
     @staticmethod
     def _get_literal_version(val):
-        return '{0}.{1}.{2}'.format((val >> 24) & 0xff, \
-                                    (val >> 16) & 0xff, \
+        return '{0}.{1}.{2}'.format((val >> 24) & 0xff,
+                                    (val >> 16) & 0xff,
                                     (val >>  8) & 0xff)
 
 #
@@ -356,7 +356,7 @@ class EftFlash():
     @classmethod
     def get_status(cls, unit):
         # return status means it.
-        cls._execute_command(unit, 3, none)
+        cls._execute_command(unit, 3, None)
 
     @classmethod
     def get_session_offset(cls, unit):
@@ -483,7 +483,7 @@ class EftHwctl():
     def set_box_states(cls, unit, states):
         mask_set = 0
         mask_clear = 0
-        for name,state in states.items():
+        for name, state in states.items():
             if name not in cls.SUPPORTED_BOX_STATES:
                 raise ValueError('Invalid value in box states')
             shift  = cls._BOX_STATE_POSITIONS[name]
@@ -765,7 +765,7 @@ class EftIoconf():
 
     @classmethod
     def get_phantom_powering(cls, unit):
-        params= cls._execute_command(unit, 5, None)
+        params = cls._execute_command(unit, 5, None)
         return params[0]
 
     @classmethod

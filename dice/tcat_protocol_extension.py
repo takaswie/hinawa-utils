@@ -2,8 +2,6 @@ from struct import unpack, pack
 from time import sleep
 from math import log10, pow
 
-from dice.tcat_protocol_general import TcatProtocolGeneral
-
 __all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace', 'ExtMixerSpace',
            'ExtNewRouterSpace', 'ExtPeakSpace', 'ExtNewStreamConfigSpace',
            'ExtCurrentConfigSpace', 'ExtStandaloneSpace', 'ExtAppSpace']
@@ -98,12 +96,12 @@ class ExtCapsSpace():
         caps = {}
 
         data = data[cls._OFFSET_GENERAL_CAPS:]
-        caps['dynamic-stream-conf'] = bool(data[3] & 0x01)
-        caps['storage-available']   = bool(data[3] & 0x02)
-        caps['peak-available']      = bool(data[3] & 0x04)
-        caps['maximum-tx-streams']  = (data[3] & 0xf0) >> 4
-        caps['maximum-rx-streams']  = data[2] & 0x0f
-        caps['storable-stream-conf']= bool(data[2] & 0x10)
+        caps['dynamic-stream-conf']     = bool(data[3] & 0x01)
+        caps['storage-available']       = bool(data[3] & 0x02)
+        caps['peak-available']          = bool(data[3] & 0x04)
+        caps['maximum-tx-streams']      = (data[3] & 0xf0) >> 4
+        caps['maximum-rx-streams']      = data[2] & 0x0f
+        caps['storable-stream-conf']    = bool(data[2] & 0x10)
         asic_type = data[1]
         if asic_type < len(cls._ASIC_TYPES) - 1:
             caps['asic-type'] = cls._ASIC_TYPES[asic_type]
@@ -164,7 +162,7 @@ class ExtCmdSpace():
                 protocol._ext_caps['router']['is-readonly']) or
             (cmd.find('stream-config') > 0 and
                 not protocol._ext_caps['general']['dynamic-stream-conf']) or
-            (cmd in ('load-from-storage', 'load-to-storage' ) and
+            (cmd in ('load-from-storage', 'load-to-storage') and
                 not protocol._ext_caps['general']['storage-available'])):
             raise RuntimeError('This feature is not available.')
 
@@ -456,8 +454,8 @@ class ExtNewStreamConfigSpace():
     def get_entries(cls, protocol, req):
         offset = protocol._ext_layout['new-stream-config']['offset']
         length = protocol._ext_layout['new-stream-config']['length']
-        return ExtNewStreamConfigSpace.parse_data(protocol, req, section,
-                                                  offset, length)
+        return ExtNewStreamConfigSpace.parse_data(protocol, req,
+                                            'new-stream-config', offset, length)
 
 # '3.8 Current config space'
 class ExtCurrentConfigSpace():
@@ -538,7 +536,6 @@ class ExtStandaloneSpace():
 
     @classmethod
     def read_clock_source(cls, protocol, req):
-        layout = protocol._ext_layout['standalone-config']
         data = ExtCtlSpace.read_section(protocol, req, 'standalone-config', 0, 4)
         val = data[3]
         if (val not in protocol.CLOCK_BITS or
@@ -548,7 +545,7 @@ class ExtStandaloneSpace():
         return protocol.CLOCK_BITS[val]
 
     @classmethod
-    def get_source_param_options(self, protocol, source):
+    def get_source_param_options(cls, protocol, source):
         OPTIONS = {
             'aes1':         ExtStandaloneSpace._AES_EXT_OPTIONS,
             'aes2':         ExtStandaloneSpace._AES_EXT_OPTIONS,
@@ -583,7 +580,7 @@ class ExtStandaloneSpace():
             val |= (params['mul'] - 1) << 2
             val |= (params['div'] - 1) << 16
         elif source == 'internal':
-            val = {v:k for k, v in protocol.RATE_BITS.items()}[params['rate']]
+            val = {v: k for k, v in protocol.RATE_BITS.items()}[params['rate']]
         else:
             for name, param_option in param_options.items():
                 for option, flag in param_option.items():
@@ -609,10 +606,10 @@ class ExtStandaloneSpace():
         params = {}
         param_options = cls.get_source_param_options(protocol, source)
         if source == 'word-clock':
-            mode = {v:k for k,v in param_options['mode'].items()}[val & 0x03]
+            mode = {v: k for k, v in param_options['mode'].items()}[val & 0x03]
             params['mode'] = mode
-            params['mul'] =  ((val >> 2) & 0x3fff) + 1
-            params['div'] =  (val >> 16) + 1
+            params['mul']  = ((val >> 2) & 0x3fff) + 1
+            params['div']  = (val >> 16) + 1
         elif source == 'internal':
             index = val & 0x0f
             if index not in protocol.RATE_BITS:
