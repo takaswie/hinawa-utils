@@ -16,41 +16,40 @@ class BebobConfigRomParser(Ieee1394ConfigRomParser):
             ('DESCRIPTOR',          'vendor-name'),
             ('MODEL',               'model-id'),
             ('DESCRIPTOR',          'model-name'),
-            ('VERSION',             'version'),
-            ('UNIT',                None),
+            # There are entries of VERSION, UNIT and VENDOR_DEPENDENT keys, but
+            # model-specific.
         )
         info = {}
 
-        for i, field in enumerate(FIELDS):
-            entry = entries[i]
-            name, alt = field
-            if entry[0] != name:
-                raise OSError('Invalid format of config ROM.')
-            if name == 'UNIT':
-                # Check unit.
-                entry = entry[1]
-                if (entry[0] != ['SPECIFIER_ID', 0x00a02d] or
-                    entry[1][0] != 'VERSION' or
-                    entry[2] != ['MODEL', info['model-id']] or
-                    entry[3] != ['DESCRIPTOR', info['model-name']]):
-                    raise ValueError('Invalid data of unit directory.')
-                info['unit-version'] = entry[1][1]
-            else:
+        for i, entry in enumerate(entries):
+            if i < len(FIELDS):
+                name, alt = FIELDS[i]
+                if entry[0] != name:
+                    raise OSError('Invalid format of config ROM.')
                 info[alt] = entry[1]
-
-        # All of units for BeBoB protocol don't have this directory.
-        if entries[-1][0] == 'DEPENDENT_INFO':
-            entries = entries[-1][1]
-            if (entries[0][0] != 'SPECIFIER_ID' or
-                entries[1][0] != 'VERSION' or
-                entries[2][0][0] != 0x3a or
-                entries[3][0][0] != 0x3b or
-                entries[4][0][0] != 0x3c or
-                entries[5][0][0] != 0x3d):
-                raise ValueError('Invalid data of dependent information.')
-            info['addrs'] = [
-                (entries[2][1] << 32) + entries[3][1],
-                (entries[4][1] << 32) + entries[5][1],
-            ]
+            elif entry[0] == 'VERSION':
+                info['version'] = entry[1]
+            elif entry[0] == 'UNIT':
+                items = entry[1]
+                # Check unit.
+                if (items[0] != ['SPECIFIER_ID', 0x00a02d] or
+                        items[1][0] != 'VERSION' or
+                        items[2] != ['MODEL', info['model-id']] or
+                        items[3] != ['DESCRIPTOR', info['model-name']]):
+                    raise ValueError('Invalid data of unit directory.')
+                info['unit-version'] = items[1][1]
+            elif entry[0] == 'DEPENDENT_INFO':
+                items = entry[1]
+                if (items[0][0] != 'SPECIFIER_ID' or
+                        items[1][0] != 'VERSION' or
+                        items[2][0][0] != 0x3a or
+                        items[3][0][0] != 0x3b or
+                        items[4][0][0] != 0x3c or
+                        items[5][0][0] != 0x3d):
+                    raise ValueError('Invalid data of dependent information.')
+                info['addrs'] = [
+                    (items[2][1] << 32) + items[3][1],
+                    (items[4][1] << 32) + items[5][1],
+                ]
 
         return info
