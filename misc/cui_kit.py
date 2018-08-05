@@ -1,18 +1,18 @@
+import sys
+import string
+from pathlib import Path
+
 import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
-
-import sys
-import string
-import glob
-import os.path
 
 __all__ = ['CuiKit']
 
 class CuiKit():
     @staticmethod
     def _seek_snd_unit_from_guid(guid):
-        for fullpath in glob.glob('/dev/snd/hw*'):
+        for fullpath in Path('/dev/snd').glob('hw*'):
+            fullpath = str(fullpath)
             try:
                 unit = Hinawa.SndUnit()
                 unit.open(fullpath)
@@ -72,10 +72,10 @@ class CuiKit():
             if args[2] in cmds:
                 cmd = args[2]
                 return cmds[cmd](unit, args[3:])
-            if os.path.isfile(args[2]):
-                filename = args[2]
-                with open(filename) as fd:
-                    for i, line in enumerate(fd):
+            path = Path(args[2])
+            if path.is_file():
+                with path.open(mode='r') as fh:
+                    for i, line in enumerate(fh):
                         args = line.rstrip().split(' ')
                         if len(args) == 0:
                             continue
@@ -87,12 +87,12 @@ class CuiKit():
                             continue
                         if cmd not in cmds:
                             print('Invalid command in {0}: {1}: {2}'.format(
-                                                        filename, i, cmd))
+                                                        str(path), i, cmd))
                             return False
 
                         if not cmds[cmd](unit, args[1:]):
                             print('Invalid arguments in {0}:{1}: {2}'.format(
-                                                            filename, i, cmd))
+                                                        str(path), i, cmd))
                             return False
                 return True
         cls._dump_commands(cmds)
