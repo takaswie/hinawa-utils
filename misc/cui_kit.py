@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
+
 import sys
 import string
 from pathlib import Path

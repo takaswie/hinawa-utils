@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
+
 from bebob.phase_go_protocol_abstract import PhaseGoProtocolAbstract
 
 from ta1394.audio import AvcAudio

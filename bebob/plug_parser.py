@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
+
 from ta1394.general import AvcGeneral
 from ta1394.general import AvcConnection
 from ta1394.ccm import AvcCcm

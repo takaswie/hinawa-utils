@@ -1,6 +1,9 @@
-from re import match
-import gi
+# SPDX-License-Identifier: LGPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
 
+from re import match
+
+import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 

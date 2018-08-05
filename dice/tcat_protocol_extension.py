@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
+
 from struct import unpack, pack
 from time import sleep
 from math import log10, pow

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
+
 from motu.motu_protocol_abstract import MotuProtocolAbstract
 
 __all__ = ['MotuProtocolV1']

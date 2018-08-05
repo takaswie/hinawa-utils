@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
+
 from bebob.maudio_protocol_normal import MaudioProtocolNormal
 
 from ta1394.general import AvcConnection
