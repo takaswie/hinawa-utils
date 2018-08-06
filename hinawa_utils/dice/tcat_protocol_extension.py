@@ -30,20 +30,20 @@ class ExtCtlSpace():
         if section not in cls._SECTIONS:
             raise ValueError('Invalid name of section: {0}'.format(section))
         offset += cls._EXT_OFFSET + protocol._ext_layout[section]['offset']
-        return protocol._write_transactions(req, offset, data)
+        return protocol.write_transactions(req, offset, data)
 
     @classmethod
     def read_section(cls, protocol, req, section, offset, length):
         if section not in cls._SECTIONS:
             raise ValueError('Invalid name of section: {0}'.format(section))
         offset += cls._EXT_OFFSET + protocol._ext_layout[section]['offset']
-        return protocol._read_transactions(req, offset, length)
+        return protocol.read_transactions(req, offset, length)
 
     @classmethod
     def detect_layout(cls, protocol, req):
         layout = {}
 
-        data = protocol._read_transactions(req, cls._EXT_OFFSET,
+        data = protocol.read_transactions(req, cls._EXT_OFFSET,
                                            len(cls._SECTIONS) * 8)
         for name, offset in cls._SECTIONS.items():
             layout[name] = {

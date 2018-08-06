@@ -46,7 +46,7 @@ class TcatProtocolGeneral():
         self._clock_source_labels = self._parse_clock_source_names(req)
         self._sampling_rates, self._clock_sources = self._parse_clock_caps(req)
 
-    def _write_transactions(self, req, offset, data):
+    def write_transactions(self, req, offset, data):
         addr = self._BASE_ADDR + offset
 
         length = len(data)
@@ -60,7 +60,7 @@ class TcatProtocolGeneral():
             length -= count
             addr += count
 
-    def _read_transactions(self, req, offset, length):
+    def read_transactions(self, req, offset, length):
         data = bytearray()
 
         addr = self._BASE_ADDR + offset
@@ -77,11 +77,11 @@ class TcatProtocolGeneral():
 
     def _read_section_offset(self, req, section, offset, length):
         offset += self._general_layout[section]['offset']
-        return self._read_transactions(req, offset, length)
+        return self.read_transactions(req, offset, length)
 
     def _write_section_offset(self, req, section, offset, data):
         offset += self._general_layout[section]['offset']
-        self._write_transactions(req, offset, data)
+        self.write_transactions(req, offset, data)
 
     def _detect_address_space(self, req):
         PARAMS = (
@@ -93,7 +93,7 @@ class TcatProtocolGeneral():
         )
         layout = {}
 
-        data = self._read_transactions(req, 0, len(PARAMS) * 8)
+        data = self.read_transactions(req, 0, len(PARAMS) * 8)
         for i, param in enumerate(PARAMS):
             offset = unpack('>I', data[0:4])[0] * 4
             count = unpack('>I', data[4:8])[0] * 4
