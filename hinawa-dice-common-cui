@@ -94,6 +94,7 @@ def handle_clock_source(unit, args):
     print('  clock-source OPERATION [SOURCE]')
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    SOURCE: [{0}]'.format('|'.join(sources)))
+    return False
 
 def handle_nickname(unit, args):
     ops = ('set', 'get')
@@ -108,6 +109,7 @@ def handle_nickname(unit, args):
     print('Arguments for nickname command:')
     print('  nickname OPERATION [SOURCE]')
     print('    OPERATION: {0}'.format(', '.join(ops)))
+    return False
 
 cmds = {
     'current-status':   handle_current_status,
