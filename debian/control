@@ -3,8 +3,9 @@ Section: python
 Priority: optional
 Maintainer: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Build-Depends: debhelper (>= 11),
-               python3-all,
-               python3-setuptools
+    dh-python,
+    python3-all,
+    python3-setuptools
 Standards-Version: 4.1.4
 X-Python3-Version: >= 3.4
 Homepage: https://github.com/takaswie/hinawa-utils
@@ -12,7 +13,7 @@ Homepage: https://github.com/takaswie/hinawa-utils
 Package: python3-hinawa-utils
 Architecture: all
 Depends: ${misc:Depends}, ${python3:Depends},
-         python3-gi,
-         gir1.2-hinawa-2.0
+    python3-gi,
+    gir1.2-hinawa-2.0
 Description: Python 3 module to handle Audio and Music units on
  IEEE1394 bus via libhinawa API with a help of PyGObject.
