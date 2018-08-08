@@ -1,10 +1,13 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
+
 import setuptools
 
 with open("README", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="hinawa_utils",
+    name="hinawa-utils",
     version="0.0.99",
     author="Takashi Sakamoto",
     author_email="o-takashi@sakamocchi.jp",
