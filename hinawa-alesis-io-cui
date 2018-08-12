@@ -1,0 +1,260 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
+
+import sys
+import signal
+from time import sleep
+
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.dice.alesis_io_unit import AlesisIoUnit
+
+def handle_mixer_source_gain(unit, args):
+    dsts = unit.get_mixer_labels()
+    srcs = unit.get_mixer_src_labels()
+    ops = ('set', 'get')
+    chs = ('0', '1')
+    if len(args) >= 4:
+        dst, src, op, src_ch = args[0:4]
+        if dst in dsts and src in srcs and op in ops and src_ch in chs:
+            src_ch = int(src_ch)
+            if op == 'set' and len(args) >= 5:
+                db = float(args[4])
+                unit.set_mixer_src_gain(dst, src, src_ch, db)
+                return True
+            elif op == 'get':
+                db = unit.get_mixer_src_gain(dst, src, src_ch)
+                print('{0:.3f}'.format(db))
+                return True
+    print('Arguments for mixer-source-gain')
+    print('  mixer-source-gain DST SRC OP SRC_CH [DB]')
+    print('    DST:    [{0}]'.format('|'.join(dsts)))
+    print('    SRC:    [{0}]'.format('|'.join(srcs)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SRC_CH: [{0}]'.format('|'.join(chs)))
+    print('    DB:     [-60.00-0.00]')
+    return False
+
+def handle_mixer_source_panning(unit, args):
+    dsts = unit.get_mixer_labels()
+    srcs = unit.get_mixer_src_labels()
+    ops = ('set', 'get')
+    chs = ('0', '1')
+    if len(args) >= 4:
+        dst, src, op, src_ch = args[0:4]
+        if src in srcs and dst in dsts and src_ch in chs and op in ops:
+            src_ch = int(src_ch)
+            if op == 'set' and len(args) >= 5:
+                balance = float(args[4])
+                unit.set_mixer_src_balance(dst, src, src_ch, balance)
+                return True
+            elif op == 'get':
+                balance = unit.get_mixer_src_balance(dst, src, src_ch)
+                print('{:.3f}'.format(balance))
+                return True
+    print('Arguments for mixer-source-panning')
+    print('  mixer-source-panning DST SRC OP SRC_CH [BALANCE]')
+    print('    DST:    [{0}]'.format('|'.join(dsts)))
+    print('    SRC:    [{0}]'.format('|'.join(srcs)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SRC_CH: [{0}]'.format('|'.join(chs)))
+    print('    BALANCE:[0.0-100.0]')
+    return False
+
+def handle_mixer_source_link(unit, args):
+    dsts = unit.get_mixer_labels()
+    srcs = unit.get_mixer_src_labels()
+    ops = ('set', 'get')
+    links = ('False', 'True')
+    if len(args) >= 3:
+        dst, src, op = args[0:3]
+        if dst in dsts and src in srcs and op in ops:
+            if op == 'set' and len(args) >= 4:
+                link = args[3] == 'True'
+                unit.set_mixer_src_link(dst, src, link)
+                return True
+            elif op == 'get':
+                print(unit.get_mixer_src_link(dst, src))
+                return True
+    print('Arguments for mixer-source-link')
+    print('  mixer-source-link DST SRC OP [LINK]')
+    print('    DST:    [{0}]'.format('|'.join(dsts)))
+    print('    SRC:    [{0}]'.format('|'.join(srcs)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    LINK:   [{0}]'.format('|'.join(links)))
+    return False
+
+def handle_mixer_source_mute(unit, args):
+    dsts = unit.get_mixer_labels()
+    srcs = unit.get_mixer_src_labels()
+    ops = ('set', 'get')
+    chs = ('0', '1')
+    if len(args) >= 4:
+        dst, src, op, src_ch = args[0:4]
+        if src in srcs and dst in dsts and src_ch in chs and op in ops:
+            src_ch = int(src_ch)
+            if op == 'set' and len(args) >= 5:
+                mute = args[4] == 'True'
+                unit.set_mixer_src_mute(dst, src, src_ch, mute)
+                return True
+            elif op == 'get':
+                print(unit.get_mixer_src_mute(dst, src, src_ch))
+                return True
+    print('Arguments for mixer-source-mute')
+    print('  mixer-source-mute DST SRC OP SRC_CH [MUTE]')
+    print('    DST:    [{0}]'.format('|'.join(dsts)))
+    print('    SRC:    [{0}]'.format('|'.join(srcs)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SRC_CH: [{0}]'.format('|'.join(chs)))
+    print('    MUTE:   [False|True]')
+    return False
+
+def handle_enable_spdif_source(unit, args):
+    ops = ('set', 'get')
+    enables = ('False', 'True')
+    if len(args) >= 1:
+        op = args[0]
+        if op == 'set' and len(args) >= 2:
+            enable = args[1] == 'True'
+            unit.set_mixer_spdif_src(enable)
+            return True
+        elif op == 'get':
+            print(unit.get_mixer_spdif_src())
+            return True
+    print('Arguments for enable-spdif-source:')
+    print('  enable-spdif-source OP [ENABLE]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    ENABLE: [{0}]'.format('|'.join(enables)))
+    return False
+
+def handle_mixer_out_volume(unit, args):
+    targets = unit.get_mixer_labels()
+    ops = ('set', 'get')
+    chs = ('0', '1')
+    if len(args) >= 3:
+        target, op, ch = args[0:3]
+        if target in targets and op in ops and ch in chs:
+            ch = int(ch)
+            if len(args) >= 4 and op == 'set':
+                db = float(args[3])
+                unit.set_mixer_out_volume(target, ch, db)
+                return True
+            elif op == 'get':
+                db = unit.get_mixer_out_volume(target, ch)
+                print('{:.3f}'.format(db))
+                return True
+    print('Arguments for mixer-out-volume command:')
+    print('  mixer-out-volume TARGET OP CH [GAIN]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    CH:     [{0}]'.format('|'.join(chs)))
+    print('    dB:     [-60.00-0.00]')
+    return False
+
+def handle_mixer_out_level(unit, args):
+    targets = unit.get_mixer_labels()
+    ops = ('set', 'get')
+    chs = ('0', '1')
+    levels = unit.get_level_labels()
+
+    if len(args) >= 3:
+        target, op, ch = args[0:3]
+        if target in targets and op in ops and ch in chs:
+            ch = int(ch)
+            if len(args) >= 4 and op == 'set' and args[3] in levels:
+                level = args[3]
+                unit.set_mixer_out_level(target, ch, level)
+                return True
+            elif op == 'get':
+                print(unit.get_mixer_out_level(target, ch))
+                return True
+    print('Arguments for mixer-out-level command:')
+    print('  mixer-out-level TARGET OP CH [LEVEL]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    CH:     [{0}]'.format('|'.join(chs)))
+    print('    LEVEL:  [{0}]'.format('|'.join(unit.get_level_labels())))
+    return False
+
+def handle_mixer_out_mute(unit, args):
+    targets = unit.get_mixer_labels()
+    ops = ('set', 'get')
+    chs = ('0', '1')
+    mutes = ('False', 'True')
+    levels = unit.get_level_labels()
+
+    if len(args) >= 3:
+        target, op, ch = args[0:3]
+        if target in targets and op in ops and ch in chs:
+            ch = int(ch)
+            if len(args) >= 4 and op == 'set' and args[3] in mutes:
+                mute = args[3] == 'True'
+                unit.set_mixer_out_mute(target, ch, mute)
+                return True
+            elif op == 'get':
+                print(unit.get_mixer_out_mute(target, ch))
+                return True
+    print('Arguments for mixer-out-mute command:')
+    print('  mixer-out-mute TARGET OP CH [MUTE]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    CH:     [{0}]'.format('|'.join(chs)))
+    print('    MUTE:   [True|False]')
+    return False
+
+def handle_output_source(unit, args):
+    targets = unit.get_output_labels()
+    ops = ('set', 'get')
+
+    if len(args) >= 2:
+        target, op = args[0:2]
+        if target in targets and op in ops:
+            srcs = unit.get_output_src_labels(target)
+            if len(args) >= 3 and args[2] in srcs:
+                src = args[2]
+                unit.set_output_src(target, src)
+                return True
+            elif op == 'get':
+                print(unit.get_output_src(target))
+                return True
+    print('Arguments for output-source command:')
+    print('  output-source TARGET OP [SRC]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    for target in targets:
+        labels = unit.get_output_src_labels(target)
+        if len(labels) == 1:
+            print('    SRC:    {0} is fixed to TARGET={1}'.format(labels[0], target))
+        else:
+            print('    SRC:    [{0}] if TARGET={1} and OP=set'.format('|'.join(labels), target))
+    return False
+
+def handle_listen_metering(unit, args):
+    labels = unit.get_meter_labels()
+    signal.signal(signal.SIGINT, lambda signum, frame: sys.exit())
+    while True:
+        meters = unit.get_meters()
+        for i, label in enumerate(labels):
+            print('{0}: {1:.3f} dB'.format(label, meters[i]))
+        print()
+        sleep(0.5)
+    return True
+
+cmds = {
+    'mixer-source-gain':    handle_mixer_source_gain,
+    'mixer-source-panning': handle_mixer_source_panning,
+    'mixer-source-link':    handle_mixer_source_link,
+    'mixer-source-mute':    handle_mixer_source_mute,
+    'mixer-out-volume':     handle_mixer_out_volume,
+    'mixer-out-level':      handle_mixer_out_level,
+    'mixer-out-mute':       handle_mixer_out_mute,
+    'output-source':        handle_output_source,
+    'listen-metering':      handle_listen_metering,
+}
+
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = AlesisIoUnit(fullpath)
+    if unit.name == 'iO|26':
+        cmds['use-spdif-source'] = handle_enable_spdif_source
+    CuiKit.dispatch_command(unit, cmds)
