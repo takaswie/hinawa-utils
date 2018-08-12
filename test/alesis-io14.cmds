@@ -1,0 +1,557 @@
+mixer-source-gain Mixer-1/2 Analog-1/2 set 0 0
+mixer-source-gain Mixer-1/2 Analog-1/2 set 1 0
+mixer-source-gain Mixer-1/2 Analog-3/4 set 0 0
+mixer-source-gain Mixer-1/2 Analog-3/4 set 1 0
+mixer-source-gain Mixer-1/2 ADAT-1/2 set 0 0
+mixer-source-gain Mixer-1/2 ADAT-1/2 set 1 0
+mixer-source-gain Mixer-1/2 ADAT-3/4 set 0 0
+mixer-source-gain Mixer-1/2 ADAT-3/4 set 1 0
+mixer-source-gain Mixer-1/2 ADAT-5/6 set 0 0
+mixer-source-gain Mixer-1/2 ADAT-5/6 set 1 0
+mixer-source-gain Mixer-1/2 ADAT-7/8 set 0 0
+mixer-source-gain Mixer-1/2 ADAT-7/8 set 1 0
+mixer-source-gain Mixer-1/2 S/PDIF-1/2 set 0 0
+mixer-source-gain Mixer-1/2 S/PDIF-1/2 set 1 0
+mixer-source-gain Mixer-3/4 Analog-1/2 set 0 0
+mixer-source-gain Mixer-3/4 Analog-1/2 set 1 0
+mixer-source-gain Mixer-3/4 Analog-3/4 set 0 0
+mixer-source-gain Mixer-3/4 Analog-3/4 set 1 0
+mixer-source-gain Mixer-3/4 ADAT-1/2 set 0 0
+mixer-source-gain Mixer-3/4 ADAT-1/2 set 1 0
+mixer-source-gain Mixer-3/4 ADAT-3/4 set 0 0
+mixer-source-gain Mixer-3/4 ADAT-3/4 set 1 0
+mixer-source-gain Mixer-3/4 ADAT-5/6 set 0 0
+mixer-source-gain Mixer-3/4 ADAT-5/6 set 1 0
+mixer-source-gain Mixer-3/4 ADAT-7/8 set 0 0
+mixer-source-gain Mixer-3/4 ADAT-7/8 set 1 0
+mixer-source-gain Mixer-3/4 S/PDIF-1/2 set 0 0
+mixer-source-gain Mixer-3/4 S/PDIF-1/2 set 1 0
+mixer-source-gain Mixer-5/6 Analog-1/2 set 0 0
+mixer-source-gain Mixer-5/6 Analog-1/2 set 1 0
+mixer-source-gain Mixer-5/6 Analog-3/4 set 0 0
+mixer-source-gain Mixer-5/6 Analog-3/4 set 1 0
+mixer-source-gain Mixer-5/6 ADAT-1/2 set 0 0
+mixer-source-gain Mixer-5/6 ADAT-1/2 set 1 0
+mixer-source-gain Mixer-5/6 ADAT-3/4 set 0 0
+mixer-source-gain Mixer-5/6 ADAT-3/4 set 1 0
+mixer-source-gain Mixer-5/6 ADAT-5/6 set 0 0
+mixer-source-gain Mixer-5/6 ADAT-5/6 set 1 0
+mixer-source-gain Mixer-5/6 ADAT-7/8 set 0 0
+mixer-source-gain Mixer-5/6 ADAT-7/8 set 1 0
+mixer-source-gain Mixer-5/6 S/PDIF-1/2 set 0 0
+mixer-source-gain Mixer-5/6 S/PDIF-1/2 set 1 0
+mixer-source-gain Mixer-7/8 Analog-1/2 set 0 0
+mixer-source-gain Mixer-7/8 Analog-1/2 set 1 0
+mixer-source-gain Mixer-7/8 Analog-3/4 set 0 0
+mixer-source-gain Mixer-7/8 Analog-3/4 set 1 0
+mixer-source-gain Mixer-7/8 ADAT-1/2 set 0 0
+mixer-source-gain Mixer-7/8 ADAT-1/2 set 1 0
+mixer-source-gain Mixer-7/8 ADAT-3/4 set 0 0
+mixer-source-gain Mixer-7/8 ADAT-3/4 set 1 0
+mixer-source-gain Mixer-7/8 ADAT-5/6 set 0 0
+mixer-source-gain Mixer-7/8 ADAT-5/6 set 1 0
+mixer-source-gain Mixer-7/8 ADAT-7/8 set 0 0
+mixer-source-gain Mixer-7/8 ADAT-7/8 set 1 0
+mixer-source-gain Mixer-7/8 S/PDIF-1/2 set 0 0
+mixer-source-gain Mixer-7/8 S/PDIF-1/2 set 1 0
+mixer-source-gain Mixer-1/2 Analog-1/2 get 0
+mixer-source-gain Mixer-1/2 Analog-1/2 get 1
+mixer-source-gain Mixer-1/2 Analog-3/4 get 0
+mixer-source-gain Mixer-1/2 Analog-3/4 get 1
+mixer-source-gain Mixer-1/2 ADAT-1/2 get 0
+mixer-source-gain Mixer-1/2 ADAT-1/2 get 1
+mixer-source-gain Mixer-1/2 ADAT-3/4 get 0
+mixer-source-gain Mixer-1/2 ADAT-3/4 get 1
+mixer-source-gain Mixer-1/2 ADAT-5/6 get 0
+mixer-source-gain Mixer-1/2 ADAT-5/6 get 1
+mixer-source-gain Mixer-1/2 ADAT-7/8 get 0
+mixer-source-gain Mixer-1/2 ADAT-7/8 get 1
+mixer-source-gain Mixer-1/2 S/PDIF-1/2 get 0
+mixer-source-gain Mixer-1/2 S/PDIF-1/2 get 1
+mixer-source-gain Mixer-3/4 Analog-1/2 get 0
+mixer-source-gain Mixer-3/4 Analog-1/2 get 1
+mixer-source-gain Mixer-3/4 Analog-3/4 get 0
+mixer-source-gain Mixer-3/4 Analog-3/4 get 1
+mixer-source-gain Mixer-3/4 ADAT-1/2 get 0
+mixer-source-gain Mixer-3/4 ADAT-1/2 get 1
+mixer-source-gain Mixer-3/4 ADAT-3/4 get 0
+mixer-source-gain Mixer-3/4 ADAT-3/4 get 1
+mixer-source-gain Mixer-3/4 ADAT-5/6 get 0
+mixer-source-gain Mixer-3/4 ADAT-5/6 get 1
+mixer-source-gain Mixer-3/4 ADAT-7/8 get 0
+mixer-source-gain Mixer-3/4 ADAT-7/8 get 1
+mixer-source-gain Mixer-3/4 S/PDIF-1/2 get 0
+mixer-source-gain Mixer-3/4 S/PDIF-1/2 get 1
+mixer-source-gain Mixer-5/6 Analog-1/2 get 0
+mixer-source-gain Mixer-5/6 Analog-1/2 get 1
+mixer-source-gain Mixer-5/6 Analog-3/4 get 0
+mixer-source-gain Mixer-5/6 Analog-3/4 get 1
+mixer-source-gain Mixer-5/6 ADAT-1/2 get 0
+mixer-source-gain Mixer-5/6 ADAT-1/2 get 1
+mixer-source-gain Mixer-5/6 ADAT-3/4 get 0
+mixer-source-gain Mixer-5/6 ADAT-3/4 get 1
+mixer-source-gain Mixer-5/6 ADAT-5/6 get 0
+mixer-source-gain Mixer-5/6 ADAT-5/6 get 1
+mixer-source-gain Mixer-5/6 ADAT-7/8 get 0
+mixer-source-gain Mixer-5/6 ADAT-7/8 get 1
+mixer-source-gain Mixer-5/6 S/PDIF-1/2 get 0
+mixer-source-gain Mixer-5/6 S/PDIF-1/2 get 1
+mixer-source-gain Mixer-7/8 Analog-1/2 get 0
+mixer-source-gain Mixer-7/8 Analog-1/2 get 1
+mixer-source-gain Mixer-7/8 Analog-3/4 get 0
+mixer-source-gain Mixer-7/8 Analog-3/4 get 1
+mixer-source-gain Mixer-7/8 ADAT-1/2 get 0
+mixer-source-gain Mixer-7/8 ADAT-1/2 get 1
+mixer-source-gain Mixer-7/8 ADAT-3/4 get 0
+mixer-source-gain Mixer-7/8 ADAT-3/4 get 1
+mixer-source-gain Mixer-7/8 ADAT-5/6 get 0
+mixer-source-gain Mixer-7/8 ADAT-5/6 get 1
+mixer-source-gain Mixer-7/8 ADAT-7/8 get 0
+mixer-source-gain Mixer-7/8 ADAT-7/8 get 1
+mixer-source-gain Mixer-7/8 S/PDIF-1/2 get 0
+mixer-source-gain Mixer-7/8 S/PDIF-1/2 get 1
+
+mixer-source-panning Mixer-1/2 Analog-1/2 set 0 0
+mixer-source-panning Mixer-1/2 Analog-1/2 set 1 100
+mixer-source-panning Mixer-1/2 Analog-3/4 set 0 0
+mixer-source-panning Mixer-1/2 Analog-3/4 set 1 100
+mixer-source-panning Mixer-1/2 ADAT-1/2 set 0 0
+mixer-source-panning Mixer-1/2 ADAT-1/2 set 1 100
+mixer-source-panning Mixer-1/2 ADAT-3/4 set 0 0
+mixer-source-panning Mixer-1/2 ADAT-3/4 set 1 100
+mixer-source-panning Mixer-1/2 ADAT-5/6 set 0 0
+mixer-source-panning Mixer-1/2 ADAT-5/6 set 1 100
+mixer-source-panning Mixer-1/2 ADAT-7/8 set 0 0
+mixer-source-panning Mixer-1/2 ADAT-7/8 set 1 100
+mixer-source-panning Mixer-1/2 S/PDIF-1/2 set 0 0
+mixer-source-panning Mixer-1/2 S/PDIF-1/2 set 1 100
+mixer-source-panning Mixer-3/4 Analog-1/2 set 0 0
+mixer-source-panning Mixer-3/4 Analog-1/2 set 1 100
+mixer-source-panning Mixer-3/4 Analog-3/4 set 0 0
+mixer-source-panning Mixer-3/4 Analog-3/4 set 1 100
+mixer-source-panning Mixer-3/4 ADAT-1/2 set 0 0
+mixer-source-panning Mixer-3/4 ADAT-1/2 set 1 100
+mixer-source-panning Mixer-3/4 ADAT-3/4 set 0 0
+mixer-source-panning Mixer-3/4 ADAT-3/4 set 1 100
+mixer-source-panning Mixer-3/4 ADAT-5/6 set 0 0
+mixer-source-panning Mixer-3/4 ADAT-5/6 set 1 100
+mixer-source-panning Mixer-3/4 ADAT-7/8 set 0 0
+mixer-source-panning Mixer-3/4 ADAT-7/8 set 1 100
+mixer-source-panning Mixer-3/4 S/PDIF-1/2 set 0 0
+mixer-source-panning Mixer-3/4 S/PDIF-1/2 set 1 100
+mixer-source-panning Mixer-5/6 Analog-1/2 set 0 0
+mixer-source-panning Mixer-5/6 Analog-1/2 set 1 100
+mixer-source-panning Mixer-5/6 Analog-3/4 set 0 0
+mixer-source-panning Mixer-5/6 Analog-3/4 set 1 100
+mixer-source-panning Mixer-5/6 ADAT-1/2 set 0 0
+mixer-source-panning Mixer-5/6 ADAT-1/2 set 1 100
+mixer-source-panning Mixer-5/6 ADAT-3/4 set 0 0
+mixer-source-panning Mixer-5/6 ADAT-3/4 set 1 100
+mixer-source-panning Mixer-5/6 ADAT-5/6 set 0 0
+mixer-source-panning Mixer-5/6 ADAT-5/6 set 1 100
+mixer-source-panning Mixer-5/6 ADAT-7/8 set 0 0
+mixer-source-panning Mixer-5/6 ADAT-7/8 set 1 100
+mixer-source-panning Mixer-5/6 S/PDIF-1/2 set 0 0
+mixer-source-panning Mixer-5/6 S/PDIF-1/2 set 1 100
+mixer-source-panning Mixer-7/8 Analog-1/2 set 0 0
+mixer-source-panning Mixer-7/8 Analog-1/2 set 1 100
+mixer-source-panning Mixer-7/8 Analog-3/4 set 0 0
+mixer-source-panning Mixer-7/8 Analog-3/4 set 1 100
+mixer-source-panning Mixer-7/8 ADAT-1/2 set 0 0
+mixer-source-panning Mixer-7/8 ADAT-1/2 set 1 100
+mixer-source-panning Mixer-7/8 ADAT-3/4 set 0 0
+mixer-source-panning Mixer-7/8 ADAT-3/4 set 1 100
+mixer-source-panning Mixer-7/8 ADAT-5/6 set 0 0
+mixer-source-panning Mixer-7/8 ADAT-5/6 set 1 100
+mixer-source-panning Mixer-7/8 ADAT-7/8 set 0 0
+mixer-source-panning Mixer-7/8 ADAT-7/8 set 1 100
+mixer-source-panning Mixer-7/8 S/PDIF-1/2 set 0 0
+mixer-source-panning Mixer-7/8 S/PDIF-1/2 set 1 100
+mixer-source-panning Mixer-1/2 Analog-1/2 get 0
+mixer-source-panning Mixer-1/2 Analog-1/2 get 1
+mixer-source-panning Mixer-1/2 Analog-3/4 get 0
+mixer-source-panning Mixer-1/2 Analog-3/4 get 1
+mixer-source-panning Mixer-1/2 ADAT-1/2 get 0
+mixer-source-panning Mixer-1/2 ADAT-1/2 get 1
+mixer-source-panning Mixer-1/2 ADAT-3/4 get 0
+mixer-source-panning Mixer-1/2 ADAT-3/4 get 1
+mixer-source-panning Mixer-1/2 ADAT-5/6 get 0
+mixer-source-panning Mixer-1/2 ADAT-5/6 get 1
+mixer-source-panning Mixer-1/2 ADAT-7/8 get 0
+mixer-source-panning Mixer-1/2 ADAT-7/8 get 1
+mixer-source-panning Mixer-1/2 S/PDIF-1/2 get 0
+mixer-source-panning Mixer-1/2 S/PDIF-1/2 get 1
+mixer-source-panning Mixer-3/4 Analog-1/2 get 0
+mixer-source-panning Mixer-3/4 Analog-1/2 get 1
+mixer-source-panning Mixer-3/4 Analog-3/4 get 0
+mixer-source-panning Mixer-3/4 Analog-3/4 get 1
+mixer-source-panning Mixer-3/4 ADAT-1/2 get 0
+mixer-source-panning Mixer-3/4 ADAT-1/2 get 1
+mixer-source-panning Mixer-3/4 ADAT-3/4 get 0
+mixer-source-panning Mixer-3/4 ADAT-3/4 get 1
+mixer-source-panning Mixer-3/4 ADAT-5/6 get 0
+mixer-source-panning Mixer-3/4 ADAT-5/6 get 1
+mixer-source-panning Mixer-3/4 ADAT-7/8 get 0
+mixer-source-panning Mixer-3/4 ADAT-7/8 get 1
+mixer-source-panning Mixer-3/4 S/PDIF-1/2 get 0
+mixer-source-panning Mixer-3/4 S/PDIF-1/2 get 1
+mixer-source-panning Mixer-5/6 Analog-1/2 get 0
+mixer-source-panning Mixer-5/6 Analog-1/2 get 1
+mixer-source-panning Mixer-5/6 Analog-3/4 get 0
+mixer-source-panning Mixer-5/6 Analog-3/4 get 1
+mixer-source-panning Mixer-5/6 ADAT-1/2 get 0
+mixer-source-panning Mixer-5/6 ADAT-1/2 get 1
+mixer-source-panning Mixer-5/6 ADAT-3/4 get 0
+mixer-source-panning Mixer-5/6 ADAT-3/4 get 1
+mixer-source-panning Mixer-5/6 ADAT-5/6 get 0
+mixer-source-panning Mixer-5/6 ADAT-5/6 get 1
+mixer-source-panning Mixer-5/6 ADAT-7/8 get 0
+mixer-source-panning Mixer-5/6 ADAT-7/8 get 1
+mixer-source-panning Mixer-5/6 S/PDIF-1/2 get 0
+mixer-source-panning Mixer-5/6 S/PDIF-1/2 get 1
+mixer-source-panning Mixer-7/8 Analog-1/2 get 0
+mixer-source-panning Mixer-7/8 Analog-1/2 get 1
+mixer-source-panning Mixer-7/8 Analog-3/4 get 0
+mixer-source-panning Mixer-7/8 Analog-3/4 get 1
+mixer-source-panning Mixer-7/8 ADAT-1/2 get 0
+mixer-source-panning Mixer-7/8 ADAT-1/2 get 1
+mixer-source-panning Mixer-7/8 ADAT-3/4 get 0
+mixer-source-panning Mixer-7/8 ADAT-3/4 get 1
+mixer-source-panning Mixer-7/8 ADAT-5/6 get 0
+mixer-source-panning Mixer-7/8 ADAT-5/6 get 1
+mixer-source-panning Mixer-7/8 ADAT-7/8 get 0
+mixer-source-panning Mixer-7/8 ADAT-7/8 get 1
+mixer-source-panning Mixer-7/8 S/PDIF-1/2 get 0
+mixer-source-panning Mixer-7/8 S/PDIF-1/2 get 1
+
+mixer-source-link Mixer-1/2 Analog-1/2 set True
+mixer-source-link Mixer-1/2 Analog-1/2 set False
+mixer-source-link Mixer-1/2 Analog-3/4 set True
+mixer-source-link Mixer-1/2 Analog-3/4 set False
+mixer-source-link Mixer-1/2 ADAT-1/2 set True
+mixer-source-link Mixer-1/2 ADAT-1/2 set False
+mixer-source-link Mixer-1/2 ADAT-3/4 set True
+mixer-source-link Mixer-1/2 ADAT-3/4 set False
+mixer-source-link Mixer-1/2 ADAT-5/6 set True
+mixer-source-link Mixer-1/2 ADAT-5/6 set False
+mixer-source-link Mixer-1/2 ADAT-7/8 set True
+mixer-source-link Mixer-1/2 ADAT-7/8 set False
+mixer-source-link Mixer-1/2 S/PDIF-1/2 set True
+mixer-source-link Mixer-1/2 S/PDIF-1/2 set False
+mixer-source-link Mixer-3/4 Analog-1/2 set True
+mixer-source-link Mixer-3/4 Analog-1/2 set False
+mixer-source-link Mixer-3/4 Analog-3/4 set True
+mixer-source-link Mixer-3/4 Analog-3/4 set False
+mixer-source-link Mixer-3/4 ADAT-1/2 set True
+mixer-source-link Mixer-3/4 ADAT-1/2 set False
+mixer-source-link Mixer-3/4 ADAT-3/4 set True
+mixer-source-link Mixer-3/4 ADAT-3/4 set False
+mixer-source-link Mixer-3/4 ADAT-5/6 set True
+mixer-source-link Mixer-3/4 ADAT-5/6 set False
+mixer-source-link Mixer-3/4 ADAT-7/8 set True
+mixer-source-link Mixer-3/4 ADAT-7/8 set False
+mixer-source-link Mixer-3/4 S/PDIF-1/2 set True
+mixer-source-link Mixer-3/4 S/PDIF-1/2 set False
+mixer-source-link Mixer-5/6 Analog-1/2 set True
+mixer-source-link Mixer-5/6 Analog-1/2 set False
+mixer-source-link Mixer-5/6 Analog-3/4 set True
+mixer-source-link Mixer-5/6 Analog-3/4 set False
+mixer-source-link Mixer-5/6 ADAT-1/2 set True
+mixer-source-link Mixer-5/6 ADAT-1/2 set False
+mixer-source-link Mixer-5/6 ADAT-3/4 set True
+mixer-source-link Mixer-5/6 ADAT-3/4 set False
+mixer-source-link Mixer-5/6 ADAT-5/6 set True
+mixer-source-link Mixer-5/6 ADAT-5/6 set False
+mixer-source-link Mixer-5/6 ADAT-7/8 set True
+mixer-source-link Mixer-5/6 ADAT-7/8 set False
+mixer-source-link Mixer-5/6 S/PDIF-1/2 set True
+mixer-source-link Mixer-5/6 S/PDIF-1/2 set False
+mixer-source-link Mixer-7/8 Analog-1/2 set True
+mixer-source-link Mixer-7/8 Analog-1/2 set False
+mixer-source-link Mixer-7/8 Analog-3/4 set True
+mixer-source-link Mixer-7/8 Analog-3/4 set False
+mixer-source-link Mixer-7/8 ADAT-1/2 set True
+mixer-source-link Mixer-7/8 ADAT-1/2 set False
+mixer-source-link Mixer-7/8 ADAT-3/4 set True
+mixer-source-link Mixer-7/8 ADAT-3/4 set False
+mixer-source-link Mixer-7/8 ADAT-5/6 set True
+mixer-source-link Mixer-7/8 ADAT-5/6 set False
+mixer-source-link Mixer-7/8 ADAT-7/8 set True
+mixer-source-link Mixer-7/8 ADAT-7/8 set False
+mixer-source-link Mixer-7/8 S/PDIF-1/2 set True
+mixer-source-link Mixer-7/8 S/PDIF-1/2 set False
+mixer-source-link Mixer-1/2 Analog-1/2 get
+mixer-source-link Mixer-1/2 Analog-3/4 get
+mixer-source-link Mixer-1/2 ADAT-1/2 get
+mixer-source-link Mixer-1/2 ADAT-3/4 get
+mixer-source-link Mixer-1/2 ADAT-5/6 get
+mixer-source-link Mixer-1/2 ADAT-7/8 get
+mixer-source-link Mixer-1/2 S/PDIF-1/2 get
+mixer-source-link Mixer-3/4 Analog-1/2 get
+mixer-source-link Mixer-3/4 Analog-3/4 get
+mixer-source-link Mixer-3/4 ADAT-1/2 get
+mixer-source-link Mixer-3/4 ADAT-3/4 get
+mixer-source-link Mixer-3/4 ADAT-5/6 get
+mixer-source-link Mixer-3/4 ADAT-7/8 get
+mixer-source-link Mixer-3/4 S/PDIF-1/2 get
+mixer-source-link Mixer-5/6 Analog-1/2 get
+mixer-source-link Mixer-5/6 Analog-3/4 get
+mixer-source-link Mixer-5/6 ADAT-1/2 get
+mixer-source-link Mixer-5/6 ADAT-3/4 get
+mixer-source-link Mixer-5/6 ADAT-5/6 get
+mixer-source-link Mixer-5/6 ADAT-7/8 get
+mixer-source-link Mixer-5/6 S/PDIF-1/2 get
+mixer-source-link Mixer-7/8 Analog-1/2 get
+mixer-source-link Mixer-7/8 Analog-3/4 get
+mixer-source-link Mixer-7/8 ADAT-1/2 get
+mixer-source-link Mixer-7/8 ADAT-3/4 get
+mixer-source-link Mixer-7/8 ADAT-5/6 get
+mixer-source-link Mixer-7/8 ADAT-7/8 get
+mixer-source-link Mixer-7/8 S/PDIF-1/2 get
+
+mixer-source-mute Mixer-1/2 Analog-1/2 set 0 True
+mixer-source-mute Mixer-1/2 Analog-1/2 set 0 False
+mixer-source-mute Mixer-1/2 Analog-1/2 set 1 True
+mixer-source-mute Mixer-1/2 Analog-1/2 set 1 False
+mixer-source-mute Mixer-1/2 Analog-3/4 set 0 True
+mixer-source-mute Mixer-1/2 Analog-3/4 set 0 False
+mixer-source-mute Mixer-1/2 Analog-3/4 set 1 True
+mixer-source-mute Mixer-1/2 Analog-3/4 set 1 False
+mixer-source-mute Mixer-1/2 ADAT-1/2 set 0 True
+mixer-source-mute Mixer-1/2 ADAT-1/2 set 0 False
+mixer-source-mute Mixer-1/2 ADAT-1/2 set 1 True
+mixer-source-mute Mixer-1/2 ADAT-1/2 set 1 False
+mixer-source-mute Mixer-1/2 ADAT-3/4 set 0 True
+mixer-source-mute Mixer-1/2 ADAT-3/4 set 0 False
+mixer-source-mute Mixer-1/2 ADAT-3/4 set 1 True
+mixer-source-mute Mixer-1/2 ADAT-3/4 set 1 False
+mixer-source-mute Mixer-1/2 ADAT-5/6 set 0 True
+mixer-source-mute Mixer-1/2 ADAT-5/6 set 0 False
+mixer-source-mute Mixer-1/2 ADAT-5/6 set 1 True
+mixer-source-mute Mixer-1/2 ADAT-5/6 set 1 False
+mixer-source-mute Mixer-1/2 ADAT-7/8 set 0 True
+mixer-source-mute Mixer-1/2 ADAT-7/8 set 0 False
+mixer-source-mute Mixer-1/2 ADAT-7/8 set 1 True
+mixer-source-mute Mixer-1/2 ADAT-7/8 set 1 False
+mixer-source-mute Mixer-1/2 S/PDIF-1/2 set 0 True
+mixer-source-mute Mixer-1/2 S/PDIF-1/2 set 0 False
+mixer-source-mute Mixer-1/2 S/PDIF-1/2 set 1 True
+mixer-source-mute Mixer-1/2 S/PDIF-1/2 set 1 False
+mixer-source-mute Mixer-3/4 Analog-1/2 set 0 True
+mixer-source-mute Mixer-3/4 Analog-1/2 set 0 False
+mixer-source-mute Mixer-3/4 Analog-1/2 set 1 True
+mixer-source-mute Mixer-3/4 Analog-1/2 set 1 False
+mixer-source-mute Mixer-3/4 Analog-3/4 set 0 True
+mixer-source-mute Mixer-3/4 Analog-3/4 set 0 False
+mixer-source-mute Mixer-3/4 Analog-3/4 set 1 True
+mixer-source-mute Mixer-3/4 Analog-3/4 set 1 False
+mixer-source-mute Mixer-3/4 ADAT-1/2 set 0 True
+mixer-source-mute Mixer-3/4 ADAT-1/2 set 0 False
+mixer-source-mute Mixer-3/4 ADAT-1/2 set 1 True
+mixer-source-mute Mixer-3/4 ADAT-1/2 set 1 False
+mixer-source-mute Mixer-3/4 ADAT-3/4 set 0 True
+mixer-source-mute Mixer-3/4 ADAT-3/4 set 0 False
+mixer-source-mute Mixer-3/4 ADAT-3/4 set 1 True
+mixer-source-mute Mixer-3/4 ADAT-3/4 set 1 False
+mixer-source-mute Mixer-3/4 ADAT-5/6 set 0 True
+mixer-source-mute Mixer-3/4 ADAT-5/6 set 0 False
+mixer-source-mute Mixer-3/4 ADAT-5/6 set 1 True
+mixer-source-mute Mixer-3/4 ADAT-5/6 set 1 False
+mixer-source-mute Mixer-3/4 ADAT-7/8 set 0 True
+mixer-source-mute Mixer-3/4 ADAT-7/8 set 0 False
+mixer-source-mute Mixer-3/4 ADAT-7/8 set 1 True
+mixer-source-mute Mixer-3/4 ADAT-7/8 set 1 False
+mixer-source-mute Mixer-3/4 S/PDIF-1/2 set 0 True
+mixer-source-mute Mixer-3/4 S/PDIF-1/2 set 0 False
+mixer-source-mute Mixer-3/4 S/PDIF-1/2 set 1 True
+mixer-source-mute Mixer-3/4 S/PDIF-1/2 set 1 False
+mixer-source-mute Mixer-5/6 Analog-1/2 set 0 True
+mixer-source-mute Mixer-5/6 Analog-1/2 set 0 False
+mixer-source-mute Mixer-5/6 Analog-1/2 set 1 True
+mixer-source-mute Mixer-5/6 Analog-1/2 set 1 False
+mixer-source-mute Mixer-5/6 Analog-3/4 set 0 True
+mixer-source-mute Mixer-5/6 Analog-3/4 set 0 False
+mixer-source-mute Mixer-5/6 Analog-3/4 set 1 True
+mixer-source-mute Mixer-5/6 Analog-3/4 set 1 False
+mixer-source-mute Mixer-5/6 ADAT-1/2 set 0 True
+mixer-source-mute Mixer-5/6 ADAT-1/2 set 0 False
+mixer-source-mute Mixer-5/6 ADAT-1/2 set 1 True
+mixer-source-mute Mixer-5/6 ADAT-1/2 set 1 False
+mixer-source-mute Mixer-5/6 ADAT-3/4 set 0 True
+mixer-source-mute Mixer-5/6 ADAT-3/4 set 0 False
+mixer-source-mute Mixer-5/6 ADAT-3/4 set 1 True
+mixer-source-mute Mixer-5/6 ADAT-3/4 set 1 False
+mixer-source-mute Mixer-5/6 ADAT-5/6 set 0 True
+mixer-source-mute Mixer-5/6 ADAT-5/6 set 0 False
+mixer-source-mute Mixer-5/6 ADAT-5/6 set 1 True
+mixer-source-mute Mixer-5/6 ADAT-5/6 set 1 False
+mixer-source-mute Mixer-5/6 ADAT-7/8 set 0 True
+mixer-source-mute Mixer-5/6 ADAT-7/8 set 0 False
+mixer-source-mute Mixer-5/6 ADAT-7/8 set 1 True
+mixer-source-mute Mixer-5/6 ADAT-7/8 set 1 False
+mixer-source-mute Mixer-5/6 S/PDIF-1/2 set 0 True
+mixer-source-mute Mixer-5/6 S/PDIF-1/2 set 0 False
+mixer-source-mute Mixer-5/6 S/PDIF-1/2 set 1 True
+mixer-source-mute Mixer-5/6 S/PDIF-1/2 set 1 False
+mixer-source-mute Mixer-7/8 Analog-1/2 set 0 True
+mixer-source-mute Mixer-7/8 Analog-1/2 set 0 False
+mixer-source-mute Mixer-7/8 Analog-1/2 set 1 True
+mixer-source-mute Mixer-7/8 Analog-1/2 set 1 False
+mixer-source-mute Mixer-7/8 Analog-3/4 set 0 True
+mixer-source-mute Mixer-7/8 Analog-3/4 set 0 False
+mixer-source-mute Mixer-7/8 Analog-3/4 set 1 True
+mixer-source-mute Mixer-7/8 Analog-3/4 set 1 False
+mixer-source-mute Mixer-7/8 ADAT-1/2 set 0 True
+mixer-source-mute Mixer-7/8 ADAT-1/2 set 0 False
+mixer-source-mute Mixer-7/8 ADAT-1/2 set 1 True
+mixer-source-mute Mixer-7/8 ADAT-1/2 set 1 False
+mixer-source-mute Mixer-7/8 ADAT-3/4 set 0 True
+mixer-source-mute Mixer-7/8 ADAT-3/4 set 0 False
+mixer-source-mute Mixer-7/8 ADAT-3/4 set 1 True
+mixer-source-mute Mixer-7/8 ADAT-3/4 set 1 False
+mixer-source-mute Mixer-7/8 ADAT-5/6 set 0 True
+mixer-source-mute Mixer-7/8 ADAT-5/6 set 0 False
+mixer-source-mute Mixer-7/8 ADAT-5/6 set 1 True
+mixer-source-mute Mixer-7/8 ADAT-5/6 set 1 False
+mixer-source-mute Mixer-7/8 ADAT-7/8 set 0 True
+mixer-source-mute Mixer-7/8 ADAT-7/8 set 0 False
+mixer-source-mute Mixer-7/8 ADAT-7/8 set 1 True
+mixer-source-mute Mixer-7/8 ADAT-7/8 set 1 False
+mixer-source-mute Mixer-7/8 S/PDIF-1/2 set 0 True
+mixer-source-mute Mixer-7/8 S/PDIF-1/2 set 0 False
+mixer-source-mute Mixer-7/8 S/PDIF-1/2 set 1 True
+mixer-source-mute Mixer-7/8 S/PDIF-1/2 set 1 False
+mixer-source-mute Mixer-1/2 Analog-1/2 get 0
+mixer-source-mute Mixer-1/2 Analog-1/2 get 1
+mixer-source-mute Mixer-1/2 Analog-3/4 get 0
+mixer-source-mute Mixer-1/2 Analog-3/4 get 1
+mixer-source-mute Mixer-1/2 ADAT-1/2 get 0
+mixer-source-mute Mixer-1/2 ADAT-1/2 get 1
+mixer-source-mute Mixer-1/2 ADAT-3/4 get 0
+mixer-source-mute Mixer-1/2 ADAT-3/4 get 1
+mixer-source-mute Mixer-1/2 ADAT-5/6 get 0
+mixer-source-mute Mixer-1/2 ADAT-5/6 get 1
+mixer-source-mute Mixer-1/2 ADAT-7/8 get 0
+mixer-source-mute Mixer-1/2 ADAT-7/8 get 1
+mixer-source-mute Mixer-1/2 S/PDIF-1/2 get 0
+mixer-source-mute Mixer-1/2 S/PDIF-1/2 get 1
+mixer-source-mute Mixer-3/4 Analog-1/2 get 0
+mixer-source-mute Mixer-3/4 Analog-1/2 get 1
+mixer-source-mute Mixer-3/4 Analog-3/4 get 0
+mixer-source-mute Mixer-3/4 Analog-3/4 get 1
+mixer-source-mute Mixer-3/4 ADAT-1/2 get 0
+mixer-source-mute Mixer-3/4 ADAT-1/2 get 1
+mixer-source-mute Mixer-3/4 ADAT-3/4 get 0
+mixer-source-mute Mixer-3/4 ADAT-3/4 get 1
+mixer-source-mute Mixer-3/4 ADAT-5/6 get 0
+mixer-source-mute Mixer-3/4 ADAT-5/6 get 1
+mixer-source-mute Mixer-3/4 ADAT-7/8 get 0
+mixer-source-mute Mixer-3/4 ADAT-7/8 get 1
+mixer-source-mute Mixer-3/4 S/PDIF-1/2 get 0
+mixer-source-mute Mixer-3/4 S/PDIF-1/2 get 1
+mixer-source-mute Mixer-5/6 Analog-1/2 get 0
+mixer-source-mute Mixer-5/6 Analog-1/2 get 1
+mixer-source-mute Mixer-5/6 Analog-3/4 get 0
+mixer-source-mute Mixer-5/6 Analog-3/4 get 1
+mixer-source-mute Mixer-5/6 ADAT-1/2 get 0
+mixer-source-mute Mixer-5/6 ADAT-1/2 get 1
+mixer-source-mute Mixer-5/6 ADAT-3/4 get 0
+mixer-source-mute Mixer-5/6 ADAT-3/4 get 1
+mixer-source-mute Mixer-5/6 ADAT-5/6 get 0
+mixer-source-mute Mixer-5/6 ADAT-5/6 get 1
+mixer-source-mute Mixer-5/6 ADAT-7/8 get 0
+mixer-source-mute Mixer-5/6 ADAT-7/8 get 1
+mixer-source-mute Mixer-5/6 S/PDIF-1/2 get 0
+mixer-source-mute Mixer-5/6 S/PDIF-1/2 get 1
+mixer-source-mute Mixer-7/8 Analog-1/2 get 0
+mixer-source-mute Mixer-7/8 Analog-1/2 get 1
+mixer-source-mute Mixer-7/8 Analog-3/4 get 0
+mixer-source-mute Mixer-7/8 Analog-3/4 get 1
+mixer-source-mute Mixer-7/8 ADAT-1/2 get 0
+mixer-source-mute Mixer-7/8 ADAT-1/2 get 1
+mixer-source-mute Mixer-7/8 ADAT-3/4 get 0
+mixer-source-mute Mixer-7/8 ADAT-3/4 get 1
+mixer-source-mute Mixer-7/8 ADAT-5/6 get 0
+mixer-source-mute Mixer-7/8 ADAT-5/6 get 1
+mixer-source-mute Mixer-7/8 ADAT-7/8 get 0
+mixer-source-mute Mixer-7/8 ADAT-7/8 get 1
+mixer-source-mute Mixer-7/8 S/PDIF-1/2 get 0
+mixer-source-mute Mixer-7/8 S/PDIF-1/2 get 1
+
+mixer-out-volume Mixer-1/2 set 0 0
+mixer-out-volume Mixer-1/2 set 1 0
+mixer-out-volume Mixer-3/4 set 0 0
+mixer-out-volume Mixer-3/4 set 1 0
+mixer-out-volume Mixer-5/6 set 0 0
+mixer-out-volume Mixer-5/6 set 1 0
+mixer-out-volume Mixer-7/8 set 0 0
+mixer-out-volume Mixer-7/8 set 1 0
+mixer-out-volume Mixer-1/2 get 0
+mixer-out-volume Mixer-1/2 get 1
+mixer-out-volume Mixer-3/4 get 0
+mixer-out-volume Mixer-3/4 get 1
+mixer-out-volume Mixer-5/6 get 0
+mixer-out-volume Mixer-5/6 get 1
+mixer-out-volume Mixer-7/8 get 0
+mixer-out-volume Mixer-7/8 get 1
+
+mixer-out-level Mixer-1/2 set 0 -10
+mixer-out-level Mixer-1/2 set 0 +4
+mixer-out-level Mixer-1/2 set 1 -10
+mixer-out-level Mixer-1/2 set 1 +4
+mixer-out-level Mixer-3/4 set 0 -10
+mixer-out-level Mixer-3/4 set 0 +4
+mixer-out-level Mixer-3/4 set 1 -10
+mixer-out-level Mixer-3/4 set 1 +4
+mixer-out-level Mixer-5/6 set 0 -10
+mixer-out-level Mixer-5/6 set 0 +4
+mixer-out-level Mixer-5/6 set 1 -10
+mixer-out-level Mixer-5/6 set 1 +4
+mixer-out-level Mixer-7/8 set 0 -10
+mixer-out-level Mixer-7/8 set 0 +4
+mixer-out-level Mixer-7/8 set 1 -10
+mixer-out-level Mixer-7/8 set 1 +4
+mixer-out-level Mixer-1/2 get 0
+mixer-out-level Mixer-1/2 get 1
+mixer-out-level Mixer-3/4 get 0
+mixer-out-level Mixer-3/4 get 1
+mixer-out-level Mixer-5/6 get 0
+mixer-out-level Mixer-5/6 get 1
+mixer-out-level Mixer-7/8 get 0
+mixer-out-level Mixer-7/8 get 1
+
+mixer-out-mute Mixer-1/2 set 0 True
+mixer-out-mute Mixer-1/2 set 0 False
+mixer-out-mute Mixer-1/2 set 1 True
+mixer-out-mute Mixer-1/2 set 1 False
+mixer-out-mute Mixer-3/4 set 0 True
+mixer-out-mute Mixer-3/4 set 0 False
+mixer-out-mute Mixer-3/4 set 1 True
+mixer-out-mute Mixer-3/4 set 1 False
+mixer-out-mute Mixer-5/6 set 0 True
+mixer-out-mute Mixer-5/6 set 0 False
+mixer-out-mute Mixer-5/6 set 1 True
+mixer-out-mute Mixer-5/6 set 1 False
+mixer-out-mute Mixer-7/8 set 0 True
+mixer-out-mute Mixer-7/8 set 0 False
+mixer-out-mute Mixer-7/8 set 1 True
+mixer-out-mute Mixer-7/8 set 1 False
+mixer-out-mute Mixer-1/2 get 0
+mixer-out-mute Mixer-1/2 get 1
+mixer-out-mute Mixer-3/4 get 0
+mixer-out-mute Mixer-3/4 get 1
+mixer-out-mute Mixer-5/6 get 0
+mixer-out-mute Mixer-5/6 get 1
+mixer-out-mute Mixer-7/8 get 0
+mixer-out-mute Mixer-7/8 get 1
+
+output-source Headphone-3/4 get
+output-source S/PDIF-1/2 get
+output-source Headphone-3/4 set Mixer-3/4
+output-source Headphone-3/4 set Mixer-5/6
+output-source Headphone-3/4 set Mixer-7/8
+output-source Headphone-3/4 set Mixer-1/2
+output-source S/PDIF-1/2 set Mixer-3/4
+output-source S/PDIF-1/2 set Mixer-5/6
+output-source S/PDIF-1/2 set Mixer-7/8
+output-source S/PDIF-1/2 set Mixer-1/2
