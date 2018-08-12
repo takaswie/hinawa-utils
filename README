@@ -41,6 +41,8 @@ The modules include applications of below specifications:
     * A lexer/parser of configuration ROM on IEEE 1394 bus
  * hinawa-bebob-parser
     * Plug structure parser for BeBoB firmware
+ * hinawa-alesis-io-cui
+    * CUI tool for Alesis iO|14 and iO|26
  * hinawa-dg00x-cui
     * CUI tool for Digidesign Digi 00x family
  * hinawa-dice-common-cui
