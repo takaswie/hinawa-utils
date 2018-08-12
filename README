@@ -6,8 +6,8 @@ Takashi Sakamoto
 ## Introduction
 
 This batch of Python 3 codes consists of modules and scripts to control
-Audio and Music units on IEEE 1394 bus, with PyGObject to use libhinawa
-APIs with a help of gobject-introspection.
+Audio and Music units on IEEE 1394 bus, via libhinawa API with a help of
+PyGObject for gobject-introspection.
 
 The modules include applications of below specifications:
 
@@ -79,7 +79,7 @@ The modules include applications of below specifications:
     * https://docs.python.org/3/library/pathlib.html
  * PyGObject
     * https://gitlab.gnome.org/GNOME/pygobject
- * libhinawa with gir support
+ * libhinawa 1.0.0 or later, with gir support
     * https://github.com/takaswie/libhinawa
 
 ## License
