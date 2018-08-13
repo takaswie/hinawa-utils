@@ -307,13 +307,15 @@ class DiceExtendedUnit(DiceUnit):
             raise ValueError('Invalid argument for mixer pair.')
         return self._get_target_source(target)
 
-    def _get_mixer_gains(self, req, output, input):
+    def _get_mixer_gains(self, req, output, input, ch):
         if self.get_mixer_source(input) == 'None':
             raise ValueError('This input to mixer has no source.')
         if output not in self.get_mixer_output_labels():
             raise ValueError('Invalid argument for mixer stereo pair.')
         if input not in self.get_mixer_input_labels():
             raise ValueError('Invalid argument for mixer input stereo pair.')
+        if ch not in (0, 1):
+            raise ValueError('Invalid argument for channel in stereo pair.')
 
         for dst in self._dsts:
             if dst[0] == output:
@@ -323,24 +325,24 @@ class DiceExtendedUnit(DiceUnit):
                 break
 
         gains = []
+        src_ch = src[2][ch]
         for dst_ch in dst[2]:
-            for src_ch in src[2]:
-                val = ExtMixerSpace.read_gain(self._protocol, req, dst_ch, src_ch)
-                gain = {
-                    'dst-ch':   dst_ch,
-                    'src-ch':   src_ch,
-                    'val':      val,
-                }
-                gains.append(gain)
+            val = ExtMixerSpace.read_gain(self._protocol, req, dst_ch, src_ch)
+            gain = {
+                'dst-ch':   dst_ch,
+                'src-ch':   src_ch,
+                'val':      val,
+            }
+            gains.append(gain)
 
         return gains
 
     # TODO: handle some exceptional cases such that both values are zero.
     def set_mixer_gain(self, output, input, ch, db):
         req = Hinawa.FwReq()
-        gains = self._get_mixer_gains(req, output, input)
-        left = gains[ch]['val']
-        right = gains[ch + 2]['val']
+        gains = self._get_mixer_gains(req, output, input, ch)
+        left = gains[0]['val']
+        right = gains[1]['val']
         total = left + right
         val = ExtMixerSpace.build_val_from_db(db)
         if total == 0:
@@ -351,39 +353,41 @@ class DiceExtendedUnit(DiceUnit):
         else:
             left = int(val * left / total)
             right = int(val * right / total)
-        gains[ch]['val'] = left
-        gains[ch + 2]['val'] = right
+        gains[0]['val'] = left
+        gains[1]['val'] = right
         for gain in gains:
             dst_ch = gain['dst-ch']
             src_ch = gain['src-ch']
             val = gain['val']
             ExtMixerSpace.write_gain(self._protocol, req, dst_ch, src_ch, val)
+
     def get_mixer_gain(self, output, input, ch):
         req = Hinawa.FwReq()
-        gains = self._get_mixer_gains(req, output, input)
-        left = gains[ch]['val']
-        right = gains[ch + 2]['val']
+        gains = self._get_mixer_gains(req, output, input, ch)
+        left = gains[0]['val']
+        right = gains[1]['val']
         return ExtMixerSpace.parse_val_to_db(left + right)
 
     # TODO: handle some exceptional cases such that both values are zero.
     def set_mixer_balance(self, output, input, ch, balance):
         req = Hinawa.FwReq()
-        gains = self._get_mixer_gains(req, output, input)
-        total = gains[ch]['val'] + gains[ch + 2]['val']
+        gains = self._get_mixer_gains(req, output, input, ch)
+        total = gains[0]['val'] + gains[1]['val']
         left = total * (100 - balance) // 100
         right = total - left
-        gains[ch]['val'] = int(left)
-        gains[ch + 2]['val'] = int(right)
+        gains[0]['val'] = int(left)
+        gains[1]['val'] = int(right)
         for gain in gains:
             dst_ch = gain['dst-ch']
             src_ch = gain['src-ch']
             val = gain['val']
             ExtMixerSpace.write_gain(self._protocol, req, dst_ch, src_ch, val)
+
     def get_mixer_balance(self, output, input, ch):
         req = Hinawa.FwReq()
-        gains = self._get_mixer_gains(req, output, input)
-        left = gains[ch]['val']
-        right = gains[ch + 2]['val']
+        gains = self._get_mixer_gains(req, output, input, ch)
+        left = gains[0]['val']
+        right = gains[1]['val']
         total = left + right
         if total == 0:
             return float('-inf')
