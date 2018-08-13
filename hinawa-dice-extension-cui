@@ -336,7 +336,8 @@ def handle_mixer_gain(unit, args):
                 unit.set_mixer_gain(output, input, ch, db)
                 return True
             elif op == 'get':
-                print(unit.get_mixer_gain(output, input, ch))
+                db = unit.get_mixer_gain(output, input, ch)
+                print('{:.3f}'.format(db))
                 return True
     print('Arguments for mixer-gain command:')
     print('  mixer-gain OUTPUT INPUT CH ITEM OP [dB]')
@@ -369,7 +370,8 @@ def handle_mixer_panning(unit, args):
                 unit.set_mixer_balance(output, input, ch, balance)
                 return True
             elif op == 'get':
-                print(unit.get_mixer_balance(output, input, ch))
+                balance = unit.get_mixer_balance(output, input, ch)
+                print('{:.3f}'.format(balance))
                 return True
     print('Arguments for mixer-panning command:')
     print('  mixer-panning OUTPUT INPUT CH ITEM OP [BALANCE]')
