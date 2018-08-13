@@ -369,11 +369,11 @@ class DiceExtendedUnit(DiceUnit):
     def set_mixer_balance(self, output, input, ch, balance):
         req = Hinawa.FwReq()
         gains = self._get_mixer_gains(req, output, input)
-        total = gains[ch]['val'] + gainc[ch + 2]['val']
+        total = gains[ch]['val'] + gains[ch + 2]['val']
         left = total * (100 - balance) // 100
         right = total - left
-        gains[ch]['val'] = left
-        gains[ch + 2]['val'] = right
+        gains[ch]['val'] = int(left)
+        gains[ch + 2]['val'] = int(right)
         for gain in gains:
             dst_ch = gain['dst-ch']
             src_ch = gain['src-ch']
