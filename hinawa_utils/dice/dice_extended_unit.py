@@ -344,62 +344,46 @@ class DiceExtendedUnit(DiceUnit):
 
         return gains
 
-    # TODO: handle some exceptional cases such that both values are zero.
     def set_mixer_gain(self, output, input, ch, db):
         req = Hinawa.FwReq()
         gains = self._get_mixer_gains(req, output, input, ch)
-        left = gains[0]['val']
-        right = gains[1]['val']
-        total = left + right
+        total = gains[0]['val'] + gains[1]['val']
         val = ExtMixerSpace.build_val_from_db(db)
         if total == 0:
-            if ch == 0:
-                left = val
-            else:
-                right = val
+            gains[ch] = val
+            gains[(ch + 1) % 2] = 0
         else:
-            left = int(val * left / total)
-            right = int(val * right / total)
-        gains[0]['val'] = left
-        gains[1]['val'] = right
+            gains[0]['val'] = gains[0]['val'] * val // total
+            gains[1]['val'] = gains[1]['val'] * val // total
         for gain in gains:
-            dst_ch = gain['dst-ch']
-            src_ch = gain['src-ch']
-            val = gain['val']
-            ExtMixerSpace.write_gain(self._protocol, req, dst_ch, src_ch, val)
+            ExtMixerSpace.write_gain(self._protocol, req, gain['dst-ch'],
+                                     gain['src-ch'], gain['val'])
 
     def get_mixer_gain(self, output, input, ch):
         req = Hinawa.FwReq()
         gains = self._get_mixer_gains(req, output, input, ch)
-        left = gains[0]['val']
-        right = gains[1]['val']
-        return ExtMixerSpace.parse_val_to_db(left + right)
+        total = gains[0]['val'] + gains[1]['val']
+        return ExtMixerSpace.parse_val_to_db(total)
 
-    # TODO: handle some exceptional cases such that both values are zero.
     def set_mixer_balance(self, output, input, ch, balance):
         req = Hinawa.FwReq()
         gains = self._get_mixer_gains(req, output, input, ch)
         total = gains[0]['val'] + gains[1]['val']
-        left = total * (100 - balance) // 100
-        right = total - left
-        gains[0]['val'] = int(left)
-        gains[1]['val'] = int(right)
+        gains[0]['val'] = int(total * (100 - balance) // 100)
+        gains[1]['val'] = total - gains[0]['val']
         for gain in gains:
-            dst_ch = gain['dst-ch']
-            src_ch = gain['src-ch']
-            val = gain['val']
-            ExtMixerSpace.write_gain(self._protocol, req, dst_ch, src_ch, val)
+            ExtMixerSpace.write_gain(self._protocol, req, gain['dst-ch'],
+                                     gain['src-ch'], gain['val'])
 
     def get_mixer_balance(self, output, input, ch):
         req = Hinawa.FwReq()
         gains = self._get_mixer_gains(req, output, input, ch)
-        left = gains[0]['val']
-        right = gains[1]['val']
-        total = left + right
+        total = gains[0]['val'] + gains[1]['val']
         if total == 0:
-            return float('-inf')
+            balance = ch * 100.0
         else:
-            return 100 * right / total
+            balance = float(100 * gains[1]['val'] // total)
+        return balance
 
     def get_mixer_saturations(self):
         outputs = self.get_mixer_output_labels()
