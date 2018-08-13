@@ -212,12 +212,12 @@ def _print_pretty_format(inputs, tx_stream_map, rx_streams, output_map,
             print('  {0: <16} -> {1}'.format(mixer_out_src, mixer_out))
 
 def handle_current_routing(unit, args):
-    OPS = {
+    ops = {
         'graphviz': _print_dot_formatted_text,
         'json':     _print_json_formatted_text,
         'pretty':   _print_pretty_format,
     }
-    if len(args) >= 1 and args[0] in OPS:
+    if len(args) >= 1 and args[0] in ops:
         op = args[0]
         tx_stream_map = {}
         for tx_stream in unit.get_tx_stream_labels():
@@ -250,12 +250,12 @@ def handle_current_routing(unit, args):
                     unit.get_mixer_gain(mixer_out, mixer_in, 1) != -float('inf')):
                     mixer_out_map[mixer_out].append(mixer_in)
 
-        OPS[op](inputs, tx_stream_map, rx_streams, output_map, mixer_in_map,
+        ops[op](inputs, tx_stream_map, rx_streams, output_map, mixer_in_map,
                 mixer_out_map)
         return True
     print('Argument for print-routing command')
     print('  print-routing OP')
-    print('    OP: [{0}]'.format('|'.join(OPS)))
+    print('    OP: [{0}]'.format('|'.join(ops)))
     return False
 
 def handle_stream_params(unit, args):
@@ -287,16 +287,15 @@ def handle_router_entries(unit, args):
 
 def _handle_target_source(unit, args, cmd, targets_func, sources_func,
                           set_func, get_func):
-    OPS = ('set', 'get')
+    ops = ('set', 'get')
     targets = targets_func()
-    sources = sources_func()
-    if len(args) >= 1 and args[0] in targets:
-        target = args[0]
-        if len(args) >= 2 and args[1] in OPS:
-            op = args[1]
-            if len(args) >= 3 and op == 'set' and args[2] in sources:
-                source = args[2]
-                set_func(target, source)
+    srcs = sources_func()
+    if len(args) >= 2:
+        target, op = args[0:2]
+        if target in targets and op in ops:
+            if op == 'set' and len(args) >= 3 and args[2] in srcs:
+                src = args[2]
+                set_func(target, src)
                 return True
             elif op == 'get':
                 print(get_func(target))
@@ -304,8 +303,8 @@ def _handle_target_source(unit, args, cmd, targets_func, sources_func,
     print('Arguments for {0} command:'.format(cmd))
     print('  {0} TARGET OP [SOURCE]'.format(cmd))
     print('    TARGET:    [{0}]'.format('|'.join(targets)))
-    print('    OP:        [{0}]'.format('|'.join(OPS)))
-    print('    SOURCE:    [{0}] if OP=set'.format('|'.join(sources)))
+    print('    OP:        [{0}]'.format('|'.join(ops)))
+    print('    SOURCE:    [{0}] if OP=set'.format('|'.join(srcs)))
     return False
 
 def handle_output_source(unit, args):
@@ -324,25 +323,21 @@ def handle_mixer_source(unit, args):
                     unit.set_mixer_source, unit.get_mixer_source)
 
 def handle_mixer_gain(unit, args):
-    CHS = (0, 1)
-    OPS = ('set', 'get')
+    chs = ('0', '1')
+    ops = ('set', 'get')
     outputs = unit.get_mixer_output_labels()
     inputs = unit.get_mixer_input_labels()
-    if len(args) >= 1 and args[0] in outputs:
-        output = args[0]
-        if len(args) >= 2 and args[1] in inputs:
-            input = args[1]
-            if len(args) >= 3 and int(args[2]) in CHS:
-                ch = int(args[2])
-                if args[3] in OPS:
-                    op = args[3]
-                    if len(args) > 4 and op == 'set':
-                        db = float(args[4])
-                        unit.set_mixer_gain(output, input, ch, db)
-                        return True
-                    elif op == 'get':
-                        print(unit.get_mixer_gain(output, input, ch))
-                        return True
+    if len(args) >= 4:
+        output, input, ch, op = args[0:4]
+        if output in outputs and input in inputs and ch in chs and op in ops:
+            ch = int(ch)
+            if op == 'set' and len(args) >= 5:
+                db = float(args[4])
+                unit.set_mixer_gain(output, input, ch, db)
+                return True
+            elif op == 'get':
+                print(unit.get_mixer_gain(output, input, ch))
+                return True
     print('Arguments for mixer-gain command:')
     print('  mixer-gain OUTPUT INPUT CH ITEM OP [dB]')
     print('    OUTPUT: [{0}]'.format('|'.join(outputs)))
@@ -352,8 +347,8 @@ def handle_mixer_gain(unit, args):
         if src != 'None':
             srcs.append('{0}(={1})'.format(input, src))
     print('    INPUT:  [{0}]'.format('|'.join(srcs)))
-    print('    CH:     [{0}]'.format('|'.join(map(str, CHS))))
-    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    CH:     [{0}]'.format('|'.join(chs)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    dB:     [-inf,-84.00..4.00] if OP=set ')
     print('Saturation state:')
     for output, saturation in unit.get_mixer_saturations().items():
@@ -361,25 +356,21 @@ def handle_mixer_gain(unit, args):
     return False
 
 def handle_mixer_panning(unit, args):
-    CHS = (0, 1)
-    OPS = ('set', 'get')
+    chs = ('0', '1')
+    ops = ('set', 'get')
     outputs = unit.get_mixer_output_labels()
     inputs = unit.get_mixer_input_labels()
-    if len(args) >= 1 and args[0] in outputs:
-        output = args[0]
-        if len(args) >= 2 and args[1] in inputs:
-            input = args[1]
-            if len(args) >= 3 and int(args[2]) in CHS:
-                ch = int(args[2])
-                if args[3] in OPS:
-                    op = args[3]
-                    if len(args) > 4 and op == 'set':
-                        balance = float(args[4])
-                        unit.set_mixer_balance(output, input, ch, balance)
-                        return True
-                    elif op == 'get':
-                        print(unit.get_mixer_balance(output, input, ch))
-                        return True
+    if len(args) >= 4:
+        output, input, ch, op = args[0:4]
+        if output in outputs and input in inputs and ch in chs and op in ops:
+            ch = int(ch)
+            if op == 'set' and len(args) >= 5:
+                balance = float(args[4])
+                unit.set_mixer_balance(output, input, ch, balance)
+                return True
+            elif op == 'get':
+                print(unit.get_mixer_balance(output, input, ch))
+                return True
     print('Arguments for mixer-panning command:')
     print('  mixer-panning OUTPUT INPUT CH ITEM OP [BALANCE]')
     print('    OUTPUT: [{0}]'.format('|'.join(outputs)))
@@ -389,17 +380,17 @@ def handle_mixer_panning(unit, args):
         if src != 'None':
             srcs.append('{0}(={1})'.format(input, src))
     print('    INPUT:  [{0}]'.format('|'.join(srcs)))
-    print('    CH:     [{0}]'.format('|'.join(map(str, CHS))))
-    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    CH:     [{0}]'.format('|'.join(chs)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    BALANCE:[0.00...100.00] (left-right) if OP=set ')
     return False
 
 def handle_standalone_clock(unit, args):
-    OPS = ('set', 'get')
+    ops = ('set', 'get')
     clocks = unit.get_supported_clock_sources()
-    if len(args) >= 1 and args[0] in OPS:
+    if len(args) >= 1 and args[0] in ops:
         op = args[0]
-        if len(args) >= 2 and op == 'set' and args[1] in clocks:
+        if op == 'set' and len(args) >= 2 and args[1] in clocks:
             clock = args[1]
             unit.set_standalone_clock_source(clock)
             return True
@@ -408,19 +399,18 @@ def handle_standalone_clock(unit, args):
             return True
     print('Arguments for standalone-clock command:')
     print('  standalone-clock OP [CLOCK]')
-    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    CLOCK:  [{0}]'.format('|'.join(clocks)))
     return False
 
 def handle_standalone_params(unit, args):
-    OPS = ('set', 'get')
+    ops = ('set', 'get')
     clocks = unit.get_supported_clock_sources()
-    if len(args) >= 1 and args[0] in clocks:
-        clock = args[0]
-        param_options = unit.get_standalone_clock_source_param_options(clock)
-        if len(args) >= 2 and args[1] in OPS:
-            op = args[1]
-            if len(args) >= 3 and op == 'set':
+    if len(args) >= 2:
+        clk, op = args[0:2]
+        if clk in clocks and op in ops:
+            param_options = unit.get_standalone_clock_source_param_options(clk)
+            if op == 'set' and len(args) >= 3:
                 params = {}
                 for entry in args[2].split(','):
                     if entry.count('=') != 1:
@@ -437,20 +427,20 @@ def handle_standalone_params(unit, args):
                             params[key] = int(val)
                         else:
                             params[key] = val
-                unit.set_standalone_clock_source_params(clock, params)
+                unit.set_standalone_clock_source_params(clk, params)
                 return True
             elif op == 'get':
-                params = unit.get_standalone_clock_source_params(clock)
+                params = unit.get_standalone_clock_source_params(clk)
                 for name, value in params.items():
                     print('{0}={1}'.format(name, value))
                 return True
     print('Arguments for standalone-params command:')
     print('  standalone-params CLOCK OP [MODE]')
     print('    CLOCK:  [{0}]'.format('|'.join(clocks)))
-    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    MODE:')
-    for clock in clocks:
-        params = unit.get_standalone_clock_source_param_options(clock)
+    for clk in clocks:
+        params = unit.get_standalone_clock_source_param_options(clk)
         for mode, options in params.items():
             if isinstance(options, int):
                 vals = 'integer(up tp {0})'.format(options)
@@ -458,7 +448,7 @@ def handle_standalone_params(unit, args):
                 vals = '|'.join(map(str, options))
             else:
                 vals = '|'.join(options)
-            print('      {0}=[{1}] if CLOCK={2}'.format(mode, vals, clock))
+            print('      {0}=[{1}] if CLOCK={2}'.format(mode, vals, clk))
     return False
 
 def handle_listen_metering(unit, args):
@@ -478,18 +468,18 @@ def handle_listen_metering(unit, args):
     return True
 
 def handle_storage_operation(unit, args):
-    OPS = {
+    ops = {
         'store':    unit.store_to_storage,
         'load':     unit.load_from_storage
     }
-    if len(args) >= 1 and args[0] in OPS:
-        categories = OPS[args[0]]()
+    if len(args) >= 1 and args[0] in ops:
+        categories = ops[args[0]]()
         for category in categories:
             print('{0} is processed.'.format(category))
         return True
     print('Arguments for store-config command:')
     print('  store-config OP')
-    print('    OP:     [{0}]'.format('|'.join(OPS)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
     return False
 
 cmds = {
