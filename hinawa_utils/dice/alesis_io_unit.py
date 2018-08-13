@@ -201,8 +201,8 @@ class AlesisIoUnit(DiceUnit):
         # normalize.
         total = sum(vals)
         if total > self.__MAX_COEFF:
-            vals[0] = int(vals[0] * self.__MAX_COEFF / total)
-            vals[1] = int(vals[1] * self.__MAX_COEFF / total)
+            vals[0] = vals[0] * self.__MAX_COEFF // total
+            vals[1] = vals[1] * self.__MAX_COEFF // total
         return vals
 
     # -60..0dB
@@ -248,7 +248,7 @@ class AlesisIoUnit(DiceUnit):
         if total == 0:
             balance = src_ch * 100.0
         else:
-            balance = float(100 * vals[1] // sum(vals))
+            balance = float(100 * vals[1] // total)
         return balance
 
     def set_mixer_src_link(self, dst, src, link):
