@@ -325,6 +325,7 @@ class DiceExtendedUnit(DiceUnit):
                 break
 
         gains = []
+        total = 0
         src_ch = src[2][ch]
         for dst_ch in dst[2]:
             val = ExtMixerSpace.read_gain(self._protocol, req, dst_ch, src_ch)
@@ -334,6 +335,12 @@ class DiceExtendedUnit(DiceUnit):
                 'val':      val,
             }
             gains.append(gain)
+            total += val
+
+        # normalize.
+        if total > ExtMixerSpace.MAX_COEFF:
+            gains[0]['val'] = gains[0]['val'] * ExtMixerSpace.MAX_COEFF // total
+            gains[1]['val'] = gains[1]['val'] * ExtMixerSpace.MAX_COEFF // total
 
         return gains
 

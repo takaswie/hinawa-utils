@@ -205,14 +205,14 @@ class ExtMixerSpace():
         'middle':   16,
         'high':     8,
     }
-    _MAX_COEFF = 0x3fff
+    MAX_COEFF = 0x3fff
 
     # '5.11 Audio Mixer' in 'TCD22xx Users Guide'.
     @classmethod
     def parse_val_to_db(cls, val):
         if val == 0:
             return float('-inf')
-        return 20 * log10(val / cls._MAX_COEFF)
+        return 20 * log10(val / cls.MAX_COEFF)
 
     @classmethod
     def build_val_from_db(cls, db):
@@ -220,7 +220,7 @@ class ExtMixerSpace():
             raise ValueError('Invalid argument for dB value.')
         if db == float('-inf'):
             return 0
-        return int(cls._MAX_COEFF * pow(10, db / 20))
+        return int(cls.MAX_COEFF * pow(10, db / 20))
 
     @classmethod
     def _calcurate_offset(cls, protocol, out_ch, in_ch):
