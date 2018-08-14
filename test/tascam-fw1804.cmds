@@ -10,9 +10,19 @@ sampling-rate set 88200
 sampling-rate set 96000
 sampling-rate set 44100
 
-coaxial-source get
-coaxial-source set S/PDIF-1/2
-coaxial-source set Analog-1/2
+optical-out-source set stream-in-3:11
+optical-out-source set stream-in-12/13
+optical-out-source set analog-in-1:8
+optical-out-source set stream-in-3:11
+optical-out-source get
+coaxial-out-source set stream-in-3/4
+coaxial-out-source set analog-out-1/2
+coaxial-out-source set stream-in-3/4
+coaxial-out-source get
+stream-spdif-in-source set coax-iface
+stream-spdif-in-source set opt-iface
+stream-spdif-in-source set coax-iface
+stream-spdif-in-source get
 
 monitor-input Analog-1 mute get
 monitor-input Analog-2 mute get

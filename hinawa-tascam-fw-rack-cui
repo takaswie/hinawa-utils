@@ -47,21 +47,40 @@ def handle_firmware_versions(unit, args):
         print('{0}: {1}'.format(name, value))
     return True
 
-def handle_coax_src(unit, args):
+def handle_routing(unit, args, cmd, labels, set_func, get_func):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
         op = args[0]
-        if op == ops[0] and len(args) == 2:
-            rate = args[1]
-            unit.set_coaxial_source(rate)
-        else:
-            print(unit.get_coaxial_source())
-        return True
-    print('Arguments for coaxial-source command:')
-    print('  coaxial-source OP [RATE]')
+        if op == ops[0] and len(args) == 2 and args[1] in labels:
+            src = args[1]
+            set_func(src)
+            return True
+        elif op == 'get':
+            print(get_func())
+            return True
+    print('Arguments for {0} command:'.format(cmd))
+    print('  {0} OP [SRC]'.format(cmd))
     print('    OP:     [{0}]'.format('|'.join(ops)))
-    print('    RATE:   [{0}]'.format('|'.join(unit.supported_coax_sources)))
+    print('    SRC:    [{0}]'.format('|'.join(labels)))
     return False
+
+def handle_coax_out_src(unit, args):
+    return handle_routing(unit, args, 'coaxial-out-source',
+                          unit.get_coax_out_src_labels(),
+                          unit.set_coax_out_src,
+                          unit.get_coax_out_src)
+
+def handle_opt_out_src(unit, args):
+    return handle_routing(unit, args, 'optical-out-source',
+                          unit.get_opt_out_src_labels(),
+                          unit.set_opt_out_src,
+                          unit.get_opt_out_src)
+
+def handle_stream_spdif_in_src(unit, args):
+    return handle_routing(unit, args, 'stream-spdif-in-source',
+                          unit.get_stream_spdif_in_src_labels(),
+                          unit.set_stream_spdif_in_src,
+                          unit.get_stream_spdif_in_src)
 
 def handle_monitor_input(unit, args):
     _OPS = ('set', 'get')
@@ -107,7 +126,9 @@ cmds = {
     'clock-source':         handle_clock_source,
     'sampling-rate':        handle_sampling_rate,
     'firmware-versions':    handle_firmware_versions,
-    'coaxial-source':       handle_coax_src,
+    'coaxial-out-source':   handle_coax_out_src,
+    'optical-out-source':   handle_opt_out_src,
+    'stream-spdif-in-source': handle_stream_spdif_in_src,
 
     'monitor-input':        handle_monitor_input,
 }

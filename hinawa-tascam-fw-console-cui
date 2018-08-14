@@ -47,36 +47,56 @@ def handle_firmware_versions(unit, args):
         print('{0}: {1}'.format(name, value))
     return True
 
-def handle_master_fader(unit, args):
+def handle_routing(unit, args, cmd, labels, set_func, get_func):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
         op = args[0]
-        if op == ops[0] and len(args) == 2:
-            mode = int(args[1])
+        if op == ops[0] and len(args) == 2 and args[1] in labels:
+            src = args[1]
+            set_func(src)
+            return True
+        elif op == 'get':
+            print(get_func())
+            return True
+    print('Arguments for {0} command:'.format(cmd))
+    print('  {0} OP [SRC]'.format(cmd))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SRC:    [{0}]'.format('|'.join(labels)))
+    return False
+
+def handle_coax_out_src(unit, args):
+    return handle_routing(unit, args, 'coaxial-out-source',
+                          unit.get_coax_out_src_labels(),
+                          unit.set_coax_out_src,
+                          unit.get_coax_out_src)
+
+def handle_opt_out_src(unit, args):
+    return handle_routing(unit, args, 'optical-out-source',
+                          unit.get_opt_out_src_labels(),
+                          unit.set_opt_out_src,
+                          unit.get_opt_out_src)
+
+def handle_stream_spdif_in_src(unit, args):
+    return handle_routing(unit, args, 'stream-spdif-in-source',
+                          unit.get_stream_spdif_in_src_labels(),
+                          unit.set_stream_spdif_in_src,
+                          unit.get_stream_spdif_in_src)
+
+def handle_master_fader(unit, args):
+    ops = ('set', 'get')
+    modes = ('False', 'True')
+    if len(args) > 0 and args[0] in ops:
+        op = args[0]
+        if op == 'set' and len(args) == 2 and args[1] in modes:
+            mode = args[1] == 'True'
             unit.set_master_fader(mode)
-        else:
+        elif op == 'get':
             print(unit.get_master_fader())
         return True
     print('Arguments for master-fader command:')
     print('  master-fader OP [MODE]')
     print('    OP:     [{0}]'.format('|'.join(ops)))
-    print('    MODE:   [0|1]')
-    return False
-
-def handle_coax_src(unit, args):
-    ops = ('set', 'get')
-    if len(args) > 0 and args[0] in ops:
-        op = args[0]
-        if op == ops[0] and len(args) == 2:
-            rate = args[1]
-            unit.set_coaxial_source(rate)
-        else:
-            print(unit.get_coaxial_source())
-        return True
-    print('Arguments for coaxial-source command:')
-    print('  coaxial-source OP [RATE]')
-    print('    OP:     [{0}]'.format('|'.join(ops)))
-    print('    RATE:   [{0}]'.format('|'.join(unit.supported_coax_sources)))
+    print('    MODE:   [{0}]'.format('|'.join(modes)))
     return False
 
 def handle_bright_led(unit, args):
@@ -85,8 +105,8 @@ def handle_bright_led(unit, args):
         state = args[1]
         unit.bright_led(pos, state)
         return True
-    print('Arguments for coaxial-source command:')
-    print('  coaxial-source POS STATE')
+    print('Arguments for bright-led command:')
+    print('  bright-led POS STATE')
     print('    POS:    [0-???]')
     print('    STATE:  [{0}]'.format('|'.join(unit.supported_led_status)))
     return False
@@ -95,7 +115,8 @@ cmds = {
     'clock-source':         handle_clock_source,
     'sampling-rate':        handle_sampling_rate,
     'firmware-versions':    handle_firmware_versions,
-    'coaxial-source':       handle_coax_src,
+    'coaxial-out-source':   handle_coax_out_src,
+    'stream-spdif-in-source': handle_stream_spdif_in_src,
 
     'master-fader':         handle_master_fader,
     'bright-led':           handle_bright_led,
@@ -104,4 +125,6 @@ cmds = {
 fullpath = CuiKit.seek_snd_unit_path()
 if fullpath:
     unit = TscmConsoleUnit(fullpath)
+    if unit.model_name == 'FW-1884':
+        cmds['optical-out-source'] = handle_opt_out_src
     CuiKit.dispatch_command(unit, cmds)

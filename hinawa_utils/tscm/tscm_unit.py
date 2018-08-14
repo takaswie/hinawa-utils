@@ -20,6 +20,21 @@ class TscmUnit(Hinawa.SndUnit):
     supported_coax_sources = ('S/PDIF-1/2', 'Analog-1/2')
     supported_led_status = ('off', 'on')
 
+    __SPECS = {
+        'FW-1082': {
+            'stream-in-ana-chs':    2,
+            'has-opt-iface':        False,
+        },
+        'FW-1804': {
+            'stream-in-ana-chs':    2,
+            'has-opt-iface':        True,
+        },
+        'FW-1884': {
+            'stream-in-ana-chs':    8,
+            'has-opt-iface':        True,
+        },
+    }
+
     def __init__(self, path):
         if match('/dev/snd/hwC[0-9]*D0', path):
             super().__init__()
@@ -38,6 +53,7 @@ class TscmUnit(Hinawa.SndUnit):
         parser = TscmConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
         self.model_name = info['model-name']
+        self.__specs = self.__SPECS[self.model_name]
 
     def read_quadlet(self, offset):
         req = Hinawa.FwReq()
@@ -69,6 +85,7 @@ class TscmUnit(Hinawa.SndUnit):
         frames[1] = 0
         frames[3] = src
         self.write_quadlet(0x0228, frames)
+
     def get_clock_source(self):
         frames = self.read_quadlet(0x0228)
         index = frames[3] - 1
@@ -91,6 +108,7 @@ class TscmUnit(Hinawa.SndUnit):
         frames = bytearray(frames)
         frames[3] = flag
         self.write_quadlet(0x0228, frames)
+
     def get_sampling_rate(self):
         frames = self.read_quadlet(0x0228)
         if (frames[1] & 0x0f) == 0x01:
@@ -105,16 +123,84 @@ class TscmUnit(Hinawa.SndUnit):
             raise OSError('Unexpected value for sampling rate.')
         return rate
 
-    def set_coaxial_source(self, source):
-        frames = bytearray(4)
-        if source not in self.supported_coax_sources:
-            raise ValueError('Invalid argument for coaxial source.')
-        if self.supported_coax_sources.index(source) == 0:
-            frames[1] = 0x02
-        else:
-            frames[2] = 0x02
-        self.write_quadlet(0x022c, frames)
-    def get_coaxial_source(self):
-        frames = self.read_quadlet(0x022c)
-        index = frames[3] & 0x02 > 0
-        return self.supported_coax_sources[index]
+    def __set_flag(self, flag, mask):
+        data = self.read_quadlet(0x022c)
+        flags = data[3]
+        data = bytearray(4)
+        data[1] = (flags & ~flag) & mask    # removed bits.
+        data[2] = (~flags & flag) & mask    # added bits.
+        self.write_quadlet(0x022c, data)
+
+    def get_stream_spdif_in_src_labels(self):
+        labels = []
+        labels.append('coax-iface')
+        labels.append('opt-iface')
+        return labels
+
+    def set_stream_spdif_in_src(self, src):
+        labels = self.get_stream_spdif_in_src_labels()
+        if src not in labels:
+            raise ValueError('Invalid argumen for source of stream spdif in.')
+        flag = labels.index(src)
+        self.__set_flag(flag, 0x01)
+
+    def get_stream_spdif_in_src(self):
+        labels = self.get_stream_spdif_in_src_labels()
+        data = self.read_quadlet(0x022c)
+        index = data[3] & 0x01
+        return labels[index]
+
+    def get_coax_out_src_labels(self):
+        labels = []
+        ana_ch = self.__specs['stream-in-ana-chs']
+        labels.append('stream-in-{0}/{1}'.format(ana_ch + 1, ana_ch + 2))
+        labels.append('analog-out-1/2')
+        return labels
+
+    def set_coax_out_src(self, src):
+        labels = self.get_coax_out_src_labels()
+        if src not in labels:
+            raise ValueError('Invalid argument for source of coax out iface.')
+        flag = labels.index(src) << 1
+        self.__set_flag(flag, 0x02)
+
+    def get_coax_out_src(self):
+        labels = self.get_coax_out_src_labels()
+        data = self.read_quadlet(0x022c)
+        index = (data[3] & 0x02) >> 1
+        return labels[index]
+
+    def get_opt_out_src_labels(self):
+        labels = []
+        if self.__specs['has-opt-iface']:
+            ana_ch = self.__specs['stream-in-ana-chs']
+
+            label = 'stream-in-{0}:{1}'.format(ana_ch + 1, ana_ch + 9)
+            labels.append(label)
+
+            label = 'stream-in-{0}/{1}'.format(ana_ch + 10, ana_ch + 11)
+            labels.append(label)
+
+            labels.append('analog-in-1:8')
+            if ana_ch > 2:
+                labels.append('analog-out-1:8')
+
+        return labels
+
+    def set_opt_out_src(self, src):
+        labels = self.get_opt_out_src_labels()
+        if src not in labels:
+            print('Invalid argument for source of opt out iface.')
+        flag = labels.index(src) << 2
+        if flag == 0x0c:
+            flag = 0x88
+        self.__set_flag(flag, 0x8c)
+
+    def get_opt_out_src(self):
+        labels = self.get_opt_out_src_labels()
+        data = self.read_quadlet(0x022c)
+        index = (data[3] & 0x0c) >> 2
+        if data[3] & 0x80:
+            index += 1
+        print(index)
+        return labels[index]

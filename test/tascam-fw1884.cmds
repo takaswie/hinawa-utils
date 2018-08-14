@@ -12,13 +12,23 @@ sampling-rate set 88200
 sampling-rate set 96000
 sampling-rate set 44100
 
-master-fader get
-master-fader set 1
-master-fader set 0
+optical-out-source set stream-in-9:17
+optical-out-source set stream-in-18/19
+optical-out-source set analog-in-1:8
+optical-out-source set analog-out-1:8
+optical-out-source get
+coaxial-out-source set stream-in-9/10
+coaxial-out-source set analog-out-1/2
+coaxial-out-source set stream-in-9/10
+coaxial-out-source get
+stream-spdif-in-source set coax-iface
+stream-spdif-in-source set opt-iface
+stream-spdif-in-source set coax-iface
+stream-spdif-in-source get
 
-coaxial-source get
-coaxial-source set S/PDIF-1/2
-coaxial-source set Analog-1/2
+master-fader get
+master-fader set False
+master-fader set True
 
 bright-led 83 on
 bright-led 84 on
