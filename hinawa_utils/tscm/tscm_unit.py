@@ -2,7 +2,8 @@
 # Copyright (C) 2018 Takashi Sakamoto
 
 from re import match
-from struct import unpack
+from struct import pack, unpack
+from math import log10, pow
 
 import gi
 gi.require_version('Hinawa', '2.0')
@@ -34,6 +35,8 @@ class TscmUnit(Hinawa.SndUnit):
             'has-opt-iface':        True,
         },
     }
+
+    __MAX_THRESHOLD = 0x7fff
 
     def __init__(self, path):
         if match('/dev/snd/hwC[0-9]*D0', path):
@@ -204,3 +207,22 @@ class TscmUnit(Hinawa.SndUnit):
             index += 1
         print(index)
         return labels[index]
+
+    def set_input_threshold(self, level):
+        data = self.read_quadlet(0x0230)
+        data = bytearray(data)
+        if level == float('-inf'):
+            val = 0x0000
+        else:
+            val = int(self.__MAX_THRESHOLD * pow(10, level / 20))
+        chunks = pack('>H', val)
+        data[0] = chunks[0]
+        data[1] = chunks[1]
+        self.write_quadlet(0x0230, data)
+
+    def get_input_threshold(self):
+        data = self.read_quadlet(0x0230)
+        val = unpack('>H', data[0:2])[0]
+        if val == 0x0000:
+            return float('-inf')
+        return 20 * log10(val / self.__MAX_THRESHOLD)

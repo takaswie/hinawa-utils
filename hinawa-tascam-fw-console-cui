@@ -82,6 +82,25 @@ def handle_stream_spdif_in_src(unit, args):
                           unit.set_stream_spdif_in_src,
                           unit.get_stream_spdif_in_src)
 
+def handle_input_threshold(unit, args):
+    ops = ('set', 'get')
+
+    if len(args) >= 1 and args[0] in ops:
+        op = args[0]
+        if op == 'set' and len(args) >= 2:
+            level = float(args[1])
+            unit.set_input_threshold(level)
+            return True
+        elif op == 'get':
+            level = unit.get_input_threshold()
+            print('{:.3f}'.format(level))
+            return True
+    print('Arguments for input-threshold command:')
+    print('  input-threshold OP [LEVEL]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    LEVEL:  [-inf, -90..0]')
+    return True
+
 def handle_master_fader(unit, args):
     ops = ('set', 'get')
     modes = ('False', 'True')
