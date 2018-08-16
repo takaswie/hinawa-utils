@@ -13,7 +13,7 @@ from hinawa_utils.bebob.maudio_protocol_special import MaudioProtocolSpecial
 __all__ = ['MaudioUnit']
 
 class MaudioUnit(BebobUnit):
-    _SUPPORTED_MODELS = {
+    __SUPPORTED_MODELS = {
         # (VendorID, ModelID): Protocol
         (0x000d6c, 0x00000a): MaudioProtocolNormal,     # Ozonic
         (0x000d6c, 0x010062): MaudioProtocolNormal,     # Firewire Solo
@@ -29,6 +29,6 @@ class MaudioUnit(BebobUnit):
         super().__init__(path)
 
         key = (self.vendor_id, self.model_id)
-        if key not in self._SUPPORTED_MODELS:
+        if key not in self.__SUPPORTED_MODELS:
             raise OSError('Not supported.')
-        self.protocol = self._SUPPORTED_MODELS[key](self, False)
+        self.protocol = self.__SUPPORTED_MODELS[key](self, False)
