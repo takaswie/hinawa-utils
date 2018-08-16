@@ -2,6 +2,7 @@
 # Copyright (C) 2018 Takashi Sakamoto
 
 from re import match
+from struct import unpack
 
 import gi
 gi.require_version('Hinawa', '2.0')
@@ -150,10 +151,10 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
     )
 
     _METERS = (
-        48 // 4,
-        52 // 4,
-        60 // 4,
-        76 // 4,
+        48,
+        52,
+        60,
+        76,
     )
 
     _CLOCKS = (
@@ -410,18 +411,17 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         labels = self._labels['meters']
         meters = {}
         req = Hinawa.FwReq()
-        current = req.read(self._unit, self._ADDR_FOR_METERING, self._meters)
+        data = req.read(self._unit, self._ADDR_FOR_METERING, self._meters)
         for i, name in enumerate(labels):
-            meters[name] = current[i]
-        if len(current) > len(labels):
-            misc = current[len(labels)]
-            meters['rotery-0'] = (misc >> 16) & 0x0f
-            meters['rotery-1'] = (misc >> 20) & 0x0f
-            meters['switch-0'] = (misc >> 24) & 0x0f
-            meters['switch-1'] = (misc >> 28) & 0x0f
+            meters[name] = unpack('>I', data[i * 4:(i + 1) * 4])[0]
+        if len(data) > len(labels) * 4:
+            meters['rotery-0'] = data[-3] & 0x0f
+            meters['rotery-1'] = (data[-3] & 0xf0) >> 4
             meters['rotery-2'] = 0
-            meters['rate'] = AvcConnection.sampling_rates[(misc >> 8) & 0xff]
-            meters['sync'] = (misc >> 0) & 0x0f
+            meters['switch-0'] = (data[-4] & 0xf0) >> 4
+            meters['switch-1'] = data[-4] & 0x0f
+            meters['rate'] = AvcConnection.sampling_rates[data[-2]]
+            meters['sync'] = data[-1] & 0x0f
         return meters
 
     def get_clock_source_labels(self):
