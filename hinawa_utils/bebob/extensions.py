@@ -318,7 +318,7 @@ class BcoPlugInfo():
         return info
 
 class BcoSubunitInfo():
-    fb_purpose = {
+    FB_PURPOSE = {
         0x00: 'input-gain',
         0x01: 'output-volume',
         0xff: 'nothing-special'
@@ -370,7 +370,7 @@ class BcoSubunitInfo():
             entry = {}
             entry['type'] = params[5 + 5 * i]
             entry['id'] = params[6 + 5 * i]
-            entry['purpose'] = cls.fb_purpose[params[7 + 5 * i]]
+            entry['purpose'] = cls.FB_PURPOSE[params[7 + 5 * i]]
             entry['inputs'] = params[8 + 5 * i]
             entry['outputs'] = params[9 + 5 * i]
             entries.append(entry)
