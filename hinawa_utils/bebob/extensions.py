@@ -585,16 +585,16 @@ class BcoStreamFormatInfo():
             ctl = params[4] & 0x01
             rate = params[4] >> 8
             fmt['type'] = 'Sync'
-            fmt['rate-control'] = AvcStreamFormatInfo.rate_controls[ctl]
-            fmt['sampling-rate'] = AvcStreamFormatInfo.sampling_rates[rate]
+            fmt['rate-control'] = AvcStreamFormatInfo.RATE_CONTROLS[ctl]
+            fmt['sampling-rate'] = AvcStreamFormatInfo.SAMPLING_RATES[rate]
             fmt['formation'] = ['multi-bit-linear-audio-raw']
             return fmt
         if params[0] != 0x90 or params[1] != 0x40:
             raise RuntimeError('Unsupported format')
         fmt['type'] = 'Compound'
-        fmt['sampling-rate'] = AvcStreamFormatInfo.sampling_rates[params[2]]
+        fmt['sampling-rate'] = AvcStreamFormatInfo.SAMPLING_RATES[params[2]]
         ctl = params[3] & 0x3
-        fmt['rate-control'] = AvcStreamFormatInfo.rate_controls[ctl]
+        fmt['rate-control'] = AvcStreamFormatInfo.RATE_CONTROLS[ctl]
         formation = []
         for i in range(params[4]):
             for c in range(params[5 + i * 2]):
