@@ -59,7 +59,7 @@ class BcoPlugInfo():
         addr.append(0xff)
         addr.append(0xff)
         # For my purpose.
-        addr.append((AvcGeneral.subunit_types.index(subunit_type) << 3) | \
+        addr.append((AvcGeneral.subunit_types.index(subunit_type) << 3) |
                     subunit_id)
         return addr
 
@@ -79,7 +79,7 @@ class BcoPlugInfo():
         addr.append(fb_id)
         addr.append(plug)
         # For my purpose.
-        addr.append((AvcGeneral.subunit_types.index(subunit_type) << 3) | \
+        addr.append((AvcGeneral.subunit_types.index(subunit_type) << 3) |
                     subunit_id)
         return addr
 
@@ -221,7 +221,7 @@ class BcoPlugInfo():
         args.append(0xff)
         params = AvcGeneral.command_status(fcp, args)
         length = params[11]
-        return params[12:12+length].decode()
+        return params[12:12 + length].decode()
 
     @classmethod
     def get_plug_clusters(cls, fcp, addr):
@@ -247,12 +247,12 @@ class BcoPlugInfo():
             num = data[pos]
             pos += 1
             if num == 0:
-                break;
+                break
 
             clusters[cls] = [[0, 0] for j in range(num)]
             for e in range(len(clusters[cls])):
-                clusters[cls][e][0] = data[pos];
-                clusters[cls][e][1] = data[pos + 1];
+                clusters[cls][e][0] = data[pos]
+                clusters[cls][e][1] = data[pos + 1]
                 pos += 2
         return clusters
 
@@ -273,7 +273,7 @@ class BcoPlugInfo():
         args.append(0xff)
         params = AvcGeneral.command_status(fcp, args)
         length = params[12]
-        return params[13:13+length].decode()
+        return params[13:13 + length].decode()
 
     @classmethod
     def get_plug_input(cls, fcp, addr):
@@ -347,7 +347,7 @@ class BcoSubunitInfo():
 
     @classmethod
     def get_subunit_fb_info(cls, fcp, subunit_type, subunit_id, page, fb_type):
-        if subunit-type not in AvcGeneral.subunit_types:
+        if subunit_type not in AvcGeneral.subunit_types:
             raise ValueError('Invalid argument for subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for subunit id')
@@ -366,7 +366,7 @@ class BcoSubunitInfo():
             entry['type'] = params[5 + 5 * i]
             entry['id'] = params[6 + 5 * i]
             entry['purpose'] = cls.fb_purpose[params[7 + 5 * i]]
-            entry['inputs'] = params[8+ 5 * i]
+            entry['inputs'] = params[8 + 5 * i]
             entry['outputs'] = params[9 + 5 * i]
             entries.append(entry)
         return entries

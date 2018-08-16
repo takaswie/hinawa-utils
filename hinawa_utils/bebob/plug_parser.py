@@ -29,7 +29,7 @@ class PlugParser(BebobUnit):
         self.signal_sources = self._parse_signal_sources()
 
     def _parse_unit_info(self):
-        return AvcGeneral.get_unit_info(self.fcp) 
+        return AvcGeneral.get_unit_info(self.fcp)
 
     def _parse_unit_plugs(self):
         unit_plugs = {}
