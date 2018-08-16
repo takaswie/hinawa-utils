@@ -2,7 +2,6 @@
 # Copyright (C) 2018 Takashi Sakamoto
 
 from struct import pack, unpack
-from math import log10, pow
 
 import gi
 gi.require_version('Hinawa', '2.0')
