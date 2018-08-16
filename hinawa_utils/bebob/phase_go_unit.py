@@ -25,4 +25,4 @@ class PhaseGoUnit(BebobUnit):
         key = (self.vendor_id, self.model_id)
         if key not in self._SUPPORTED_MODELS:
             raise OSError('Not supported.')
-        self.protocol = self._SUPPORTED_MODELS[key]
+        self.protocol = self._SUPPORTED_MODELS[key](self.fcp)
