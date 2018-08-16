@@ -24,8 +24,8 @@ def handle_clock_source(unit, args):
         return True
     print('Arguments for clock-source command:')
     print('  clock-source OPERATION [SOURCE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
-    print('    SOURCE:    {0}'.format(', '.join(unit.SUPPORTED_CLOCK_SOURCES)))
+    print('    OPERATION: {0}'.format('|'.join(ops)))
+    print('    SOURCE:    {0}'.format('|'.join(unit.SUPPORTED_CLOCK_SOURCES)))
     return False
 
 def handle_sampling_rate(unit, args):
@@ -43,9 +43,9 @@ def handle_sampling_rate(unit, args):
         return True
     print('Arguments for sampling-rate command:')
     print('  sampling-rate OPERATION [RATE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    OPERATION: {0}'.format('|'.join(ops)))
     rates = [str(r) for r in unit.SUPPORTED_SAMPLING_RATES]
-    print('    RATE:      {0}'.format(', '.join(rates)))
+    print('    RATE:      {0}'.format('|'.join(rates)))
     return False
 
 def handle_mixer_mode(unit, args):
@@ -60,7 +60,7 @@ def handle_mixer_mode(unit, args):
         return True
     print('Arguments for mixer-mode command:')
     print('  sampling-rate OPERATION [MODE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    OPERATION: {0}'.format('|'.join(ops)))
     print('    MODE:      0, 1')
     return False
 
@@ -79,9 +79,8 @@ def handle_opt_iface(unit, args):
         return True
     print('Arguments for optical-interface command:')
     print('  optical-interface OPERATION [MODE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
-    print('    MODE:      {0}'.format(', '.join(
-                                            unit.SUPPORTED_OPTICAL_INTERFACES)))
+    print('    OPERATION: {0}'.format('|'.join(ops)))
+    print('    MODE:      {0}'.format('|'.join(unit.SUPPORTED_OPTICAL_INTERFACES)))
     return False
 
 def handle_listen_message(self, args):
