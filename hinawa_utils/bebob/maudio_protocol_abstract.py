@@ -23,7 +23,7 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     _ADDR_FOR_METERING = 0xffc700600000
 
     def __init__(self, unit, debug):
-        self._unit = unit
+        self.unit = unit
 
     # For input gains.
     @abstractmethod
@@ -143,25 +143,25 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     def get_sampling_rate_labels(self):
         rates = []
         for rate in AvcConnection.sampling_rates:
-            if not AvcConnection.ask_plug_signal_format(self._unit.fcp,
+            if not AvcConnection.ask_plug_signal_format(self.unit.fcp,
                                                         'input', 0, rate):
                 continue
-            if not AvcConnection.ask_plug_signal_format(self._unit.fcp,
+            if not AvcConnection.ask_plug_signal_format(self.unit.fcp,
                                                         'output', 0, rate):
                 continue
             rates.append(rate)
         return rates
     def set_sampling_rate(self, rate):
-        if self._unit.get_property('streaming'):
+        if self.unit.get_property('streaming'):
             raise ValueError('Packet streaming already runs.')
         if rate not in self.get_sampling_rate_labels():
             raise ValueError('Invalid argument for sampling rate')
-        old_timeout = self._unit.fcp.get_property('timeout')
+        old_timeout = self.unit.fcp.get_property('timeout')
         # The unit tends to respond with larger interval from these requests.
-        self._unit.fcp.set_property('timeout', 500)
-        AvcConnection.set_plug_signal_format(self._unit.fcp, 'input', 0, rate)
-        AvcConnection.set_plug_signal_format(self._unit.fcp, 'output', 0, rate)
-        self._unit.fcp.set_property('timeout', old_timeout)
+        self.unit.fcp.set_property('timeout', 500)
+        AvcConnection.set_plug_signal_format(self.unit.fcp, 'input', 0, rate)
+        AvcConnection.set_plug_signal_format(self.unit.fcp, 'output', 0, rate)
+        self.unit.fcp.set_property('timeout', old_timeout)
     @abstractmethod
     def get_sampling_rate(self):
         pass

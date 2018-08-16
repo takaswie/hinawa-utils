@@ -66,7 +66,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         # For process local cache.
         self._cache = bytearray(160)
         # For permanent cache.
-        guid = self._unit.get_property('guid')
+        guid = self.unit.get_property('guid')
         self.__path = Path('/tmp/hinawa-{0:08x}'.format(guid))
         self.__load_cache()
 
@@ -129,7 +129,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         req = Hinawa.FwReq()
         while True:
             try:
-                req.write(self._unit, self.BASE_ADDR + offset, data)
+                req.write(self.unit, self.BASE_ADDR + offset, data)
                 break
             except Exception as e:
                 if count > 10:
@@ -365,7 +365,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
     def get_meters(self):
         meters = {}
         req = Hinawa.FwReq()
-        data = req.read(self._unit, self._ADDR_FOR_METERING, 84)
+        data = req.read(self.unit, self._ADDR_FOR_METERING, 84)
         meters['switch-0'] = data[0]
         meters['rotery-0'] = data[1]
         meters['rotery-1'] = data[2]
@@ -387,4 +387,4 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
     def get_sampling_rate(self):
         # Current rate is correctly returned from a plug 0 for output direction
         # only.
-        return AvcConnection.get_plug_signal_format(self._unit.fcp, 'output', 0)
+        return AvcConnection.get_plug_signal_format(self.unit.fcp, 'output', 0)

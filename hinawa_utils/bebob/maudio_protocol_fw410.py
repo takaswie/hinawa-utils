@@ -23,7 +23,7 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
             value = 0x01
         else:
             value = 0x00
-        AvcAudio.set_selector_state(self._unit.fcp, 0, 'current',
+        AvcAudio.set_selector_state(self.unit.fcp, 0, 'current',
                                     self.__SELECTOR_FB, value)
 
         if source != 'aux-1/2':
@@ -34,7 +34,7 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
                     data = (0x80, 0x00)
 
                 in_ch = elems[1][0]
-                AvcAudio.set_processing_mixer_state(self._unit.fcp, 0,
+                AvcAudio.set_processing_mixer_state(self.unit.fcp, 0,
                             'current', self.__PROCESSING_OUT_FB,
                             self.__PROCESSING_IN_FB, in_ch,
                             self.__PROCESSING_OUT_CH, data)
@@ -43,14 +43,14 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
         if target not in self.get_headphone_labels():
             raise ValueError('Invalid argument for headphone')
 
-        state = AvcAudio.get_selector_state(self._unit.fcp, 0, 'current',
+        state = AvcAudio.get_selector_state(self.unit.fcp, 0, 'current',
                                             self.__SELECTOR_FB)
         if state == 0x01:
             return 'aux-1/2'
         elif state == 0x00:
             for i, elems in enumerate(self._mixers):
                 in_ch = elems[1][0]
-                data = AvcAudio.get_processing_mixer_state(self._unit.fcp, 0,
+                data = AvcAudio.get_processing_mixer_state(self.unit.fcp, 0,
                             'current',
                             self.__PROCESSING_OUT_FB, self.__PROCESSING_IN_FB,
                             in_ch, self.__PROCESSING_OUT_CH)
