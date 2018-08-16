@@ -17,26 +17,26 @@ __all__ = ['MaudioProtocolSpecial']
 
 class MaudioProtocolSpecial(MaudioProtocolAbstract):
     BASE_ADDR = 0xffc700700000
-    _IDS = (
+    __IDS = (
         0x010071,   # Firewire 1814
         0x010091,   # ProjectMix I/O
     )
 
-    _INPUT_LABELS = (
+    __INPUT_LABELS = (
         'stream-1/2', 'stream-3/4',
         'analog-1/2', 'analog-3/4', 'analog-5/6', 'analog-7/8',
         'spdif-1/2', 'adat-1/2', 'adat-3/4', 'adat-5/6', 'adat-7/8',
     )
 
-    _OUTPUT_LABELS = ('analog-1/2', 'analog-3/4')
+    __OUTPUT_LABELS = ('analog-1/2', 'analog-3/4')
 
-    _HP_LABELS = ('headphone-1/2', 'headphone-3/4')
+    __HP_LABELS = ('headphone-1/2', 'headphone-3/4')
 
-    _MIXER_LABELS = ('mixer-1/2', 'mixer-3/4')
+    __MIXER_LABELS = ('mixer-1/2', 'mixer-3/4')
 
-    _HP_SOURCE_LABELS = ('mixer-1/2', 'mixer-3/4', 'aux-1/2')
+    __HP_SOURCE_LABELS = ('mixer-1/2', 'mixer-3/4', 'aux-1/2')
 
-    _METERING_LABELS = (
+    __METERING_LABELS = (
         'analog-in-1', 'analog-in-2', 'analog-in-3', 'analog-in-4',
         'analog-in-5', 'analog-in-6', 'analog-in-7', 'analog-in-8',
         'spdif-in-1', 'spdif-in-2',
@@ -58,7 +58,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
     # 1999008)'.
 
     def __init__(self, unit, debug):
-        if unit.model_id not in self._IDS:
+        if unit.model_id not in self.__IDS:
             raise OSError('Not supported')
 
         super().__init__(unit, debug)
@@ -67,12 +67,12 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         self._cache = bytearray(160)
         # For permanent cache.
         guid = self._unit.get_property('guid')
-        self._path = Path('/tmp/hinawa-{0:08x}'.format(guid))
-        self._load_cache()
+        self.__path = Path('/tmp/hinawa-{0:08x}'.format(guid))
+        self.__load_cache()
 
     # Read transactions are not allowed. We cache data.
-    def _load_cache(self):
-        if not self._path.exists() or not self._path.is_file():
+    def __load_cache(self):
+        if not self.__path.exists() or not self.__path.is_file():
             # This is initial value.
             cache = [
                 0x00, 0x00, 0x00, 0x00, # gain of inputs from stream 1/2
@@ -117,13 +117,13 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
                 0x00, 0x00, 0x00, 0x00] # source for analog out 1/2 and 3/4
         else:
             cache = bytearray(160)
-            with self._path.open(mode='r') as f:
+            with self.__path.open(mode='r') as f:
                 for i, line in enumerate(f):
                     cache[i] = int(line.strip(), base=16)
 
-        self._write_data(0, cache)
+        self.__write_data(0, cache)
 
-    def _write_data(self, offset, data):
+    def __write_data(self, offset, data):
         # Write to the unit.
         count = 0
         req = Hinawa.FwReq()
@@ -131,7 +131,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
             try:
                 req.write(self._unit, self.BASE_ADDR + offset, data)
                 break
-            except:
+            except Exception as e:
                 if count > 10:
                     raise OSError('Fail to communicate to the unit.')
                 count += 1
@@ -139,191 +139,191 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         for i, datum in enumerate(data):
             self._cache[offset + i] = datum
         # Refresh permanent cache.
-        with self._path.open(mode='w+') as fd:
+        with self.__path.open(mode='w+') as fd:
             for i, datum in enumerate(self._cache):
                 fd.write('{0:02x}\n'.format(datum))
 
-    def _set_volume(self, offset, db):
+    def __set_volume(self, offset, db):
         if offset > len(self._cache):
             raise ValueError('Invalid argument for offset on address space')
         data = AvcAudio.build_data_from_db(db)
-        self._write_data(offset, data)
-    def _get_volume(self, offset):
+        self.__write_data(offset, data)
+    def __get_volume(self, offset):
         if offset > len(self._cache):
             raise ValueError('Invalid argument for offset on address space')
         return AvcAudio.parse_data_to_db(self._cache[offset:offset + 2])
 
     def get_input_labels(self):
-        return self._INPUT_LABELS
-    def _get_input_gain_offset(self, target, ch):
-        if target not in self._INPUT_LABELS:
+        return self.__INPUT_LABELS
+    def __get_input_gain_offset(self, target, ch):
+        if target not in self.__INPUT_LABELS:
             raise ValueError('invalid argument for input stereo pair')
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
-        offset = self._INPUT_LABELS.index(target) * 4
+        offset = self.__INPUT_LABELS.index(target) * 4
         if offset >= 8:
             offset += 8
         return offset + ch * 2
     def set_input_gain(self, target, ch, db):
-        offset = self._get_input_gain_offset(target, ch)
-        self._set_volume(offset, db)
+        offset = self.__get_input_gain_offset(target, ch)
+        self.__set_volume(offset, db)
     def get_input_gain(self, target, ch):
-        offset = self._get_input_gain_offset(target, ch)
-        return self._get_volume(offset)
+        offset = self.__get_input_gain_offset(target, ch)
+        return self.__get_volume(offset)
 
     def get_input_balance_labels(self):
         labels = []
-        for label in self._INPUT_LABELS:
+        for label in self.__INPUT_LABELS:
             if label.find('stream-') == 0:
                 continue
             labels.append(label)
         return labels
     def set_input_balance(self, target, ch, balance):
-        if target not in self._INPUT_LABELS:
+        if target not in self.__INPUT_LABELS:
             raise ValueError('invalid argument for input stereo pair')
-        offset = (self._INPUT_LABELS.index(target) - 2 + 16) * 4 + ch * 2
+        offset = (self.__INPUT_LABELS.index(target) - 2 + 16) * 4 + ch * 2
         data = AvcAudio.build_data_from_db(balance)
-        self._write_status(offset, data)
+        self.__write_data(offset, data)
     def get_input_balance(self, target, ch):
-        if target not in self._INPUT_LABELS:
+        if target not in self.__INPUT_LABELS:
             raise ValueError('invalid argument for input stereo pair')
-        offset = (self._INPUT_LABELS.index(target) - 2 + 16) * 4 + ch * 2
+        offset = (self.__INPUT_LABELS.index(target) - 2 + 16) * 4 + ch * 2
         data = self._cache[offset:offset + 2]
         return AvcAudio.parse_data_to_db(data)
 
     def get_output_labels(self):
-        return self._OUTPUT_LABELS
-    def _set_output_volume_offset(self, target, ch):
-        if target not in self._OUTPUT_LABELS:
+        return self.__OUTPUT_LABELS
+    def __set_output_volume_offset(self, target, ch):
+        if target not in self.__OUTPUT_LABELS:
             raise ValueError('invalid argument for output stereo pair')
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
-        return 8 + self._OUTPUT_LABELS.index(target) * 4 + ch * 2
+        return 8 + self.__OUTPUT_LABELS.index(target) * 4 + ch * 2
     def set_output_volume(self, target, ch, value):
-        offset = self._set_output_volume_offset(target, ch)
-        self._set_volume(offset, value)
+        offset = self.__set_output_volume_offset(target, ch)
+        self.__set_volume(offset, value)
     def get_output_volume(self, target, ch):
-        offset = self._set_output_volume_offset(target, ch)
-        return self._get_volume(offset)
+        offset = self.__set_output_volume_offset(target, ch)
+        return self.__get_volume(offset)
 
-    def _get_aux_volume_offset(self, ch):
+    def __get_aux_volume_offset(self, ch):
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
         return 52 + ch * 2
     def set_aux_volume(self, ch, value):
-        offset = self._get_aux_volume_offset(ch)
-        self._set_volume(offset, value)
+        offset = self.__get_aux_volume_offset(ch)
+        self.__set_volume(offset, value)
     def get_aux_volume(self, ch):
-        offset = self._get_aux_volume_offset(ch)
-        return self._get_volume(offset)
+        offset = self.__get_aux_volume_offset(ch)
+        return self.__get_volume(offset)
 
     def get_headphone_labels(self):
-        return self._HP_LABELS
-    def _get_headphone_volume_offset(self, target, ch):
-        if target not in self._HP_LABELS:
+        return self.__HP_LABELS
+    def __get_headphone_volume_offset(self, target, ch):
+        if target not in self.__HP_LABELS:
             raise ValueError('invalid argument for heaphone stereo pair')
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
-        return 56 + self._HP_LABELS.index(target) * 4 + ch * 2
+        return 56 + self.__HP_LABELS.index(target) * 4 + ch * 2
     def set_headphone_volume(self, target, ch, value):
-        offset = self._get_headphone_volume_offset(target, ch)
-        self._set_volume(offset, value)
+        offset = self.__get_headphone_volume_offset(target, ch)
+        self.__set_volume(offset, value)
     def get_headphone_volume(self, target, ch):
-        offset = self._get_headphone_volume_offset(target, ch)
-        return self._get_volume(offset)
+        offset = self.__get_headphone_volume_offset(target, ch)
+        return self.__get_volume(offset)
 
     def get_aux_input_labels(self):
-        return self._INPUT_LABELS
-    def _get_aux_input_offset(self, target, ch):
-        if target not in self._INPUT_LABELS:
+        return self.__INPUT_LABELS
+    def __get_aux_input_offset(self, target, ch):
+        if target not in self.__INPUT_LABELS:
             raise ValueError('Invalid argument for input stereo pair')
         if ch > 1:
             raise ValueError('Invalid argument for stereo pair channel')
-        return 104 + self._INPUT_LABELS.index(target) * 4 + ch * 2
+        return 104 + self.__INPUT_LABELS.index(target) * 4 + ch * 2
     def set_aux_input(self, target, ch, value):
-        offset = self._get_aux_input_offset(target, ch)
-        self._set_volume(offset, value)
+        offset = self.__get_aux_input_offset(target, ch)
+        self.__set_volume(offset, value)
     def get_aux_input(self, target, ch):
-        offset = self._get_aux_input_offset(target, ch)
-        return self._get_volume(offset)
+        offset = self.__get_aux_input_offset(target, ch)
+        return self.__get_volume(offset)
 
     def get_mixer_labels(self):
-        return self._MIXER_LABELS
+        return self.__MIXER_LABELS
     def get_mixer_source_labels(self):
-        return self._INPUT_LABELS
-    def _calculate_mixer_input_bit(self, mixer, source):
-        if mixer not in self._MIXER_LABELS:
+        return self.__INPUT_LABELS
+    def __calculate_mixer_input_bit(self, mixer, source):
+        if mixer not in self.__MIXER_LABELS:
             raise ValueError('invalid argument for mixer stereo pair')
-        if source not in self._INPUT_LABELS:
+        if source not in self.__INPUT_LABELS:
             raise ValueError('Invalid argument for source stereo pair')
         if source.find('stream') == 0:
             pos = 0
             if source == 'stream-3/4':
                 pos = 2
-            pos = pos + self._MIXER_LABELS.index(mixer)
+            pos = pos + self.__MIXER_LABELS.index(mixer)
         else:
             if source.find('analog') == 0:
-                pos = self._MIXER_LABELS.index(mixer) * 4
-                pos = pos + self_._INPUT_LABELS.index(source) - 2
+                pos = self.__MIXER_LABELS.index(mixer) * 4
+                pos = pos + self.__INPUT_LABELS.index(source) - 2
             else:
-                pos = 16 + (self._INPUT_LABELS.index(source) - 6) * 2
-                pos = pos + self._MIXER_LABELS.index(mixer)
+                pos = 16 + (self.__INPUT_LABELS.index(source) - 6) * 2
+                pos = pos + self.__MIXER_LABELS.index(mixer)
         return pos
-    def _get_mixer_offset(self, source):
+    def __get_mixer_offset(self, source):
         if source.find('stream') == 0:
             offset = 148
         else:
             offset = 142
         return offset
     def set_mixer_routing(self, mixer, source, enable):
-        pos = self._calculate_mixer_input_bit(mixer, source)
-        offset = self._get_mixer_offset(source)
+        pos = self.__calculate_mixer_input_bit(mixer, source)
+        offset = self.__get_mixer_offset(source)
         val = unpack('>I', self._cache[offset:offset + 4])[0]
         if enable > 0:
             val |= (1 << pos)
         else:
             val &= ~(1 << pos)
         data = pack('>I', val)
-        self._write_data(offset, data)
+        self.__write_data(offset, data)
     def get_mixer_routing(self, mixer, source):
-        pos = self._calculate_mixer_input_bit(mixer, source)
-        offset = self._get_mixer_offset(source)
+        pos = self.__calculate_mixer_input_bit(mixer, source)
+        offset = self.__get_mixer_offset(source)
         val = unpack('>I', self._cache[offset:offset + 4])[0]
         return bool(val & (1 << pos))
 
     def get_headphone_source_labels(self, target):
-        return self._HP_SOURCE_LABELS
+        return self.__HP_SOURCE_LABELS
     def set_headphone_source(self, target, source):
-        if target not in self._HP_LABELS:
+        if target not in self.__HP_LABELS:
             raise ValueError('Invalid argument for output stereo pair')
-        if source not in self._HP_SOURCE_LABELS:
+        if source not in self.__HP_SOURCE_LABELS:
             raise ValueError('Invalid argument for headphone source')
-        index = (self._HP_LABELS.index(target) + 1) % 2
-        pos = self._HP_SOURCE_LABELS.index(source)
+        index = (self.__HP_LABELS.index(target) + 1) % 2
+        pos = self.__HP_SOURCE_LABELS.index(source)
         offset = 152
         vals = list(unpack('>2H', self._cache[offset:offset + 4]))
         vals[index] = 1 << pos
         data = pack('>2H', vals[0], vals[1])
-        self._write_data(offset, data)
+        self.__write_data(offset, data)
     def get_headphone_source(self, target):
-        if target not in self._HP_LABELS:
+        if target not in self.__HP_LABELS:
             raise ValueError('Invalid argument for output stereo pair')
-        index = (self._HP_LABELS.index(target) + 1) % 2
+        index = (self.__HP_LABELS.index(target) + 1) % 2
         offset = 152
         vals = unpack('>2H', self._cache[offset:offset + 4])
-        for i, source in enumerate(self._HP_SOURCE_LABELS):
+        for i, source in enumerate(self.__HP_SOURCE_LABELS):
             if vals[index] & (1 << i):
                 return source
         else:
             raise IOError('Unexpected state of register cache')
 
-    def _calculate_output_source_bit(self, target):
-        if target not in self._OUTPUT_LABELS:
+    def __calculate_output_source_bit(self, target):
+        if target not in self.__OUTPUT_LABELS:
             raise ValueError('Invalid argument for output stereo pair')
-        return self._OUTPUT_LABELS.index(target)
+        return self.__OUTPUT_LABELS.index(target)
     def get_output_source_labels(self, target):
         labels = []
-        if target not in self._OUTPUT_LABELS:
+        if target not in self.__OUTPUT_LABELS:
             raise ValueError('Invalid argument for output stereo pair')
         if target.find('1/2') > 0:
             labels.append('mixer-1/2')
@@ -332,9 +332,9 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         labels.append('aux-1/2')
         return labels
     def set_output_source(self, target, source):
-        if target not in self._OUTPUT_LABELS:
+        if target not in self.__OUTPUT_LABELS:
             raise ValueError('Invalid argument for output stereo pair')
-        pos = self._OUTPUT_LABELS.index(target)
+        pos = self.__OUTPUT_LABELS.index(target)
         labels = self.get_output_source_labels(target)
         if source not in labels:
             raise ValueError('Invalid argument for output source pair')
@@ -345,11 +345,11 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         else:
             val &= ~(1 << pos)
         data = pack('>I', val)
-        self._write_data(offset, data)
+        self.__write_data(offset, data)
     def get_output_source(self, target):
-        if target not in self._OUTPUT_LABELS:
+        if target not in self.__OUTPUT_LABELS:
             raise ValueError('Invalid argument for output stereo pair')
-        pos = self._OUTPUT_LABELS.index(target)
+        pos = self.__OUTPUT_LABELS.index(target)
         labels = self.get_output_source_labels(target)
         offset = 156
         val = unpack('>I', self._cache[offset:offset + 4])[0]
@@ -371,7 +371,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         meters['rotery-1'] = data[2]
         meters['rotery-2'] = data[3]
         data = data[4:]
-        for i, label in enumerate(self._METERING_LABELS):
+        for i, label in enumerate(self.__METERING_LABELS):
             meters[label] = unpack('>H', data[i * 2:(i + 1) * 2])[0]
         meters['rate'] = AvcConnection.sampling_rates[(data[-1] >> 8) & 0x0f]
         meters['sync'] = (data[-1] & 0x0f) > 0
