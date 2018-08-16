@@ -19,6 +19,10 @@ stream-spdif-in-source set opt-iface
 stream-spdif-in-source set coax-iface
 stream-spdif-in-source get
 
+input-threshold set -inf
+input-threshold set -45.0
+input-threshold get
+
 master-fader get
 master-fader set False
 master-fader set True

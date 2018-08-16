@@ -24,6 +24,10 @@ stream-spdif-in-source set opt-iface
 stream-spdif-in-source set coax-iface
 stream-spdif-in-source get
 
+input-threshold set -inf
+input-threshold set -45.0
+input-threshold get
+
 monitor-input Analog-1 mute get
 monitor-input Analog-2 mute get
 monitor-input Analog-3 mute get
