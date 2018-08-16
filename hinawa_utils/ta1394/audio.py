@@ -8,10 +8,10 @@ from hinawa_utils.ta1394.general import AvcGeneral
 __all__ = ['AvcAudio']
 
 class AvcAudio():
-    attributes = ('resolution', 'minimum', 'maximum', 'default', 'duration',
+    ATTRIBUTES = ('resolution', 'minimum', 'maximum', 'default', 'duration',
                   'current', 'move', 'delta')
 
-    attribute_values = {
+    ATTRIBUTE_VALUES = {
         'resolution':   0x01,
         'minimum':      0x02,
         'maximum':      0x03,
@@ -38,7 +38,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x80)   # Selector function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x02)   # Selector length is 2
         args.append(value)
         args.append(0x01)   # Selector control
@@ -58,7 +58,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x80)   # Selector function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x02)   # Selector length is 2
         args.append(0xff)
         args.append(0x01)   # Selector control
@@ -85,7 +85,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x01)   # Mute control
@@ -109,7 +109,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x01)   # Mute control
@@ -128,7 +128,7 @@ class AvcAudio():
     def set_feature_volume_state(cls, fcp, subunit_id, attr, fb_id, ch, data):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if attr not in cls.attributes:
+        if attr not in cls.ATTRIBUTES:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -142,7 +142,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x02)   # Volume control
@@ -154,7 +154,7 @@ class AvcAudio():
     def get_feature_volume_state(cls, fcp, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if attr not in cls.attributes:
+        if attr not in cls.ATTRIBUTES:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -166,7 +166,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x02)   # Volume control
@@ -181,7 +181,7 @@ class AvcAudio():
     def set_feature_lr_state(cls, fcp, subunit_id, attr, fb_id, ch, data):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if attr not in cls.attributes:
+        if attr not in cls.ATTRIBUTES:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -195,7 +195,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x03)   # LR control
@@ -207,7 +207,7 @@ class AvcAudio():
     def get_feature_lr_state(cls, fcp, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if attr not in cls.attributes:
+        if attr not in cls.ATTRIBUTES:
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -219,7 +219,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x81)   # Feature function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x02)   # Selector length is 2
         args.append(ch)
         args.append(0x03)   # LR control
@@ -254,7 +254,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x82)   # Processing function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x04)   # Selector length is 4
         args.append(in_fb)
         args.append(in_ch)
@@ -286,7 +286,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x82)   # Processing function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x04)   # Selector length is 4
         args.append(in_fb)
         args.append(in_ch)
@@ -320,7 +320,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x82)   # Processing function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x04)   # Selector length is 4
         args.append(in_fb)
         args.append(0xff)
@@ -349,7 +349,7 @@ class AvcAudio():
         args.append(0xb8)
         args.append(0x82)   # Processing function block
         args.append(fb_id)
-        args.append(cls.attribute_values[attr])
+        args.append(cls.ATTRIBUTE_VALUES[attr])
         args.append(0x04)   # Selector length is 4
         args.append(in_fb)
         args.append(0xff)
