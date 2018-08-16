@@ -3,8 +3,6 @@
 
 from hinawa_utils.bebob.maudio_protocol_normal import MaudioProtocolNormal
 
-from hinawa_utils.ta1394.general import AvcConnection
-from hinawa_utils.ta1394.ccm import AvcCcm
 from hinawa_utils.ta1394.audio import AvcAudio
 
 __all__ = ['MaudioProtocolNormal']
@@ -56,7 +54,6 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
                             'current',
                             self._PROCESSING_OUT_FB, self._PROCESSING_IN_FB,
                             in_ch, self._PROCESSING_OUT_CH)
-                print(data)
                 if data[0] == 0x00 and data[1] == 0x00:
                     return self._labels['mixers'][i]
 
