@@ -357,7 +357,12 @@ class BcoSubunitInfo():
         args[2] = 0x31
         args[3] = page
         args[4] = 0xff
-        params = AvcGeneral.command_status(fcp, args)
+        try:
+            params = AvcGeneral.command_status(fcp, args)
+        except Exception as e:
+            if str(e) == 'Not implemented':
+                return []
+            raise
         entries = []
         for i in range(5):
             if params[5 + 5 * i] == 0xff:

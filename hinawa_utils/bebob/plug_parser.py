@@ -131,12 +131,12 @@ class PlugParser(BebobUnit):
                 fbs = {}
 
                 entries = []
-                for i in range(0xff):
-                    try:
-                        entries.extend(BcoSubunitInfo.get_subunit_fb_info(
-                                self.fcp, subunit_type, subunit_id, i, 0xff))
-                    except:
+                for page in range(0xff):
+                    elems = BcoSubunitInfo.get_subunit_fb_info(self.fcp,
+                                        subunit_type, subunit_id, page, 0xff)
+                    if len(elems) == 0:
                         break
+                    entries.extend(elems)
 
                 for entry in entries:
                     fb_type = entry['type']
