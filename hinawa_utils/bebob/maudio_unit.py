@@ -7,7 +7,6 @@ from hinawa_utils.bebob.bebob_unit import BebobUnit
 
 from hinawa_utils.bebob.maudio_protocol_normal import MaudioProtocolNormal
 from hinawa_utils.bebob.maudio_protocol_fw410 import MaudioProtocolFw410
-from hinawa_utils.bebob.maudio_protocol_audiophile import MaudioProtocolAudiophile
 from hinawa_utils.bebob.maudio_protocol_special import MaudioProtocolSpecial
 
 __all__ = ['MaudioUnit']
@@ -17,7 +16,7 @@ class MaudioUnit(BebobUnit):
         # (VendorID, ModelID): Protocol
         (0x000d6c, 0x00000a): MaudioProtocolNormal,     # Ozonic
         (0x000d6c, 0x010062): MaudioProtocolNormal,     # Firewire Solo
-        (0x000d6c, 0x010060): MaudioProtocolAudiophile, # Firewire Audiophile
+        (0x000d6c, 0x010060): MaudioProtocolNormal,     # Firewire Audiophile
         (0x000d6c, 0x010081): MaudioProtocolNormal,     # NRV10
         (0x000d6c, 0x0100a1): MaudioProtocolNormal,     # Profire Lightbridge
         (0x0007f5, 0x010046): MaudioProtocolFw410,      # Firewire 410
