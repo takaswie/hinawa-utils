@@ -351,7 +351,7 @@ class BcoSubunitInfo():
             raise ValueError('Invalid argument for subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for subunit id')
-        args = bytearray(0xff for i in range(29))
+        args = bytearray(0xff for i in range(30))
         args[0] = 0x01
         args[1] = (AvcGeneral.subunit_types.index(subunit_type) << 3) | subunit_id
         args[2] = 0x31
