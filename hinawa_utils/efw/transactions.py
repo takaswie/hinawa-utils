@@ -84,7 +84,7 @@ class EftInfo():
         'guitar string'
     )
 
-    _MODELS = {
+    __MODELS = {
         'Audiofire2':           0x000af2,
         'Audiofire4':           0x000af4,
         'Audiofire8':           0x000af8,
@@ -100,7 +100,7 @@ class EftInfo():
         'AudioPunk':            0x00afb9,
     }
 
-    _FEATURE_FLAGS = {
+    __FEATURE_FLAGS = {
         'changeable-resp-addr':    0x0001,
         'control-room-mirroring':  0x0002,
         'spdif-coax':              0x0004,
@@ -119,7 +119,7 @@ class EftInfo():
         'robot-battery-charge':    0x8000,
     }
 
-    _CLOCK_FLAGS = {
+    __CLOCK_FLAGS = {
         'internal':    0x0001,
         'syt-match':   0x0002,
         'word-clock':  0x0004,
@@ -129,14 +129,14 @@ class EftInfo():
         'continuous':  0x0040,
     }
 
-    _MIDI_FLAGS = {
+    __MIDI_FLAGS = {
         'midi-in-1':        0x00000100,
         'midi-out-1':       0x00000200,
         'midi-in-2':        0x00000400,
         'midi-out-2':       0x00000800,
     }
 
-    _ROBOT_FLAGS = {
+    __ROBOT_FLAGS = {
         'battery-charging': 0x20000000,
         'stereo-connect':   0x40000000,
         'hex-signal':       0x80000000,
@@ -152,7 +152,7 @@ class EftInfo():
     def get_spec(cls, unit):
         params = cls._execute_command(unit, 0, None)
         info = {}
-        for model, value in cls._MODELS.items():
+        for model, value in cls.__MODELS.items():
             if value == params[3]:
                 info['model'] = model
                 break
@@ -172,19 +172,19 @@ class EftInfo():
         params = cls._execute_command(unit, 1, None)
         metering = {}
         metering['clocks'] = {}
-        for name, flag in cls._CLOCK_FLAGS.items():
+        for name, flag in cls.__CLOCK_FLAGS.items():
             if params[0] & flag:
                 metering['clocks'][name] = True
             else:
                 metering['clocks'][name] = False
         metering['midi'] = {}
-        for name, flag in cls._MIDI_FLAGS.items():
+        for name, flag in cls.__MIDI_FLAGS.items():
             if params[0] & flag:
                 metering['midi'][name] = True
             else:
                 metering['midi'][name] = False
         metering['robot'] = {}
-        for name, flag in cls._ROBOT_FLAGS.items():
+        for name, flag in cls.__ROBOT_FLAGS.items():
             if params[0] & flag:
                 metering['robot'][name] = True
             else:
@@ -253,7 +253,7 @@ class EftInfo():
     @classmethod
     def _parse_capability(cls, params):
         caps = {}
-        for name, flag in cls._FEATURE_FLAGS.items():
+        for name, flag in cls.__FEATURE_FLAGS.items():
             if params[0] & flag:
                 caps[name] = True
             else:
@@ -263,7 +263,7 @@ class EftInfo():
     @classmethod
     def _parse_clock_source(cls, params):
         srcs = {}
-        for name, flag in cls._CLOCK_FLAGS.items():
+        for name, flag in cls.__CLOCK_FLAGS.items():
             if params[21] & flag:
                 srcs[name] = True
             else:
@@ -438,7 +438,7 @@ class EftHwctl():
     }
 
     # Internal parameters
-    _BOX_STATE_POSITIONS = {
+    __BOX_STATE_POSITIONS = {
         # identifier            shift
         'internal-multiplexer':  0,
         'spdif-pro':             1,
@@ -489,7 +489,7 @@ class EftHwctl():
         for name, state in states.items():
             if name not in cls.SUPPORTED_BOX_STATES:
                 raise ValueError('Invalid value in box states')
-            shift  = cls._BOX_STATE_POSITIONS[name]
+            shift  = cls.__BOX_STATE_POSITIONS[name]
             if cls.SUPPORTED_BOX_STATES[name].index(state) is 0:
                 mask_clear |= (1 << shift)
             else:
@@ -503,7 +503,7 @@ class EftHwctl():
     def get_box_states(cls, unit):
         params = cls._execute_command(unit, 4, None)
         states = {}
-        for name, shift in cls._BOX_STATE_POSITIONS.items():
+        for name, shift in cls.__BOX_STATE_POSITIONS.items():
             index = (params[0] >> shift) & 0x01
             states[name] = cls.SUPPORTED_BOX_STATES[name][index]
         return states
