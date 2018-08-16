@@ -8,10 +8,10 @@ from hinawa_utils.ta1394.audio import AvcAudio
 __all__ = ['MaudioProtocolNormal']
 
 class MaudioProtocolFw410(MaudioProtocolNormal):
-    _SELECTOR_FB        = 0x07
-    _PROCESSING_OUT_FB  = 0x07
-    _PROCESSING_IN_FB   = 0x00
-    _PROCESSING_OUT_CH  = 0x01
+    __SELECTOR_FB        = 0x07
+    __PROCESSING_OUT_FB  = 0x07
+    __PROCESSING_IN_FB   = 0x00
+    __PROCESSING_OUT_CH  = 0x01
 
     def set_headphone_source(self, target, source):
         if target not in self.get_headphone_labels():
@@ -24,7 +24,7 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
         else:
             value = 0x00
         AvcAudio.set_selector_state(self._unit.fcp, 0, 'current',
-                                    self._SELECTOR_FB, value)
+                                    self.__SELECTOR_FB, value)
 
         if source != 'aux-1/2':
             for i, elems in enumerate(self._mixers):
@@ -35,16 +35,16 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
 
                 in_ch = elems[1][0]
                 AvcAudio.set_processing_mixer_state(self._unit.fcp, 0,
-                            'current', self._PROCESSING_OUT_FB,
-                            self._PROCESSING_IN_FB, in_ch,
-                            self._PROCESSING_OUT_CH, data)
+                            'current', self.__PROCESSING_OUT_FB,
+                            self.__PROCESSING_IN_FB, in_ch,
+                            self.__PROCESSING_OUT_CH, data)
 
     def get_headphone_source(self, target):
         if target not in self.get_headphone_labels():
             raise ValueError('Invalid argument for headphone')
 
         state = AvcAudio.get_selector_state(self._unit.fcp, 0, 'current',
-                                            self._SELECTOR_FB)
+                                            self.__SELECTOR_FB)
         if state == 0x01:
             return 'aux-1/2'
         elif state == 0x00:
@@ -52,8 +52,8 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
                 in_ch = elems[1][0]
                 data = AvcAudio.get_processing_mixer_state(self._unit.fcp, 0,
                             'current',
-                            self._PROCESSING_OUT_FB, self._PROCESSING_IN_FB,
-                            in_ch, self._PROCESSING_OUT_CH)
+                            self.__PROCESSING_OUT_FB, self.__PROCESSING_IN_FB,
+                            in_ch, self.__PROCESSING_OUT_CH)
                 if data[0] == 0x00 and data[1] == 0x00:
                     return self._labels['mixers'][i]
 
