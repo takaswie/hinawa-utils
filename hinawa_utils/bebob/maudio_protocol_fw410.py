@@ -27,8 +27,8 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
                                     self.__SELECTOR_FB, value)
 
         if source != 'aux-1/2':
-            for i, elems in enumerate(self._mixers):
-                if self._labels['mixers'][i] == source:
+            for i, elems in enumerate(self.mixers):
+                if self.labels['mixers'][i] == source:
                     data = (0x00, 0x00)
                 else:
                     data = (0x80, 0x00)
@@ -48,14 +48,14 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
         if state == 0x01:
             return 'aux-1/2'
         elif state == 0x00:
-            for i, elems in enumerate(self._mixers):
+            for i, elems in enumerate(self.mixers):
                 in_ch = elems[1][0]
                 data = AvcAudio.get_processing_mixer_state(self.unit.fcp, 0,
                             'current',
                             self.__PROCESSING_OUT_FB, self.__PROCESSING_IN_FB,
                             in_ch, self.__PROCESSING_OUT_CH)
                 if data[0] == 0x00 and data[1] == 0x00:
-                    return self._labels['mixers'][i]
+                    return self.labels['mixers'][i]
 
         # No sources are set. For convenience, set 'mixer-1/2'.
         self.set_headphone_source('headphone-1/2', 'mixer-1/2')
