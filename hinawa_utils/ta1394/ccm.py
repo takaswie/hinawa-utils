@@ -6,12 +6,12 @@ from hinawa_utils.ta1394.general import AvcGeneral
 __all__ = ['AvcCcm']
 
 class AvcCcm():
-    plug_mode = ('unit', 'subunit')
-    plug_unit_type = ('isoc', 'external')
+    PLUG_MODE = ('unit', 'subunit')
+    PLUG_UNIT_TYPE = ('isoc', 'external')
 
     @classmethod
     def get_unit_signal_addr(cls, type, plug):
-        if type not in cls.plug_unit_type:
+        if type not in cls.PLUG_UNIT_TYPE:
             raise ValueError('Invalid argument for plug unit type')
         if plug >= 30:
             raise ValueError('Invalid argument for plug number')
