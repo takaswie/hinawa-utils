@@ -2,6 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
+import signal
+
+from gi.repository import GLib
+
 from hinawa_utils.misc.cui_kit import CuiKit
 from hinawa_utils.dg00x.dg00x_unit import Dg00xUnit
 
@@ -21,7 +25,7 @@ def handle_clock_source(unit, args):
     print('Arguments for clock-source command:')
     print('  clock-source OPERATION [SOURCE]')
     print('    OPERATION: {0}'.format(', '.join(ops)))
-    print('    SOURCE:    {0}'.format(', '.join(unit.supported_clock_sources)))
+    print('    SOURCE:    {0}'.format(', '.join(unit.SUPPORTED_CLOCK_SOURCES)))
     return False
 
 def handle_sampling_rate(unit, args):
@@ -40,7 +44,7 @@ def handle_sampling_rate(unit, args):
     print('Arguments for sampling-rate command:')
     print('  sampling-rate OPERATION [RATE]')
     print('    OPERATION: {0}'.format(', '.join(ops)))
-    rates = [str(r) for r in unit.supported_sampling_rates]
+    rates = [str(r) for r in unit.SUPPORTED_SAMPLING_RATES]
     print('    RATE:      {0}'.format(', '.join(rates)))
     return False
 
@@ -77,12 +81,10 @@ def handle_opt_iface(unit, args):
     print('  optical-interface OPERATION [MODE]')
     print('    OPERATION: {0}'.format(', '.join(ops)))
     print('    MODE:      {0}'.format(', '.join(
-                                            unit.supported_optical_interfaces)))
+                                            unit.SUPPORTED_OPTICAL_INTERFACES)))
     return False
 
 def handle_listen_message(self, args):
-    from gi.repository import GLib
-    import signal
     loop = GLib.MainLoop()
     def handle_unix_signal():
         loop.quit()
