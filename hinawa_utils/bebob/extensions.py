@@ -377,11 +377,11 @@ class BcoSubunitInfo():
         return entries
 
 class BcoVendorDependent():
-    supported_spec = ('con', 'pro')
-    addr_dir = ('input', 'output')
+    SUPPORTED_SPEC = ('con', 'pro')
+    ADDR_DIR = ('input', 'output')
 
     # For IEC 60958-1, a.k.a. 'concumer' or 'S/PDIF'
-    supported_con_status = {
+    SUPPORTED_CON_STATUS = {
         # name, the number of values
         'consumerUse':             1,
         'linearPCM':               1,
@@ -398,7 +398,7 @@ class BcoVendorDependent():
     }
 
     # For IEC 60958-3, a.k.a 'professional' or 'AES'
-    supported_pro_status = {
+    SUPPORTED_PRO_STATUS = {
         # name, the number of values
         'profesionalUse':          1,
         'linearPCM':               1,
@@ -421,7 +421,7 @@ class BcoVendorDependent():
         'cyclicRedundancyCheck':   1,
     }
 
-    _con_subcmds = {
+    __CON_SUBCMDS = {
         'consumerUse':             0x00,
         'linearPCM':               0x01,
         'copyRight':               0x02,
@@ -436,7 +436,7 @@ class BcoVendorDependent():
         'sampleWordLength':        0x0b,
     }
 
-    _pro_subcmds = {
+    __PRO_SUBCMDS = {
         'profesionalUse':          0x00,
         'linearPCM':               0x01,
         'audioSignalEmphasis':     0x02,
@@ -461,11 +461,11 @@ class BcoVendorDependent():
     @classmethod
     def set_digital_channel_status(cls, fcp, spec, name, values):
         if   spec is 'con':
-            attrs = BcoVendorDependent.supported_con_status
-            subcmds  = BcoVendorDependent._con_subcmds
+            attrs = cls.SUPPORTED_CON_STATUS
+            subcmds  = cls.__CON_SUBCMDS
         elif spec is 'pro':
-            attrs = BcoVendorDependent.supported_pro_status
-            subcmds = BcoVendorDependent._pro_subcmds
+            attrs = cls.SUPPORTED_PRO_STATUS
+            subcmds = cls.__PRO_SUBCMDS
         else:
             raise ValueError('Invalid argument for specification name')
         if name not in attrs:
@@ -477,7 +477,7 @@ class BcoVendorDependent():
         args[0] = 0x00
         args[1] = 0xff
         args[2] = 0x00
-        args[3] = BcoVendorDependent.supported_spec.index(spec)
+        args[3] = cls.SUPPORTED_SPEC.index(spec)
         args[4] = subcmds[name]
         args[5] = attrs[name]
         if attrs[name] == 1:
@@ -490,11 +490,11 @@ class BcoVendorDependent():
     @classmethod
     def get_digital_channel_status(cls, fcp, spec, name):
         if   spec is 'con':
-            attrs = BcoVendorDependent.supported_con_status
-            subcmds  = BcoVendorDependent._con_subcmds
+            attrs = cls.SUPPORTED_CON_STATUS
+            subcmds  = cls.__CON_SUBCMDS
         elif spec is 'pro':
-            attrs = BcoVendorDependent.supported_pro_status
-            subcmds = BcoVendorDependent._pro_subcmds
+            attrs = cls.SUPPORTED_PRO_STATUS
+            subcmds = cls.__PRO_SUBCMDS
         else:
             raise ValueError('Invalid argument for specification name')
         if name not in attrs:
@@ -503,7 +503,7 @@ class BcoVendorDependent():
         args[0] = 0x01
         args[1] = 0xff
         args[2] = 0x00
-        args[3] = BcoVendorDependent.supported_spec.index(spec)
+        args[3] = cls.SUPPORTED_SPEC.index(spec)
         args[4] = subcmds[name]
         args[5] = attrs[name]
         params = AvcGeneral.command_status(fcp, args)
@@ -511,13 +511,13 @@ class BcoVendorDependent():
 
     @classmethod
     def get_stream_detection(cls, fcp, company_ids, dir, ext_plug):
-        if dir not in BcoVendorDependent.addr_dir:
+        if dir not in cls.ADDR_DIR:
             raise ValueError('Invalid argument for address direction')
         if ext_plug >= 255:
             raise ValueError('Invalid argument for external plug number')
         args = bytearray()
         args.append(0x00)
-        args.append(BcoVendorDependent.addr_dir.index(dir))
+        args.append(cls.ADDR_DIR.index(dir))
         args.append(ext_plug)
         args.append(0xff)
         params = AvcGeneral.get_vendor_dependent(fcp, company_ids, args)
