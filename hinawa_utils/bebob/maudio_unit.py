@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from struct import unpack
-
 from hinawa_utils.bebob.bebob_unit import BebobUnit
 
 from hinawa_utils.bebob.maudio_protocol_normal import MaudioProtocolNormal
