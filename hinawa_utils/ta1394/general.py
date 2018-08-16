@@ -8,7 +8,7 @@ from gi.repository import Hinawa
 __all__ = ['AvcGeneral', 'AvcConnection']
 
 class AvcGeneral():
-    subunit_types = ('monitor', 'audio', 'printer', 'disc',
+    SUBUNIT_TYPES = ('monitor', 'audio', 'printer', 'disc',
                      'tape-recorder-player', 'tuner', 'ca', 'camera',
                      'reserved', 'panel', 'bulletin-board', 'camera storate',
                      'music')
@@ -90,7 +90,7 @@ class AvcGeneral():
         args.append(0xff)
         params = cls.command_status(fcp, args)
         info = {}
-        info['subunit-type'] = cls.subunit_types[params[4] >> 3]
+        info['subunit-type'] = cls.SUBUNIT_TYPES[params[4] >> 3]
         info['maximum-id'] = params[4] & 0x07
         # ignoring extended_subunit_type and extended_subunit_ID
         return info
@@ -153,13 +153,13 @@ class AvcConnection():
 
     @classmethod
     def get_subunit_plug_info(cls, fcp, subunit_type, subunit_id):
-        if subunit_type not in AvcGeneral.subunit_types:
+        if subunit_type not in AvcGeneral.SUBUNIT_TYPES:
             raise ValueError('Invalid argument for subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for subunit id')
         args = bytearray()
         args.append(0x01)
-        args.append((AvcGeneral.subunit_types.index(subunit_type) << 3) | subunit_id)
+        args.append((AvcGeneral.SUBUNIT_TYPES.index(subunit_type) << 3) | subunit_id)
         args.append(0x02)
         args.append(0x00)
         args.append(0xff)

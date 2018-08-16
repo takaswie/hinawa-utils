@@ -46,7 +46,7 @@ class BcoPlugInfo():
     def get_subunit_addr(cls, addr_dir, subunit_type, subunit_id, plug):
         if addr_dir not in cls.addr_dir:
             raise ValueError('Invalid argument for address direction')
-        if subunit_type not in AvcGeneral.subunit_types:
+        if subunit_type not in AvcGeneral.SUBUNIT_TYPES:
             raise ValueError('Invalid argument for address subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for address subunit id')
@@ -59,7 +59,7 @@ class BcoPlugInfo():
         addr.append(0xff)
         addr.append(0xff)
         # For my purpose.
-        addr.append((AvcGeneral.subunit_types.index(subunit_type) << 3) |
+        addr.append((AvcGeneral.SUBUNIT_TYPES.index(subunit_type) << 3) |
                     subunit_id)
         return addr
 
@@ -68,7 +68,7 @@ class BcoPlugInfo():
                                 fb_type, fb_id, plug):
         if addr_dir not in cls.addr_dir:
             raise ValueError('Invalid argument for address direction')
-        if subunit_type not in AvcGeneral.subunit_types:
+        if subunit_type not in AvcGeneral.SUBUNIT_TYPES:
             raise ValueError('Invalid argument for address subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for address subunit id')
@@ -79,7 +79,7 @@ class BcoPlugInfo():
         addr.append(fb_id)
         addr.append(plug)
         # For my purpose.
-        addr.append((AvcGeneral.subunit_types.index(subunit_type) << 3) |
+        addr.append((AvcGeneral.SUBUNIT_TYPES.index(subunit_type) << 3) |
                     subunit_id)
         return addr
 
@@ -102,9 +102,9 @@ class BcoPlugInfo():
             addr.append(0xff)
             addr.append(0xff)
         else:
-            if data['subunit-type'] not in AvcGeneral.subunit_types:
+            if data['subunit-type'] not in AvcGeneral.SUBUNIT_TYPES:
                 raise ValueError('Invalid address subunit type')
-            addr.append(AvcGeneral.subunit_types.index(data['subunit-type']))
+            addr.append(AvcGeneral.SUBUNIT_TYPES.index(data['subunit-type']))
             addr.append(data['subunit-id'])
             addr.append(0xff)
             addr.append(0xff)
@@ -132,9 +132,9 @@ class BcoPlugInfo():
             data['unit-type'] = cls.addr_unit_type[addr[2]]
             data['plug'] = addr[3]
         else:
-            if addr[2] >= len(AvcGeneral.subunit_types):
+            if addr[2] >= len(AvcGeneral.SUBUNIT_TYPES):
                 raise OSError('Unexpected address subunit type in response')
-            data['subunit-type'] = AvcGeneral.subunit_types[addr[2]]
+            data['subunit-type'] = AvcGeneral.SUBUNIT_TYPES[addr[2]]
             data['subunit-id'] = addr[3]
             if info['mode'] == 'subunit':
                 data['plug'] = addr[4]
@@ -340,20 +340,20 @@ class BcoSubunitInfo():
         for i in range(4, 7):
             if params[i] is not 0xff:
                 subunit = {}
-                subunit['type'] = AvcGeneral.subunit_types[params[i] >> 3]
+                subunit['type'] = AvcGeneral.SUBUNIT_TYPES[params[i] >> 3]
                 subunit['id'] = params[i] & 0x7
                 subunits.append(subunit)
         return subunits
 
     @classmethod
     def get_subunit_fb_info(cls, fcp, subunit_type, subunit_id, page, fb_type):
-        if subunit_type not in AvcGeneral.subunit_types:
+        if subunit_type not in AvcGeneral.SUBUNIT_TYPES:
             raise ValueError('Invalid argument for subunit type')
         if subunit_id > 7:
             raise ValueError('Invalid argument for subunit id')
         args = bytearray(0xff for i in range(30))
         args[0] = 0x01
-        args[1] = (AvcGeneral.subunit_types.index(subunit_type) << 3) | subunit_id
+        args[1] = (AvcGeneral.SUBUNIT_TYPES.index(subunit_type) << 3) | subunit_id
         args[2] = 0x31
         args[3] = page
         args[4] = 0xff

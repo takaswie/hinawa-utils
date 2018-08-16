@@ -25,12 +25,12 @@ class AvcCcm():
 
     @classmethod
     def get_subunit_signal_addr(cls, type, id, plug):
-        if type not in AvcGeneral.subunit_types:
+        if type not in AvcGeneral.SUBUNIT_TYPES:
             raise ValueError('Invalid argument for subunit type')
         if plug >= 30:
             raise ValueError('Invalid argument for plug number')
         addr = bytearray()
-        addr.append((AvcGeneral.subunit_types.index(type) << 3) | id)
+        addr.append((AvcGeneral.SUBUNIT_TYPES.index(type) << 3) | id)
         addr.append(plug)
         return addr
 
@@ -61,7 +61,7 @@ class AvcCcm():
                 data['plug'] = addr[1]
         else:
             info['mode'] = 'subunit'
-            data['type'] = AvcGeneral.subunit_types[addr[0] >> 3]
+            data['type'] = AvcGeneral.SUBUNIT_TYPES[addr[0] >> 3]
             data['id'] = addr[0] & 0x07
             data['plug'] = addr[1]
         info['data'] = data
