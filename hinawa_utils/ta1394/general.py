@@ -129,8 +129,8 @@ class AvcGeneral():
         return params[6:]
 
 class AvcConnection():
-    plug_direction = ('output', 'input')
-    sampling_rates = (32000, 44100, 48000, 88200, 96000, 176400, 192000)
+    PLUG_DIRECTION = ('output', 'input')
+    SAMPLING_RATES = (32000, 44100, 48000, 88200, 96000, 176400, 192000)
 
     @classmethod
     def get_unit_plug_info(cls, fcp):
@@ -174,17 +174,17 @@ class AvcConnection():
     def set_plug_signal_format(cls, fcp, direction, plug, rate):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
-        if direction not in AvcConnection.plug_direction:
+        if direction not in AvcConnection.PLUG_DIRECTION:
             raise ValueError('Invalid argument for plug direction')
-        if rate not in AvcConnection.sampling_rates:
+        if rate not in AvcConnection.SAMPLING_RATES:
             raise ValueError('Invalid argument for sampling rate')
         args = bytearray()
         args.append(0x00)
         args.append(0xff)
-        args.append(0x18 + AvcConnection.plug_direction.index(direction))
+        args.append(0x18 + AvcConnection.PLUG_DIRECTION.index(direction))
         args.append(plug)
         args.append(0x90)
-        args.append(AvcConnection.sampling_rates.index(rate))
+        args.append(AvcConnection.SAMPLING_RATES.index(rate))
         args.append(0xff)
         args.append(0xff)
         AvcGeneral.command_control(fcp, args)
@@ -193,12 +193,12 @@ class AvcConnection():
     def get_plug_signal_format(cls, fcp, direction, plug):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
-        if direction not in AvcConnection.plug_direction:
+        if direction not in AvcConnection.PLUG_DIRECTION:
             raise ValueError('Invalid argument for plug direction')
         args = bytearray()
         args.append(0x01)
         args.append(0xff)
-        args.append(0x18 + AvcConnection.plug_direction.index(direction))
+        args.append(0x18 + AvcConnection.PLUG_DIRECTION.index(direction))
         args.append(plug)
         args.append(0xff)
         args.append(0xff)
@@ -206,25 +206,25 @@ class AvcConnection():
         args.append(0xff)
         params = AvcGeneral.command_status(fcp, args)
         param = params[5] & 0x07
-        if param > len(AvcConnection.sampling_rates):
+        if param > len(AvcConnection.SAMPLING_RATES):
             raise OSError
-        return AvcConnection.sampling_rates[param]
+        return AvcConnection.SAMPLING_RATES[param]
 
     @classmethod
     def ask_plug_signal_format(cls, fcp, direction, plug, rate):
         if plug > 255:
             raise ValueError('Invalid argument for plug number')
-        if direction not in AvcConnection.plug_direction:
+        if direction not in AvcConnection.PLUG_DIRECTION:
             raise ValueError('Invalid argument for plug direction')
-        if rate not in AvcConnection.sampling_rates:
+        if rate not in AvcConnection.SAMPLING_RATES:
             raise ValueError('Invalid argument for sampling rate')
         args = bytearray()
         args.append(0x02)
         args.append(0xff)
-        args.append(0x18 + AvcConnection.plug_direction.index(direction))
+        args.append(0x18 + AvcConnection.PLUG_DIRECTION.index(direction))
         args.append(plug)
         args.append(0x90)
-        args.append(AvcConnection.sampling_rates.index(rate))
+        args.append(AvcConnection.SAMPLING_RATES.index(rate))
         args.append(0xff)
         args.append(0xff)
         try:

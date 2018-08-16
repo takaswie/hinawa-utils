@@ -142,7 +142,7 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     # For sampling rate.
     def get_sampling_rate_labels(self):
         rates = []
-        for rate in AvcConnection.sampling_rates:
+        for rate in AvcConnection.SAMPLING_RATES:
             if not AvcConnection.ask_plug_signal_format(self.unit.fcp,
                                                         'input', 0, rate):
                 continue

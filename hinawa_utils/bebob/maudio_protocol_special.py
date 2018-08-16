@@ -373,7 +373,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         data = data[4:]
         for i, label in enumerate(self.__METERING_LABELS):
             meters[label] = unpack('>H', data[i * 2:(i + 1) * 2])[0]
-        meters['rate'] = AvcConnection.sampling_rates[(data[-1] >> 8) & 0x0f]
+        meters['rate'] = AvcConnection.SAMPLING_RATES[(data[-1] >> 8) & 0x0f]
         meters['sync'] = (data[-1] & 0x0f) > 0
         return meters
 

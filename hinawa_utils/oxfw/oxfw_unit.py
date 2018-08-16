@@ -63,15 +63,15 @@ class OxfwUnit(Hinawa.SndUnit):
         playback = []
         capture  = []
         # Assume that PCM playback is available for all of models.
-        for rate in AvcConnection.sampling_rates:
+        for rate in AvcConnection.SAMPLING_RATES:
             if AvcConnection.ask_plug_signal_format(self.fcp, 'input', 0, rate):
                 playback.append(rate)
         # PCM capture is not always available depending on models.
-        for rate in AvcConnection.sampling_rates:
+        for rate in AvcConnection.SAMPLING_RATES:
             if AvcConnection.ask_plug_signal_format(self.fcp, 'output', 0, rate):
                 capture.append(rate)
         self._playback_only = (len(capture) == 0)
-        for rate in AvcConnection.sampling_rates:
+        for rate in AvcConnection.SAMPLING_RATES:
             if rate in playback or rate in capture:
                 sampling_rates[rate] = True
         return sampling_rates

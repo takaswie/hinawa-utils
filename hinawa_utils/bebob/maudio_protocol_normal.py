@@ -418,7 +418,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
             meters['rotery-2'] = 0
             meters['switch-0'] = (data[-4] & 0xf0) >> 4
             meters['switch-1'] = data[-4] & 0x0f
-            meters['rate'] = AvcConnection.sampling_rates[data[-2]]
+            meters['rate'] = AvcConnection.SAMPLING_RATES[data[-2]]
             meters['sync'] = data[-1] & 0x0f
         return meters
 
