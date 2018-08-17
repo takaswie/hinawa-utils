@@ -30,6 +30,7 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
     CLOCK_SPDIF_ON_OPT_B  = 'S/PDIF on optical interface B'
     CLOCK_AESEBU_XLR      = 'AES/EBU on XLR interface'
     CLOCK_WORD_ON_BNC     = 'Word clock on BNC interface'
+    CLOCK_UNKNOWN         = 'Unknown'
 
     def __init__(self, unit, debug):
         self._unit = unit

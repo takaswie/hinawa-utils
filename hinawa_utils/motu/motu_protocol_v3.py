@@ -46,21 +46,56 @@ class MotuProtocolV3(MotuProtocolAbstract):
         return sources
 
     def get_clock_source(self):
-        frames = self.read(0x0b14, 4)
+        data = self.read(0x0b14, 4)
 
-        # TODO:
-        if frames[3] == 0x00:
+        if data[3] == 0x00:
             return self.CLOCK_INTERNAL
+        elif data[3] == 0x01:
+            return self.CLOCK_WORD_ON_BNC
+        elif data[3] == 0x10:
+            return self.CLOCK_SPDIF_ON_COAX
+        elif data[3] == 0x18:
+            mode = self.get_opt_iface_mode('in', 'A')
+            if mode == 'S/PDIF':
+                return self.CLOCK_SPDIF_ON_OPT_A
+            else:
+                return self.CLOCK_ADAT_ON_OPT_A
+        elif data[3] == 0x19:
+            mode = self.get_opt_iface_mode('in', 'B')
+            if mode == 'S/PDIF':
+                return self.CLOCK_SPDIF_ON_OPT_B
+            else:
+                return self.CLOCK_ADAT_ON_OPT_B
 
-    def set_clock_source(self, source):
-        frames = self.read(0x0b14, 4)
+        # TODO: signal from AES/EBU on XLR interface.
 
-        # TODO:
-        frames[3] &= ~0x0f
-        if source == self.CLOCK_INTERNAL:
-            pass
+        return self.CLOCK_UNKNOWN
 
-        self.write(0x0b14, frames)
+    def set_clock_source(self, src):
+        data = self.read(0x0b14, 4)
+
+        if src == self.CLOCK_INTERNAL:
+            data[3] = 0x00
+        elif src == self.CLOCK_WORD_ON_BNC:
+            data[3] = 0x01
+        elif src == self.CLOCK_SPDIF_ON_COAX:
+            data[3] = 0x10
+        elif src in (self.CLOCK_SPDIF_ON_OPT_A, self.CLOCK_ADAT_ON_OPT_A):
+            mode = self.get_opt_iface_mode('in', 'A')
+            if mode not in ('S/PDIF', 'ADAT'):
+                raise OSError('Signal from this source is not available.')
+            data[3] = 0x18
+        elif src in (self.CLOCK_SPDIF_ON_OPT_B, self.CLOCK_ADAT_ON_OPT_B):
+            mode = self.get_opt_iface_mode('in', 'B')
+            if mode in ('S/PDIF', 'ADAT'):
+                raise OSError('Signal from this source is not available.')
+            data[3] = 0x19
+        else:
+            raise ValueError('Invalid argument for source of sampling clock.')
+
+        # TODO: signal from AES/EBU on XLR interface
+
+        self.write(0x0b14, data)
 
     # kind/direction/index/mask/shift
     OPT_IFACE_MODE_ATTRS = {
