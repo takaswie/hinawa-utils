@@ -38,7 +38,7 @@ def handle_output_volume(unit, args):
                                               data)
         else:
             data = AvcAudio.get_feature_volume_state(unit.fcp, 0, 'current', 1,
-                                                     0))
+                                                     0)
             print(AvcAudio.parse_data_to_db(data))
         return True
     print('Arguments for output-volume command:')
