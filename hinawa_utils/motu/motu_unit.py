@@ -21,7 +21,6 @@ class MotuUnit(Hinawa.SndMotu):
         0x100800: ('828mk3',    MotuProtocolV3),    # Hybrid
         0x104800: ('AudioExpress', MotuProtocolV3),
     }
-    _pcm_frame_fetch_mode = ('Enable', 'Disable')
 
     def __init__(self, path):
         super().__init__()
