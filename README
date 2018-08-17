@@ -6,8 +6,8 @@ Takashi Sakamoto
 ## Introduction
 
 This batch of Python 3 codes consists of modules and scripts to control
-Audio and Music units on IEEE 1394 bus, via libhinawa API with a help of
-PyGObject for gobject-introspection.
+Audio and Music units on IEEE 1394 bus, with a help of PyGObject for
+gobject-introspection to libhinawa APIs.
 
 The modules include applications of below specifications:
 
@@ -18,7 +18,7 @@ The modules include applications of below specifications:
    (Sep. 2004, 1394 Trade Association)
  * AV/C Audio Subunit Specification 1.0 (Oct. 2000, 1394 Trade Association)
  * AV/C Connection and Compatibility Management Specification 1.1
-   (Mar. 2003, 1394 Trade Associtation)
+   (Mar. 2003, 1394 Trade Association)
  * Configuration ROM for AV/C Devices 1.0 (Dec. 2000, 1394 Trade Association)
  * AV/C Stream Format Information Specification 1.1 - Working draft
    revision 0.5 (Apr. 2005, 1394 Trade Association)
