@@ -2,8 +2,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
+import signal
+
 from hinawa_utils.misc.cui_kit import CuiKit
 from hinawa_utils.motu.motu_unit import MotuUnit
+
+from gi.repository import GLib
 
 def handle_opt_iface_mode(uniit, args):
     ops = ('set', 'get')
@@ -19,13 +23,13 @@ def handle_opt_iface_mode(uniit, args):
         return True
     print('Arguments for optical input interface mode:')
     print('  opt-iface-mode OPERATION DIRECTION INDEX [MODE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    OPERATION:  [{0}]'.format('|'.join(ops)))
     directions = [str(d) for d in unit.get_supported_opt_iface_directions()]
-    print('    DIRECTION:  {0}'.format(', '.join(directions)))
+    print('    DIRECTION:  [{0}]'.format('|'.join(directions)))
     indexes = [str(i) for i in unit.get_opt_iface_indexes()]
-    print('    INDEX:      {0}'.format(', '.join(indexes)))
+    print('    INDEX:      [{0}]'.format('|'.join(indexes)))
     modes = [str(m) for m in unit.get_opt_iface_modes()]
-    print('    MODE:       {0}'.format(', '.join(modes)))
+    print('    MODE:       [{0}]'.format('|'.join(modes)))
     return False
 
 def handle_sampling_rate(unit, args):
@@ -40,9 +44,9 @@ def handle_sampling_rate(unit, args):
         return True
     print('Arguments for sampling-rate command:')
     print('  sampling-rate OPERATION [RATE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    OPERATION: [{0}]'.format('|'.join(ops)))
     rates = [str(r) for r in unit.get_sampling_rates()]
-    print('    RATE:      {0}'.format(', '.join(rates)))
+    print('    RATE:      [{0}]'.format('|'.join(rates)))
     return False
 
 def handle_clock_source(unit, args):
@@ -57,14 +61,12 @@ def handle_clock_source(unit, args):
         return True
     print('Arguments for clock-source command:')
     print('  clock-source OPERATION [SOURCE]')
-    print('    OPERATION: {0}'.format(', '.join(ops)))
+    print('    OPERATION: [{0}]'.format('|'.join(ops)))
     sources = unit.get_supported_clock_sources()
-    print('    SOURCE:    {0}'.format(', '.join(sources)))
+    print('    SOURCE:    [{0}]'.format('|'.join(sources)))
     return False
 
 def handle_listen_message(unit, args):
-    from gi.repository import GLib
-    import signal
     loop = GLib.MainLoop()
     def handle_unix_signal():
         loop.quit()
