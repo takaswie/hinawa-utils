@@ -13,9 +13,9 @@ class Ta1394ConfigRomParser(Ieee1394ConfigRomParser):
 
     def parse_rom(self, data):
         entries = super().parse_rom(data)
-        return self._parse_entries(entries['root-directory'])
+        return self.__parse_entries(entries['root-directory'])
 
-    def _parse_entries(self, entries):
+    def __parse_entries(self, entries):
         # Recommended layout.
         FIELDS = (
             ('VENDOR',              'vendor-id'),
