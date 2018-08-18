@@ -6,18 +6,18 @@ from hinawa_utils.ieee1394.config_rom_parser import Ieee1394ConfigRomParser
 __all__ = ['TscmConfigRomParser']
 
 class TscmConfigRomParser(Ieee1394ConfigRomParser):
-    _OUI = 0x00022e
+    __OUI = 0x00022e
 
     def __init__(self):
         super().__init__()
         # FW-1884
-        self.add_spec_dep_handle(self._OUI, 0x800000, self._handle_teac_keys)
+        self.add_spec_dep_handle(self.__OUI, 0x800000, self.__handle_teac_keys)
         # FW-1082
-        self.add_spec_dep_handle(self._OUI, 0x800003, self._handle_teac_keys)
+        self.add_spec_dep_handle(self.__OUI, 0x800003, self.__handle_teac_keys)
         # FW-1804
-        self.add_spec_dep_handle(self._OUI, 0x800004, self._handle_teac_keys)
+        self.add_spec_dep_handle(self.__OUI, 0x800004, self.__handle_teac_keys)
 
-    def _handle_teac_keys(self, key_id, type_name, data):
+    def __handle_teac_keys(self, key_id, type_name, data):
         if key_id == 0x02 and type_name == 'LEAF':
             content = data[8:].decode('US-ASCII') + '\0'
             return ['MODEL_NAME', content[:content.find('\0')]]
@@ -25,9 +25,9 @@ class TscmConfigRomParser(Ieee1394ConfigRomParser):
 
     def parse_rom(self, data):
         entries = super().parse_rom(data)
-        return self._parse_entries(entries['root-directory'])
+        return self.__parse_entries(entries['root-directory'])
 
-    def _parse_entries(self, entries):
+    def __parse_entries(self, entries):
         # Typical layout.
         FIELDS = (
             ('VENDOR',              'vendor-id'),
@@ -45,7 +45,7 @@ class TscmConfigRomParser(Ieee1394ConfigRomParser):
             if name == 'UNIT':
                 # Check unit.
                 entry = entry[1]
-                if (entry[0] != ['SPECIFIER_ID', self._OUI] or
+                if (entry[0] != ['SPECIFIER_ID', self.__OUI] or
                     entry[1][0] != 'VERSION' or
                     entry[2][0] != 'DEPENDENT_INFO'):
                     raise ValueError('Invalid data in unit directory.')
