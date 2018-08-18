@@ -13,16 +13,13 @@ class Dg00xConfigRomParser(Ieee1394ConfigRomParser):
     def __init__(self):
         super().__init__()
         self.add_vendor_dep_handle(self._OUI_MICROSOFT,
-                                   self._handle_microsoft_keys)
+                                   self.__handle_microsoft_keys)
 
-    def _handle_microsoft_keys(self, key_id, type_name, data):
+    def __handle_microsoft_keys(self, key_id, type_name, data):
         if key_id == 0x01 and type_name == 'LEAF':
             width = data[0] >> 4
             character_set = ((data[0] & 0x0f) << 8) | data[1]
             language = unpack('>H', data[2:4])[0]
-
-            if width != 0x00:
-                raise OSError('Width {0} is not supported.'.format(width))
 
             if character_set != 0x00 or language != 0x00:
                 raise ValueError('Invalid data in descriptor leaf.')
@@ -34,9 +31,9 @@ class Dg00xConfigRomParser(Ieee1394ConfigRomParser):
 
     def parse_rom(self, data):
         entries = super().parse_rom(data)
-        return self._parse_entries(entries['root-directory'])
+        return self.__parse_entries(entries['root-directory'])
 
-    def _parse_entries(self, entries):
+    def __parse_entries(self, entries):
         # Typical layout.
         FIELDS = (
             ('NODE_CAPABILITIES',   'node-capabilities'),
