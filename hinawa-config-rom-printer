@@ -28,6 +28,7 @@ else:
     print('Invalid operation: {0}'.format(sys.argv[2]))
     sys.exit()
 
+# For Echo Audio Fireworks series.
 def handle_echoaudio_keys(key_id, type_name, data):
     OUI_COMPANIES = {
         0x000ff2: 'Loud Technologies Inc.',
@@ -42,6 +43,7 @@ def handle_echoaudio_keys(key_id, type_name, data):
 
     return None
 
+# For Apple iSight.
 def handle_iidc_v1_30_keys(key_id, type_name, data):
     if key_id == 0x00 and type_name == 'CSR_OFFSET':
         return ['IIDC_COMMAND_REGS_BASE', data]
@@ -69,12 +71,14 @@ def handle_isight_iris_keys(key_id, type_name, data):
         return ['ISIGHT_IRIS_REGS_BASE', data]
     return None
 
+# For TASCAM FireWire series.
 def handle_teac_keys(key_id, type_name, data):
     if key_id == 0x02 and type_name == 'LEAF':
         content = data[8:].decode('US-ASCII') + '\0'
         return ['MODEL_NAME', content[:content.find('\0')]]
     return None
 
+# For Digidesign Digi 00x series.
 def handle_microsoft_keys(key_id, type_name, data):
     if key_id == 0x01 and type_name == 'LEAF':
         width = data[0] >> 4
