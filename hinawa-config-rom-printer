@@ -93,6 +93,32 @@ def handle_microsoft_keys(key_id, type_name, data):
 
     return None
 
+# For Cool Stream iSweet.
+def handle_ame_root_keys(key_id, type_name, data):
+    if key_id == 0x06 and type_name == 'IMMEDIATE':
+        return ['DEVICE_ID', data]
+    return None
+def handle_iidc_v1_04_keys(key_id, type_name, data):
+    if key_id == 0x00 and type_name == 'CSR_OFFSET':
+        return ['COMMAND_REGS_BASE', data]
+    return None
+def handle_ame_unit_dep_keys(key_id, type_name, data):
+    if key_id == 0x02 and type_name == 'LEAF':
+        descriptor_type = data[0]
+        specifier_id = (data[1] << 16) | unpack('>H', data[2:4])[0]
+        if descriptor_type != 0x00 or specifier_id != 0x00:
+            raise ValueError('Invalid data in vendor-dep descriptor leaf.')
+
+        width = data[4] >> 4
+        character_set = ((data[4] & 0x0f) << 8) | data[5]
+        language = unpack('>H', data[6:8])[0]
+        if character_set != 0x00 or language != 0x00:
+            raise ValueError('Invalid data in descriptor leaf.')
+
+        content = data[8:].decode('US-ASCII') + '\0'
+        return ['MODEL_NAME', content[:content.find('\0')]]
+    return None
+
 pp = PrettyPrinter(indent=2, compact=False)
 
 unit = Hinawa.FwUnit()
@@ -114,5 +140,8 @@ else:
     parser.add_spec_dep_handle(0x00022e, 0x800003, handle_teac_keys)
     parser.add_spec_dep_handle(0x00022e, 0x800004, handle_teac_keys)
     parser.add_vendor_dep_handle(0x0050f2, handle_microsoft_keys)
+    parser.add_spec_dep_handle(0x00a02d, 0x000100, handle_iidc_v1_04_keys)
+    parser.add_spec_dep_handle(0x00a02d, 0x000100, handle_ame_unit_dep_keys)
+    parser.add_vendor_dep_handle(0x0002f0, handle_ame_root_keys)
     info = parser.parse_rom(data)
     pp.pprint(info)
