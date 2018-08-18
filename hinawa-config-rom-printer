@@ -5,6 +5,7 @@
 import sys
 import errno
 from pprint import PrettyPrinter
+from struct import unpack
 
 from hinawa_utils.ieee1212.config_rom_lexer import Ieee1212ConfigRomLexer
 from hinawa_utils.ieee1394.config_rom_parser import Ieee1394ConfigRomParser
