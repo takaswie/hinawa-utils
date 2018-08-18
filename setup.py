@@ -8,7 +8,7 @@ with open("README", "r") as fh:
 
 setuptools.setup(
     name="hinawa-utils",
-    version="0.0.99",
+    version="0.1.0",
     author="Takashi Sakamoto",
     author_email="o-takashi@sakamocchi.jp",
     description="Utility to control Audio and Music units on IEEE 1394 bus",
@@ -39,6 +39,7 @@ setuptools.setup(
         'hinawa_utils.tscm',
     ),
     scripts=(
+        'hinawa-alesis-io-cui',
         'hinawa-bebob-parser',
         'hinawa-config-rom-printer',
         'hinawa-dg00x-cui',
