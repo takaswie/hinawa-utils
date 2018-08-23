@@ -12,6 +12,8 @@ from hinawa_utils.dg00x.config_rom_parser import Dg00xConfigRomParser
 __all__ = ['Dg00xUnit']
 
 class Dg00xUnit(Hinawa.SndDg00x):
+    __BASE_ADDR = 0xffffe0000000
+
     SUPPORTED_SAMPLING_RATES = (44100, 48000, 88200, 96000)
     SUPPORTED_CLOCK_SOURCES = ('Internal', 'S/PDIF', 'ADAT', 'Word-clock')
     SUPPORTED_OPTICAL_INTERFACES = ('ADAT', 'S/PDIF')
@@ -35,22 +37,24 @@ class Dg00xUnit(Hinawa.SndDg00x):
         info = parser.parse_rom(self.get_config_rom())
         self._model_name = info['model-name']
 
-    def _read_transaction(self, addr, quads):
+    def _read_transaction(self, offset, size):
         req = Hinawa.FwReq()
-        return req.read(self, addr, quads)
+        addr = self.__BASE_ADDR + offset
+        return req.read(self, addr, size)
 
-    def _write_transaction(self, addr, data):
+    def _write_transaction(self, offset, size):
         req = Hinawa.FwReq()
-        return req.write(self, addr, data)
+        addr = self.__BASE_ADDR + offset
+        return req.write(self, addr, size)
 
     def set_clock_source(self, source):
         if source not in self.SUPPORTED_CLOCK_SOURCES:
             raise ValueError('Invalid argument for clock source.')
         data = bytearray(4)
         data[3] = self.SUPPORTED_CLOCK_SOURCES.index(source)
-        self._write_transaction(0xffffe0000118, data)
+        self._write_transaction(0x0118, data)
     def get_clock_source(self):
-        data = self._read_transaction(0xffffe0000118, 4)
+        data = self._read_transaction(0x0118, 4)
         if data[3] >= len(self.SUPPORTED_CLOCK_SOURCES):
             raise OSError('Unexpected value for clock source.')
         return self.SUPPORTED_CLOCK_SOURCES[data[3]]
@@ -60,20 +64,20 @@ class Dg00xUnit(Hinawa.SndDg00x):
             raise ValueError('Invalid argument for local sampling rate.')
         data = bytearray(4)
         data[3] = self.SUPPORTED_SAMPLING_RATES.index(rate)
-        self._write_transaction(0xffffe0000110, data)
+        self._write_transaction(0x0110, data)
     def get_local_sampling_rate(self):
-        data = self._read_transaction(0xffffe0000110, 4)
+        data = self._read_transaction(0x0110, 4)
         if data[3] >= len(self.SUPPORTED_SAMPLING_RATES):
             raise OSError('Unexpected value for local sampling rate.')
         return self.SUPPORTED_SAMPLING_RATES[data[3]]
 
     def get_external_sampling_rate(self):
-        data = self._read_transaction(0xffffe0000114, 4)
+        data = self._read_transaction(0x0114, 4)
         if data[3] >= len(self.SUPPORTED_SAMPLING_RATES):
             raise OSError('Unexpected value for external sampling rate.')
         return self.SUPPORTED_SAMPLING_RATES[data[3]]
     def check_external_input(self):
-        data = self._read_transaction(0xffffe000012c, 4)
+        data = self._read_transaction(0x012c, 4)
         return data[3] > 0
 
     def set_opt_iface(self, mode):
@@ -81,9 +85,9 @@ class Dg00xUnit(Hinawa.SndDg00x):
             raise ValueError('Invalid argument for optical interface mode.')
         data = bytearray(4)
         data[3] = self.SUPPORTED_OPTICAL_INTERFACES.index(mode)
-        self._write_transaction(0xffffe000011c, data)
+        self._write_transaction(0x011c, data)
     def get_opt_iface(self):
-        data = self._read_transaction(0xffffe000011c, 4)
+        data = self._read_transaction(0x011c, 4)
         if data[3] >= len(self.SUPPORTED_OPTICAL_INTERFACES):
             raise ValueError('Unexpected value for optical interface mode.')
         return self.SUPPORTED_OPTICAL_INTERFACES[data[3]]
@@ -95,7 +99,7 @@ class Dg00xUnit(Hinawa.SndDg00x):
             mode = 0
         data = bytearray(4)
         data[3] = mode
-        self._write_transaction(0xffffe0000124, data)
+        self._write_transaction(0x0124, data)
     def get_mixer_mode(self):
-        data = self._read_transaction(0xffffe0000124, 4)
+        data = self._read_transaction(0x0124, 4)
         return (data[3] > 0)
