@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
+
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.dg00x.dg003_unit import Dg003Unit
+
+def handle_mixer_state(unit, args):
+    ops = ('set', 'get')
+    states = ('Disabled', 'Enabled')
+    if len(args) >= 1 and args[0] in ops:
+        op = args[0]
+        if len(args) >= 2 and op == 'set' and args[1] in states:
+            enabled = bool(args[1] == 'Enabled')
+            unit.set_mixer_status(enabled)
+            return True
+        else:
+            state = unit.get_mixer_status()
+            index = 1 if state else 0
+            print(states[index])
+            return True
+    print('Argumetns for mixer-state command:')
+    print('  mixer-enable OP [ENABLED]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    ENABLED:[{0}]'.format('|'.join(states)))
+    return False
+
+def handle_mixer_source(unit, args):
+    srcs = unit.get_mixer_src_labels()
+    items = {
+        'pan':  {
+            'set':  unit.set_mixer_src_balance,
+            'get':  unit.get_mixer_src_balance,
+        },
+        'gain': {
+            'set':  unit.set_mixer_src_gain,
+            'get':  unit.get_mixer_src_gain,
+        },
+    }
+    ops = ('set', 'get')
+    chs = ('0', '1')
+    if len(args) >= 4:
+        src, item, op, ch = args[0:4]
+        if src in srcs and item in items and op in ops and ch in chs:
+            ch = int(ch)
+            if op == 'set' and len(args) >= 5:
+                val = float(args[4])
+                items[item][op](src, ch, val)
+                return True
+            elif op == 'get':
+                val = items[item][op](src, ch)
+                print('{:.3f}'.format(val))
+                return True
+    print('Arguments for mixer-source command:')
+    print('  mixer-source SRC ITEM OP CH [dB|BALANCE]')
+    print('    SRC:    [{0}]'.format('|'.join(srcs)))
+    print('    ITEMS:  [{0}]'.format('|'.join(items)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    CH:     [{0}]'.format('|'.join(chs)))
+    print('    dB:     [-inf, -175.000...0.000]')
+    print('    BALANCE:[0.000...100.000]')
+    return False
+
+cmds = {
+    'mixer-state':  handle_mixer_state,
+    'mixer-source': handle_mixer_source,
+}
+
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = Dg003Unit(fullpath)
+    CuiKit.dispatch_command(unit, cmds)
