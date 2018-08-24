@@ -43,8 +43,10 @@ The modules include applications of below specifications:
     * Plug structure parser for BeBoB firmware
  * hinawa-alesis-io-cui
     * CUI tool for Alesis iO|14 and iO|26
- * hinawa-dg00x-cui
-    * CUI tool for Digidesign Digi 00x family
+ * hinawa-dg00x-common-cui
+    * CUI tool for common functionalities of Digidesign Digi 00x family
+ * hinawa-dg003-cui
+    * CUI tool for functionalities specific to Digidesign Digi 003 family
  * hinawa-dice-common-cui
     * CUI tool for Dice common functionalities
  * hinawa-dice-extension-cui
