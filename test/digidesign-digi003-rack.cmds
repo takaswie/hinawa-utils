@@ -1,0 +1,78 @@
+mixer-state set Enabled
+mixer-state get
+
+mixer-source Analog-1/2 gain set 0 -20
+mixer-source Analog-1/2 gain set 1 -30
+mixer-source Analog-3/4 gain set 0 -10
+mixer-source Analog-3/4 gain set 1 -40
+mixer-source Analog-5/6 gain set 0 -50
+mixer-source Analog-5/6 gain set 1 -60
+mixer-source Analog-7/8 gain set 0 -70
+mixer-source Analog-7/8 gain set 1 -80
+mixer-source S/PDIF-1/2 gain set 0 -90
+mixer-source S/PDIF-1/2 gain set 1 -100
+mixer-source ADAT-1/2 gain set 0 -120
+mixer-source ADAT-1/2 gain set 1 -130
+mixer-source ADAT-3/4 gain set 0 -140
+mixer-source ADAT-3/4 gain set 1 0
+mixer-source ADAT-5/6 gain set 0 -10
+mixer-source ADAT-5/6 gain set 1 -20
+mixer-source ADAT-7/8 gain set 0 -30
+mixer-source ADAT-7/8 gain set 1 -40
+
+mixer-source Analog-1/2 gain get 0
+mixer-source Analog-1/2 gain get 1
+mixer-source Analog-3/4 gain get 0
+mixer-source Analog-3/4 gain get 1
+mixer-source Analog-5/6 gain get 0
+mixer-source Analog-5/6 gain get 1
+mixer-source Analog-7/8 gain get 0
+mixer-source Analog-7/8 gain get 1
+mixer-source S/PDIF-1/2 gain get 0
+mixer-source S/PDIF-1/2 gain get 1
+mixer-source ADAT-1/2 gain get 0
+mixer-source ADAT-1/2 gain get 1
+mixer-source ADAT-3/4 gain get 0
+mixer-source ADAT-3/4 gain get 1
+mixer-source ADAT-5/6 gain get 0
+mixer-source ADAT-5/6 gain get 1
+mixer-source ADAT-7/8 gain get 0
+mixer-source ADAT-7/8 gain get 1
+
+mixer-source Analog-1/2 pan set 0 00
+mixer-source Analog-1/2 pan set 1 10
+mixer-source Analog-3/4 pan set 0 20
+mixer-source Analog-3/4 pan set 1 30
+mixer-source Analog-5/6 pan set 0 40
+mixer-source Analog-5/6 pan set 1 50
+mixer-source Analog-7/8 pan set 0 60
+mixer-source Analog-7/8 pan set 1 70
+mixer-source S/PDIF-1/2 pan set 0 80
+mixer-source S/PDIF-1/2 pan set 1 90
+mixer-source ADAT-1/2 pan set 0 100
+mixer-source ADAT-1/2 pan set 1 5
+mixer-source ADAT-3/4 pan set 0 15
+mixer-source ADAT-3/4 pan set 1 25
+mixer-source ADAT-5/6 pan set 0 35
+mixer-source ADAT-5/6 pan set 1 45
+mixer-source ADAT-7/8 pan set 0 55
+mixer-source ADAT-7/8 pan set 1 65
+
+mixer-source Analog-1/2 pan get 0
+mixer-source Analog-1/2 pan get 1
+mixer-source Analog-3/4 pan get 0
+mixer-source Analog-3/4 pan get 1
+mixer-source Analog-5/6 pan get 0
+mixer-source Analog-5/6 pan get 1
+mixer-source Analog-7/8 pan get 0
+mixer-source Analog-7/8 pan get 1
+mixer-source S/PDIF-1/2 pan get 0
+mixer-source S/PDIF-1/2 pan get 1
+mixer-source ADAT-1/2 pan get 0
+mixer-source ADAT-1/2 pan get 1
+mixer-source ADAT-3/4 pan get 0
+mixer-source ADAT-3/4 pan get 1
+mixer-source ADAT-5/6 pan get 0
+mixer-source ADAT-5/6 pan get 1
+mixer-source ADAT-7/8 pan get 0
+mixer-source ADAT-7/8 pan get 1
