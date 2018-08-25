@@ -11,6 +11,38 @@ __all__ = ['Ieee1394ConfigRomParser']
 class Ieee1394ConfigRomParser(Ieee1212RootDirectoryParser):
     _NAME = '1394'
 
+    # IEEE 1394:1995 refers to ISO/IEC 13213:1994 (ANSI/IEEE Std 1212:1994).
+    __NODE_CAPABILITIES = {
+        'misc': {
+            'spt':  15, # The SPLIT_TIMEOUT register is implemented.
+            'ms':  14, # The messages-passing registers are implemented.
+            'int':  13, # The INTERRUPT_TARGET and INTERRUPT_MASK registers are
+                        # implemented.
+        },
+        'testing': {
+            'ext':  12, # The ARGUMENT registers are implemented.
+            'bas':  11, # Node implements TEST_START&TEST_STATUS registers and
+                        # testing state.
+        },
+        'addressing': {
+            'prv':  10, # The node implements the private space.
+            '64':   9,  # The node uses 64-bit aaddressing (otherwise 32-bit
+                        # addressing).
+            'fix':  8,  # The node uses the fixed addressing scheme (otherwise
+                        # extended addressing).
+        },
+        'state': {
+            'lst':  7,  # The STATE_BITS.lost bit is implemented.
+            'drq':  6,  # The STATE_BITS.dreq bit is implemented.
+            'elo':  4,  # The STATE_BITS.elog bit and the ERROR_LOG registers
+                        # are implementd.
+            'atn':  3,  # The STATE_BITS.atn bit is implemented.
+            'off':  2,  # The STATE_BITS.off bit is implemented.
+            'ded':  1,  # The node supports the dead state.
+            'init': 0,  # The node supports the initializing state.
+        },
+    }
+
     def __init__(self):
         super().__init__()
 
@@ -38,8 +70,16 @@ class Ieee1394ConfigRomParser(Ieee1212RootDirectoryParser):
 
         return info
 
-    def _handle_bus_dep_keys(self, key_id, type, data):
-        pass
+    def _handle_bus_dep_keys(self, key_name, type_name, data):
+        if key_name == 'NODE_CAPABILITIES' and type_name == 'IMMEDIATE':
+            info = {}
+            for kind, elems in self.__NODE_CAPABILITIES.items():
+                if kind not in info:
+                    info[kind] = {}
+                for name, shift in elems.items():
+                    info[kind][name] = bool(data & (1 << shift))
+            return info
+        return None
 
     def parse_rom(self, data):
         info = {}

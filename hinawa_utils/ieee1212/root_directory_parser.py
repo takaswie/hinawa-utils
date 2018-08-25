@@ -115,6 +115,19 @@ class Ieee1212RootDirectoryParser():
             self._keyword_dep_handles[keyword] = []
         self._keyword_dep_handles[keyword].append(handle)
 
+    def __parse_immediate(self, key_type, ctx, value):
+        #
+        # 7.7.7 Node_Capabilities entry
+        #
+        if key_type == KeyType.NODE_CAPABILITIES:
+            if self._bus_name in self._bus_dep_handles:
+                for handle in self._bus_dep_handles[self._bus_name]:
+                    data = handle(KeyType.NODE_CAPABILITIES.name,
+                                  EntryType.IMMEDIATE.name, value)
+                    if data:
+                        value = data
+                        break
+        return value
     #
     # 7.5.4.1 Textual descriptors
     #
@@ -477,7 +490,7 @@ class Ieee1212RootDirectoryParser():
 
     def _parse_directory_entries(self, dir_key_type, ctx, entries, keys):
         TYPE_PARSERS = {
-            EntryType.IMMEDIATE:    lambda key_type, ctx, data: data,
+            EntryType.IMMEDIATE:    self.__parse_immediate,
             EntryType.CSR_OFFSET:   lambda key_type, ctx, data: data,
             EntryType.LEAF:         self._parse_leaf,
             EntryType.DIRECTORY:    self._parse_directory,
