@@ -11,6 +11,19 @@ __all__ = ['Ieee1394ConfigRomParser']
 class Ieee1394ConfigRomParser(Ieee1212RootDirectoryParser):
     _NAME = '1394'
 
+    __BUS_CAPABILITIES_1995 = {
+        'imc':  7,  # the node is IRM capable.
+        'cmc':  6,  # the node is cycle master capable.
+        'isc':  5,  # the node supports isochronous operations.
+        'bmc':  4,  # the node is bus namager capable.
+    }
+
+    # added by IEEE 1394:2008
+    __BUS_CAPABILITIES_2008 = {
+        'pmc':  3,  # the node is power manager capable.
+        'adj':  2,  # the node is compliant to IEEE 1394.1:2004.
+    }
+
     # IEEE 1394:1995 refers to ISO/IEC 13213:1994 (ANSI/IEEE Std 1212:1994).
     __NODE_CAPABILITIES = {
         'misc': {
@@ -54,17 +67,24 @@ class Ieee1394ConfigRomParser(Ieee1212RootDirectoryParser):
             raise ValueError('Invalid data for Configuration ROM in IEEE 1394.')
 
         info['name'] = name
-        info['imc'] = bool(data[4] & 0x80)
-        info['cmc'] = bool(data[4] & 0x40)
-        info['isc'] = bool(data[4] & 0x20)
-        info['bmc'] = bool(data[4] & 0x10)
-        info['pmc'] = bool(data[4] & 0x00)
+
+        for name, shift in self.__BUS_CAPABILITIES_1995.items():
+            info[name] = bool(data[4] & (1 << shift))
+
         info['cyc_clk_acc'] = data[5]
-        info['max_rec'] = data[6] >> 4
-        info['max_ROM'] = data[6] & 0x03
-        info['generation'] = data[7] >> 4
-        info['r'] = bool(data[7] & 0x08)
-        info['link_spd'] = data[7] & 0x07
+
+        val = data[6] >> 4
+        info['max_rec'] = 0 if val == 0 else pow(2, val + 1)
+
+        # reserved fields in IEEE 1394:1995
+        if data[4] & 0x0f or data[6] & 0x04 or data[7]:
+            # IEEE 1394:2008
+            for name, shift in self.__BUS_CAPABILITIES_2008.items():
+                info[name] = bool(data[4] & (1 << shift))
+            info['max_ROM'] = data[6] & 0x03
+            info['generation'] = data[7] >> 4
+            info['link_spd'] = data[7] & 0x07
+
         info['node_vendor_ID'] = (unpack('>H', data[8:10])[0] << 8) | data[10]
         info['chip_ID'] = (data[11] << 32) | unpack('>I', data[12:16])[0]
 
