@@ -35,44 +35,44 @@ The modules include applications of below specifications:
       the Unicorn (MOTU).
     * Some protocols specific to manufacturer.
 
-## CUI tools to control Audio and Music unit on IEEE 1394 bus
+## CLI tools to control Audio and Music unit on IEEE 1394 bus
 
  * hinawa-config-rom-printer
     * A lexer/parser of configuration ROM on IEEE 1394 bus
  * hinawa-bebob-parser
     * Plug structure parser for BeBoB firmware
  * hinawa-alesis-io-cui
-    * CUI tool for Alesis iO|14 and iO|26
+    * CLI tool for Alesis iO|14 and iO|26
  * hinawa-dg00x-common-cui
-    * CUI tool for common functionalities of Digidesign Digi 00x family
+    * CLI tool for common functionalities of Digidesign Digi 00x family
  * hinawa-dg003-cui
-    * CUI tool for functionalities specific to Digidesign Digi 003 family
+    * CLI tool for functionalities specific to Digidesign Digi 003 family
  * hinawa-dice-common-cui
-    * CUI tool for Dice common functionalities
+    * CLI tool for Dice common functionalities
  * hinawa-dice-extension-cui
-    * CUI tool for Dice extended functionalities
+    * CLI tool for Dice extended functionalities
  * hinawa-fireworks-cui
-    * CUI tool for Echo Audio Fireworks module
+    * CLI tool for Echo Audio Fireworks module
  * hinawa-griffin-firewave-cui
-    * CUI tool for Griffin Firewave
+    * CLI tool for Griffin Firewave
  * hinawa-lacie-speakers-cui
-    * CUI tool for Lacie FireWire speakers
+    * CLI tool for Lacie FireWire speakers
  * hinawa-motu-common-cui
-    * CUI tool for MOTU FireWire series
+    * CLI tool for MOTU FireWire series
  * hinawa-maudio-bebob-cui
-    * CUI tool for M-Audio FireWire series based on BeBoB solution
+    * CLI tool for M-Audio FireWire series based on BeBoB solution
  * hinawa-oxfw-generic-cui
-    * CUI tool for OXFW generic functionalities
+    * CLI tool for OXFW generic functionalities
  * hinawa-tascam-fireone-cui
-    * CUI tool for Tascam FireOne
+    * CLI tool for Tascam FireOne
  * hinawa-tascam-fw-rack-cui
-    * CUI tool for rack models of Tascam FireWire series (FW1804)
+    * CLI tool for rack models of Tascam FireWire series (FW1804)
  * hinawa-tascam-fw-console-cui
-    * CUI tool for console models of Tascam FireWire series (FW1082/1884)
+    * CLI tool for console models of Tascam FireWire series (FW1082/1884)
  * hinawa-yamaha-terratec-cui
-    * CUI tool for Yamaha GO series and Terratec PHASE series
+    * CLI tool for Yamaha GO series and Terratec PHASE series
  * hinawa-focusrite-saffirepro-io-cui
-    * CUI tool for Focusrite SaffirePro IO series
+    * CLI tool for Focusrite SaffirePro IO series
 
 ## Requirements
 
