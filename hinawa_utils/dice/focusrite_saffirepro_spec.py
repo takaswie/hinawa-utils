@@ -39,6 +39,12 @@ class FocusriteSaffireproSpec(TcatTcd22xxSpec):
             ('ADAT',        'adat', 8),
         ),
         (),
+        (
+            ('Analog',      'ins1', 8),
+            ('S/PDIF-coax', 'aes',  2),
+            ('S/PDIF-opt',  'aes',  2),
+            ('ADAT',        'adat', 8),
+        ),
         (),
         (),
     )
@@ -61,6 +67,13 @@ class FocusriteSaffireproSpec(TcatTcd22xxSpec):
             ('S/PDIF',  'aes',  2),
         ),
         (),
+        (
+            ('Monitor',     'ins0', 2),
+            ('Analog',      'ins1', 8),
+            ('S/PDIF-coax', 'aes',  2),
+            ('S/PDIF-opt',  'aes',  2),
+            ('ADAT',        'adat', 8),
+        ),
         (),
         (),
     )
@@ -78,6 +91,16 @@ class FocusriteSaffireproSpec(TcatTcd22xxSpec):
             5: ('src', 'ins0', 5),
         },
         {},
+        {
+            0: ('src', 'ins1', 0),
+            1: ('src', 'ins1', 1),
+            2: ('src', 'ins1', 2),
+            3: ('src', 'ins1', 3),
+            4: ('src', 'ins1', 4),
+            5: ('src', 'ins1', 5),
+            6: ('src', 'ins1', 6),
+            7: ('src', 'ins1', 7),
+        },
         {},
         {},
     )
