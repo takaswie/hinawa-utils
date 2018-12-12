@@ -33,6 +33,7 @@ The modules include applications of below specifications:
     * Protocol for FireWire series of TEAC (TASCAM).
     * Common protocol for each generation of FireWire series of Mark of
       the Unicorn (MOTU).
+    * Protofol for Fireface series of RME GmbH.
     * Some protocols specific to manufacturer.
 
 ## CLI tools to control Audio and Music unit on IEEE 1394 bus
@@ -51,6 +52,8 @@ The modules include applications of below specifications:
     * CLI tool for Dice common functionalities
  * hinawa-dice-extension-cui
     * CLI tool for Dice extended functionalities
+ * hinawa-fireface-cui
+    * CLI tool for RME Fireface series
  * hinawa-fireworks-cui
     * CLI tool for Echo Audio Fireworks module
  * hinawa-griffin-firewave-cui
