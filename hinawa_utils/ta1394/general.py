@@ -109,7 +109,8 @@ class AvcGeneral():
             args.append(b)
         for b in deps:
             args.append(b)
-        cls.command_control(fcp, args)
+        params = cls.command_control(fcp, args)
+        return params[6:]
 
     @classmethod
     def get_vendor_dependent(cls, fcp, company_ids, deps):
