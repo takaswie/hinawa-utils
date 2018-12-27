@@ -1,0 +1,402 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2018 Takashi Sakamoto
+
+import sys
+import signal
+from time import sleep
+
+from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.bebob.apogee_ensemble_unit import ApogeeEnsembleUnit
+
+def handle_clock_src(unit, args):
+    ops = ('set', 'get')
+    srcs = unit.get_clock_src_labels()
+    if len(args) >= 1 and args[0] in ops:
+        op = args[0]
+        if op == 'set' and len(args) >= 2 and args[1] in srcs:
+            src = args[1]
+            unit.set_clock_src(src)
+            return True
+        elif op == 'get':
+            print(unit.get_clock_src())
+            return True
+    print('Arguments for clock-source command:')
+    print('  clock-source OP [SRC]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SRC:    [{0}] if OP=set'.format('|'.join(srcs)))
+    print('  Packet streaming should be stopped.')
+    return False
+def handle_status(unit, args):
+    status = unit.get_status()
+    for key, val in status.items():
+        print('{0}: {1}'.format(key, val))
+    return True
+
+def handle_stream_mode(unit, args):
+    ops = ('set', 'get')
+    modes = unit.get_stream_mode_labels()
+    if len(args) >= 1:
+        op = args[0]
+        if op in ops:
+            if op == 'set' and len(args) >= 2 and args[1] in modes:
+                mode = args[1]
+                unit.set_stream_mode(mode)
+                return True
+            elif op == 'get':
+                print(unit.get_stream_mode())
+                return True
+    print('Arguments for stream-mode command:')
+    print('  stream-mode OP [MODE]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    MODE:   [{0}] if OP=set'.format('|'.join(modes)))
+    print('  This operation corresponds bus-reset.')
+    return False
+
+def handle_display_mode(unit, args):
+    ops = ('set', 'get')
+    if len(args) >= 1 and args[0] in ops:
+        op = args[0]
+        if op == 'set' and len(args) >= 2 and args[1] in ('0', '1'):
+            enable = bool(int(args[1]))
+            unit.set_display_mode(enable)
+            return True
+        elif op == 'get':
+            print(unit.get_display_mode())
+            return True
+    print('Arguments for display-mode command:')
+    print('  display-mode OP [ENABLE]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    ENABLE: [0|1] if OP=set')
+    return False
+
+def handle_display_target(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_display_target_labels()
+    if len(args) >= 1 and args[0] in ops:
+        op = args[0]
+        if op == 'set' and len(args) >= 2 and args[1] in targets:
+            target = args[1]
+            unit.set_display_target(target)
+            return True
+        elif op == 'get':
+            print(unit.get_display_target())
+            return True
+    print('Arguments for display-target command:')
+    print('  display-target OP [TARGET]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    TARGET: [{0}] if OP=set'.format('|'.join(targets)))
+    return False
+
+def handle_display_illuminate(unit, args):
+    ops = ('set', 'get')
+    if len(args) >= 1 and args[0] in ops:
+        op = args[0]
+        if op == 'set' and len(args) >= 2 and args[1] in ('0', '1'):
+            enable = bool(int(args[1]))
+            unit.set_display_illuminate(enable)
+            return True
+        elif op == 'get':
+            print(unit.get_display_illuminate())
+            return True
+    print('Arguments for display-illuminate command:')
+    print('  display-illuminate OP [ENABLE]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    ENABLE: [0|1]')
+    return False
+
+def handle_display_overhold(unit, args):
+    ops = ('set', 'get')
+    if len(args) >= 1 and args[0] in ops:
+        op = args[0]
+        if op == 'set' and len(args) >= 2 and args[1] in ('0', '1'):
+            enable = bool(int(args[1]))
+            unit.set_display_overhold(enable)
+            return True
+        elif op == 'get':
+            print(unit.get_display_overhold())
+            return True
+    print('Arguments for display-overhold command:')
+    print('  display-overhold OP [ENABLE]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    ENABLE: [0|1]')
+    return False
+
+def handle_opt_iface_mode(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_opt_iface_target_labels()
+    modes = unit.get_opt_iface_mode_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3 and args[2] in modes:
+            mode = args[2]
+            unit.set_opt_iface_mode(target, mode)
+            return True
+        elif op == 'get':
+            print(unit.get_opt_iface_mode(target))
+            return True
+    print('Arguments for opt-iface-mode command:')
+    print('  opt-iface-mode TARGET OP [MODE]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    MODE:   [{0}]'.format('|'.join(modes)))
+    return False
+
+def handle_cd_mode(unit, args):
+    ops = ('set', 'get')
+    if len(args) >= 1 and args[0] in ops:
+        op = args[0]
+        if op == 'set' and len(args) >= 2 and args[1] in ('0', '1'):
+            enable = bool(int(args[1]))
+            unit.set_cd_mode(enable)
+            return True
+        elif op == 'get':
+            print(unit.get_cd_mode())
+            return True
+    print('Arguments for cd-mode command:')
+    print('  cd-mode OP [ENABLE]')
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    ENABLE: [0|1]')
+    return False
+
+def handle_in_attenuate(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_line_in_labels()
+    attrs = unit.get_attr_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3 and args[2] in attrs:
+            attr = args[2]
+            unit.set_in_attr(target, attr)
+            return True
+        elif op == 'get':
+            print(unit.get_in_attr(target))
+            return True
+    print('Arguments for in-attenuate command:')
+    print('  in-attenuate TARGET OP [ATTR]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    ATTR:   [{0}] if OP=set'.format('|'.join(attrs)))
+    return False
+
+def handle_in_limit(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_line_in_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3 and args[2] in ('0', '1'):
+            enable = bool(int(args[2]))
+            unit.set_soft_limit(target, enable)
+            return True
+        elif op == 'get':
+            print(unit.get_soft_limit(target))
+            return True
+    print('Arguments for in-limit command:')
+    print('  in-limit TARGET OP [ENABLE]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    ENABLE: [0|1] if OP=set')
+    return False
+
+def handle_mic_polarity(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_mic_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3 and args[2] in ('0', '1'):
+            invert = bool(int(args[2]))
+            unit.set_polarity(target, invert)
+            return True
+        elif op == 'get':
+            print(unit.get_polarity(target))
+            return True
+    print('Arguments for mic-polarity command:')
+    print('  mic-polarity TARGET OP [INVERT]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    INVERT: [0|1] if OP=set')
+    return False
+
+def handle_mic_power(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_mic_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3 and args[2] in ('0', '1'):
+            enable = bool(int(args[2]))
+            unit.set_phantom_power(target, enable)
+            return True
+        elif op == 'get':
+            print(unit.get_phantom_power(target))
+            return True
+    print('Arguments for mic-power command:')
+    print('  mic-power TARGET OP [ENABLE]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    ENABLE: [0|1] if OP=set')
+    return False
+
+def handle_out_attenuate(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_line_out_labels()
+    attrs = unit.get_attr_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3 and args[2] in attrs:
+            attr = args[2]
+            unit.set_out_attr(target, attr)
+            return True
+        elif op == 'get':
+            print(unit.get_out_attr(target))
+            return True
+    print('Arguments for out-attenuate command:')
+    print('  out-attenuate TARGET OP [ATTR]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    ATTR:   [{0}] if OP=set'.format('|'.join(attrs)))
+    return False
+
+def handle_out_volume(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_out_volume_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3:
+            db = float(args[2])
+            unit.set_out_volume(target, db)
+            return True
+        elif op == 'get':
+            print(unit.get_out_volume(target))
+            return True
+    print('Arguments for out-volume command:')
+    print('  out-volume TARGET OP [dB]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    dB:     [-127.00..0.00] if OP=set')
+    return False
+
+def handle_cap_src(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_cap_labels()
+    srcs = unit.get_cap_src_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3 and args[2] in srcs:
+            dst = args[2]
+            unit.set_cap_src(target, dst)
+            return True
+        elif op == 'get':
+            print(unit.get_cap_src(target))
+            return True
+    print('Arguments for cap-src command:')
+    print('  cap-src TARGET OP [DST]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SRC:    [{0}] if OP=set'.format('|'.join(srcs)))
+    return False
+
+def handle_out_src(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_out_labels()
+    srcs = unit.get_out_src_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3 and args[2] in srcs:
+            src = args[2]
+            unit.set_out_src(target, src)
+            return True
+        elif op == 'get':
+            print(unit.get_out_src(target))
+            return True
+    print('Arguments for out-src command:')
+    print('  out-src TARGET OP [SRC]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SRC:    [{0}] if OP=set'.format('|'.join(srcs)))
+    return False
+
+def handle_hp_src(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_hp_labels()
+    srcs = unit.get_hp_src_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3 and args[2] in srcs:
+            src = args[2]
+            unit.set_hp_src(target, src)
+            return True
+        elif op == 'get':
+            print(unit.get_hp_src(target))
+            return True
+    print('Arguments for hp-src command:')
+    print('  hp-src TARGET OP [SRC]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    SRC:    [{0}] if OP=set'.format('|'.join(srcs)))
+    return False
+
+def handle_mixer_src(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_mixer_labels()
+    srcs = unit.get_mixer_src_labels()
+    if len(args) >= 3 and args[0] in targets and args[1] in srcs and args[2] in ops:
+        target = args[0]
+        src = args[1]
+        op = args[2]
+        if op == 'set' and len(args) >= 5:
+            db = float(args[3])
+            balance = float(args[4])
+            unit.set_mixer_src(target, src, db, balance)
+            return True
+        elif op == 'get':
+            print(unit.get_mixer_src(target, src))
+            return True
+    print('Arguments for mixer-src command:')
+    print('  mixer-src TARGET SRC OP [dB BALANCE]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    SRC:    [{0}]'.format('|'.join(srcs)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    dB:     [-48.0..0.0] if OP=set')
+    print('    BALANCE:[0.0..100.0] if OP=set')
+    return False
+
+def handle_reset_meters(unit, args):
+    unit.reset_meters()
+
+cmds = {
+    'clock-source':     handle_clock_src,
+    'status':           handle_status,
+    'stream-mode':      handle_stream_mode,
+    'display-mode':     handle_display_mode,
+    'display-target':   handle_display_target,
+    'display-illuminate': handle_display_illuminate,
+    'display-overhold': handle_display_overhold,
+    'opt-iface-mode':   handle_opt_iface_mode,
+    'cd-mode':          handle_cd_mode,
+    'in-attenuate':     handle_in_attenuate,
+    'in-limit':         handle_in_limit,
+    'mic-polarity':     handle_mic_polarity,
+    'mic-power':        handle_mic_power,
+    'out-attenuate':    handle_out_attenuate,
+    'out-volume':       handle_out_volume,
+    'cap-src':          handle_cap_src,
+    'out-src':          handle_out_src,
+    'hp-src':           handle_hp_src,
+    'mixer-src':        handle_mixer_src,
+    'reset-meters':     handle_reset_meters,
+}
+
+fullpath = CuiKit.seek_snd_unit_path()
+if fullpath:
+    unit = ApogeeEnsembleUnit(fullpath)
+    CuiKit.dispatch_command(unit, cmds)
