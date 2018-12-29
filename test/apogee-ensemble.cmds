@@ -1,0 +1,1308 @@
+clock-source get
+clock-source set Coaxial
+clock-source set Optical
+clock-source set Word-clock
+clock-source set Internal
+
+display-mode get
+display-mode set 0
+display-mode set 1
+
+display-target get
+display-target set input
+display-target set output
+
+display-illuminate get
+display-illuminate set 1
+display-illuminate set 0
+
+display-overhold get
+display-overhold set 0
+display-overhold set 1
+
+opt-iface-mode input get
+opt-iface-mode output get
+opt-iface-mode input set ADAT/SMUX
+opt-iface-mode input set S/PDIF
+opt-iface-mode output set ADAT/SMUX
+opt-iface-mode output set S/PDIF
+
+in-attenuate analog-1 get
+in-attenuate analog-2 get
+in-attenuate analog-3 get
+in-attenuate analog-4 get
+in-attenuate analog-5 get
+in-attenuate analog-6 get
+in-attenuate analog-7 get
+in-attenuate analog-8 get
+in-attenuate analog-1 set +4dB
+in-attenuate analog-2 set +4dB
+in-attenuate analog-3 set +4dB
+in-attenuate analog-4 set +4dB
+in-attenuate analog-5 set +4dB
+in-attenuate analog-6 set +4dB
+in-attenuate analog-7 set +4dB
+in-attenuate analog-8 set +4dB
+in-attenuate analog-1 set -10dB
+in-attenuate analog-2 set -10dB
+in-attenuate analog-3 set -10dB
+in-attenuate analog-4 set -10dB
+in-attenuate analog-5 set -10dB
+in-attenuate analog-6 set -10dB
+in-attenuate analog-7 set -10dB
+in-attenuate analog-8 set -10dB
+
+in-limit analog-1 get
+in-limit analog-2 get
+in-limit analog-3 get
+in-limit analog-4 get
+in-limit analog-5 get
+in-limit analog-6 get
+in-limit analog-7 get
+in-limit analog-8 get
+in-limit analog-1 set 0
+in-limit analog-2 set 0
+in-limit analog-3 set 0
+in-limit analog-4 set 0
+in-limit analog-5 set 0
+in-limit analog-6 set 0
+in-limit analog-7 set 0
+in-limit analog-8 set 0
+in-limit analog-1 set 1
+in-limit analog-2 set 1
+in-limit analog-3 set 1
+in-limit analog-4 set 1
+in-limit analog-5 set 1
+in-limit analog-6 set 1
+in-limit analog-7 set 1
+in-limit analog-8 set 1
+
+mic-polarity mic-1 get
+mic-polarity mic-2 get
+mic-polarity mic-3 get
+mic-polarity mic-4 get
+mic-polarity mic-1 set 1
+mic-polarity mic-1 set 0
+mic-polarity mic-2 set 1
+mic-polarity mic-2 set 0
+mic-polarity mic-3 set 1
+mic-polarity mic-3 set 0
+mic-polarity mic-4 set 1
+mic-polarity mic-4 set 0
+
+mic-power mic-1 get
+mic-power mic-2 get
+mic-power mic-3 get
+mic-power mic-4 get
+mic-power mic-1 set 1
+mic-power mic-1 set 0
+mic-power mic-2 set 1
+mic-power mic-2 set 0
+mic-power mic-3 set 1
+mic-power mic-3 set 0
+mic-power mic-4 set 1
+mic-power mic-4 set 0
+
+out-attenuate analog-1 get
+out-attenuate analog-2 get
+out-attenuate analog-3 get
+out-attenuate analog-4 get
+out-attenuate analog-5 get
+out-attenuate analog-6 get
+out-attenuate analog-7 get
+out-attenuate analog-8 get
+out-attenuate analog-1 set +4dB
+out-attenuate analog-2 set +4dB
+out-attenuate analog-3 set +4dB
+out-attenuate analog-4 set +4dB
+out-attenuate analog-5 set +4dB
+out-attenuate analog-6 set +4dB
+out-attenuate analog-7 set +4dB
+out-attenuate analog-8 set +4dB
+out-attenuate analog-1 set -10dB
+out-attenuate analog-2 set -10dB
+out-attenuate analog-3 set -10dB
+out-attenuate analog-4 set -10dB
+out-attenuate analog-5 set -10dB
+out-attenuate analog-6 set -10dB
+out-attenuate analog-7 set -10dB
+out-attenuate analog-8 set -10dB
+
+out-volume main get
+out-volume hp-1 get
+out-volume hp-2 get
+out-volume main set 0
+out-volume hp-1 set 0
+out-volume hp-2 set 0
+
+cap-src stream-1 get
+cap-src stream-2 get
+cap-src stream-3 get
+cap-src stream-4 get
+cap-src stream-5 get
+cap-src stream-6 get
+cap-src stream-7 get
+cap-src stream-8 get
+cap-src stream-9 get
+cap-src stream-10 get
+cap-src stream-11 get
+cap-src stream-12 get
+cap-src stream-13 get
+cap-src stream-14 get
+cap-src stream-15 get
+cap-src stream-16 get
+cap-src stream-17 get
+cap-src stream-18 get
+cap-src stream-1 set analog-1
+cap-src stream-1 set analog-2
+cap-src stream-1 set analog-3
+cap-src stream-1 set analog-4
+cap-src stream-1 set analog-5
+cap-src stream-1 set analog-6
+cap-src stream-1 set analog-7
+cap-src stream-1 set analog-8
+cap-src stream-1 set spdif-1
+cap-src stream-1 set spdif-2
+cap-src stream-1 set adat-1
+cap-src stream-1 set adat-2
+cap-src stream-1 set adat-3
+cap-src stream-1 set adat-4
+cap-src stream-1 set adat-5
+cap-src stream-1 set adat-6
+cap-src stream-1 set adat-7
+cap-src stream-1 set adat-8
+cap-src stream-2 set analog-1
+cap-src stream-2 set analog-2
+cap-src stream-2 set analog-3
+cap-src stream-2 set analog-4
+cap-src stream-2 set analog-5
+cap-src stream-2 set analog-6
+cap-src stream-2 set analog-7
+cap-src stream-2 set analog-8
+cap-src stream-2 set spdif-1
+cap-src stream-2 set spdif-2
+cap-src stream-2 set adat-1
+cap-src stream-2 set adat-2
+cap-src stream-2 set adat-3
+cap-src stream-2 set adat-4
+cap-src stream-2 set adat-5
+cap-src stream-2 set adat-6
+cap-src stream-2 set adat-7
+cap-src stream-2 set adat-8
+cap-src stream-3 set analog-1
+cap-src stream-3 set analog-2
+cap-src stream-3 set analog-3
+cap-src stream-3 set analog-4
+cap-src stream-3 set analog-5
+cap-src stream-3 set analog-6
+cap-src stream-3 set analog-7
+cap-src stream-3 set analog-8
+cap-src stream-3 set spdif-1
+cap-src stream-3 set spdif-2
+cap-src stream-3 set adat-1
+cap-src stream-3 set adat-2
+cap-src stream-3 set adat-3
+cap-src stream-3 set adat-4
+cap-src stream-3 set adat-5
+cap-src stream-3 set adat-6
+cap-src stream-3 set adat-7
+cap-src stream-3 set adat-8
+cap-src stream-4 set analog-1
+cap-src stream-4 set analog-2
+cap-src stream-4 set analog-3
+cap-src stream-4 set analog-4
+cap-src stream-4 set analog-5
+cap-src stream-4 set analog-6
+cap-src stream-4 set analog-7
+cap-src stream-4 set analog-8
+cap-src stream-4 set spdif-1
+cap-src stream-4 set spdif-2
+cap-src stream-4 set adat-1
+cap-src stream-4 set adat-2
+cap-src stream-4 set adat-3
+cap-src stream-4 set adat-4
+cap-src stream-4 set adat-5
+cap-src stream-4 set adat-6
+cap-src stream-4 set adat-7
+cap-src stream-4 set adat-8
+cap-src stream-5 set analog-1
+cap-src stream-5 set analog-2
+cap-src stream-5 set analog-3
+cap-src stream-5 set analog-4
+cap-src stream-5 set analog-5
+cap-src stream-5 set analog-6
+cap-src stream-5 set analog-7
+cap-src stream-5 set analog-8
+cap-src stream-5 set spdif-1
+cap-src stream-5 set spdif-2
+cap-src stream-5 set adat-1
+cap-src stream-5 set adat-2
+cap-src stream-5 set adat-3
+cap-src stream-5 set adat-4
+cap-src stream-5 set adat-5
+cap-src stream-5 set adat-6
+cap-src stream-5 set adat-7
+cap-src stream-5 set adat-8
+cap-src stream-6 set analog-1
+cap-src stream-6 set analog-2
+cap-src stream-6 set analog-3
+cap-src stream-6 set analog-4
+cap-src stream-6 set analog-5
+cap-src stream-6 set analog-6
+cap-src stream-6 set analog-7
+cap-src stream-6 set analog-8
+cap-src stream-6 set spdif-1
+cap-src stream-6 set spdif-2
+cap-src stream-6 set adat-1
+cap-src stream-6 set adat-2
+cap-src stream-6 set adat-3
+cap-src stream-6 set adat-4
+cap-src stream-6 set adat-5
+cap-src stream-6 set adat-6
+cap-src stream-6 set adat-7
+cap-src stream-6 set adat-8
+cap-src stream-7 set analog-1
+cap-src stream-7 set analog-2
+cap-src stream-7 set analog-3
+cap-src stream-7 set analog-4
+cap-src stream-7 set analog-5
+cap-src stream-7 set analog-6
+cap-src stream-7 set analog-7
+cap-src stream-7 set analog-8
+cap-src stream-7 set spdif-1
+cap-src stream-7 set spdif-2
+cap-src stream-7 set adat-1
+cap-src stream-7 set adat-2
+cap-src stream-7 set adat-3
+cap-src stream-7 set adat-4
+cap-src stream-7 set adat-5
+cap-src stream-7 set adat-6
+cap-src stream-7 set adat-7
+cap-src stream-7 set adat-8
+cap-src stream-8 set analog-1
+cap-src stream-8 set analog-2
+cap-src stream-8 set analog-3
+cap-src stream-8 set analog-4
+cap-src stream-8 set analog-5
+cap-src stream-8 set analog-6
+cap-src stream-8 set analog-7
+cap-src stream-8 set analog-8
+cap-src stream-8 set spdif-1
+cap-src stream-8 set spdif-2
+cap-src stream-8 set adat-1
+cap-src stream-8 set adat-2
+cap-src stream-8 set adat-3
+cap-src stream-8 set adat-4
+cap-src stream-8 set adat-5
+cap-src stream-8 set adat-6
+cap-src stream-8 set adat-7
+cap-src stream-8 set adat-8
+cap-src stream-9 set analog-1
+cap-src stream-9 set analog-2
+cap-src stream-9 set analog-3
+cap-src stream-9 set analog-4
+cap-src stream-9 set analog-5
+cap-src stream-9 set analog-6
+cap-src stream-9 set analog-7
+cap-src stream-9 set analog-8
+cap-src stream-9 set spdif-1
+cap-src stream-9 set spdif-2
+cap-src stream-9 set adat-1
+cap-src stream-9 set adat-2
+cap-src stream-9 set adat-3
+cap-src stream-9 set adat-4
+cap-src stream-9 set adat-5
+cap-src stream-9 set adat-6
+cap-src stream-9 set adat-7
+cap-src stream-9 set adat-8
+cap-src stream-10 set analog-1
+cap-src stream-10 set analog-2
+cap-src stream-10 set analog-3
+cap-src stream-10 set analog-4
+cap-src stream-10 set analog-5
+cap-src stream-10 set analog-6
+cap-src stream-10 set analog-7
+cap-src stream-10 set analog-8
+cap-src stream-10 set spdif-1
+cap-src stream-10 set spdif-2
+cap-src stream-10 set adat-1
+cap-src stream-10 set adat-2
+cap-src stream-10 set adat-3
+cap-src stream-10 set adat-4
+cap-src stream-10 set adat-5
+cap-src stream-10 set adat-6
+cap-src stream-10 set adat-7
+cap-src stream-10 set adat-8
+cap-src stream-11 set analog-1
+cap-src stream-11 set analog-2
+cap-src stream-11 set analog-3
+cap-src stream-11 set analog-4
+cap-src stream-11 set analog-5
+cap-src stream-11 set analog-6
+cap-src stream-11 set analog-7
+cap-src stream-11 set analog-8
+cap-src stream-11 set spdif-1
+cap-src stream-11 set spdif-2
+cap-src stream-11 set adat-1
+cap-src stream-11 set adat-2
+cap-src stream-11 set adat-3
+cap-src stream-11 set adat-4
+cap-src stream-11 set adat-5
+cap-src stream-11 set adat-6
+cap-src stream-11 set adat-7
+cap-src stream-11 set adat-8
+cap-src stream-12 set analog-1
+cap-src stream-12 set analog-2
+cap-src stream-12 set analog-3
+cap-src stream-12 set analog-4
+cap-src stream-12 set analog-5
+cap-src stream-12 set analog-6
+cap-src stream-12 set analog-7
+cap-src stream-12 set analog-8
+cap-src stream-12 set spdif-1
+cap-src stream-12 set spdif-2
+cap-src stream-12 set adat-1
+cap-src stream-12 set adat-2
+cap-src stream-12 set adat-3
+cap-src stream-12 set adat-4
+cap-src stream-12 set adat-5
+cap-src stream-12 set adat-6
+cap-src stream-12 set adat-7
+cap-src stream-12 set adat-8
+cap-src stream-13 set analog-1
+cap-src stream-13 set analog-2
+cap-src stream-13 set analog-3
+cap-src stream-13 set analog-4
+cap-src stream-13 set analog-5
+cap-src stream-13 set analog-6
+cap-src stream-13 set analog-7
+cap-src stream-13 set analog-8
+cap-src stream-13 set spdif-1
+cap-src stream-13 set spdif-2
+cap-src stream-13 set adat-1
+cap-src stream-13 set adat-2
+cap-src stream-13 set adat-3
+cap-src stream-13 set adat-4
+cap-src stream-13 set adat-5
+cap-src stream-13 set adat-6
+cap-src stream-13 set adat-7
+cap-src stream-13 set adat-8
+cap-src stream-14 set analog-1
+cap-src stream-14 set analog-2
+cap-src stream-14 set analog-3
+cap-src stream-14 set analog-4
+cap-src stream-14 set analog-5
+cap-src stream-14 set analog-6
+cap-src stream-14 set analog-7
+cap-src stream-14 set analog-8
+cap-src stream-14 set spdif-1
+cap-src stream-14 set spdif-2
+cap-src stream-14 set adat-1
+cap-src stream-14 set adat-2
+cap-src stream-14 set adat-3
+cap-src stream-14 set adat-4
+cap-src stream-14 set adat-5
+cap-src stream-14 set adat-6
+cap-src stream-14 set adat-7
+cap-src stream-14 set adat-8
+cap-src stream-15 set analog-1
+cap-src stream-15 set analog-2
+cap-src stream-15 set analog-3
+cap-src stream-15 set analog-4
+cap-src stream-15 set analog-5
+cap-src stream-15 set analog-6
+cap-src stream-15 set analog-7
+cap-src stream-15 set analog-8
+cap-src stream-15 set spdif-1
+cap-src stream-15 set spdif-2
+cap-src stream-15 set adat-1
+cap-src stream-15 set adat-2
+cap-src stream-15 set adat-3
+cap-src stream-15 set adat-4
+cap-src stream-15 set adat-5
+cap-src stream-15 set adat-6
+cap-src stream-15 set adat-7
+cap-src stream-15 set adat-8
+cap-src stream-16 set analog-1
+cap-src stream-16 set analog-2
+cap-src stream-16 set analog-3
+cap-src stream-16 set analog-4
+cap-src stream-16 set analog-5
+cap-src stream-16 set analog-6
+cap-src stream-16 set analog-7
+cap-src stream-16 set analog-8
+cap-src stream-16 set spdif-1
+cap-src stream-16 set spdif-2
+cap-src stream-16 set adat-1
+cap-src stream-16 set adat-2
+cap-src stream-16 set adat-3
+cap-src stream-16 set adat-4
+cap-src stream-16 set adat-5
+cap-src stream-16 set adat-6
+cap-src stream-16 set adat-7
+cap-src stream-16 set adat-8
+cap-src stream-17 set analog-1
+cap-src stream-17 set analog-2
+cap-src stream-17 set analog-3
+cap-src stream-17 set analog-4
+cap-src stream-17 set analog-5
+cap-src stream-17 set analog-6
+cap-src stream-17 set analog-7
+cap-src stream-17 set analog-8
+cap-src stream-17 set spdif-1
+cap-src stream-17 set spdif-2
+cap-src stream-17 set adat-1
+cap-src stream-17 set adat-2
+cap-src stream-17 set adat-3
+cap-src stream-17 set adat-4
+cap-src stream-17 set adat-5
+cap-src stream-17 set adat-6
+cap-src stream-17 set adat-7
+cap-src stream-17 set adat-8
+cap-src stream-18 set analog-1
+cap-src stream-18 set analog-2
+cap-src stream-18 set analog-3
+cap-src stream-18 set analog-4
+cap-src stream-18 set analog-5
+cap-src stream-18 set analog-6
+cap-src stream-18 set analog-7
+cap-src stream-18 set analog-8
+cap-src stream-18 set spdif-1
+cap-src stream-18 set spdif-2
+cap-src stream-18 set adat-1
+cap-src stream-18 set adat-2
+cap-src stream-18 set adat-3
+cap-src stream-18 set adat-4
+cap-src stream-18 set adat-5
+cap-src stream-18 set adat-6
+cap-src stream-18 set adat-7
+cap-src stream-18 set adat-8
+
+out-src analog-1 get
+out-src analog-2 get
+out-src analog-3 get
+out-src analog-4 get
+out-src analog-5 get
+out-src analog-6 get
+out-src analog-7 get
+out-src analog-8 get
+out-src spdif-1 get
+out-src spdif-2 get
+out-src adat-1 get
+out-src adat-2 get
+out-src adat-3 get
+out-src adat-4 get
+out-src adat-5 get
+out-src adat-6 get
+out-src adat-7 get
+out-src adat-8 get
+out-src analog-1 set analog-1
+out-src analog-1 set analog-2
+out-src analog-1 set analog-3
+out-src analog-1 set analog-4
+out-src analog-1 set analog-5
+out-src analog-1 set analog-6
+out-src analog-1 set analog-7
+out-src analog-1 set analog-8
+out-src analog-1 set stream-1
+out-src analog-1 set stream-2
+out-src analog-1 set stream-3
+out-src analog-1 set stream-4
+out-src analog-1 set stream-5
+out-src analog-1 set stream-6
+out-src analog-1 set stream-7
+out-src analog-1 set stream-8
+out-src analog-1 set stream-9
+out-src analog-1 set stream-10
+out-src analog-1 set stream-11
+out-src analog-1 set stream-12
+out-src analog-1 set stream-13
+out-src analog-1 set stream-14
+out-src analog-1 set stream-15
+out-src analog-1 set stream-16
+out-src analog-1 set stream-17
+out-src analog-1 set stream-18
+out-src analog-1 set spdif-1
+out-src analog-1 set spdif-2
+out-src analog-1 set adat-1
+out-src analog-1 set adat-2
+out-src analog-1 set adat-3
+out-src analog-1 set adat-4
+out-src analog-1 set adat-5
+out-src analog-1 set adat-6
+out-src analog-1 set adat-7
+out-src analog-1 set adat-8
+out-src analog-1 set mixer-1
+out-src analog-1 set mixer-2
+out-src analog-1 set mixer-3
+out-src analog-1 set mixer-4
+out-src analog-2 set analog-1
+out-src analog-2 set analog-2
+out-src analog-2 set analog-3
+out-src analog-2 set analog-4
+out-src analog-2 set analog-5
+out-src analog-2 set analog-6
+out-src analog-2 set analog-7
+out-src analog-2 set analog-8
+out-src analog-2 set stream-1
+out-src analog-2 set stream-2
+out-src analog-2 set stream-3
+out-src analog-2 set stream-4
+out-src analog-2 set stream-5
+out-src analog-2 set stream-6
+out-src analog-2 set stream-7
+out-src analog-2 set stream-8
+out-src analog-2 set stream-9
+out-src analog-2 set stream-10
+out-src analog-2 set stream-11
+out-src analog-2 set stream-12
+out-src analog-2 set stream-13
+out-src analog-2 set stream-14
+out-src analog-2 set stream-15
+out-src analog-2 set stream-16
+out-src analog-2 set stream-17
+out-src analog-2 set stream-18
+out-src analog-2 set spdif-1
+out-src analog-2 set spdif-2
+out-src analog-2 set adat-1
+out-src analog-2 set adat-2
+out-src analog-2 set adat-3
+out-src analog-2 set adat-4
+out-src analog-2 set adat-5
+out-src analog-2 set adat-6
+out-src analog-2 set adat-7
+out-src analog-2 set adat-8
+out-src analog-2 set mixer-1
+out-src analog-2 set mixer-2
+out-src analog-2 set mixer-3
+out-src analog-2 set mixer-4
+out-src analog-3 set analog-1
+out-src analog-3 set analog-2
+out-src analog-3 set analog-3
+out-src analog-3 set analog-4
+out-src analog-3 set analog-5
+out-src analog-3 set analog-6
+out-src analog-3 set analog-7
+out-src analog-3 set analog-8
+out-src analog-3 set stream-1
+out-src analog-3 set stream-2
+out-src analog-3 set stream-3
+out-src analog-3 set stream-4
+out-src analog-3 set stream-5
+out-src analog-3 set stream-6
+out-src analog-3 set stream-7
+out-src analog-3 set stream-8
+out-src analog-3 set stream-9
+out-src analog-3 set stream-10
+out-src analog-3 set stream-11
+out-src analog-3 set stream-12
+out-src analog-3 set stream-13
+out-src analog-3 set stream-14
+out-src analog-3 set stream-15
+out-src analog-3 set stream-16
+out-src analog-3 set stream-17
+out-src analog-3 set stream-18
+out-src analog-3 set spdif-1
+out-src analog-3 set spdif-2
+out-src analog-3 set adat-1
+out-src analog-3 set adat-2
+out-src analog-3 set adat-3
+out-src analog-3 set adat-4
+out-src analog-3 set adat-5
+out-src analog-3 set adat-6
+out-src analog-3 set adat-7
+out-src analog-3 set adat-8
+out-src analog-3 set mixer-1
+out-src analog-3 set mixer-2
+out-src analog-3 set mixer-3
+out-src analog-3 set mixer-4
+out-src analog-4 set analog-1
+out-src analog-4 set analog-2
+out-src analog-4 set analog-3
+out-src analog-4 set analog-4
+out-src analog-4 set analog-5
+out-src analog-4 set analog-6
+out-src analog-4 set analog-7
+out-src analog-4 set analog-8
+out-src analog-4 set stream-1
+out-src analog-4 set stream-2
+out-src analog-4 set stream-3
+out-src analog-4 set stream-4
+out-src analog-4 set stream-5
+out-src analog-4 set stream-6
+out-src analog-4 set stream-7
+out-src analog-4 set stream-8
+out-src analog-4 set stream-9
+out-src analog-4 set stream-10
+out-src analog-4 set stream-11
+out-src analog-4 set stream-12
+out-src analog-4 set stream-13
+out-src analog-4 set stream-14
+out-src analog-4 set stream-15
+out-src analog-4 set stream-16
+out-src analog-4 set stream-17
+out-src analog-4 set stream-18
+out-src analog-4 set spdif-1
+out-src analog-4 set spdif-2
+out-src analog-4 set adat-1
+out-src analog-4 set adat-2
+out-src analog-4 set adat-3
+out-src analog-4 set adat-4
+out-src analog-4 set adat-5
+out-src analog-4 set adat-6
+out-src analog-4 set adat-7
+out-src analog-4 set adat-8
+out-src analog-4 set mixer-1
+out-src analog-4 set mixer-2
+out-src analog-4 set mixer-3
+out-src analog-4 set mixer-4
+out-src analog-5 set analog-1
+out-src analog-5 set analog-2
+out-src analog-5 set analog-3
+out-src analog-5 set analog-4
+out-src analog-5 set analog-5
+out-src analog-5 set analog-6
+out-src analog-5 set analog-7
+out-src analog-5 set analog-8
+out-src analog-5 set stream-1
+out-src analog-5 set stream-2
+out-src analog-5 set stream-3
+out-src analog-5 set stream-4
+out-src analog-5 set stream-5
+out-src analog-5 set stream-6
+out-src analog-5 set stream-7
+out-src analog-5 set stream-8
+out-src analog-5 set stream-9
+out-src analog-5 set stream-10
+out-src analog-5 set stream-11
+out-src analog-5 set stream-12
+out-src analog-5 set stream-13
+out-src analog-5 set stream-14
+out-src analog-5 set stream-15
+out-src analog-5 set stream-16
+out-src analog-5 set stream-17
+out-src analog-5 set stream-18
+out-src analog-5 set spdif-1
+out-src analog-5 set spdif-2
+out-src analog-5 set adat-1
+out-src analog-5 set adat-2
+out-src analog-5 set adat-3
+out-src analog-5 set adat-4
+out-src analog-5 set adat-5
+out-src analog-5 set adat-6
+out-src analog-5 set adat-7
+out-src analog-5 set adat-8
+out-src analog-5 set mixer-1
+out-src analog-5 set mixer-2
+out-src analog-5 set mixer-3
+out-src analog-5 set mixer-4
+out-src analog-6 set analog-1
+out-src analog-6 set analog-2
+out-src analog-6 set analog-3
+out-src analog-6 set analog-4
+out-src analog-6 set analog-5
+out-src analog-6 set analog-6
+out-src analog-6 set analog-7
+out-src analog-6 set analog-8
+out-src analog-6 set stream-1
+out-src analog-6 set stream-2
+out-src analog-6 set stream-3
+out-src analog-6 set stream-4
+out-src analog-6 set stream-5
+out-src analog-6 set stream-6
+out-src analog-6 set stream-7
+out-src analog-6 set stream-8
+out-src analog-6 set stream-9
+out-src analog-6 set stream-10
+out-src analog-6 set stream-11
+out-src analog-6 set stream-12
+out-src analog-6 set stream-13
+out-src analog-6 set stream-14
+out-src analog-6 set stream-15
+out-src analog-6 set stream-16
+out-src analog-6 set stream-17
+out-src analog-6 set stream-18
+out-src analog-6 set spdif-1
+out-src analog-6 set spdif-2
+out-src analog-6 set adat-1
+out-src analog-6 set adat-2
+out-src analog-6 set adat-3
+out-src analog-6 set adat-4
+out-src analog-6 set adat-5
+out-src analog-6 set adat-6
+out-src analog-6 set adat-7
+out-src analog-6 set adat-8
+out-src analog-6 set mixer-1
+out-src analog-6 set mixer-2
+out-src analog-6 set mixer-3
+out-src analog-6 set mixer-4
+out-src analog-7 set analog-1
+out-src analog-7 set analog-2
+out-src analog-7 set analog-3
+out-src analog-7 set analog-4
+out-src analog-7 set analog-5
+out-src analog-7 set analog-6
+out-src analog-7 set analog-7
+out-src analog-7 set analog-8
+out-src analog-7 set stream-1
+out-src analog-7 set stream-2
+out-src analog-7 set stream-3
+out-src analog-7 set stream-4
+out-src analog-7 set stream-5
+out-src analog-7 set stream-6
+out-src analog-7 set stream-7
+out-src analog-7 set stream-8
+out-src analog-7 set stream-9
+out-src analog-7 set stream-10
+out-src analog-7 set stream-11
+out-src analog-7 set stream-12
+out-src analog-7 set stream-13
+out-src analog-7 set stream-14
+out-src analog-7 set stream-15
+out-src analog-7 set stream-16
+out-src analog-7 set stream-17
+out-src analog-7 set stream-18
+out-src analog-7 set spdif-1
+out-src analog-7 set spdif-2
+out-src analog-7 set adat-1
+out-src analog-7 set adat-2
+out-src analog-7 set adat-3
+out-src analog-7 set adat-4
+out-src analog-7 set adat-5
+out-src analog-7 set adat-6
+out-src analog-7 set adat-7
+out-src analog-7 set adat-8
+out-src analog-7 set mixer-1
+out-src analog-7 set mixer-2
+out-src analog-7 set mixer-3
+out-src analog-7 set mixer-4
+out-src analog-8 set analog-1
+out-src analog-8 set analog-2
+out-src analog-8 set analog-3
+out-src analog-8 set analog-4
+out-src analog-8 set analog-5
+out-src analog-8 set analog-6
+out-src analog-8 set analog-7
+out-src analog-8 set analog-8
+out-src analog-8 set stream-1
+out-src analog-8 set stream-2
+out-src analog-8 set stream-3
+out-src analog-8 set stream-4
+out-src analog-8 set stream-5
+out-src analog-8 set stream-6
+out-src analog-8 set stream-7
+out-src analog-8 set stream-8
+out-src analog-8 set stream-9
+out-src analog-8 set stream-10
+out-src analog-8 set stream-11
+out-src analog-8 set stream-12
+out-src analog-8 set stream-13
+out-src analog-8 set stream-14
+out-src analog-8 set stream-15
+out-src analog-8 set stream-16
+out-src analog-8 set stream-17
+out-src analog-8 set stream-18
+out-src analog-8 set spdif-1
+out-src analog-8 set spdif-2
+out-src analog-8 set adat-1
+out-src analog-8 set adat-2
+out-src analog-8 set adat-3
+out-src analog-8 set adat-4
+out-src analog-8 set adat-5
+out-src analog-8 set adat-6
+out-src analog-8 set adat-7
+out-src analog-8 set adat-8
+out-src analog-8 set mixer-1
+out-src analog-8 set mixer-2
+out-src analog-8 set mixer-3
+out-src analog-8 set mixer-4
+out-src spdif-1 set analog-1
+out-src spdif-1 set analog-2
+out-src spdif-1 set analog-3
+out-src spdif-1 set analog-4
+out-src spdif-1 set analog-5
+out-src spdif-1 set analog-6
+out-src spdif-1 set analog-7
+out-src spdif-1 set analog-8
+out-src spdif-1 set stream-1
+out-src spdif-1 set stream-2
+out-src spdif-1 set stream-3
+out-src spdif-1 set stream-4
+out-src spdif-1 set stream-5
+out-src spdif-1 set stream-6
+out-src spdif-1 set stream-7
+out-src spdif-1 set stream-8
+out-src spdif-1 set stream-9
+out-src spdif-1 set stream-10
+out-src spdif-1 set stream-11
+out-src spdif-1 set stream-12
+out-src spdif-1 set stream-13
+out-src spdif-1 set stream-14
+out-src spdif-1 set stream-15
+out-src spdif-1 set stream-16
+out-src spdif-1 set stream-17
+out-src spdif-1 set stream-18
+out-src spdif-1 set spdif-1
+out-src spdif-1 set spdif-2
+out-src spdif-1 set adat-1
+out-src spdif-1 set adat-2
+out-src spdif-1 set adat-3
+out-src spdif-1 set adat-4
+out-src spdif-1 set adat-5
+out-src spdif-1 set adat-6
+out-src spdif-1 set adat-7
+out-src spdif-1 set adat-8
+out-src spdif-1 set mixer-1
+out-src spdif-1 set mixer-2
+out-src spdif-1 set mixer-3
+out-src spdif-1 set mixer-4
+out-src spdif-2 set analog-1
+out-src spdif-2 set analog-2
+out-src spdif-2 set analog-3
+out-src spdif-2 set analog-4
+out-src spdif-2 set analog-5
+out-src spdif-2 set analog-6
+out-src spdif-2 set analog-7
+out-src spdif-2 set analog-8
+out-src spdif-2 set stream-1
+out-src spdif-2 set stream-2
+out-src spdif-2 set stream-3
+out-src spdif-2 set stream-4
+out-src spdif-2 set stream-5
+out-src spdif-2 set stream-6
+out-src spdif-2 set stream-7
+out-src spdif-2 set stream-8
+out-src spdif-2 set stream-9
+out-src spdif-2 set stream-10
+out-src spdif-2 set stream-11
+out-src spdif-2 set stream-12
+out-src spdif-2 set stream-13
+out-src spdif-2 set stream-14
+out-src spdif-2 set stream-15
+out-src spdif-2 set stream-16
+out-src spdif-2 set stream-17
+out-src spdif-2 set stream-18
+out-src spdif-2 set spdif-1
+out-src spdif-2 set spdif-2
+out-src spdif-2 set adat-1
+out-src spdif-2 set adat-2
+out-src spdif-2 set adat-3
+out-src spdif-2 set adat-4
+out-src spdif-2 set adat-5
+out-src spdif-2 set adat-6
+out-src spdif-2 set adat-7
+out-src spdif-2 set adat-8
+out-src spdif-2 set mixer-1
+out-src spdif-2 set mixer-2
+out-src spdif-2 set mixer-3
+out-src spdif-2 set mixer-4
+out-src adat-1 set analog-1
+out-src adat-1 set analog-2
+out-src adat-1 set analog-3
+out-src adat-1 set analog-4
+out-src adat-1 set analog-5
+out-src adat-1 set analog-6
+out-src adat-1 set analog-7
+out-src adat-1 set analog-8
+out-src adat-1 set stream-1
+out-src adat-1 set stream-2
+out-src adat-1 set stream-3
+out-src adat-1 set stream-4
+out-src adat-1 set stream-5
+out-src adat-1 set stream-6
+out-src adat-1 set stream-7
+out-src adat-1 set stream-8
+out-src adat-1 set stream-9
+out-src adat-1 set stream-10
+out-src adat-1 set stream-11
+out-src adat-1 set stream-12
+out-src adat-1 set stream-13
+out-src adat-1 set stream-14
+out-src adat-1 set stream-15
+out-src adat-1 set stream-16
+out-src adat-1 set stream-17
+out-src adat-1 set stream-18
+out-src adat-1 set spdif-1
+out-src adat-1 set spdif-2
+out-src adat-1 set adat-1
+out-src adat-1 set adat-2
+out-src adat-1 set adat-3
+out-src adat-1 set adat-4
+out-src adat-1 set adat-5
+out-src adat-1 set adat-6
+out-src adat-1 set adat-7
+out-src adat-1 set adat-8
+out-src adat-1 set mixer-1
+out-src adat-1 set mixer-2
+out-src adat-1 set mixer-3
+out-src adat-1 set mixer-4
+out-src adat-2 set analog-1
+out-src adat-2 set analog-2
+out-src adat-2 set analog-3
+out-src adat-2 set analog-4
+out-src adat-2 set analog-5
+out-src adat-2 set analog-6
+out-src adat-2 set analog-7
+out-src adat-2 set analog-8
+out-src adat-2 set stream-1
+out-src adat-2 set stream-2
+out-src adat-2 set stream-3
+out-src adat-2 set stream-4
+out-src adat-2 set stream-5
+out-src adat-2 set stream-6
+out-src adat-2 set stream-7
+out-src adat-2 set stream-8
+out-src adat-2 set stream-9
+out-src adat-2 set stream-10
+out-src adat-2 set stream-11
+out-src adat-2 set stream-12
+out-src adat-2 set stream-13
+out-src adat-2 set stream-14
+out-src adat-2 set stream-15
+out-src adat-2 set stream-16
+out-src adat-2 set stream-17
+out-src adat-2 set stream-18
+out-src adat-2 set spdif-1
+out-src adat-2 set spdif-2
+out-src adat-2 set adat-1
+out-src adat-2 set adat-2
+out-src adat-2 set adat-3
+out-src adat-2 set adat-4
+out-src adat-2 set adat-5
+out-src adat-2 set adat-6
+out-src adat-2 set adat-7
+out-src adat-2 set adat-8
+out-src adat-2 set mixer-1
+out-src adat-2 set mixer-2
+out-src adat-2 set mixer-3
+out-src adat-2 set mixer-4
+out-src adat-3 set analog-1
+out-src adat-3 set analog-2
+out-src adat-3 set analog-3
+out-src adat-3 set analog-4
+out-src adat-3 set analog-5
+out-src adat-3 set analog-6
+out-src adat-3 set analog-7
+out-src adat-3 set analog-8
+out-src adat-3 set stream-1
+out-src adat-3 set stream-2
+out-src adat-3 set stream-3
+out-src adat-3 set stream-4
+out-src adat-3 set stream-5
+out-src adat-3 set stream-6
+out-src adat-3 set stream-7
+out-src adat-3 set stream-8
+out-src adat-3 set stream-9
+out-src adat-3 set stream-10
+out-src adat-3 set stream-11
+out-src adat-3 set stream-12
+out-src adat-3 set stream-13
+out-src adat-3 set stream-14
+out-src adat-3 set stream-15
+out-src adat-3 set stream-16
+out-src adat-3 set stream-17
+out-src adat-3 set stream-18
+out-src adat-3 set spdif-1
+out-src adat-3 set spdif-2
+out-src adat-3 set adat-1
+out-src adat-3 set adat-2
+out-src adat-3 set adat-3
+out-src adat-3 set adat-4
+out-src adat-3 set adat-5
+out-src adat-3 set adat-6
+out-src adat-3 set adat-7
+out-src adat-3 set adat-8
+out-src adat-3 set mixer-1
+out-src adat-3 set mixer-2
+out-src adat-3 set mixer-3
+out-src adat-3 set mixer-4
+out-src adat-4 set analog-1
+out-src adat-4 set analog-2
+out-src adat-4 set analog-3
+out-src adat-4 set analog-4
+out-src adat-4 set analog-5
+out-src adat-4 set analog-6
+out-src adat-4 set analog-7
+out-src adat-4 set analog-8
+out-src adat-4 set stream-1
+out-src adat-4 set stream-2
+out-src adat-4 set stream-3
+out-src adat-4 set stream-4
+out-src adat-4 set stream-5
+out-src adat-4 set stream-6
+out-src adat-4 set stream-7
+out-src adat-4 set stream-8
+out-src adat-4 set stream-9
+out-src adat-4 set stream-10
+out-src adat-4 set stream-11
+out-src adat-4 set stream-12
+out-src adat-4 set stream-13
+out-src adat-4 set stream-14
+out-src adat-4 set stream-15
+out-src adat-4 set stream-16
+out-src adat-4 set stream-17
+out-src adat-4 set stream-18
+out-src adat-4 set spdif-1
+out-src adat-4 set spdif-2
+out-src adat-4 set adat-1
+out-src adat-4 set adat-2
+out-src adat-4 set adat-3
+out-src adat-4 set adat-4
+out-src adat-4 set adat-5
+out-src adat-4 set adat-6
+out-src adat-4 set adat-7
+out-src adat-4 set adat-8
+out-src adat-4 set mixer-1
+out-src adat-4 set mixer-2
+out-src adat-4 set mixer-3
+out-src adat-4 set mixer-4
+out-src adat-5 set analog-1
+out-src adat-5 set analog-2
+out-src adat-5 set analog-3
+out-src adat-5 set analog-4
+out-src adat-5 set analog-5
+out-src adat-5 set analog-6
+out-src adat-5 set analog-7
+out-src adat-5 set analog-8
+out-src adat-5 set stream-1
+out-src adat-5 set stream-2
+out-src adat-5 set stream-3
+out-src adat-5 set stream-4
+out-src adat-5 set stream-5
+out-src adat-5 set stream-6
+out-src adat-5 set stream-7
+out-src adat-5 set stream-8
+out-src adat-5 set stream-9
+out-src adat-5 set stream-10
+out-src adat-5 set stream-11
+out-src adat-5 set stream-12
+out-src adat-5 set stream-13
+out-src adat-5 set stream-14
+out-src adat-5 set stream-15
+out-src adat-5 set stream-16
+out-src adat-5 set stream-17
+out-src adat-5 set stream-18
+out-src adat-5 set spdif-1
+out-src adat-5 set spdif-2
+out-src adat-5 set adat-1
+out-src adat-5 set adat-2
+out-src adat-5 set adat-3
+out-src adat-5 set adat-4
+out-src adat-5 set adat-5
+out-src adat-5 set adat-6
+out-src adat-5 set adat-7
+out-src adat-5 set adat-8
+out-src adat-5 set mixer-1
+out-src adat-5 set mixer-2
+out-src adat-5 set mixer-3
+out-src adat-5 set mixer-4
+out-src adat-6 set analog-1
+out-src adat-6 set analog-2
+out-src adat-6 set analog-3
+out-src adat-6 set analog-4
+out-src adat-6 set analog-5
+out-src adat-6 set analog-6
+out-src adat-6 set analog-7
+out-src adat-6 set analog-8
+out-src adat-6 set stream-1
+out-src adat-6 set stream-2
+out-src adat-6 set stream-3
+out-src adat-6 set stream-4
+out-src adat-6 set stream-5
+out-src adat-6 set stream-6
+out-src adat-6 set stream-7
+out-src adat-6 set stream-8
+out-src adat-6 set stream-9
+out-src adat-6 set stream-10
+out-src adat-6 set stream-11
+out-src adat-6 set stream-12
+out-src adat-6 set stream-13
+out-src adat-6 set stream-14
+out-src adat-6 set stream-15
+out-src adat-6 set stream-16
+out-src adat-6 set stream-17
+out-src adat-6 set stream-18
+out-src adat-6 set spdif-1
+out-src adat-6 set spdif-2
+out-src adat-6 set adat-1
+out-src adat-6 set adat-2
+out-src adat-6 set adat-3
+out-src adat-6 set adat-4
+out-src adat-6 set adat-5
+out-src adat-6 set adat-6
+out-src adat-6 set adat-7
+out-src adat-6 set adat-8
+out-src adat-6 set mixer-1
+out-src adat-6 set mixer-2
+out-src adat-6 set mixer-3
+out-src adat-6 set mixer-4
+out-src adat-7 set analog-1
+out-src adat-7 set analog-2
+out-src adat-7 set analog-3
+out-src adat-7 set analog-4
+out-src adat-7 set analog-5
+out-src adat-7 set analog-6
+out-src adat-7 set analog-7
+out-src adat-7 set analog-8
+out-src adat-7 set stream-1
+out-src adat-7 set stream-2
+out-src adat-7 set stream-3
+out-src adat-7 set stream-4
+out-src adat-7 set stream-5
+out-src adat-7 set stream-6
+out-src adat-7 set stream-7
+out-src adat-7 set stream-8
+out-src adat-7 set stream-9
+out-src adat-7 set stream-10
+out-src adat-7 set stream-11
+out-src adat-7 set stream-12
+out-src adat-7 set stream-13
+out-src adat-7 set stream-14
+out-src adat-7 set stream-15
+out-src adat-7 set stream-16
+out-src adat-7 set stream-17
+out-src adat-7 set stream-18
+out-src adat-7 set spdif-1
+out-src adat-7 set spdif-2
+out-src adat-7 set adat-1
+out-src adat-7 set adat-2
+out-src adat-7 set adat-3
+out-src adat-7 set adat-4
+out-src adat-7 set adat-5
+out-src adat-7 set adat-6
+out-src adat-7 set adat-7
+out-src adat-7 set adat-8
+out-src adat-7 set mixer-1
+out-src adat-7 set mixer-2
+out-src adat-7 set mixer-3
+out-src adat-7 set mixer-4
+out-src adat-8 set analog-1
+out-src adat-8 set analog-2
+out-src adat-8 set analog-3
+out-src adat-8 set analog-4
+out-src adat-8 set analog-5
+out-src adat-8 set analog-6
+out-src adat-8 set analog-7
+out-src adat-8 set analog-8
+out-src adat-8 set stream-1
+out-src adat-8 set stream-2
+out-src adat-8 set stream-3
+out-src adat-8 set stream-4
+out-src adat-8 set stream-5
+out-src adat-8 set stream-6
+out-src adat-8 set stream-7
+out-src adat-8 set stream-8
+out-src adat-8 set stream-9
+out-src adat-8 set stream-10
+out-src adat-8 set stream-11
+out-src adat-8 set stream-12
+out-src adat-8 set stream-13
+out-src adat-8 set stream-14
+out-src adat-8 set stream-15
+out-src adat-8 set stream-16
+out-src adat-8 set stream-17
+out-src adat-8 set stream-18
+out-src adat-8 set spdif-1
+out-src adat-8 set spdif-2
+out-src adat-8 set adat-1
+out-src adat-8 set adat-2
+out-src adat-8 set adat-3
+out-src adat-8 set adat-4
+out-src adat-8 set adat-5
+out-src adat-8 set adat-6
+out-src adat-8 set adat-7
+out-src adat-8 set adat-8
+out-src adat-8 set mixer-1
+out-src adat-8 set mixer-2
+out-src adat-8 set mixer-3
+out-src adat-8 set mixer-4
+
+hp-src hp-1 get
+hp-src hp-2 get
+hp-src hp-1 set analog-1/2
+hp-src hp-1 set analog-3/4
+hp-src hp-1 set analog-5/6
+hp-src hp-1 set analog-7/8
+hp-src hp-1 set spdif-1/2
+hp-src hp-1 set none
+hp-src hp-2 set analog-1/2
+hp-src hp-2 set analog-3/4
+hp-src hp-2 set analog-5/6
+hp-src hp-2 set analog-7/8
+hp-src hp-2 set spdif-1/2
+hp-src hp-2 set none
+
+mixer-src mixer-1/2 analog-1 set -48 0
+mixer-src mixer-1/2 analog-2 set -48 100
+mixer-src mixer-1/2 analog-3 set -48 0
+mixer-src mixer-1/2 analog-4 set -48 100
+mixer-src mixer-1/2 analog-5 set -48 0
+mixer-src mixer-1/2 analog-6 set -48 100
+mixer-src mixer-1/2 analog-7 set -48 0
+mixer-src mixer-1/2 analog-8 set -48 100
+mixer-src mixer-1/2 stream-1 set -48 0
+mixer-src mixer-1/2 stream-2 set -48 100
+mixer-src mixer-1/2 stream-3 set -48 0
+mixer-src mixer-1/2 stream-4 set -48 100
+mixer-src mixer-1/2 stream-5 set -48 0
+mixer-src mixer-1/2 stream-6 set -48 100
+mixer-src mixer-1/2 stream-7 set -48 0
+mixer-src mixer-1/2 stream-8 set -48 100
+mixer-src mixer-1/2 stream-9 set -48 0
+mixer-src mixer-1/2 stream-10 set -48 100
+mixer-src mixer-1/2 stream-11 set -48 0
+mixer-src mixer-1/2 stream-12 set -48 100
+mixer-src mixer-1/2 stream-13 set -48 0
+mixer-src mixer-1/2 stream-14 set -48 100
+mixer-src mixer-1/2 stream-15 set -48 0
+mixer-src mixer-1/2 stream-16 set -48 100
+mixer-src mixer-1/2 stream-17 set -48 0
+mixer-src mixer-1/2 stream-18 set -48 100
+mixer-src mixer-1/2 adat-1 set -48 0
+mixer-src mixer-1/2 adat-2 set -48 100
+mixer-src mixer-1/2 adat-3 set -48 0
+mixer-src mixer-1/2 adat-4 set -48 100
+mixer-src mixer-1/2 adat-5 set -48 0
+mixer-src mixer-1/2 adat-6 set -48 100
+mixer-src mixer-1/2 adat-7 set -48 0
+mixer-src mixer-1/2 adat-8 set -48 100
+mixer-src mixer-1/2 spdif-1 set -48 0
+mixer-src mixer-1/2 spdif-2 set -48 100
+mixer-src mixer-3/4 analog-1 set -48 0
+mixer-src mixer-3/4 analog-2 set -48 100
+mixer-src mixer-3/4 analog-3 set -48 0
+mixer-src mixer-3/4 analog-4 set -48 100
+mixer-src mixer-3/4 analog-5 set -48 0
+mixer-src mixer-3/4 analog-6 set -48 100
+mixer-src mixer-3/4 analog-7 set -48 0
+mixer-src mixer-3/4 analog-8 set -48 100
+mixer-src mixer-3/4 stream-1 set -48 0
+mixer-src mixer-3/4 stream-2 set -48 100
+mixer-src mixer-3/4 stream-3 set -48 0
+mixer-src mixer-3/4 stream-4 set -48 100
+mixer-src mixer-3/4 stream-5 set -48 0
+mixer-src mixer-3/4 stream-6 set -48 100
+mixer-src mixer-3/4 stream-7 set -48 0
+mixer-src mixer-3/4 stream-8 set -48 100
+mixer-src mixer-3/4 stream-9 set -48 0
+mixer-src mixer-3/4 stream-10 set -48 100
+mixer-src mixer-3/4 stream-11 set -48 0
+mixer-src mixer-3/4 stream-12 set -48 100
+mixer-src mixer-3/4 stream-13 set -48 0
+mixer-src mixer-3/4 stream-14 set -48 100
+mixer-src mixer-3/4 stream-15 set -48 0
+mixer-src mixer-3/4 stream-16 set -48 100
+mixer-src mixer-3/4 stream-17 set -48 0
+mixer-src mixer-3/4 stream-18 set -48 100
+mixer-src mixer-3/4 adat-1 set -48 0
+mixer-src mixer-3/4 adat-2 set -48 100
+mixer-src mixer-3/4 adat-3 set -48 0
+mixer-src mixer-3/4 adat-4 set -48 100
+mixer-src mixer-3/4 adat-5 set -48 0
+mixer-src mixer-3/4 adat-6 set -48 100
+mixer-src mixer-3/4 adat-7 set -48 0
+mixer-src mixer-3/4 adat-8 set -48 100
+mixer-src mixer-3/4 spdif-1 set -48 0
+mixer-src mixer-3/4 spdif-2 set -48 100
+
+reset-meters
