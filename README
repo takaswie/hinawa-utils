@@ -42,39 +42,39 @@ The modules include applications of below specifications:
     * A lexer/parser of configuration ROM on IEEE 1394 bus
  * hinawa-bebob-parser
     * Plug structure parser for BeBoB firmware
- * hinawa-alesis-io-cui
+ * hinawa-alesis-io-cli
     * CLI tool for Alesis iO|14 and iO|26
- * hinawa-dg00x-common-cui
+ * hinawa-dg00x-common-cli
     * CLI tool for common functionalities of Digidesign Digi 00x family
- * hinawa-dg003-cui
+ * hinawa-dg003-cli
     * CLI tool for functionalities specific to Digidesign Digi 003 family
- * hinawa-dice-common-cui
+ * hinawa-dice-common-cli
     * CLI tool for Dice common functionalities
- * hinawa-dice-extension-cui
+ * hinawa-dice-extension-cli
     * CLI tool for Dice extended functionalities
- * hinawa-fireface-cui
+ * hinawa-fireface-cli
     * CLI tool for RME Fireface series
- * hinawa-fireworks-cui
+ * hinawa-fireworks-cli
     * CLI tool for Echo Audio Fireworks module
- * hinawa-griffin-firewave-cui
+ * hinawa-griffin-firewave-cli
     * CLI tool for Griffin Firewave
- * hinawa-lacie-speakers-cui
+ * hinawa-lacie-speakers-cli
     * CLI tool for Lacie FireWire speakers
- * hinawa-motu-common-cui
+ * hinawa-motu-common-cli
     * CLI tool for MOTU FireWire series
- * hinawa-maudio-bebob-cui
+ * hinawa-maudio-bebob-cli
     * CLI tool for M-Audio FireWire series based on BeBoB solution
- * hinawa-oxfw-generic-cui
+ * hinawa-oxfw-generic-cli
     * CLI tool for OXFW generic functionalities
- * hinawa-tascam-fireone-cui
+ * hinawa-tascam-fireone-cli
     * CLI tool for Tascam FireOne
- * hinawa-tascam-fw-rack-cui
+ * hinawa-tascam-fw-rack-cli
     * CLI tool for rack models of Tascam FireWire series (FW1804)
- * hinawa-tascam-fw-console-cui
+ * hinawa-tascam-fw-console-cli
     * CLI tool for console models of Tascam FireWire series (FW1082/1884)
- * hinawa-yamaha-terratec-cui
+ * hinawa-yamaha-terratec-cli
     * CLI tool for Yamaha GO series and Terratec PHASE series
- * hinawa-focusrite-saffirepro-io-cui
+ * hinawa-focusrite-saffirepro-io-cli
     * CLI tool for Focusrite SaffirePro IO series
 
 ## Requirements
