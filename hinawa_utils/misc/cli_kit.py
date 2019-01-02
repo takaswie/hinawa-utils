@@ -9,9 +9,9 @@ import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
-__all__ = ['CuiKit']
+__all__ = ['CliKit']
 
-class CuiKit():
+class CliKit():
     @staticmethod
     def _seek_snd_unit_from_guid(guid):
         for fullpath in Path('/dev/snd').glob('hw*'):

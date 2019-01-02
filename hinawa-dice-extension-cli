@@ -7,7 +7,7 @@ from time import sleep
 from signal import signal, SIGINT
 from json import dumps
 
-from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.dice.dice_extended_unit import DiceExtendedUnit
 
 def _print_stream_params(direction, index, params):
@@ -499,7 +499,7 @@ cmds = {
     'listen-metering':  handle_listen_metering,
 }
 
-fullpath = CuiKit.seek_snd_unit_path()
+fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
     unit = DiceExtendedUnit(fullpath)
     if (unit.get_caps('general')['storage-available'] and
@@ -507,4 +507,4 @@ if fullpath:
         unit.get_caps('router')['is-storable'] and
         unit.get_caps('mixer')['is-storable']):
         cmds['storage-operation'] = handle_storage_operation
-    CuiKit.dispatch_command(unit, cmds)
+    CliKit.dispatch_command(unit, cmds)

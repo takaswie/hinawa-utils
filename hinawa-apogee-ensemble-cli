@@ -6,7 +6,7 @@ import sys
 import signal
 from time import sleep
 
-from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.bebob.apogee_ensemble_unit import ApogeeEnsembleUnit
 
 def handle_clock_src(unit, args):
@@ -396,7 +396,7 @@ cmds = {
     'reset-meters':     handle_reset_meters,
 }
 
-fullpath = CuiKit.seek_snd_unit_path()
+fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
     unit = ApogeeEnsembleUnit(fullpath)
-    CuiKit.dispatch_command(unit, cmds)
+    CliKit.dispatch_command(unit, cmds)

@@ -6,7 +6,7 @@ import signal
 
 from gi.repository import GLib
 
-from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.dg00x.dg00x_unit import Dg00xUnit
 
 def handle_clock_source(unit, args):
@@ -105,7 +105,7 @@ cmds = {
     'listen-message':       handle_listen_message,
 }
 
-fullpath = CuiKit.seek_snd_unit_path()
+fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
     unit = Dg00xUnit(fullpath)
-    CuiKit.dispatch_command(unit, cmds)
+    CliKit.dispatch_command(unit, cmds)

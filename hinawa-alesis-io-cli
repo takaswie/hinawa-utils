@@ -6,7 +6,7 @@ import sys
 import signal
 from time import sleep
 
-from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.dice.alesis_io_unit import AlesisIoUnit
 
 def handle_mixer_source_gain(unit, args):
@@ -252,9 +252,9 @@ cmds = {
     'listen-metering':      handle_listen_metering,
 }
 
-fullpath = CuiKit.seek_snd_unit_path()
+fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
     unit = AlesisIoUnit(fullpath)
     if unit.name == 'iO|26':
         cmds['use-spdif-source'] = handle_enable_spdif_source
-    CuiKit.dispatch_command(unit, cmds)
+    CliKit.dispatch_command(unit, cmds)

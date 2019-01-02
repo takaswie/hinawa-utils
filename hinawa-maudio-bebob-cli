@@ -6,7 +6,7 @@ import time
 import signal
 import sys
 
-from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.misc.cli_kit import CliKit
 
 from hinawa_utils.bebob.maudio_unit import MaudioUnit
 
@@ -254,7 +254,7 @@ cmds = {
     'sampling-rate':        handle_sampling_rate,
 }
 
-fullpath = CuiKit.seek_snd_unit_path()
+fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
     unit = MaudioUnit(fullpath)
     if len(unit.protocol.get_aux_input_labels()) > 0:
@@ -269,4 +269,4 @@ if fullpath:
     if len(unit.protocol.get_headphone_labels()) > 0:
         cmds['headphone-volume'] = handle_headphone_volume
         cmds['headphone-source'] = handle_headphone_source
-    CuiKit.dispatch_command(unit, cmds)
+    CliKit.dispatch_command(unit, cmds)

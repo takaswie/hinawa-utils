@@ -6,7 +6,7 @@ import sys
 import time
 import signal
 
-from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.efw.efw_unit import EfwUnit
 
 def handle_hardware_info(unit, args):
@@ -426,8 +426,8 @@ def get_available_commands(features):
 
     return cmds
 
-fullpath = CuiKit.seek_snd_unit_path()
+fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
     unit = EfwUnit(fullpath)
     cmds = get_available_commands(unit.info['features'])
-    CuiKit.dispatch_command(unit, cmds)
+    CliKit.dispatch_command(unit, cmds)

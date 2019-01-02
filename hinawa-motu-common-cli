@@ -4,7 +4,7 @@
 
 import signal
 
-from hinawa_utils.misc.cui_kit import CuiKit
+from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.motu.motu_unit import MotuUnit
 
 from gi.repository import GLib
@@ -87,7 +87,7 @@ cmds = {
     'listen-message':   handle_listen_message,
 }
 
-fullpath = CuiKit.seek_snd_unit_path()
+fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
     unit = MotuUnit(fullpath)
-    CuiKit.dispatch_command(unit, cmds)
+    CliKit.dispatch_command(unit, cmds)
