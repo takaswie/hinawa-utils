@@ -4,6 +4,10 @@ clock-source set Optical
 clock-source set Word-clock
 clock-source set Internal
 
+status
+
+stream-mode get
+
 display-mode get
 display-mode set 0
 display-mode set 1
