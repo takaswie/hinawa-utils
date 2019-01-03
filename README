@@ -44,6 +44,8 @@ The modules include applications of below specifications:
     * Plug structure parser for BeBoB firmware
  * hinawa-alesis-io-cli
     * CLI tool for Alesis iO|14 and iO|26
+ * hinawa-apogee-ensemble-cli
+    * CLI tool for Apogee Ensemble
  * hinawa-dg00x-common-cli
     * CLI tool for common functionalities of Digidesign Digi 00x family
  * hinawa-dg003-cli
