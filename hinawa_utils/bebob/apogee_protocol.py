@@ -85,10 +85,6 @@ class HwCmd():
         return cls.__build_args(HwCmdOp.STREAM_MODE, val)
 
     @classmethod
-    def build_meter_reset(cls):
-        return cls.__build_args(HwCmdOp.METER_RESET, 0x00)
-
-    @classmethod
     def build_cd_mode(cls, enable):
         if not isinstance(enable, bool):
             raise ValueError('Invalid argument for mode of cd.')
@@ -163,6 +159,10 @@ class DisplayCmd():
             raise ValueError('Invalid argument for overhold of display.')
         val = 0x01 if enable else 0x00
         return cls.__build_args(HwCmdOp.DISPLAY_OVERHOLD, val)
+
+    @classmethod
+    def build_meter_reset(cls):
+        return cls.__build_args(HwCmdOp.METER_RESET, 0x00)
 
 
 class OptIfaceCmd():

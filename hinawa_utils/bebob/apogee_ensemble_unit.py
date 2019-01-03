@@ -178,7 +178,7 @@ class ApogeeEnsembleUnit(BebobUnit):
         return sync_plug_ids[plug_id]
 
     def reset_meters(self):
-        args = HwCmd.build_meter_reset()
+        args = DisplayCmd.build_meter_reset()
         self.__command_control(args)
 
     def set_cd_mode(self, enable):
