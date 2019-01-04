@@ -42,6 +42,7 @@ setuptools.setup(
     scripts=(
         'hinawa-alesis-io-cli',
         'hinawa-apogee-ensemble-cli',
+        'hinawa-apogee-duet-cli',
         'hinawa-bebob-parser',
         'hinawa-config-rom-printer',
         'hinawa-dg003-cli',
