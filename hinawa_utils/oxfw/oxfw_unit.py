@@ -3,6 +3,7 @@
 
 from struct import unpack
 from re import match
+from time import sleep
 
 import gi
 gi.require_version('Hinawa', '2.0')
@@ -66,6 +67,7 @@ class OxfwUnit(Hinawa.SndUnit):
         for rate in AvcConnection.SAMPLING_RATES:
             if AvcConnection.ask_plug_signal_format(self.fcp, 'input', 0, rate):
                 playback.append(rate)
+        sleep(0.02)
         # PCM capture is not always available depending on models.
         for rate in AvcConnection.SAMPLING_RATES:
             if AvcConnection.ask_plug_signal_format(self.fcp, 'output', 0, rate):
