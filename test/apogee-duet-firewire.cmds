@@ -1,0 +1,95 @@
+mic-polarity mic-1 get
+mic-polarity mic-2 get
+mic-polarity mic-1 set 1
+mic-polarity mic-2 set 1
+mic-polarity mic-1 set 0
+mic-polarity mic-2 set 0
+
+mic-power mic-1 get
+mic-power mic-2 get
+mic-power mic-1 set 1
+mic-power mic-2 set 1
+mic-power mic-1 set 0
+mic-power mic-2 set 0
+
+input-source analog-1 get
+input-source analog-2 get
+input-source analog-1 set mic
+input-source analog-2 set mic
+input-source analog-1 set line
+input-source analog-2 set line
+
+input-level analog-1 get
+input-level analog-2 get
+input-level analog-1 set instrument
+input-level analog-2 set instrument
+input-level analog-1 set line
+input-level analog-2 set line
+
+input-gain analog-1 get
+input-gain analog-2 get
+input-gain analog-1 set -20.0
+input-gain analog-2 set -20.0
+
+input-attenuate analog-1 get
+input-attenuate analog-2 get
+input-attenuate analog-1 set +4dB
+input-attenuate analog-2 set +4dB
+input-attenuate analog-1 set -10dB
+input-attenuate analog-2 set -10dB
+
+input-clickless get
+input-clickless set 1
+input-clickless set 0
+
+input-meters
+
+output-mute get
+output-mute set 1
+output-mute set 0
+
+output-attenuate get
+output-attenuate set instrument
+output-attenuate set -10dB
+
+output-source get
+output-source set mixer-1/2
+output-source set stream-1/2
+
+output-volume get
+output-volume set -20.0
+
+mixer-source stream-1 0 get
+mixer-source stream-1 1 get
+mixer-source stream-2 0 get
+mixer-source stream-2 1 get
+mixer-source analog-1 0 get
+mixer-source analog-1 1 get
+mixer-source analog-2 0 get
+mixer-source analog-2 1 get
+mixer-source stream-1 0 set -20.0
+mixer-source stream-1 1 set -20.0
+mixer-source stream-2 0 set -20.0
+mixer-source stream-2 1 set -20.0
+mixer-source analog-1 0 set -20.0
+mixer-source analog-1 1 set -20.0
+mixer-source analog-2 0 set -20.0
+mixer-source analog-2 1 set -20.0
+
+mixer-meters
+
+display-target get
+display-target set input
+display-target set output
+
+display-overhold get
+display-overhold set instrument
+display-overhold set 2sec
+
+display-follow get
+display-follow set 0
+display-follow set 1
+
+display-clear
+
+knob-states
