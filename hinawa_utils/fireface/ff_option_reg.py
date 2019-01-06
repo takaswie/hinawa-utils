@@ -100,7 +100,6 @@ class FFOptionReg():
                 quads[i] &= ~flag
         for i, flag in enumerate(elems[val]):
             quads[i] |= flag
-        return quads
     @classmethod
     def parse_multiple_option(cls, quads, target):
         if target not in cls.__MULTIPLE_OPTION_MASKS:
@@ -138,7 +137,6 @@ class FFOptionReg():
             quads[i] &= ~mask
             if enable:
                 quads[i] |= mask
-        return quads
     @classmethod
     def parse_single_option(cls, quads, target, item):
         if target not in cls.__SINGLE_OPTION_MASKS:

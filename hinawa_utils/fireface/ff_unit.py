@@ -38,25 +38,25 @@ class FFUnit(Hinawa.SndUnit):
         if self._path.exists() and self._path.is_file():
             self.__load_cache()
         else:
-            self.__cache = FFOptionReg.create_initial_cache(self.__name)
+            self.__option_cache = FFOptionReg.create_initial_cache(self.__name)
             self.__save_cache()
 
         self.__set_options()
 
     def __load_cache(self):
-        self.__cache = [0x00] * 3
+        self.__option_cache = [0x00] * 3
         with self._path.open(mode='r') as f:
             for i, line in enumerate(f):
-                self.__cache[i] = int(line.strip(), base=16)
+                self.__option_cache[i] = int(line.strip(), base=16)
 
     def __save_cache(self):
         with self._path.open(mode='w+') as f:
-            for frame in self.__cache:
+            for frame in self.__option_cache:
                 f.write('{0:08x}\n'.format(frame))
 
     def __set_options(self):
         req = Hinawa.FwReq()
-        frames = pack('<3I', *self.__cache)
+        frames = pack('<3I', *self.__option_cache)
         req.write(self, self.__regs[0], frames)
 
     def get_model_name(self):
@@ -67,22 +67,24 @@ class FFUnit(Hinawa.SndUnit):
     def get_multiple_option_value_labels(self, target):
         return FFOptionReg.get_multiple_option_value_labels(target)
     def set_multiple_option(self, target, val):
-        self.__cache = FFOptionReg.build_multiple_option(self.__cache, target, val)
+        FFOptionReg.build_multiple_option(self.__option_cache, target, val)
         self.__save_cache()
         self.__set_options()
     def get_multiple_option(self, target):
-        return FFOptionReg.parse_multiple_option(self.__cache, target)
+        return FFOptionReg.parse_multiple_option(self.__option_cache, target)
 
     def get_single_option_labels(self):
         return FFOptionReg.get_single_option_labels()
     def get_single_option_item_labels(self, target):
         return FFOptionReg.get_single_option_item_labels(target)
     def set_single_option(self, target, item, enable):
-        self.__cache = FFOptionReg.build_single_option(self.__cache, target, item, enable)
+        FFOptionReg.build_single_option(self.__option_cache, target, item,
+                                        enable)
         self.__save_cache()
         self.__set_options()
     def get_single_option(self, target, item):
-        return FFOptionReg.parse_single_option(self.__cache, target, item)
+        return FFOptionReg.parse_single_option(self.__option_cache, target,
+                                               item)
 
     def get_sync_status(self):
         req = Hinawa.FwReq()
