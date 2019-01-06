@@ -78,10 +78,39 @@ def handle_single_option(unit, args):
     return False
 
 
+def handle_mixer_src(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_mixer_labels()
+    srcs = unit.get_mixer_src_labels()
+    mute = unit.get_mixer_mute_db()
+    minimum = unit.get_mixer_min_db()
+    maximum = unit.get_mixer_max_db()
+    if (len(args) >= 3 and args[0] in targets and args[1] in srcs
+            and args[2] in ops):
+        target = args[0]
+        src = args[1]
+        op = args[2]
+        if op == 'set' and len(args) >= 4:
+            db = float(args[3])
+            unit.set_mixer_src(target, src, db)
+            return True
+        elif op == 'get':
+            print(unit.get_mixer_src(target, src))
+            return True
+    print('Arguments for mixer-src command:')
+    print('  mixer-src TARGET SRC OP dB')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    SRC:    [{0}]'.format('|'.join(srcs)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    dB:     [{0}, {1:.1f}..{2:.1f}]'.format(mute, minimum, maximum))
+    return False
+
+
 cmds = {
     'status':           handle_status,
     'multiple-option':  handle_multiple_option,
-    'single-option':   handle_single_option,
+    'single-option':    handle_single_option,
+    'mixer-src':        handle_mixer_src,
 }
 
 fullpath = CliKit.seek_snd_unit_path()
