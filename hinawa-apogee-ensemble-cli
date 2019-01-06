@@ -2,10 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-import sys
-import signal
-from time import sleep
-
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.bebob.apogee_ensemble_unit import ApogeeEnsembleUnit
 
@@ -28,11 +24,32 @@ def handle_clock_src(unit, args):
     print('  Packet streaming should be stopped.')
     return False
 
-def handle_status(unit, args):
-    status = unit.get_status()
-    for key, val in status.items():
+def handle_knob_states(unit, args):
+    states = unit.get_knob_states()
+    for key, val in states.items():
         print('{0}: {1}'.format(key, val))
     return True
+
+def handle_knob_volume(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_knob_out_labels()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3:
+            db = float(args[2])
+            unit.set_knob_out_volume(target, db)
+            return True
+        elif op == 'get':
+            states = unit.get_knob_states()
+            print(states[target])
+            return True
+    print('Arguments for out-volume command:')
+    print('  out-volume TARGET OP [dB]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    dB:     [-127.00..0.00] if OP=set')
+    return False
 
 def handle_stream_mode(unit, args):
     ops = ('set', 'get')
@@ -263,26 +280,6 @@ def handle_out_attenuate(unit, args):
     print('    ATTR:   [{0}] if OP=set'.format('|'.join(attrs)))
     return False
 
-def handle_out_volume(unit, args):
-    ops = ('set', 'get')
-    targets = unit.get_out_volume_labels()
-    if len(args) >= 2 and args[0] in targets and args[1] in ops:
-        target = args[0]
-        op = args[1]
-        if op == 'set' and len(args) >= 3:
-            db = float(args[2])
-            unit.set_out_volume(target, db)
-            return True
-        elif op == 'get':
-            print(unit.get_out_volume(target))
-            return True
-    print('Arguments for out-volume command:')
-    print('  out-volume TARGET OP [dB]')
-    print('    TARGET: [{0}]'.format('|'.join(targets)))
-    print('    OP:     [{0}]'.format('|'.join(ops)))
-    print('    dB:     [-127.00..0.00] if OP=set')
-    return False
-
 def handle_cap_src(unit, args):
     ops = ('set', 'get')
     targets = unit.get_cap_labels()
@@ -350,7 +347,8 @@ def handle_mixer_src(unit, args):
     ops = ('set', 'get')
     targets = unit.get_mixer_labels()
     srcs = unit.get_mixer_src_labels()
-    if len(args) >= 3 and args[0] in targets and args[1] in srcs and args[2] in ops:
+    if (len(args) >= 3 and args[0] in targets and args[1] in srcs
+            and args[2] in ops):
         target = args[0]
         src = args[1]
         op = args[2]
@@ -423,7 +421,8 @@ def handle_spdif_resample(unit, args):
 
 cmds = {
     'clock-source':     handle_clock_src,
-    'status':           handle_status,
+    'knob-states':      handle_knob_states,
+    'knob-volume':      handle_knob_volume,
     'stream-mode':      handle_stream_mode,
     'display-mode':     handle_display_mode,
     'display-target':   handle_display_target,
@@ -436,7 +435,6 @@ cmds = {
     'mic-polarity':     handle_mic_polarity,
     'mic-power':        handle_mic_power,
     'out-attenuate':    handle_out_attenuate,
-    'out-volume':       handle_out_volume,
     'cap-src':          handle_cap_src,
     'out-src':          handle_out_src,
     'hp-src':           handle_hp_src,

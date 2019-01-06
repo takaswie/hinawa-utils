@@ -4,8 +4,6 @@ clock-source set Optical
 clock-source set Word-clock
 clock-source set Internal
 
-status
-
 stream-mode get
 
 display-mode get
@@ -132,12 +130,13 @@ out-attenuate analog-6 set -10dB
 out-attenuate analog-7 set -10dB
 out-attenuate analog-8 set -10dB
 
-out-volume main get
-out-volume hp-1 get
-out-volume hp-2 get
-out-volume main set 0
-out-volume hp-1 set 0
-out-volume hp-2 set 0
+knob-states
+knob-volume main get
+knob-volume hp-1/2 get
+knob-volume hp-3/4 get
+knob-volume main set 0
+knob-volume hp-1/2 set 0
+knob-volume hp-3/4 set 0
 
 cap-src stream-1 get
 cap-src stream-2 get

@@ -6,12 +6,12 @@ from json import load, dump
 
 from hinawa_utils.bebob.bebob_unit import BebobUnit
 from hinawa_utils.bebob.extensions import BcoPlugInfo
-from hinawa_utils.ta1394.general import AvcGeneral, AvcConnection
+from hinawa_utils.ta1394.general import AvcConnection
 from hinawa_utils.ta1394.ccm import AvcCcm
 
 from hinawa_utils.bebob.apogee_protocol import (
     HwCmd, DisplayCmd, OptIfaceCmd, MicCmd, InputCmd, OutputCmd, MixerCmd,
-    RouteCmd, StatusCmd, KnobCmd, SpdifResampleCmd
+    RouteCmd, KnobCmd, SpdifResampleCmd
 )
 
 __all__ = ['ApogeeEnsembleUnit']
@@ -30,9 +30,6 @@ class ApogeeEnsembleUnit(BebobUnit):
         if (self.vendor_id, self.model_id) != (0x0003db, 0x01eeee):
             raise OSError('Not supported.')
 
-        unit_info = AvcGeneral.get_unit_info(self.fcp)
-        self.__company_ids = unit_info['company-id']
-
         guid = self.get_property('guid')
         self.__path = Path('/tmp/hinawa-{0:08x}'.format(guid))
 
@@ -40,7 +37,7 @@ class ApogeeEnsembleUnit(BebobUnit):
             self.__load_cache()
         else:
             self.__create_cache()
-            self.__initialize()
+            self.__set_from_cache()
             self.__save_cache()
 
     def __load_cache(self):
@@ -53,69 +50,70 @@ class ApogeeEnsembleUnit(BebobUnit):
 
     def __create_cache(self):
         cache = {}
-        cache['hw'] = HwCmd.create_cache()
-        cache['display'] = DisplayCmd.create_cache()
-        cache['opt-iface'] = OptIfaceCmd.create_cache()
-        cache['mic'] = MicCmd.create_cache()
-        cache['input'] = InputCmd.create_cache()
-        cache['output'] = OutputCmd.create_cache()
-        cache['mixer'] = MixerCmd.create_cache()
-        cache['route'] = RouteCmd.create_cache()
-        cache['spdif-resample'] = SpdifResampleCmd.create_cache()
+        HwCmd.create_cache(cache)
+        DisplayCmd.create_cache(cache)
+        OptIfaceCmd.create_cache(cache)
+        MicCmd.create_cache(cache)
+        InputCmd.create_cache(cache)
+        OutputCmd.create_cache(cache)
+        MixerCmd.create_cache(cache)
+        RouteCmd.create_cache(cache)
+        SpdifResampleCmd.create_cache(cache)
         self.__cache = cache
 
-    def __initialize(self):
-        states = self.__cache['hw']
-        self.set_16bit_mode(states['16bit'])
-        self.set_cd_mode(states['cd'])
-        states = self.__cache['display']
-        self.set_display_mode(states['mode'])
-        self.set_display_target(states['target'])
-        self.set_display_illuminate(states['illuminate'])
-        self.set_display_overhold(states['overhold'])
-        states = self.__cache['opt-iface']
-        for target, val in states.items():
-            self.set_opt_iface_mode(target, val)
-        states = self.__cache['mic']
-        for target, val in states['power'].items():
-            self.set_phantom_power(target, val)
-        for target, val in states['polarity'].items():
-            self.set_polarity(target, val)
-        states = self.__cache['input']
-        for target, val in states['soft-limit'].items():
-            self.set_soft_limit(target, val)
-        for target, val in states['attr'].items():
-            self.set_in_attr(target, val)
-        states = self.__cache['output']
-        for target, val in states['attr'].items():
-            self.set_out_attr(target, val)
-        states = self.__cache['mixer']
-        for target, src_params in states.items():
-            for src, params in src_params.items():
-                db, balance = params
-                self.set_mixer_src(target, src, db, balance)
-        states = self.__cache['route']
-        for target, src in states['out'].items():
-            self.set_out_src(target, src)
-        for target, src in states['cap'].items():
-            self.set_cap_src(target, src)
-        for target, src in states['hp'].items():
-            self.set_hp_src(target, src)
-        states = self.__cache['spdif-resample']
-        self.set_spdif_resample(states['state'], states['iface'],
-                                states['direction'], states['rate'])
+    def __set_from_cache(self):
+        val = HwCmd.get_cd_mode(self.__cache)
+        HwCmd.set_cd_mode(self.__cache, self.fcp, val)
+        val = HwCmd.get_16bit_mode(self.__cache)
+        HwCmd.set_16bit_mode(self.__cache, self.fcp, val)
 
-    def __command_control(self, args):
-        # At least, 6 bytes should be required to align to 3 quadlets.
-        # Unless, target unit is freezed.
-        if len(args) < 6:
-            for i in range(6 - len(args)):
-                args.append(0x00)
-        resps = AvcGeneral.set_vendor_dependent(self.fcp, self.__company_ids,
-                                                args)
-        if resps[0] != args[0]:
-            raise OSError('Unexpected value for vendor-dependent command.')
-        return resps
+        val = DisplayCmd.get_illuminate(self.__cache)
+        DisplayCmd.set_illuminate(self.__cache, self.fcp, val)
+        val = DisplayCmd.get_mode(self.__cache)
+        DisplayCmd.set_mode(self.__cache, self.fcp, val)
+        val = DisplayCmd.get_target(self.__cache)
+        DisplayCmd.set_target(self.__cache, self.fcp, val)
+        val = DisplayCmd.get_overhold(self.__cache)
+        DisplayCmd.set_overhold(self.__cache, self.fcp, val)
+
+        for target in OptIfaceCmd.get_target_labels():
+            val = OptIfaceCmd.get_mode(self.__cache, target)
+            OptIfaceCmd.set_mode(self.__cache, self.fcp, target, val)
+
+        for target in MicCmd.get_mic_labels():
+            val = MicCmd.get_power(self.__cache, target)
+            MicCmd.set_power(self.__cache, self.fcp, target, val)
+            val = MicCmd.get_polarity(self.__cache, target)
+            MicCmd.set_polarity(self.__cache, self.fcp, target, val)
+
+        for target in InputCmd.get_in_labels():
+            val = InputCmd.get_soft_limit(self.__cache, target)
+            InputCmd.set_soft_limit(self.__cache, self.fcp, target, val)
+            val = InputCmd.get_attr(self.__cache, target)
+            InputCmd.set_attr(self.__cache, self.fcp, target, val)
+
+        for target in OutputCmd.get_target_labels():
+            val = OutputCmd.get_attr(self.__cache, target)
+            OutputCmd.set_attr(self.__cache, self.fcp, target, val)
+
+        for target in MixerCmd.get_target_labels():
+            for src in MixerCmd.get_src_labels():
+                vals = MixerCmd.get_src_gain(self.__cache, target, src)
+                MixerCmd.set_src_gain(self.__cache, self.fcp, target, src,
+                                      *vals)
+
+        for target in RouteCmd.get_out_labels():
+            src = RouteCmd.get_out_src(self.__cache, target)
+            RouteCmd.set_out_src(self.__cache, self.fcp, target, src)
+        for target in RouteCmd.get_cap_labels():
+            src = RouteCmd.get_cap_src(self.__cache, target)
+            RouteCmd.set_cap_src(self.__cache, self.fcp, target, src)
+        for target in RouteCmd.get_hp_labels():
+            src = RouteCmd.get_hp_src(self.__cache, target)
+            RouteCmd.set_hp_src(self.__cache, self.fcp, target, src)
+
+        params = SpdifResampleCmd.get_params(self.__cache)
+        SpdifResampleCmd.set_params(self.__cache, self.fcp, *params)
 
     def __get_clock_plugs(self):
         plugs = {}
@@ -152,7 +150,8 @@ class ApogeeEnsembleUnit(BebobUnit):
         plugs = self.__get_clock_plugs()
         dst = plugs['input']
         src = AvcCcm.get_signal_source(self.fcp, dst)
-        if AvcCcm.compare_addrs(src, AvcCcm.parse_signal_addr(plugs['output'])):
+        addr = AvcCcm.parse_signal_addr(plugs['output'])
+        if AvcCcm.compare_addrs(src, addr):
             return 'Internal'
         for name, addr in self.__CLOCK_SRCS.items():
             if AvcCcm.compare_addrs(src, AvcCcm.parse_signal_addr(addr)):
@@ -162,8 +161,7 @@ class ApogeeEnsembleUnit(BebobUnit):
     def get_stream_mode_labels(self):
         return HwCmd.get_stream_mode_labels()
     def set_stream_mode(self, mode):
-        args = HwCmd.build_stream_mode(mode)
-        self.__command_control(args)
+        HwCmd.set_stream_mode(mode)
     def get_stream_mode(self):
         sync_plug_ids = {
             5: '8x8',
@@ -178,22 +176,19 @@ class ApogeeEnsembleUnit(BebobUnit):
         return sync_plug_ids[plug_id]
 
     def reset_meters(self):
-        args = DisplayCmd.build_meter_reset()
-        self.__command_control(args)
+        DisplayCmd.reset_meter(self.fcp)
 
     def set_cd_mode(self, enable):
         if enable:
-            if self.__cache['hw']['16bit-mode'] != 'spdif-coax-out-1/2':
+            if self.__cache['hw']['16bit'] != 'spdif-coax-out-1/2':
                 raise ValueError('16bit-mode should be spdif-coax-out-1/2.')
             rate = AvcConnection.get_plug_signal_format(self.fcp, 'output', 0)
-            if rate == 44100:
+            if rate != 44100:
                 raise ValueError('Sampling rate should be 44100.')
-        args = HwCmd.build_cd_mode(enable)
-        self.__command_control(args)
-        self.__cache['hw']['cd'] = enable
+        HwCmd.set_cd_mode(self.__cache, self.fcp, enable)
         self.__save_cache()
     def get_cd_mode(self):
-        return self.__cache['hw']['cd']
+        return HwCmd.get_cd_mode(self.__cache)
 
     def get_16bit_mode_labels(self):
         return HwCmd.get_16bit_mode_labels()
@@ -202,139 +197,97 @@ class ApogeeEnsembleUnit(BebobUnit):
             rate = AvcConnection.get_plug_signal_format(self.fcp, 'output', 0)
             if rate not in (44100, 48000):
                 raise ValueError('Sampling rate should be 44100 or 48000.')
-        args = HwCmd.build_16bit_mode(target)
-        self.__command_control(args)
-        self.__cache['hw']['16bit-mode'] = target
+        HwCmd.set_16bit_mode(self.__cache, self.fcp, target)
         self.__save_cache()
     def get_16bit_mode(self):
-        return self.__cache['hw']['16bit-mode']
+        return HwCmd.get_16bit_mode(self.__cache)
 
     # Hardware configurations.
     def set_display_mode(self, enable):
-        args = DisplayCmd.build_mode(enable)
-        self.__command_control(args)
-        self.__cache['display']['mode'] = enable
+        DisplayCmd.set_mode(self.__cache, self.fcp, enable)
         self.__save_cache()
     def get_display_mode(self):
-        return self.__cache['display']['mode']
+        return DisplayCmd.get_mode(self.__cache)
 
     def get_display_target_labels(self):
         return DisplayCmd.get_target_labels()
     def set_display_target(self, target):
-        args = DisplayCmd.build_target(target)
-        self.__command_control(args)
-        self.__cache['display']['target'] = target
+        DisplayCmd.set_target(self.__cache, self.fcp, target)
         self.__save_cache()
     def get_display_target(self):
-        return self.__cache['display']['target']
+        return DisplayCmd.get_target(self.__cache)
 
     def set_display_illuminate(self, enable):
-        args = DisplayCmd.build_illuminate(enable)
-        self.__command_control(args)
-        self.__cache['display']['illuminate'] = enable
+        DisplayCmd.set_illuminate(self.__cache, self.fcp, enable)
         self.__save_cache()
     def get_display_illuminate(self):
-        return self.__cache['display']['illuminate']
+        return DisplayCmd.get_illuminate(self.__cache)
 
     def set_display_overhold(self, enable):
-        args = DisplayCmd.build_overhold(enable)
-        self.__command_control(args)
-        self.__cache['display']['overhold'] = enable
+        DisplayCmd.set_overhold(self.__cache, self.fcp, enable)
         self.__save_cache()
     def get_display_overhold(self):
-        return self.__cache['display']['overhold']
+        return DisplayCmd.get_overhold(self.__cache)
 
     def get_opt_iface_target_labels(self):
         return OptIfaceCmd.get_target_labels()
     def get_opt_iface_mode_labels(self):
         return OptIfaceCmd.get_mode_labels()
     def set_opt_iface_mode(self, target, mode):
-        args = OptIfaceCmd.build_opt_iface(target, mode)
-        self.__command_control(args)
-        self.__cache['opt-iface'][target] = mode
+        OptIfaceCmd.set_mode(self.__cache, self.fcp, target, mode)
         self.__save_cache()
     def get_opt_iface_mode(self, target):
-        if target not in OptIfaceCmd.get_target_labels():
-            raise ValueError('Invalid argument for optical iface.')
-        return self.__cache['opt-iface'][target]
+        return OptIfaceCmd.get_mode(self.__cache, target)
 
     # Knob configurations.
-    def get_out_volume_labels(self):
-        return KnobCmd.get_knob_labels()
-    def set_out_volume(self, target, db):
-        args = KnobCmd.build_vol(target, db)
-        self.__command_control(args)
-    def get_out_volume(self, target):
-        if target not in KnobCmd.get_knob_labels():
-            raise ValueError('Invalid argument for knob.')
-        status = self.get_status()
-        return status[target]
+    def get_knob_out_labels(self):
+        return KnobCmd.get_knob_out_labels()
+    def set_knob_out_volume(self, target, db):
+        KnobCmd.set_out_vol(self.fcp, target, db)
+    def get_knob_states(self):
+        return KnobCmd.get_states(self.fcp)
 
     # Microphone configurations.
     def get_mic_labels(self):
         return MicCmd.get_mic_labels()
     def set_polarity(self, target, invert):
-        args = MicCmd.build_polarity(target, invert)
-        self.__command_control(args)
-        self.__cache['mic']['polarity'][target] = invert
+        MicCmd.set_polarity(self.__cache, self.fcp, target, invert)
         self.__save_cache()
     def get_polarity(self, target):
-        if target not in MicCmd.get_mic_labels():
-            raise ValueError('Invalid argument for mic.')
-        return self.__cache['mic']['polarity'][target]
+        return MicCmd.get_polarity(self.__cache, target)
 
     def set_phantom_power(self, target, enable):
-        args = MicCmd.build_power(target, enable)
-        self.__command_control(args)
-        self.__cache['mic']['power'][target] = enable
+        MicCmd.set_power(self.__cache, self.fcp, target, enable)
         self.__save_cache()
     def get_phantom_power(self, target):
-        if target not in MicCmd.get_mic_labels():
-            raise ValueError('Invalid argument for mic.')
-        return self.__cache['mic']['power'][target]
+        return MicCmd.get_power(self.__cache, target)
 
     # Line input/output configurations.
     def get_line_in_labels(self):
         return InputCmd.get_in_labels()
     def set_soft_limit(self, target, enable):
-        args = InputCmd.build_soft_limit(target, enable)
-        self.__command_control(args)
-        self.__cache['input']['soft-limit'][target] = enable
+        InputCmd.set_soft_limit(self.__cache, self.fcp, target, enable)
         self.__save_cache()
     def get_soft_limit(self, target):
-        if target not in InputCmd.get_in_labels():
-            raise ValueError('Invalid argument for input')
-        return self.__cache['input']['soft-limit'][target]
+        return InputCmd.get_soft_limit(self.__cache, target)
 
     def get_in_attr_labels(self):
         return InputCmd.get_attr_labels()
     def set_in_attr(self, target, attr):
-        args = InputCmd.build_attr(target, attr)
-        self.__command_control(args)
-        self.__cache['input']['attr'][target] = attr
+        InputCmd.set_attr(self.__cache, self.fcp, target, attr)
         self.__save_cache()
     def get_in_attr(self, target):
-        if target not in InputCmd.get_in_labels():
-            raise ValueError('Invalid argument for input.')
-        return self.__cache['input']['attr'][target]
+        return InputCmd.get_attr(self.__cache, target)
 
     def get_line_out_labels(self):
         return OutputCmd.get_target_labels()
     def get_out_attr_labels(self):
         return OutputCmd.get_attr_labels()
     def set_out_attr(self, target, attr):
-        if target not in OutputCmd.get_target_labels():
-            raise ValueError('Invalid argument for output.')
-        if attr not in OutputCmd.get_attr_labels():
-            raise ValueError('Invalid argument for attenuation')
-        args = OutputCmd.build_attr(target, attr)
-        self.__command_control(args)
-        self.__cache['output']['attr'][target] = attr
+        OutputCmd.set_attr(self.__cache, self.fcp, target, attr)
         self.__save_cache()
     def get_out_attr(self, target):
-        if target not in OutputCmd.get_target_labels():
-            raise ValueError('Invalid argument for output.')
-        return self.__cache['output']['attr'][target]
+        return OutputCmd.get_attr(self.__cache, target)
 
     # Route configurations.
     def get_out_labels(self):
@@ -342,61 +295,41 @@ class ApogeeEnsembleUnit(BebobUnit):
     def get_out_src_labels(self):
         return RouteCmd.get_out_src_labels()
     def set_out_src(self, target, src):
-        args = RouteCmd.build_out_src(target, src)
-        self.__command_control(args)
-        self.__cache['route']['out'][target] = src
+        RouteCmd.set_out_src(self.__cache, self.fcp, target, src)
         self.__save_cache()
     def get_out_src(self, target):
-        if target not in RouteCmd.get_out_labels():
-            raise ValueError('Invalid argument for output.')
-        return self.__cache['route']['out'][target]
+        return RouteCmd.get_out_src(self.__cache, target)
 
     def get_cap_labels(self):
         return RouteCmd.get_cap_labels()
     def get_cap_src_labels(self):
         return RouteCmd.get_cap_src_labels()
     def set_cap_src(self, target, src):
-        args = RouteCmd.build_cap_src(target, src)
-        self.__command_control(args)
-        self.__cache['route']['cap'][target] = src
+        RouteCmd.set_cap_src(self.__cache, self.fcp, target, src)
         self.__save_cache()
     def get_cap_src(self, target):
-        if target not in RouteCmd.get_cap_labels():
-            raise ValueError('Invalid argument for capture.')
-        return self.__cache['route']['cap'][target]
+        return RouteCmd.get_cap_src(self.__cache, target)
 
     def get_hp_labels(self):
         return RouteCmd.get_hp_labels()
     def get_hp_src_labels(self):
         return RouteCmd.get_hp_src_labels()
     def set_hp_src(self, target, src):
-        args = RouteCmd.build_hp_src(target, src)
-        self.__command_control(args)
-        self.__cache['route']['hp'][target] = src
+        RouteCmd.set_hp_src(self.__cache, self.fcp, target, src)
         self.__save_cache()
     def get_hp_src(self, target):
-        if target not in RouteCmd.get_hp_labels():
-            raise ValueError('Invalid argument for headphone.')
-        return self.__cache['route']['hp'][target]
+        return RouteCmd.get_hp_src(self.__cache, target)
 
     # Internal multiplexer configuration.
     def get_mixer_labels(self):
         return MixerCmd.get_target_labels()
     def get_mixer_src_labels(self):
-        return MixerCmd.get_mixer_src_labels()
+        return MixerCmd.get_src_labels()
     def set_mixer_src(self, target, src, db, balance):
-        cache = self.__cache['mixer']
-        args = MixerCmd.build_src_gain(cache, target, src, db, balance)
-        self.__command_control(args)
-        self.__cache['mixer'][target][src] = [db, balance]
+        MixerCmd.set_src_gain(self.__cache, self.fcp, target, src, db, balance)
         self.__save_cache()
     def get_mixer_src(self, target, src):
-        return self.__cache['mixer'][target][src]
-
-    def get_status(self):
-        args = StatusCmd.build_status()
-        params = self.__command_control(args)
-        return StatusCmd.parse_params(params)
+        return MixerCmd.get_src_gain(self.__cache, target, src)
 
     # S/PDIF resampler configuration.
     def get_spdif_resample_iface_labels(self):
@@ -406,12 +339,8 @@ class ApogeeEnsembleUnit(BebobUnit):
     def get_spdif_resample_rate_labels(self):
         return SpdifResampleCmd.get_rate_labels()
     def set_spdif_resample(self, enable, iface, direction, rate):
-        args = SpdifResampleCmd.build_args(enable, iface, direction, rate)
-        self.__command_control(args)
-        self.__cache['spdif-resample']['state'] = enable
-        self.__cache['spdif-resample']['iface'] = iface
-        self.__cache['spdif-resample']['direction'] = direction
-        self.__cache['spdif-resample']['rate'] = rate
+        SpdifResampleCmd.set_params(self.__cache, self.fcp, enable, iface,
+                                    direction, rate)
         self.__save_cache()
     def get_spdif_resample(self):
-        return self.__cache['spdif-resample']
+        return SpdifResampleCmd.get_params(self.__cache)
