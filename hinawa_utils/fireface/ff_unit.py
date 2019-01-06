@@ -35,68 +35,16 @@ class FFUnit(Hinawa.SndUnit):
         guid = self.get_property('guid')
         self._path = Path('/tmp/hinawa-{0:08x}'.format(guid))
 
-        self.__cache = [0x00] * 3
         if self._path.exists() and self._path.is_file():
             self.__load_cache()
         else:
-            # Default values.
-            single_options = {
-                'auto-sync': {
-                    'internal':     True,   'base-441':     True,
-                    'base-480':     True,   'double':       True,
-                    'quadruple':    True,
-                },
-                'front-input': {
-                    'in-1':         False,  'in-7':         False,
-                    'in-8':         False,
-                },
-                'rear-input': {
-                    'in-1':         True,   'in-7':         True,
-                    'in-8':         True,
-                },
-                'phantom-power': {
-                    'mic-7':        False,  'mic-8':        False,
-                    'mic-9':        False,  'mic-10':       False,
-                },
-                'spdif-in': {
-                    'optical':      False,  'track-maker':  False,
-                },
-                'spdif-out': {
-                    'professional': False,  'emphasis':     False,
-                    'non-audio':    False,  'optical':      False,
-                },
-                'instruments': {
-                    'drive':        False,  'limit':        True,
-                    'speaker-emu':  False,
-                },
-                'wdclk-out': {
-                    'single-speed': True,
-                },
-                'in-error': {
-                    'continue':     True,
-                },
-            }
-            multiple_options = {
-                'line-in':          '-10dB',
-                'line-out':         '-10dB',
-                'primary-clk-src':  FFClkLabels.SPDIF.value,
-            }
-            for target, opts in single_options.items():
-                for item, enable in opts.items():
-                    FFOptionReg.build_single_option(self.__cache, target, item, enable)
-            for target, value in multiple_options.items():
-                FFOptionReg.build_multiple_option(self.__cache, target, value)
-
+            self.__cache = FFOptionReg.create_initial_cache(self.__name)
             self.__save_cache()
-
-        # Assist ALSA fireface driver to handle MIDI messages from Fireface 400.
-        if self.__name == 'Fireface400':
-            FFOptionReg.build_single_option(self.__cache, 'miti-low',
-                                            '0x00000000', True)
 
         self.__set_options()
 
     def __load_cache(self):
+        self.__cache = [0x00] * 3
         with self._path.open(mode='r') as f:
             for i, line in enumerate(f):
                 self.__cache[i] = int(line.strip(), base=16)
