@@ -94,7 +94,7 @@ class FFUnit(Hinawa.SndUnit):
             FFOptionReg.build_single_option(self.__cache, 'miti-low',
                                             '0x00000000', True)
 
-        self.__write_flags()
+        self.__set_options()
 
     def __load_cache(self):
         with self._path.open(mode='r') as f:
@@ -106,7 +106,7 @@ class FFUnit(Hinawa.SndUnit):
             for frame in self.__cache:
                 f.write('{0:08x}\n'.format(frame))
 
-    def __write_flags(self):
+    def __set_options(self):
         req = Hinawa.FwReq()
         frames = pack('<3I', *self.__cache)
         req.write(self, self.__regs[0], frames)
@@ -121,7 +121,7 @@ class FFUnit(Hinawa.SndUnit):
     def set_multiple_option(self, target, val):
         self.__cache = FFOptionReg.build_multiple_option(self.__cache, target, val)
         self.__save_cache()
-        self.__write_flags()
+        self.__set_options()
     def get_multiple_option(self, target):
         return FFOptionReg.parse_multiple_option(self.__cache, target)
 
@@ -132,7 +132,7 @@ class FFUnit(Hinawa.SndUnit):
     def set_single_option(self, target, item, enable):
         self.__cache = FFOptionReg.build_single_option(self.__cache, target, item, enable)
         self.__save_cache()
-        self.__write_flags()
+        self.__set_options()
     def get_single_option(self, target, item):
         return FFOptionReg.parse_single_option(self.__cache, target, item)
 
