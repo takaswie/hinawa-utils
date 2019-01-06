@@ -11,13 +11,14 @@ from gi.repository import Hinawa
 from hinawa_utils.fireface.ff_config_rom_parser import FFConfigRomParser
 from hinawa_utils.fireface.ff_option_reg import FFOptionReg
 from hinawa_utils.fireface.ff_status_reg import FFStatusReg, FFClkLabels
+from hinawa_utils.fireface.ff_mixer_reg import FFMixerRegs
 
 __all__ = ['FFUnit']
 
 class FFUnit(Hinawa.SndUnit):
     _MODELS = {
-        0x000001:   ('Fireface800', (0x0000fc88f014, )),
-        0x000002:   ('Fireface400', (0x00008010051c, )),
+        0x000001:   ('Fireface800', (0x0000fc88f014, 0x000080080000)),
+        0x000002:   ('Fireface400', (0x00008010051c, 0x000080080000)),
     }
 
     def __init__(self, path):
@@ -39,25 +40,43 @@ class FFUnit(Hinawa.SndUnit):
             self.__load_cache()
         else:
             self.__option_cache = FFOptionReg.create_initial_cache(self.__name)
+            self.__mixer_cache = FFMixerRegs.create_initial_cache(self.__name)
             self.__save_cache()
+            self.__set_mixers()
 
         self.__set_options()
 
     def __load_cache(self):
         self.__option_cache = [0x00] * 3
+        self.__mixer_cache = []
         with self._path.open(mode='r') as f:
             for i, line in enumerate(f):
-                self.__option_cache[i] = int(line.strip(), base=16)
+                val = int(line.strip(), base=16)
+                if i < len(self.__option_cache):
+                    self.__option_cache[i] = val
+                else:
+                    self.__mixer_cache.append(val)
 
     def __save_cache(self):
         with self._path.open(mode='w+') as f:
             for frame in self.__option_cache:
+                f.write('{0:08x}\n'.format(frame))
+            for frame in self.__mixer_cache:
                 f.write('{0:08x}\n'.format(frame))
 
     def __set_options(self):
         req = Hinawa.FwReq()
         frames = pack('<3I', *self.__option_cache)
         req.write(self, self.__regs[0], frames)
+
+    def __set_mixers(self):
+        req = Hinawa.FwReq()
+        targets = FFMixerRegs.get_mixer_labels(self.__name)
+        srcs = FFMixerRegs.get_mixer_src_labels(self.__name)
+        for target in targets:
+            for src in srcs:
+                db = self.get_mixer_src(target, src)
+                self.set_mixer_src(target, src, db)
 
     def get_model_name(self):
         return self.__name
@@ -92,3 +111,31 @@ class FFUnit(Hinawa.SndUnit):
         quads = unpack('<2I', frames)
 
         return FFStatusReg.parse(quads)
+
+    def get_mixer_labels(self):
+        return FFMixerRegs.get_mixer_labels(self.__name)
+
+    def get_mixer_src_labels(self):
+        return FFMixerRegs.get_mixer_src_labels(self.__name)
+
+    def get_mixer_mute_db(self):
+        return FFMixerRegs.get_mute_db()
+
+    def get_mixer_min_db(self):
+        return FFMixerRegs.get_min_db()
+
+    def get_mixer_max_db(self):
+        return FFMixerRegs.get_max_db()
+
+    def set_mixer_src(self, target, src, db):
+        offset = FFMixerRegs.calculate_offset(self.__name, target, src)
+        val = FFMixerRegs.build_val_from_db(db)
+        data = pack('<I', val)
+        req = Hinawa.FwReq()
+        req.write(self, self.__regs[1] + offset, data)
+        self.__mixer_cache[offset // 4] = val
+        self.__save_cache()
+
+    def get_mixer_src(self, target, src):
+        offset = FFMixerRegs.calculate_offset(self.__name, target, src)
+        return FFMixerRegs.parse_val_to_db(self.__mixer_cache[offset // 4])
