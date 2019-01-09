@@ -21,7 +21,7 @@ def handle_current_status(unit, args):
     print('  ID:               {0}'.format(unit.hw_info['asic-id']))
     print('  firmware version: {0}'.format(unit.hw_info['firmware-version']))
     print('TASCAM firmware information:')
-    print('  version:          {0}'.format(unit.firmware_get_version()))
+    print('  version:          {0}'.format(unit.get_firmware_version()))
     return True
 
 def handle_display_mode(unit, args):
