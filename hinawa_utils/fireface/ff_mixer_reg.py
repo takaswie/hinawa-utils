@@ -1,15 +1,8 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2019 Takashi Sakamoto
 
-from math import log10
-
 
 class FFMixerRegs():
-    __MUTE_VAL = 0x00000000
-    __MIN_VAL = 0x00000001
-    __ZERO_VAL = 0x00008000
-    __MAX_VAL = 0x00010000
-
     @classmethod
     def __generate_labels(cls, spec, category):
         labels = []
@@ -31,28 +24,6 @@ class FFMixerRegs():
         labels += cls.__generate_labels(spec, 'adat')
         labels += cls.__generate_labels(spec, 'stream')
         return labels
-
-    @classmethod
-    def build_val_from_db(cls, db: float):
-        return int(0x8000 * pow(10, db / 20))
-
-    @classmethod
-    def parse_val_to_db(cls, val: int):
-        if val == 0:
-            return float('-inf')
-        return 20 * log10(val / 0x8000)
-
-    @classmethod
-    def get_mute_db(cls):
-        return cls.parse_val_to_db(cls.__MUTE_VAL)
-
-    @classmethod
-    def get_min_db(cls):
-        return cls.parse_val_to_db(cls.__MIN_VAL)
-
-    @classmethod
-    def get_max_db(cls):
-        return cls.parse_val_to_db(cls.__MAX_VAL)
 
     @classmethod
     def calculate_src_offset(cls, spec: dict, dst: str, src: str):

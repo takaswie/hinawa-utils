@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
+from math import log10
 from struct import pack, unpack
 from pathlib import Path
 
@@ -44,6 +45,8 @@ class FFUnit(Hinawa.SndUnit):
 
     __MUTE_VAL = 0x00000000
     __ZERO_VAL = 0x00008000
+    __MIN_VAL = 0x00000001
+    __MAX_VAL = 0x00010000
 
     def __init__(self, path):
         super().__init__()
@@ -164,17 +167,17 @@ class FFUnit(Hinawa.SndUnit):
         return FFMixerRegs.get_mixer_src_labels(self.__spec)
 
     def get_mixer_mute_db(self):
-        return FFMixerRegs.get_mute_db()
+        return self.get_db_mute()
 
     def get_mixer_min_db(self):
-        return FFMixerRegs.get_min_db()
+        return self.get_db_min()
 
     def get_mixer_max_db(self):
-        return FFMixerRegs.get_max_db()
+        return self.get_db_max()
 
     def set_mixer_src(self, target, src, db):
         offset = FFMixerRegs.calculate_src_offset(self.__spec, target, src)
-        val = FFMixerRegs.build_val_from_db(db)
+        val = self.__build_val_from_db(db)
         data = pack('<I', val)
         req = Hinawa.FwReq()
         req.write(self, self.__regs[1] + offset, data)
@@ -183,4 +186,33 @@ class FFUnit(Hinawa.SndUnit):
 
     def get_mixer_src(self, target, src):
         offset = FFMixerRegs.calculate_src_offset(self.__spec, target, src)
-        return FFMixerRegs.parse_val_to_db(self.__mixer_cache[offset // 4])
+        return self.__parse_val_to_db(self.__mixer_cache[offset // 4])
+
+    #
+    # Helper methods.
+    #
+    @staticmethod
+    def __build_val_from_db(db: float):
+        return int(0x8000 * pow(10, db / 20))
+
+    @staticmethod
+    def __parse_val_to_db(val: int):
+        if val == 0:
+            return float('-inf')
+        return 20 * log10(val / 0x8000)
+
+    @classmethod
+    def get_db_mute(cls):
+        return cls.__parse_val_to_db(cls.__MUTE_VAL)
+
+    @classmethod
+    def get_db_zero(cls):
+        return cls.__parse_val_to_db(cls.__ZERO_VAL)
+
+    @classmethod
+    def get_db_min(cls):
+        return cls.__parse_val_to_db(cls.__MIN_VAL)
+
+    @classmethod
+    def get_db_max(cls):
+        return cls.__parse_val_to_db(cls.__MAX_VAL)
