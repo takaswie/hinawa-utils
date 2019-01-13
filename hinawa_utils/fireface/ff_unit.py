@@ -67,17 +67,17 @@ class FFUnit(Hinawa.SndUnit):
         self._path = Path('/tmp/hinawa-{0:08x}'.format(guid))
 
         if self._path.exists() and self._path.is_file():
-            self.__load_cache()
+            self.__read_cache_from_file()
         else:
             self.__option_cache = self.__create_option_initial_cache()
             self.__mixer_cache = self.__create_mixer_initial_cache()
             self.__out_cache = self.__create_out_initial_cache()
-            self.__save_cache()
+            self.__write_cache_to_file()
             self.__set_mixers()
 
         self.__load_option_settings()
 
-    def __load_cache(self):
+    def __read_cache_from_file(self):
         self.__option_cache = []
         self.__mixer_cache = []
         self.__out_cache = []
@@ -94,7 +94,7 @@ class FFUnit(Hinawa.SndUnit):
                 elif reg_type == 'out':
                     self.__out_cache.append(reg_val)
 
-    def __save_cache(self):
+    def __write_cache_to_file(self):
         with self._path.open(mode='w+') as f:
             for frame in self.__option_cache:
                 f.write('option {0:08x}\n'.format(frame))
@@ -148,7 +148,7 @@ class FFUnit(Hinawa.SndUnit):
         return FFOptionReg.get_multiple_option_value_labels(target)
     def set_multiple_option(self, target, val):
         FFOptionReg.build_multiple_option(self.__option_cache, target, val)
-        self.__save_cache()
+        self.__write_cache_to_file()
         self.__load_option_settings()
     def get_multiple_option(self, target):
         return FFOptionReg.parse_multiple_option(self.__option_cache, target)
@@ -201,7 +201,7 @@ class FFUnit(Hinawa.SndUnit):
     def set_single_option(self, target, item, enable):
         FFOptionReg.build_single_option(self.__option_cache, target, item,
                                         enable)
-        self.__save_cache()
+        self.__write_cache_to_file()
         self.__load_option_settings()
     def get_single_option(self, target, item):
         return FFOptionReg.parse_single_option(self.__option_cache, target,
@@ -255,7 +255,7 @@ class FFUnit(Hinawa.SndUnit):
         req = Hinawa.FwReq()
         req.write(self, self.__regs[1] + offset, data)
         self.__mixer_cache[offset // 4] = val
-        self.__save_cache()
+        self.__write_cache_to_file()
 
     def get_mixer_src(self, target, src):
         offset = FFMixerRegs.calculate_src_offset(self.__spec, target, src)
