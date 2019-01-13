@@ -42,6 +42,9 @@ class FFUnit(Hinawa.SndUnit):
         },
     }
 
+    __MUTE_VAL = 0x00000000
+    __ZERO_VAL = 0x00008000
+
     def __init__(self, path):
         super().__init__()
         self.open(path)
@@ -63,7 +66,7 @@ class FFUnit(Hinawa.SndUnit):
             self.__load_cache()
         else:
             self.__option_cache = FFOptionReg.create_initial_cache(self.__name)
-            self.__mixer_cache = FFMixerRegs.create_initial_cache(self.__spec)
+            self.__mixer_cache = self.__create_mixer_initial_cache()
             self.__save_cache()
             self.__set_mixers()
 
@@ -94,8 +97,8 @@ class FFUnit(Hinawa.SndUnit):
 
     def __set_mixers(self):
         req = Hinawa.FwReq()
-        targets = FFMixerRegs.get_mixer_labels(self.__spec)
-        srcs = FFMixerRegs.get_mixer_src_labels(self.__spec)
+        targets = FFMixerRegs.get_mixer_labels()
+        srcs = FFMixerRegs.get_mixer_src_labels()
         for target in targets:
             for src in srcs:
                 db = self.get_mixer_src(target, src)
@@ -135,6 +138,25 @@ class FFUnit(Hinawa.SndUnit):
 
         return FFStatusReg.parse(quads)
 
+    #
+    # Configuration for internal multiplexer.
+    #
+    def __create_mixer_initial_cache(self):
+        targets = self.get_mixer_labels()
+        srcs = self.get_mixer_src_labels()
+        cache = [0x00] * (len(targets) * 2 * self.__spec['avail'])
+        for i, target in enumerate(targets):
+            for src in srcs:
+                # Supply diagonal stream sources to each mixers.
+                if src != 'stream-{0}'.format(i + 1):
+                    val = self.__MUTE_VAL
+                else:
+                    val = self.__ZERO_VAL
+                offset = FFMixerRegs.calculate_src_offset(self.__spec, target,
+                                                          src)
+                cache[offset // 4] = val
+        return cache
+
     def get_mixer_labels(self):
         return FFMixerRegs.get_mixer_labels(self.__spec)
 
@@ -151,7 +173,7 @@ class FFUnit(Hinawa.SndUnit):
         return FFMixerRegs.get_max_db()
 
     def set_mixer_src(self, target, src, db):
-        offset = FFMixerRegs.calculate_offset(self.__spec, target, src)
+        offset = FFMixerRegs.calculate_src_offset(self.__spec, target, src)
         val = FFMixerRegs.build_val_from_db(db)
         data = pack('<I', val)
         req = Hinawa.FwReq()
@@ -160,5 +182,5 @@ class FFUnit(Hinawa.SndUnit):
         self.__save_cache()
 
     def get_mixer_src(self, target, src):
-        offset = FFMixerRegs.calculate_offset(self.__spec, target, src)
+        offset = FFMixerRegs.calculate_src_offset(self.__spec, target, src)
         return FFMixerRegs.parse_val_to_db(self.__mixer_cache[offset // 4])

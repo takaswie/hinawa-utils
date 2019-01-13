@@ -11,25 +11,6 @@ class FFMixerRegs():
     __MAX_VAL = 0x00010000
 
     @classmethod
-    def create_initial_cache(cls, spec):
-        cache = []
-        dsts =  spec['analog']
-        dsts += spec['spdif']
-        dsts += spec['adat']
-        avail = spec['avail']
-        for i in range(dsts):
-            for j in range(avail):
-                cache.append(cls.__MUTE_VAL)
-            for j in range(avail):
-                if i != j:
-                    val = cls.__MUTE_VAL
-                else:
-                    # Supply diagonal stream sources for mixers.
-                    val = cls.__ZERO_VAL
-                cache.append(val)
-        return cache
-
-    @classmethod
     def __generate_labels(cls, spec, category):
         labels = []
         for i in range(spec[category]):
@@ -74,7 +55,7 @@ class FFMixerRegs():
         return cls.parse_val_to_db(cls.__MAX_VAL)
 
     @classmethod
-    def calculate_offset(cls, spec: dict, dst: str, src: str):
+    def calculate_src_offset(cls, spec: dict, dst: str, src: str):
         """
         Register layout.
              =+=========+=
