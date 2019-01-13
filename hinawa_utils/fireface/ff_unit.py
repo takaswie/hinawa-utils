@@ -21,8 +21,25 @@ class FFUnit(Hinawa.SndUnit):
         0x000002:   'Fireface400',
     }
     __REGS = {
+        # model_id: (option offset, mixer offset)
         0x000001:   (0x0000fc88f014, 0x000080080000),
         0x000002:   (0x00008010051c, 0x000080080000),
+    }
+    __SPECS = {
+        0x000001: {
+            'analog':   10,
+            'spdif':    2,
+            'adat':     16,
+            'stream':   28,
+            'avail':    32,
+        },
+        0x000002: {
+            'analog':   10,
+            'spdif':    2,
+            'adat':     8,
+            'stream':   18,
+            'avail':    18,
+        },
     }
 
     def __init__(self, path):
@@ -37,6 +54,7 @@ class FFUnit(Hinawa.SndUnit):
 
         self.__name = self.__MODELS[info['model_id']]
         self.__regs = self.__REGS[info['model_id']]
+        self.__spec = self.__SPECS[info['model_id']]
 
         guid = self.get_property('guid')
         self._path = Path('/tmp/hinawa-{0:08x}'.format(guid))
@@ -45,7 +63,7 @@ class FFUnit(Hinawa.SndUnit):
             self.__load_cache()
         else:
             self.__option_cache = FFOptionReg.create_initial_cache(self.__name)
-            self.__mixer_cache = FFMixerRegs.create_initial_cache(self.__name)
+            self.__mixer_cache = FFMixerRegs.create_initial_cache(self.__spec)
             self.__save_cache()
             self.__set_mixers()
 
@@ -76,8 +94,8 @@ class FFUnit(Hinawa.SndUnit):
 
     def __set_mixers(self):
         req = Hinawa.FwReq()
-        targets = FFMixerRegs.get_mixer_labels(self.__name)
-        srcs = FFMixerRegs.get_mixer_src_labels(self.__name)
+        targets = FFMixerRegs.get_mixer_labels(self.__spec)
+        srcs = FFMixerRegs.get_mixer_src_labels(self.__spec)
         for target in targets:
             for src in srcs:
                 db = self.get_mixer_src(target, src)
@@ -118,10 +136,10 @@ class FFUnit(Hinawa.SndUnit):
         return FFStatusReg.parse(quads)
 
     def get_mixer_labels(self):
-        return FFMixerRegs.get_mixer_labels(self.__name)
+        return FFMixerRegs.get_mixer_labels(self.__spec)
 
     def get_mixer_src_labels(self):
-        return FFMixerRegs.get_mixer_src_labels(self.__name)
+        return FFMixerRegs.get_mixer_src_labels(self.__spec)
 
     def get_mixer_mute_db(self):
         return FFMixerRegs.get_mute_db()
@@ -133,7 +151,7 @@ class FFUnit(Hinawa.SndUnit):
         return FFMixerRegs.get_max_db()
 
     def set_mixer_src(self, target, src, db):
-        offset = FFMixerRegs.calculate_offset(self.__name, target, src)
+        offset = FFMixerRegs.calculate_offset(self.__spec, target, src)
         val = FFMixerRegs.build_val_from_db(db)
         data = pack('<I', val)
         req = Hinawa.FwReq()
@@ -142,5 +160,5 @@ class FFUnit(Hinawa.SndUnit):
         self.__save_cache()
 
     def get_mixer_src(self, target, src):
-        offset = FFMixerRegs.calculate_offset(self.__name, target, src)
+        offset = FFMixerRegs.calculate_offset(self.__spec, target, src)
         return FFMixerRegs.parse_val_to_db(self.__mixer_cache[offset // 4])

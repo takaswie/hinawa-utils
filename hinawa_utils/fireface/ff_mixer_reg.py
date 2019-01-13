@@ -5,35 +5,18 @@ from math import log10
 
 
 class FFMixerRegs():
-    __SPECS = {
-        'Fireface400':  {
-            'analog':   10,
-            'spdif':    2,
-            'adat':     8,
-            'stream':   18,
-            'avail':    18,
-        },
-        'Fireface800':  {
-            'analog':   10,
-            'spdif':    2,
-            'adat':     16,
-            'stream':   28,
-            'avail':    32,
-        },
-    }
-
     __MUTE_VAL = 0x00000000
     __MIN_VAL = 0x00000001
     __ZERO_VAL = 0x00008000
     __MAX_VAL = 0x00010000
 
     @classmethod
-    def create_initial_cache(cls, name):
+    def create_initial_cache(cls, spec):
         cache = []
-        dsts = cls.__SPECS[name]['analog']
-        dsts += cls.__SPECS[name]['spdif']
-        dsts += cls.__SPECS[name]['adat']
-        avail = cls.__SPECS[name]['avail']
+        dsts =  spec['analog']
+        dsts += spec['spdif']
+        dsts += spec['adat']
+        avail = spec['avail']
         for i in range(dsts):
             for j in range(avail):
                 cache.append(cls.__MUTE_VAL)
@@ -47,27 +30,27 @@ class FFMixerRegs():
         return cache
 
     @classmethod
-    def __generate_labels(cls, name, category):
+    def __generate_labels(cls, spec, category):
         labels = []
-        for i in range(cls.__SPECS[name][category]):
+        for i in range(spec[category]):
             labels.append('{0}-{1}'.format(category, i + 1))
         return labels
 
     @classmethod
-    def get_mixer_labels(cls, name: str):
-        labels = cls.__generate_labels(name, 'analog')
+    def get_mixer_labels(cls, spec: dict):
+        labels = cls.__generate_labels(spec, 'analog')
         labels[-2] = 'hp-1'
         labels[-1] = 'hp-2'
-        labels += cls.__generate_labels(name, 'spdif')
-        labels += cls.__generate_labels(name, 'adat')
+        labels += cls.__generate_labels(spec, 'spdif')
+        labels += cls.__generate_labels(spec, 'adat')
         return labels
 
     @classmethod
-    def get_mixer_src_labels(cls, name: str):
-        labels = cls.__generate_labels(name, 'analog')
-        labels += cls.__generate_labels(name, 'spdif')
-        labels += cls.__generate_labels(name, 'adat')
-        labels += cls.__generate_labels(name, 'stream')
+    def get_mixer_src_labels(cls, spec: dict):
+        labels = cls.__generate_labels(spec, 'analog')
+        labels += cls.__generate_labels(spec, 'spdif')
+        labels += cls.__generate_labels(spec, 'adat')
+        labels += cls.__generate_labels(spec, 'stream')
         return labels
 
     @classmethod
@@ -93,7 +76,7 @@ class FFMixerRegs():
         return cls.parse_val_to_db(cls.__MAX_VAL)
 
     @classmethod
-    def calculate_offset(cls, name: str, dst: str, src: str):
+    def calculate_offset(cls, spec: dict, dst: str, src: str):
         """
         Register layout.
              =+=========+=
@@ -113,17 +96,17 @@ class FFMixerRegs():
              =+=========+=
         """
 
-        dsts = cls.get_mixer_labels(name)
-        srcs = cls.get_mixer_src_labels(name)
+        dsts = cls.get_mixer_labels(spec)
+        srcs = cls.get_mixer_src_labels(spec)
         if dst not in dsts:
             raise ValueError('Invalid argument for destination of mixer.')
         if src not in srcs:
             raise ValueError('Invalid argument for source of mixer.')
 
-        offset = dsts.index(dst) * cls.__SPECS[name]['avail'] * 2 * 4
+        offset = dsts.index(dst) * spec['avail'] * 2 * 4
 
         if src.find('stream-') == 0:
-            offset += cls.__SPECS[name]['avail'] * 4
-            srcs = cls.__generate_labels(name, 'stream')
+            offset += spec['avail'] * 4
+            srcs = cls.__generate_labels(spec, 'stream')
 
         return offset + srcs.index(src) * 4
