@@ -16,9 +16,13 @@ from hinawa_utils.fireface.ff_mixer_reg import FFMixerRegs
 __all__ = ['FFUnit']
 
 class FFUnit(Hinawa.SndUnit):
-    _MODELS = {
-        0x000001:   ('Fireface800', (0x0000fc88f014, 0x000080080000)),
-        0x000002:   ('Fireface400', (0x00008010051c, 0x000080080000)),
+    __MODELS = {
+        0x000001:   'Fireface800',
+        0x000002:   'Fireface400',
+    }
+    __REGS = {
+        0x000001:   (0x0000fc88f014, 0x000080080000),
+        0x000002:   (0x00008010051c, 0x000080080000),
     }
 
     def __init__(self, path):
@@ -28,10 +32,11 @@ class FFUnit(Hinawa.SndUnit):
 
         parser = FFConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
-        if info['model_id'] not in self._MODELS:
+        if info['model_id'] not in self.__MODELS:
             raise OSError('Unsupported model.')
 
-        self.__name, self.__regs = self._MODELS[info['model_id']]
+        self.__name = self.__MODELS[info['model_id']]
+        self.__regs = self.__REGS[info['model_id']]
 
         guid = self.get_property('guid')
         self._path = Path('/tmp/hinawa-{0:08x}'.format(guid))
