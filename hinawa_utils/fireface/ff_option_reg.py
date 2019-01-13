@@ -5,6 +5,7 @@ from hinawa_utils.fireface.ff_status_reg import FFClkLabels
 
 __all__ = ['FFOptionReg']
 
+
 class FFOptionReg():
     __MULTIPLE_OPTION_MASKS = {
         'line-in': {
@@ -83,11 +84,13 @@ class FFOptionReg():
     @classmethod
     def get_multiple_option_labels(cls):
         return cls.__MULTIPLE_OPTION_MASKS.keys()
+
     @classmethod
     def get_multiple_option_value_labels(cls, target):
         if target not in cls.__MULTIPLE_OPTION_MASKS:
             raise ValueError('Invalid argument for multi option.')
         return cls.__MULTIPLE_OPTION_MASKS[target].keys()
+
     @classmethod
     def build_multiple_option(cls, quads, target, val):
         if target not in cls.__MULTIPLE_OPTION_MASKS:
@@ -100,6 +103,7 @@ class FFOptionReg():
                 quads[i] &= ~flag
         for i, flag in enumerate(elems[val]):
             quads[i] |= flag
+
     @classmethod
     def parse_multiple_option(cls, quads, target):
         if target not in cls.__MULTIPLE_OPTION_MASKS:
@@ -121,11 +125,13 @@ class FFOptionReg():
     @classmethod
     def get_single_option_labels(cls):
         return cls.__SINGLE_OPTION_MASKS.keys()
+
     @classmethod
     def get_single_option_item_labels(cls, target):
         if target not in cls.__SINGLE_OPTION_MASKS:
             raise ValueError('Invalid argument for bool option.')
         return cls.__SINGLE_OPTION_MASKS[target].keys()
+
     @classmethod
     def build_single_option(cls, quads, target, item, enable):
         if target not in cls.__SINGLE_OPTION_MASKS:
@@ -137,6 +143,7 @@ class FFOptionReg():
             quads[i] &= ~mask
             if enable:
                 quads[i] |= mask
+
     @classmethod
     def parse_single_option(cls, quads, target, item):
         if target not in cls.__SINGLE_OPTION_MASKS:

@@ -5,13 +5,15 @@ from enum import Enum
 
 __all__ = ['FFClkLabels', 'FFStatusReg']
 
+
 class FFClkLabels(Enum):
-    ADAT1   = 'ADAT1'
-    ADAT2   = 'ADAT2'
-    SPDIF   = 'S/PDIF'
-    WDCLK   = 'Word-clock'
-    LTO     = 'LTO'
-    TCO     = 'TCO'
+    ADAT1 = 'ADAT1'
+    ADAT2 = 'ADAT2'
+    SPDIF = 'S/PDIF'
+    WDCLK = 'Word-clock'
+    LTO = 'LTO'
+    TCO = 'TCO'
+
 
 class FFStatusReg():
     __SINGLE_STATUS_MASKS = {

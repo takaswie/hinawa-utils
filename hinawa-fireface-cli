@@ -5,6 +5,7 @@
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.fireface.ff_unit import FFUnit
 
+
 def handle_status(unit, args):
     print('Model name: {0}'.format(unit.get_model_name()))
 
@@ -26,6 +27,7 @@ def handle_status(unit, args):
             print('  {0}: {1}'.format(key, val))
 
     return True
+
 
 def handle_multiple_option(unit, args):
     ops = ('set', 'get')
@@ -50,6 +52,7 @@ def handle_multiple_option(unit, args):
         vals = unit.get_multiple_option_value_labels(target)
         print('    ITEM    [{0}] if TARGET={1} and OP=set'.format('|'.join(vals), target))
     return False
+
 
 def handle_single_option(unit, args):
     ops = ('set', 'get')

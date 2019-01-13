@@ -17,6 +17,7 @@ from hinawa_utils.fireface.ff_out_reg import FFOutRegs
 
 __all__ = ['FFUnit']
 
+
 class FFUnit(Hinawa.SndUnit):
     __MODELS = {
         0x000001:   'Fireface800',
@@ -145,12 +146,15 @@ class FFUnit(Hinawa.SndUnit):
 
     def get_multiple_option_labels(self):
         return FFOptionReg.get_multiple_option_labels()
+
     def get_multiple_option_value_labels(self, target):
         return FFOptionReg.get_multiple_option_value_labels(target)
+
     def set_multiple_option(self, target, val):
         FFOptionReg.build_multiple_option(self.__option_cache, target, val)
         self.__write_cache_to_file()
         self.__load_option_settings()
+
     def get_multiple_option(self, target):
         return FFOptionReg.parse_multiple_option(self.__option_cache, target)
 
@@ -197,13 +201,16 @@ class FFUnit(Hinawa.SndUnit):
 
     def get_single_option_labels(self):
         return FFOptionReg.get_single_option_labels()
+
     def get_single_option_item_labels(self, target):
         return FFOptionReg.get_single_option_item_labels(target)
+
     def set_single_option(self, target, item, enable):
         FFOptionReg.build_single_option(self.__option_cache, target, item,
                                         enable)
         self.__write_cache_to_file()
         self.__load_option_settings()
+
     def get_single_option(self, target, item):
         return FFOptionReg.parse_single_option(self.__option_cache, target,
                                                item)
