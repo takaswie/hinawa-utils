@@ -39,8 +39,6 @@ class FFMixerRegs():
     @classmethod
     def get_mixer_labels(cls, spec: dict):
         labels = cls.__generate_labels(spec, 'analog')
-        labels[-2] = 'hp-1'
-        labels[-1] = 'hp-2'
         labels += cls.__generate_labels(spec, 'spdif')
         labels += cls.__generate_labels(spec, 'adat')
         return labels

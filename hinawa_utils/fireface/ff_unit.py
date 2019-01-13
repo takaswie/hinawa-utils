@@ -34,7 +34,7 @@ class FFUnit(Hinawa.SndUnit):
             'avail':    32,
         },
         0x000002: {
-            'analog':   10,
+            'analog':   8,
             'spdif':    2,
             'adat':     8,
             'stream':   18,
