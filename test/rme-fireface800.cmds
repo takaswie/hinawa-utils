@@ -106,3 +106,3198 @@ multiple-option primary-clk-src set ADAT1
 multiple-option primary-clk-src set ADAT2
 multiple-option primary-clk-src set S/PDIF
 multiple-option primary-clk-src set Word-clock
+
+mixer-src analog-1 analog-1 get
+mixer-src analog-1 analog-2 get
+mixer-src analog-1 analog-3 get
+mixer-src analog-1 analog-4 get
+mixer-src analog-1 analog-5 get
+mixer-src analog-1 analog-6 get
+mixer-src analog-1 analog-7 get
+mixer-src analog-1 analog-8 get
+mixer-src analog-1 analog-9 get
+mixer-src analog-1 analog-10 get
+mixer-src analog-1 spdif-1 get
+mixer-src analog-1 spdif-2 get
+mixer-src analog-1 adat-1 get
+mixer-src analog-1 adat-2 get
+mixer-src analog-1 adat-3 get
+mixer-src analog-1 adat-4 get
+mixer-src analog-1 adat-5 get
+mixer-src analog-1 adat-6 get
+mixer-src analog-1 adat-7 get
+mixer-src analog-1 adat-8 get
+mixer-src analog-1 adat-9 get
+mixer-src analog-1 adat-10 get
+mixer-src analog-1 adat-11 get
+mixer-src analog-1 adat-12 get
+mixer-src analog-1 adat-13 get
+mixer-src analog-1 adat-14 get
+mixer-src analog-1 adat-15 get
+mixer-src analog-1 adat-16 get
+mixer-src analog-1 stream-1 get
+mixer-src analog-1 stream-2 get
+mixer-src analog-1 stream-3 get
+mixer-src analog-1 stream-4 get
+mixer-src analog-1 stream-5 get
+mixer-src analog-1 stream-6 get
+mixer-src analog-1 stream-7 get
+mixer-src analog-1 stream-8 get
+mixer-src analog-1 stream-9 get
+mixer-src analog-1 stream-10 get
+mixer-src analog-1 stream-11 get
+mixer-src analog-1 stream-12 get
+mixer-src analog-1 stream-13 get
+mixer-src analog-1 stream-14 get
+mixer-src analog-1 stream-15 get
+mixer-src analog-1 stream-16 get
+mixer-src analog-1 stream-17 get
+mixer-src analog-1 stream-18 get
+mixer-src analog-1 stream-19 get
+mixer-src analog-1 stream-20 get
+mixer-src analog-1 stream-21 get
+mixer-src analog-1 stream-22 get
+mixer-src analog-1 stream-23 get
+mixer-src analog-1 stream-24 get
+mixer-src analog-1 stream-25 get
+mixer-src analog-1 stream-26 get
+mixer-src analog-1 stream-27 get
+mixer-src analog-1 stream-28 get
+mixer-src analog-2 analog-1 get
+mixer-src analog-2 analog-2 get
+mixer-src analog-2 analog-3 get
+mixer-src analog-2 analog-4 get
+mixer-src analog-2 analog-5 get
+mixer-src analog-2 analog-6 get
+mixer-src analog-2 analog-7 get
+mixer-src analog-2 analog-8 get
+mixer-src analog-2 analog-9 get
+mixer-src analog-2 analog-10 get
+mixer-src analog-2 spdif-1 get
+mixer-src analog-2 spdif-2 get
+mixer-src analog-2 adat-1 get
+mixer-src analog-2 adat-2 get
+mixer-src analog-2 adat-3 get
+mixer-src analog-2 adat-4 get
+mixer-src analog-2 adat-5 get
+mixer-src analog-2 adat-6 get
+mixer-src analog-2 adat-7 get
+mixer-src analog-2 adat-8 get
+mixer-src analog-2 adat-9 get
+mixer-src analog-2 adat-10 get
+mixer-src analog-2 adat-11 get
+mixer-src analog-2 adat-12 get
+mixer-src analog-2 adat-13 get
+mixer-src analog-2 adat-14 get
+mixer-src analog-2 adat-15 get
+mixer-src analog-2 adat-16 get
+mixer-src analog-2 stream-1 get
+mixer-src analog-2 stream-2 get
+mixer-src analog-2 stream-3 get
+mixer-src analog-2 stream-4 get
+mixer-src analog-2 stream-5 get
+mixer-src analog-2 stream-6 get
+mixer-src analog-2 stream-7 get
+mixer-src analog-2 stream-8 get
+mixer-src analog-2 stream-9 get
+mixer-src analog-2 stream-10 get
+mixer-src analog-2 stream-11 get
+mixer-src analog-2 stream-12 get
+mixer-src analog-2 stream-13 get
+mixer-src analog-2 stream-14 get
+mixer-src analog-2 stream-15 get
+mixer-src analog-2 stream-16 get
+mixer-src analog-2 stream-17 get
+mixer-src analog-2 stream-18 get
+mixer-src analog-2 stream-19 get
+mixer-src analog-2 stream-20 get
+mixer-src analog-2 stream-21 get
+mixer-src analog-2 stream-22 get
+mixer-src analog-2 stream-23 get
+mixer-src analog-2 stream-24 get
+mixer-src analog-2 stream-25 get
+mixer-src analog-2 stream-26 get
+mixer-src analog-2 stream-27 get
+mixer-src analog-2 stream-28 get
+mixer-src analog-3 analog-1 get
+mixer-src analog-3 analog-2 get
+mixer-src analog-3 analog-3 get
+mixer-src analog-3 analog-4 get
+mixer-src analog-3 analog-5 get
+mixer-src analog-3 analog-6 get
+mixer-src analog-3 analog-7 get
+mixer-src analog-3 analog-8 get
+mixer-src analog-3 analog-9 get
+mixer-src analog-3 analog-10 get
+mixer-src analog-3 spdif-1 get
+mixer-src analog-3 spdif-2 get
+mixer-src analog-3 adat-1 get
+mixer-src analog-3 adat-2 get
+mixer-src analog-3 adat-3 get
+mixer-src analog-3 adat-4 get
+mixer-src analog-3 adat-5 get
+mixer-src analog-3 adat-6 get
+mixer-src analog-3 adat-7 get
+mixer-src analog-3 adat-8 get
+mixer-src analog-3 adat-9 get
+mixer-src analog-3 adat-10 get
+mixer-src analog-3 adat-11 get
+mixer-src analog-3 adat-12 get
+mixer-src analog-3 adat-13 get
+mixer-src analog-3 adat-14 get
+mixer-src analog-3 adat-15 get
+mixer-src analog-3 adat-16 get
+mixer-src analog-3 stream-1 get
+mixer-src analog-3 stream-2 get
+mixer-src analog-3 stream-3 get
+mixer-src analog-3 stream-4 get
+mixer-src analog-3 stream-5 get
+mixer-src analog-3 stream-6 get
+mixer-src analog-3 stream-7 get
+mixer-src analog-3 stream-8 get
+mixer-src analog-3 stream-9 get
+mixer-src analog-3 stream-10 get
+mixer-src analog-3 stream-11 get
+mixer-src analog-3 stream-12 get
+mixer-src analog-3 stream-13 get
+mixer-src analog-3 stream-14 get
+mixer-src analog-3 stream-15 get
+mixer-src analog-3 stream-16 get
+mixer-src analog-3 stream-17 get
+mixer-src analog-3 stream-18 get
+mixer-src analog-3 stream-19 get
+mixer-src analog-3 stream-20 get
+mixer-src analog-3 stream-21 get
+mixer-src analog-3 stream-22 get
+mixer-src analog-3 stream-23 get
+mixer-src analog-3 stream-24 get
+mixer-src analog-3 stream-25 get
+mixer-src analog-3 stream-26 get
+mixer-src analog-3 stream-27 get
+mixer-src analog-3 stream-28 get
+mixer-src analog-4 analog-1 get
+mixer-src analog-4 analog-2 get
+mixer-src analog-4 analog-3 get
+mixer-src analog-4 analog-4 get
+mixer-src analog-4 analog-5 get
+mixer-src analog-4 analog-6 get
+mixer-src analog-4 analog-7 get
+mixer-src analog-4 analog-8 get
+mixer-src analog-4 analog-9 get
+mixer-src analog-4 analog-10 get
+mixer-src analog-4 spdif-1 get
+mixer-src analog-4 spdif-2 get
+mixer-src analog-4 adat-1 get
+mixer-src analog-4 adat-2 get
+mixer-src analog-4 adat-3 get
+mixer-src analog-4 adat-4 get
+mixer-src analog-4 adat-5 get
+mixer-src analog-4 adat-6 get
+mixer-src analog-4 adat-7 get
+mixer-src analog-4 adat-8 get
+mixer-src analog-4 adat-9 get
+mixer-src analog-4 adat-10 get
+mixer-src analog-4 adat-11 get
+mixer-src analog-4 adat-12 get
+mixer-src analog-4 adat-13 get
+mixer-src analog-4 adat-14 get
+mixer-src analog-4 adat-15 get
+mixer-src analog-4 adat-16 get
+mixer-src analog-4 stream-1 get
+mixer-src analog-4 stream-2 get
+mixer-src analog-4 stream-3 get
+mixer-src analog-4 stream-4 get
+mixer-src analog-4 stream-5 get
+mixer-src analog-4 stream-6 get
+mixer-src analog-4 stream-7 get
+mixer-src analog-4 stream-8 get
+mixer-src analog-4 stream-9 get
+mixer-src analog-4 stream-10 get
+mixer-src analog-4 stream-11 get
+mixer-src analog-4 stream-12 get
+mixer-src analog-4 stream-13 get
+mixer-src analog-4 stream-14 get
+mixer-src analog-4 stream-15 get
+mixer-src analog-4 stream-16 get
+mixer-src analog-4 stream-17 get
+mixer-src analog-4 stream-18 get
+mixer-src analog-4 stream-19 get
+mixer-src analog-4 stream-20 get
+mixer-src analog-4 stream-21 get
+mixer-src analog-4 stream-22 get
+mixer-src analog-4 stream-23 get
+mixer-src analog-4 stream-24 get
+mixer-src analog-4 stream-25 get
+mixer-src analog-4 stream-26 get
+mixer-src analog-4 stream-27 get
+mixer-src analog-4 stream-28 get
+mixer-src analog-5 analog-1 get
+mixer-src analog-5 analog-2 get
+mixer-src analog-5 analog-3 get
+mixer-src analog-5 analog-4 get
+mixer-src analog-5 analog-5 get
+mixer-src analog-5 analog-6 get
+mixer-src analog-5 analog-7 get
+mixer-src analog-5 analog-8 get
+mixer-src analog-5 analog-9 get
+mixer-src analog-5 analog-10 get
+mixer-src analog-5 spdif-1 get
+mixer-src analog-5 spdif-2 get
+mixer-src analog-5 adat-1 get
+mixer-src analog-5 adat-2 get
+mixer-src analog-5 adat-3 get
+mixer-src analog-5 adat-4 get
+mixer-src analog-5 adat-5 get
+mixer-src analog-5 adat-6 get
+mixer-src analog-5 adat-7 get
+mixer-src analog-5 adat-8 get
+mixer-src analog-5 adat-9 get
+mixer-src analog-5 adat-10 get
+mixer-src analog-5 adat-11 get
+mixer-src analog-5 adat-12 get
+mixer-src analog-5 adat-13 get
+mixer-src analog-5 adat-14 get
+mixer-src analog-5 adat-15 get
+mixer-src analog-5 adat-16 get
+mixer-src analog-5 stream-1 get
+mixer-src analog-5 stream-2 get
+mixer-src analog-5 stream-3 get
+mixer-src analog-5 stream-4 get
+mixer-src analog-5 stream-5 get
+mixer-src analog-5 stream-6 get
+mixer-src analog-5 stream-7 get
+mixer-src analog-5 stream-8 get
+mixer-src analog-5 stream-9 get
+mixer-src analog-5 stream-10 get
+mixer-src analog-5 stream-11 get
+mixer-src analog-5 stream-12 get
+mixer-src analog-5 stream-13 get
+mixer-src analog-5 stream-14 get
+mixer-src analog-5 stream-15 get
+mixer-src analog-5 stream-16 get
+mixer-src analog-5 stream-17 get
+mixer-src analog-5 stream-18 get
+mixer-src analog-5 stream-19 get
+mixer-src analog-5 stream-20 get
+mixer-src analog-5 stream-21 get
+mixer-src analog-5 stream-22 get
+mixer-src analog-5 stream-23 get
+mixer-src analog-5 stream-24 get
+mixer-src analog-5 stream-25 get
+mixer-src analog-5 stream-26 get
+mixer-src analog-5 stream-27 get
+mixer-src analog-5 stream-28 get
+mixer-src analog-6 analog-1 get
+mixer-src analog-6 analog-2 get
+mixer-src analog-6 analog-3 get
+mixer-src analog-6 analog-4 get
+mixer-src analog-6 analog-5 get
+mixer-src analog-6 analog-6 get
+mixer-src analog-6 analog-7 get
+mixer-src analog-6 analog-8 get
+mixer-src analog-6 analog-9 get
+mixer-src analog-6 analog-10 get
+mixer-src analog-6 spdif-1 get
+mixer-src analog-6 spdif-2 get
+mixer-src analog-6 adat-1 get
+mixer-src analog-6 adat-2 get
+mixer-src analog-6 adat-3 get
+mixer-src analog-6 adat-4 get
+mixer-src analog-6 adat-5 get
+mixer-src analog-6 adat-6 get
+mixer-src analog-6 adat-7 get
+mixer-src analog-6 adat-8 get
+mixer-src analog-6 adat-9 get
+mixer-src analog-6 adat-10 get
+mixer-src analog-6 adat-11 get
+mixer-src analog-6 adat-12 get
+mixer-src analog-6 adat-13 get
+mixer-src analog-6 adat-14 get
+mixer-src analog-6 adat-15 get
+mixer-src analog-6 adat-16 get
+mixer-src analog-6 stream-1 get
+mixer-src analog-6 stream-2 get
+mixer-src analog-6 stream-3 get
+mixer-src analog-6 stream-4 get
+mixer-src analog-6 stream-5 get
+mixer-src analog-6 stream-6 get
+mixer-src analog-6 stream-7 get
+mixer-src analog-6 stream-8 get
+mixer-src analog-6 stream-9 get
+mixer-src analog-6 stream-10 get
+mixer-src analog-6 stream-11 get
+mixer-src analog-6 stream-12 get
+mixer-src analog-6 stream-13 get
+mixer-src analog-6 stream-14 get
+mixer-src analog-6 stream-15 get
+mixer-src analog-6 stream-16 get
+mixer-src analog-6 stream-17 get
+mixer-src analog-6 stream-18 get
+mixer-src analog-6 stream-19 get
+mixer-src analog-6 stream-20 get
+mixer-src analog-6 stream-21 get
+mixer-src analog-6 stream-22 get
+mixer-src analog-6 stream-23 get
+mixer-src analog-6 stream-24 get
+mixer-src analog-6 stream-25 get
+mixer-src analog-6 stream-26 get
+mixer-src analog-6 stream-27 get
+mixer-src analog-6 stream-28 get
+mixer-src analog-7 analog-1 get
+mixer-src analog-7 analog-2 get
+mixer-src analog-7 analog-3 get
+mixer-src analog-7 analog-4 get
+mixer-src analog-7 analog-5 get
+mixer-src analog-7 analog-6 get
+mixer-src analog-7 analog-7 get
+mixer-src analog-7 analog-8 get
+mixer-src analog-7 analog-9 get
+mixer-src analog-7 analog-10 get
+mixer-src analog-7 spdif-1 get
+mixer-src analog-7 spdif-2 get
+mixer-src analog-7 adat-1 get
+mixer-src analog-7 adat-2 get
+mixer-src analog-7 adat-3 get
+mixer-src analog-7 adat-4 get
+mixer-src analog-7 adat-5 get
+mixer-src analog-7 adat-6 get
+mixer-src analog-7 adat-7 get
+mixer-src analog-7 adat-8 get
+mixer-src analog-7 adat-9 get
+mixer-src analog-7 adat-10 get
+mixer-src analog-7 adat-11 get
+mixer-src analog-7 adat-12 get
+mixer-src analog-7 adat-13 get
+mixer-src analog-7 adat-14 get
+mixer-src analog-7 adat-15 get
+mixer-src analog-7 adat-16 get
+mixer-src analog-7 stream-1 get
+mixer-src analog-7 stream-2 get
+mixer-src analog-7 stream-3 get
+mixer-src analog-7 stream-4 get
+mixer-src analog-7 stream-5 get
+mixer-src analog-7 stream-6 get
+mixer-src analog-7 stream-7 get
+mixer-src analog-7 stream-8 get
+mixer-src analog-7 stream-9 get
+mixer-src analog-7 stream-10 get
+mixer-src analog-7 stream-11 get
+mixer-src analog-7 stream-12 get
+mixer-src analog-7 stream-13 get
+mixer-src analog-7 stream-14 get
+mixer-src analog-7 stream-15 get
+mixer-src analog-7 stream-16 get
+mixer-src analog-7 stream-17 get
+mixer-src analog-7 stream-18 get
+mixer-src analog-7 stream-19 get
+mixer-src analog-7 stream-20 get
+mixer-src analog-7 stream-21 get
+mixer-src analog-7 stream-22 get
+mixer-src analog-7 stream-23 get
+mixer-src analog-7 stream-24 get
+mixer-src analog-7 stream-25 get
+mixer-src analog-7 stream-26 get
+mixer-src analog-7 stream-27 get
+mixer-src analog-7 stream-28 get
+mixer-src analog-8 analog-1 get
+mixer-src analog-8 analog-2 get
+mixer-src analog-8 analog-3 get
+mixer-src analog-8 analog-4 get
+mixer-src analog-8 analog-5 get
+mixer-src analog-8 analog-6 get
+mixer-src analog-8 analog-7 get
+mixer-src analog-8 analog-8 get
+mixer-src analog-8 analog-9 get
+mixer-src analog-8 analog-10 get
+mixer-src analog-8 spdif-1 get
+mixer-src analog-8 spdif-2 get
+mixer-src analog-8 adat-1 get
+mixer-src analog-8 adat-2 get
+mixer-src analog-8 adat-3 get
+mixer-src analog-8 adat-4 get
+mixer-src analog-8 adat-5 get
+mixer-src analog-8 adat-6 get
+mixer-src analog-8 adat-7 get
+mixer-src analog-8 adat-8 get
+mixer-src analog-8 adat-9 get
+mixer-src analog-8 adat-10 get
+mixer-src analog-8 adat-11 get
+mixer-src analog-8 adat-12 get
+mixer-src analog-8 adat-13 get
+mixer-src analog-8 adat-14 get
+mixer-src analog-8 adat-15 get
+mixer-src analog-8 adat-16 get
+mixer-src analog-8 stream-1 get
+mixer-src analog-8 stream-2 get
+mixer-src analog-8 stream-3 get
+mixer-src analog-8 stream-4 get
+mixer-src analog-8 stream-5 get
+mixer-src analog-8 stream-6 get
+mixer-src analog-8 stream-7 get
+mixer-src analog-8 stream-8 get
+mixer-src analog-8 stream-9 get
+mixer-src analog-8 stream-10 get
+mixer-src analog-8 stream-11 get
+mixer-src analog-8 stream-12 get
+mixer-src analog-8 stream-13 get
+mixer-src analog-8 stream-14 get
+mixer-src analog-8 stream-15 get
+mixer-src analog-8 stream-16 get
+mixer-src analog-8 stream-17 get
+mixer-src analog-8 stream-18 get
+mixer-src analog-8 stream-19 get
+mixer-src analog-8 stream-20 get
+mixer-src analog-8 stream-21 get
+mixer-src analog-8 stream-22 get
+mixer-src analog-8 stream-23 get
+mixer-src analog-8 stream-24 get
+mixer-src analog-8 stream-25 get
+mixer-src analog-8 stream-26 get
+mixer-src analog-8 stream-27 get
+mixer-src analog-8 stream-28 get
+mixer-src analog-9 analog-1 get
+mixer-src analog-9 analog-2 get
+mixer-src analog-9 analog-3 get
+mixer-src analog-9 analog-4 get
+mixer-src analog-9 analog-5 get
+mixer-src analog-9 analog-6 get
+mixer-src analog-9 analog-7 get
+mixer-src analog-9 analog-8 get
+mixer-src analog-9 analog-9 get
+mixer-src analog-9 analog-10 get
+mixer-src analog-9 spdif-1 get
+mixer-src analog-9 spdif-2 get
+mixer-src analog-9 adat-1 get
+mixer-src analog-9 adat-2 get
+mixer-src analog-9 adat-3 get
+mixer-src analog-9 adat-4 get
+mixer-src analog-9 adat-5 get
+mixer-src analog-9 adat-6 get
+mixer-src analog-9 adat-7 get
+mixer-src analog-9 adat-8 get
+mixer-src analog-9 adat-9 get
+mixer-src analog-9 adat-10 get
+mixer-src analog-9 adat-11 get
+mixer-src analog-9 adat-12 get
+mixer-src analog-9 adat-13 get
+mixer-src analog-9 adat-14 get
+mixer-src analog-9 adat-15 get
+mixer-src analog-9 adat-16 get
+mixer-src analog-9 stream-1 get
+mixer-src analog-9 stream-2 get
+mixer-src analog-9 stream-3 get
+mixer-src analog-9 stream-4 get
+mixer-src analog-9 stream-5 get
+mixer-src analog-9 stream-6 get
+mixer-src analog-9 stream-7 get
+mixer-src analog-9 stream-8 get
+mixer-src analog-9 stream-9 get
+mixer-src analog-9 stream-10 get
+mixer-src analog-9 stream-11 get
+mixer-src analog-9 stream-12 get
+mixer-src analog-9 stream-13 get
+mixer-src analog-9 stream-14 get
+mixer-src analog-9 stream-15 get
+mixer-src analog-9 stream-16 get
+mixer-src analog-9 stream-17 get
+mixer-src analog-9 stream-18 get
+mixer-src analog-9 stream-19 get
+mixer-src analog-9 stream-20 get
+mixer-src analog-9 stream-21 get
+mixer-src analog-9 stream-22 get
+mixer-src analog-9 stream-23 get
+mixer-src analog-9 stream-24 get
+mixer-src analog-9 stream-25 get
+mixer-src analog-9 stream-26 get
+mixer-src analog-9 stream-27 get
+mixer-src analog-10 stream-28 get
+mixer-src analog-10 analog-1 get
+mixer-src analog-10 analog-2 get
+mixer-src analog-10 analog-3 get
+mixer-src analog-10 analog-4 get
+mixer-src analog-10 analog-5 get
+mixer-src analog-10 analog-6 get
+mixer-src analog-10 analog-7 get
+mixer-src analog-10 analog-8 get
+mixer-src analog-10 analog-9 get
+mixer-src analog-10 analog-10 get
+mixer-src analog-10 spdif-1 get
+mixer-src analog-10 spdif-2 get
+mixer-src analog-10 adat-1 get
+mixer-src analog-10 adat-2 get
+mixer-src analog-10 adat-3 get
+mixer-src analog-10 adat-4 get
+mixer-src analog-10 adat-5 get
+mixer-src analog-10 adat-6 get
+mixer-src analog-10 adat-7 get
+mixer-src analog-10 adat-8 get
+mixer-src analog-10 adat-9 get
+mixer-src analog-10 adat-10 get
+mixer-src analog-10 adat-11 get
+mixer-src analog-10 adat-12 get
+mixer-src analog-10 adat-13 get
+mixer-src analog-10 adat-14 get
+mixer-src analog-10 adat-15 get
+mixer-src analog-10 adat-16 get
+mixer-src analog-10 stream-1 get
+mixer-src analog-10 stream-2 get
+mixer-src analog-10 stream-3 get
+mixer-src analog-10 stream-4 get
+mixer-src analog-10 stream-5 get
+mixer-src analog-10 stream-6 get
+mixer-src analog-10 stream-7 get
+mixer-src analog-10 stream-8 get
+mixer-src analog-10 stream-9 get
+mixer-src analog-10 stream-10 get
+mixer-src analog-10 stream-11 get
+mixer-src analog-10 stream-12 get
+mixer-src analog-10 stream-13 get
+mixer-src analog-10 stream-14 get
+mixer-src analog-10 stream-15 get
+mixer-src analog-10 stream-16 get
+mixer-src analog-10 stream-17 get
+mixer-src analog-10 stream-18 get
+mixer-src analog-10 stream-19 get
+mixer-src analog-10 stream-20 get
+mixer-src analog-10 stream-21 get
+mixer-src analog-10 stream-22 get
+mixer-src analog-10 stream-23 get
+mixer-src analog-10 stream-24 get
+mixer-src analog-10 stream-25 get
+mixer-src analog-10 stream-26 get
+mixer-src analog-10 stream-27 get
+mixer-src analog-10 stream-28 get
+mixer-src spdif-1 analog-1 get
+mixer-src spdif-1 analog-2 get
+mixer-src spdif-1 analog-3 get
+mixer-src spdif-1 analog-4 get
+mixer-src spdif-1 analog-5 get
+mixer-src spdif-1 analog-6 get
+mixer-src spdif-1 analog-7 get
+mixer-src spdif-1 analog-8 get
+mixer-src spdif-1 analog-9 get
+mixer-src spdif-1 analog-10 get
+mixer-src spdif-1 spdif-1 get
+mixer-src spdif-1 spdif-2 get
+mixer-src spdif-1 adat-1 get
+mixer-src spdif-1 adat-2 get
+mixer-src spdif-1 adat-3 get
+mixer-src spdif-1 adat-4 get
+mixer-src spdif-1 adat-5 get
+mixer-src spdif-1 adat-6 get
+mixer-src spdif-1 adat-7 get
+mixer-src spdif-1 adat-8 get
+mixer-src spdif-1 adat-9 get
+mixer-src spdif-1 adat-10 get
+mixer-src spdif-1 adat-11 get
+mixer-src spdif-1 adat-12 get
+mixer-src spdif-1 adat-13 get
+mixer-src spdif-1 adat-14 get
+mixer-src spdif-1 adat-15 get
+mixer-src spdif-1 adat-16 get
+mixer-src spdif-1 stream-1 get
+mixer-src spdif-1 stream-2 get
+mixer-src spdif-1 stream-3 get
+mixer-src spdif-1 stream-4 get
+mixer-src spdif-1 stream-5 get
+mixer-src spdif-1 stream-6 get
+mixer-src spdif-1 stream-7 get
+mixer-src spdif-1 stream-8 get
+mixer-src spdif-1 stream-9 get
+mixer-src spdif-1 stream-10 get
+mixer-src spdif-1 stream-11 get
+mixer-src spdif-1 stream-12 get
+mixer-src spdif-1 stream-13 get
+mixer-src spdif-1 stream-14 get
+mixer-src spdif-1 stream-15 get
+mixer-src spdif-1 stream-16 get
+mixer-src spdif-1 stream-17 get
+mixer-src spdif-1 stream-18 get
+mixer-src spdif-1 stream-19 get
+mixer-src spdif-1 stream-20 get
+mixer-src spdif-1 stream-21 get
+mixer-src spdif-1 stream-22 get
+mixer-src spdif-1 stream-23 get
+mixer-src spdif-1 stream-24 get
+mixer-src spdif-1 stream-25 get
+mixer-src spdif-1 stream-26 get
+mixer-src spdif-1 stream-27 get
+mixer-src spdif-1 stream-28 get
+mixer-src spdif-2 analog-1 get
+mixer-src spdif-2 analog-2 get
+mixer-src spdif-2 analog-3 get
+mixer-src spdif-2 analog-4 get
+mixer-src spdif-2 analog-5 get
+mixer-src spdif-2 analog-6 get
+mixer-src spdif-2 analog-7 get
+mixer-src spdif-2 analog-8 get
+mixer-src spdif-2 analog-9 get
+mixer-src spdif-2 analog-10 get
+mixer-src spdif-2 spdif-1 get
+mixer-src spdif-2 spdif-2 get
+mixer-src spdif-2 adat-1 get
+mixer-src spdif-2 adat-2 get
+mixer-src spdif-2 adat-3 get
+mixer-src spdif-2 adat-4 get
+mixer-src spdif-2 adat-5 get
+mixer-src spdif-2 adat-6 get
+mixer-src spdif-2 adat-7 get
+mixer-src spdif-2 adat-8 get
+mixer-src spdif-2 adat-9 get
+mixer-src spdif-2 adat-10 get
+mixer-src spdif-2 adat-11 get
+mixer-src spdif-2 adat-12 get
+mixer-src spdif-2 adat-13 get
+mixer-src spdif-2 adat-14 get
+mixer-src spdif-2 adat-15 get
+mixer-src spdif-2 adat-16 get
+mixer-src spdif-2 stream-1 get
+mixer-src spdif-2 stream-2 get
+mixer-src spdif-2 stream-3 get
+mixer-src spdif-2 stream-4 get
+mixer-src spdif-2 stream-5 get
+mixer-src spdif-2 stream-6 get
+mixer-src spdif-2 stream-7 get
+mixer-src spdif-2 stream-8 get
+mixer-src spdif-2 stream-9 get
+mixer-src spdif-2 stream-10 get
+mixer-src spdif-2 stream-11 get
+mixer-src spdif-2 stream-12 get
+mixer-src spdif-2 stream-13 get
+mixer-src spdif-2 stream-14 get
+mixer-src spdif-2 stream-15 get
+mixer-src spdif-2 stream-16 get
+mixer-src spdif-2 stream-17 get
+mixer-src spdif-2 stream-18 get
+mixer-src spdif-2 stream-19 get
+mixer-src spdif-2 stream-20 get
+mixer-src spdif-2 stream-21 get
+mixer-src spdif-2 stream-22 get
+mixer-src spdif-2 stream-23 get
+mixer-src spdif-2 stream-24 get
+mixer-src spdif-2 stream-25 get
+mixer-src spdif-2 stream-26 get
+mixer-src spdif-2 stream-27 get
+mixer-src spdif-2 stream-28 get
+mixer-src adat-1 analog-1 get
+mixer-src adat-1 analog-2 get
+mixer-src adat-1 analog-3 get
+mixer-src adat-1 analog-4 get
+mixer-src adat-1 analog-5 get
+mixer-src adat-1 analog-6 get
+mixer-src adat-1 analog-7 get
+mixer-src adat-1 analog-8 get
+mixer-src adat-1 analog-9 get
+mixer-src adat-1 analog-10 get
+mixer-src adat-1 spdif-1 get
+mixer-src adat-1 spdif-2 get
+mixer-src adat-1 adat-1 get
+mixer-src adat-1 adat-2 get
+mixer-src adat-1 adat-3 get
+mixer-src adat-1 adat-4 get
+mixer-src adat-1 adat-5 get
+mixer-src adat-1 adat-6 get
+mixer-src adat-1 adat-7 get
+mixer-src adat-1 adat-8 get
+mixer-src adat-1 adat-9 get
+mixer-src adat-1 adat-10 get
+mixer-src adat-1 adat-11 get
+mixer-src adat-1 adat-12 get
+mixer-src adat-1 adat-13 get
+mixer-src adat-1 adat-14 get
+mixer-src adat-1 adat-15 get
+mixer-src adat-1 adat-16 get
+mixer-src adat-1 stream-1 get
+mixer-src adat-1 stream-2 get
+mixer-src adat-1 stream-3 get
+mixer-src adat-1 stream-4 get
+mixer-src adat-1 stream-5 get
+mixer-src adat-1 stream-6 get
+mixer-src adat-1 stream-7 get
+mixer-src adat-1 stream-8 get
+mixer-src adat-1 stream-9 get
+mixer-src adat-1 stream-10 get
+mixer-src adat-1 stream-11 get
+mixer-src adat-1 stream-12 get
+mixer-src adat-1 stream-13 get
+mixer-src adat-1 stream-14 get
+mixer-src adat-1 stream-15 get
+mixer-src adat-1 stream-16 get
+mixer-src adat-1 stream-17 get
+mixer-src adat-1 stream-18 get
+mixer-src adat-1 stream-19 get
+mixer-src adat-1 stream-20 get
+mixer-src adat-1 stream-21 get
+mixer-src adat-1 stream-22 get
+mixer-src adat-1 stream-23 get
+mixer-src adat-1 stream-24 get
+mixer-src adat-1 stream-25 get
+mixer-src adat-1 stream-26 get
+mixer-src adat-1 stream-27 get
+mixer-src adat-1 stream-28 get
+mixer-src adat-2 analog-1 get
+mixer-src adat-2 analog-2 get
+mixer-src adat-2 analog-3 get
+mixer-src adat-2 analog-4 get
+mixer-src adat-2 analog-5 get
+mixer-src adat-2 analog-6 get
+mixer-src adat-2 analog-7 get
+mixer-src adat-2 analog-8 get
+mixer-src adat-2 analog-9 get
+mixer-src adat-2 analog-10 get
+mixer-src adat-2 spdif-1 get
+mixer-src adat-2 spdif-2 get
+mixer-src adat-2 adat-1 get
+mixer-src adat-2 adat-2 get
+mixer-src adat-2 adat-3 get
+mixer-src adat-2 adat-4 get
+mixer-src adat-2 adat-5 get
+mixer-src adat-2 adat-6 get
+mixer-src adat-2 adat-7 get
+mixer-src adat-2 adat-8 get
+mixer-src adat-2 adat-9 get
+mixer-src adat-2 adat-10 get
+mixer-src adat-2 adat-11 get
+mixer-src adat-2 adat-12 get
+mixer-src adat-2 adat-13 get
+mixer-src adat-2 adat-14 get
+mixer-src adat-2 adat-15 get
+mixer-src adat-2 adat-16 get
+mixer-src adat-2 stream-1 get
+mixer-src adat-2 stream-2 get
+mixer-src adat-2 stream-3 get
+mixer-src adat-2 stream-4 get
+mixer-src adat-2 stream-5 get
+mixer-src adat-2 stream-6 get
+mixer-src adat-2 stream-7 get
+mixer-src adat-2 stream-8 get
+mixer-src adat-2 stream-9 get
+mixer-src adat-2 stream-10 get
+mixer-src adat-2 stream-11 get
+mixer-src adat-2 stream-12 get
+mixer-src adat-2 stream-13 get
+mixer-src adat-2 stream-14 get
+mixer-src adat-2 stream-15 get
+mixer-src adat-2 stream-16 get
+mixer-src adat-2 stream-17 get
+mixer-src adat-2 stream-18 get
+mixer-src adat-2 stream-19 get
+mixer-src adat-2 stream-20 get
+mixer-src adat-2 stream-21 get
+mixer-src adat-2 stream-22 get
+mixer-src adat-2 stream-23 get
+mixer-src adat-2 stream-24 get
+mixer-src adat-2 stream-25 get
+mixer-src adat-2 stream-26 get
+mixer-src adat-2 stream-27 get
+mixer-src adat-2 stream-28 get
+mixer-src adat-3 analog-1 get
+mixer-src adat-3 analog-2 get
+mixer-src adat-3 analog-3 get
+mixer-src adat-3 analog-4 get
+mixer-src adat-3 analog-5 get
+mixer-src adat-3 analog-6 get
+mixer-src adat-3 analog-7 get
+mixer-src adat-3 analog-8 get
+mixer-src adat-3 analog-9 get
+mixer-src adat-3 analog-10 get
+mixer-src adat-3 spdif-1 get
+mixer-src adat-3 spdif-2 get
+mixer-src adat-3 adat-1 get
+mixer-src adat-3 adat-2 get
+mixer-src adat-3 adat-3 get
+mixer-src adat-3 adat-4 get
+mixer-src adat-3 adat-5 get
+mixer-src adat-3 adat-6 get
+mixer-src adat-3 adat-7 get
+mixer-src adat-3 adat-8 get
+mixer-src adat-3 adat-9 get
+mixer-src adat-3 adat-10 get
+mixer-src adat-3 adat-11 get
+mixer-src adat-3 adat-12 get
+mixer-src adat-3 adat-13 get
+mixer-src adat-3 adat-14 get
+mixer-src adat-3 adat-15 get
+mixer-src adat-3 adat-16 get
+mixer-src adat-3 stream-1 get
+mixer-src adat-3 stream-2 get
+mixer-src adat-3 stream-3 get
+mixer-src adat-3 stream-4 get
+mixer-src adat-3 stream-5 get
+mixer-src adat-3 stream-6 get
+mixer-src adat-3 stream-7 get
+mixer-src adat-3 stream-8 get
+mixer-src adat-3 stream-9 get
+mixer-src adat-3 stream-10 get
+mixer-src adat-3 stream-11 get
+mixer-src adat-3 stream-12 get
+mixer-src adat-3 stream-13 get
+mixer-src adat-3 stream-14 get
+mixer-src adat-3 stream-15 get
+mixer-src adat-3 stream-16 get
+mixer-src adat-3 stream-17 get
+mixer-src adat-3 stream-18 get
+mixer-src adat-3 stream-19 get
+mixer-src adat-3 stream-20 get
+mixer-src adat-3 stream-21 get
+mixer-src adat-3 stream-22 get
+mixer-src adat-3 stream-23 get
+mixer-src adat-3 stream-24 get
+mixer-src adat-3 stream-25 get
+mixer-src adat-3 stream-26 get
+mixer-src adat-3 stream-27 get
+mixer-src adat-3 stream-28 get
+mixer-src adat-4 analog-1 get
+mixer-src adat-4 analog-2 get
+mixer-src adat-4 analog-3 get
+mixer-src adat-4 analog-4 get
+mixer-src adat-4 analog-5 get
+mixer-src adat-4 analog-6 get
+mixer-src adat-4 analog-7 get
+mixer-src adat-4 analog-8 get
+mixer-src adat-4 analog-9 get
+mixer-src adat-4 analog-10 get
+mixer-src adat-4 spdif-1 get
+mixer-src adat-4 spdif-2 get
+mixer-src adat-4 adat-1 get
+mixer-src adat-4 adat-2 get
+mixer-src adat-4 adat-3 get
+mixer-src adat-4 adat-4 get
+mixer-src adat-4 adat-5 get
+mixer-src adat-4 adat-6 get
+mixer-src adat-4 adat-7 get
+mixer-src adat-4 adat-8 get
+mixer-src adat-4 adat-9 get
+mixer-src adat-4 adat-10 get
+mixer-src adat-4 adat-11 get
+mixer-src adat-4 adat-12 get
+mixer-src adat-4 adat-13 get
+mixer-src adat-4 adat-14 get
+mixer-src adat-4 adat-15 get
+mixer-src adat-4 adat-16 get
+mixer-src adat-4 stream-1 get
+mixer-src adat-4 stream-2 get
+mixer-src adat-4 stream-3 get
+mixer-src adat-4 stream-4 get
+mixer-src adat-4 stream-5 get
+mixer-src adat-4 stream-6 get
+mixer-src adat-4 stream-7 get
+mixer-src adat-4 stream-8 get
+mixer-src adat-4 stream-9 get
+mixer-src adat-4 stream-10 get
+mixer-src adat-4 stream-11 get
+mixer-src adat-4 stream-12 get
+mixer-src adat-4 stream-13 get
+mixer-src adat-4 stream-14 get
+mixer-src adat-4 stream-15 get
+mixer-src adat-4 stream-16 get
+mixer-src adat-4 stream-17 get
+mixer-src adat-4 stream-18 get
+mixer-src adat-4 stream-19 get
+mixer-src adat-4 stream-20 get
+mixer-src adat-4 stream-21 get
+mixer-src adat-4 stream-22 get
+mixer-src adat-4 stream-23 get
+mixer-src adat-4 stream-24 get
+mixer-src adat-4 stream-25 get
+mixer-src adat-4 stream-26 get
+mixer-src adat-4 stream-27 get
+mixer-src adat-4 stream-28 get
+mixer-src adat-5 analog-1 get
+mixer-src adat-5 analog-2 get
+mixer-src adat-5 analog-3 get
+mixer-src adat-5 analog-4 get
+mixer-src adat-5 analog-5 get
+mixer-src adat-5 analog-6 get
+mixer-src adat-5 analog-7 get
+mixer-src adat-5 analog-8 get
+mixer-src adat-5 analog-9 get
+mixer-src adat-5 analog-10 get
+mixer-src adat-5 spdif-1 get
+mixer-src adat-5 spdif-2 get
+mixer-src adat-5 adat-1 get
+mixer-src adat-5 adat-2 get
+mixer-src adat-5 adat-3 get
+mixer-src adat-5 adat-4 get
+mixer-src adat-5 adat-5 get
+mixer-src adat-5 adat-6 get
+mixer-src adat-5 adat-7 get
+mixer-src adat-5 adat-8 get
+mixer-src adat-5 adat-9 get
+mixer-src adat-5 adat-10 get
+mixer-src adat-5 adat-11 get
+mixer-src adat-5 adat-12 get
+mixer-src adat-5 adat-13 get
+mixer-src adat-5 adat-14 get
+mixer-src adat-5 adat-15 get
+mixer-src adat-5 adat-16 get
+mixer-src adat-5 stream-1 get
+mixer-src adat-5 stream-2 get
+mixer-src adat-5 stream-3 get
+mixer-src adat-5 stream-4 get
+mixer-src adat-5 stream-5 get
+mixer-src adat-5 stream-6 get
+mixer-src adat-5 stream-7 get
+mixer-src adat-5 stream-8 get
+mixer-src adat-5 stream-9 get
+mixer-src adat-5 stream-10 get
+mixer-src adat-5 stream-11 get
+mixer-src adat-5 stream-12 get
+mixer-src adat-5 stream-13 get
+mixer-src adat-5 stream-14 get
+mixer-src adat-5 stream-15 get
+mixer-src adat-5 stream-16 get
+mixer-src adat-5 stream-17 get
+mixer-src adat-5 stream-18 get
+mixer-src adat-5 stream-19 get
+mixer-src adat-5 stream-20 get
+mixer-src adat-5 stream-21 get
+mixer-src adat-5 stream-22 get
+mixer-src adat-5 stream-23 get
+mixer-src adat-5 stream-24 get
+mixer-src adat-5 stream-25 get
+mixer-src adat-5 stream-26 get
+mixer-src adat-5 stream-27 get
+mixer-src adat-5 stream-28 get
+mixer-src adat-6 analog-1 get
+mixer-src adat-6 analog-2 get
+mixer-src adat-6 analog-3 get
+mixer-src adat-6 analog-4 get
+mixer-src adat-6 analog-5 get
+mixer-src adat-6 analog-6 get
+mixer-src adat-6 analog-7 get
+mixer-src adat-6 analog-8 get
+mixer-src adat-6 analog-9 get
+mixer-src adat-6 analog-10 get
+mixer-src adat-6 spdif-1 get
+mixer-src adat-6 spdif-2 get
+mixer-src adat-6 adat-1 get
+mixer-src adat-6 adat-2 get
+mixer-src adat-6 adat-3 get
+mixer-src adat-6 adat-4 get
+mixer-src adat-6 adat-5 get
+mixer-src adat-6 adat-6 get
+mixer-src adat-6 adat-7 get
+mixer-src adat-6 adat-8 get
+mixer-src adat-6 adat-9 get
+mixer-src adat-6 adat-10 get
+mixer-src adat-6 adat-11 get
+mixer-src adat-6 adat-12 get
+mixer-src adat-6 adat-13 get
+mixer-src adat-6 adat-14 get
+mixer-src adat-6 adat-15 get
+mixer-src adat-6 adat-16 get
+mixer-src adat-6 stream-1 get
+mixer-src adat-6 stream-2 get
+mixer-src adat-6 stream-3 get
+mixer-src adat-6 stream-4 get
+mixer-src adat-6 stream-5 get
+mixer-src adat-6 stream-6 get
+mixer-src adat-6 stream-7 get
+mixer-src adat-6 stream-8 get
+mixer-src adat-6 stream-9 get
+mixer-src adat-6 stream-10 get
+mixer-src adat-6 stream-11 get
+mixer-src adat-6 stream-12 get
+mixer-src adat-6 stream-13 get
+mixer-src adat-6 stream-14 get
+mixer-src adat-6 stream-15 get
+mixer-src adat-6 stream-16 get
+mixer-src adat-6 stream-17 get
+mixer-src adat-6 stream-18 get
+mixer-src adat-6 stream-19 get
+mixer-src adat-6 stream-20 get
+mixer-src adat-6 stream-21 get
+mixer-src adat-6 stream-22 get
+mixer-src adat-6 stream-23 get
+mixer-src adat-6 stream-24 get
+mixer-src adat-6 stream-25 get
+mixer-src adat-6 stream-26 get
+mixer-src adat-6 stream-27 get
+mixer-src adat-6 stream-28 get
+mixer-src adat-7 analog-1 get
+mixer-src adat-7 analog-2 get
+mixer-src adat-7 analog-3 get
+mixer-src adat-7 analog-4 get
+mixer-src adat-7 analog-5 get
+mixer-src adat-7 analog-6 get
+mixer-src adat-7 analog-7 get
+mixer-src adat-7 analog-8 get
+mixer-src adat-7 analog-9 get
+mixer-src adat-7 analog-10 get
+mixer-src adat-7 spdif-1 get
+mixer-src adat-7 spdif-2 get
+mixer-src adat-7 adat-1 get
+mixer-src adat-7 adat-2 get
+mixer-src adat-7 adat-3 get
+mixer-src adat-7 adat-4 get
+mixer-src adat-7 adat-5 get
+mixer-src adat-7 adat-6 get
+mixer-src adat-7 adat-7 get
+mixer-src adat-7 adat-8 get
+mixer-src adat-7 adat-9 get
+mixer-src adat-7 adat-10 get
+mixer-src adat-7 adat-11 get
+mixer-src adat-7 adat-12 get
+mixer-src adat-7 adat-13 get
+mixer-src adat-7 adat-14 get
+mixer-src adat-7 adat-15 get
+mixer-src adat-7 adat-16 get
+mixer-src adat-7 stream-1 get
+mixer-src adat-7 stream-2 get
+mixer-src adat-7 stream-3 get
+mixer-src adat-7 stream-4 get
+mixer-src adat-7 stream-5 get
+mixer-src adat-7 stream-6 get
+mixer-src adat-7 stream-7 get
+mixer-src adat-7 stream-8 get
+mixer-src adat-7 stream-9 get
+mixer-src adat-7 stream-10 get
+mixer-src adat-7 stream-11 get
+mixer-src adat-7 stream-12 get
+mixer-src adat-7 stream-13 get
+mixer-src adat-7 stream-14 get
+mixer-src adat-7 stream-15 get
+mixer-src adat-7 stream-16 get
+mixer-src adat-7 stream-17 get
+mixer-src adat-7 stream-18 get
+mixer-src adat-7 stream-19 get
+mixer-src adat-7 stream-20 get
+mixer-src adat-7 stream-21 get
+mixer-src adat-7 stream-22 get
+mixer-src adat-7 stream-23 get
+mixer-src adat-7 stream-24 get
+mixer-src adat-7 stream-25 get
+mixer-src adat-7 stream-26 get
+mixer-src adat-7 stream-27 get
+mixer-src adat-7 stream-28 get
+mixer-src adat-8 analog-1 get
+mixer-src adat-8 analog-2 get
+mixer-src adat-8 analog-3 get
+mixer-src adat-8 analog-4 get
+mixer-src adat-8 analog-5 get
+mixer-src adat-8 analog-6 get
+mixer-src adat-8 analog-7 get
+mixer-src adat-8 analog-8 get
+mixer-src adat-8 analog-9 get
+mixer-src adat-8 analog-10 get
+mixer-src adat-8 spdif-1 get
+mixer-src adat-8 spdif-2 get
+mixer-src adat-8 adat-1 get
+mixer-src adat-8 adat-2 get
+mixer-src adat-8 adat-3 get
+mixer-src adat-8 adat-4 get
+mixer-src adat-8 adat-5 get
+mixer-src adat-8 adat-6 get
+mixer-src adat-8 adat-7 get
+mixer-src adat-8 adat-8 get
+mixer-src adat-8 adat-9 get
+mixer-src adat-8 adat-10 get
+mixer-src adat-8 adat-11 get
+mixer-src adat-8 adat-12 get
+mixer-src adat-8 adat-13 get
+mixer-src adat-8 adat-14 get
+mixer-src adat-8 adat-15 get
+mixer-src adat-8 adat-16 get
+mixer-src adat-8 stream-1 get
+mixer-src adat-8 stream-2 get
+mixer-src adat-8 stream-3 get
+mixer-src adat-8 stream-4 get
+mixer-src adat-8 stream-5 get
+mixer-src adat-8 stream-6 get
+mixer-src adat-8 stream-7 get
+mixer-src adat-8 stream-8 get
+mixer-src adat-8 stream-9 get
+mixer-src adat-8 stream-10 get
+mixer-src adat-8 stream-11 get
+mixer-src adat-8 stream-12 get
+mixer-src adat-8 stream-13 get
+mixer-src adat-8 stream-14 get
+mixer-src adat-8 stream-15 get
+mixer-src adat-8 stream-16 get
+mixer-src adat-8 stream-17 get
+mixer-src adat-8 stream-18 get
+mixer-src adat-8 stream-19 get
+mixer-src adat-8 stream-20 get
+mixer-src adat-8 stream-21 get
+mixer-src adat-8 stream-22 get
+mixer-src adat-8 stream-23 get
+mixer-src adat-8 stream-24 get
+mixer-src adat-8 stream-25 get
+mixer-src adat-8 stream-26 get
+mixer-src adat-8 stream-27 get
+mixer-src adat-8 stream-28 get
+mixer-src adat-9 analog-1 get
+mixer-src adat-9 analog-2 get
+mixer-src adat-9 analog-3 get
+mixer-src adat-9 analog-4 get
+mixer-src adat-9 analog-5 get
+mixer-src adat-9 analog-6 get
+mixer-src adat-9 analog-7 get
+mixer-src adat-9 analog-8 get
+mixer-src adat-9 analog-9 get
+mixer-src adat-9 analog-10 get
+mixer-src adat-9 spdif-1 get
+mixer-src adat-9 spdif-2 get
+mixer-src adat-9 adat-1 get
+mixer-src adat-9 adat-2 get
+mixer-src adat-9 adat-3 get
+mixer-src adat-9 adat-4 get
+mixer-src adat-9 adat-5 get
+mixer-src adat-9 adat-6 get
+mixer-src adat-9 adat-7 get
+mixer-src adat-9 adat-8 get
+mixer-src adat-9 adat-9 get
+mixer-src adat-9 adat-10 get
+mixer-src adat-9 adat-11 get
+mixer-src adat-9 adat-12 get
+mixer-src adat-9 adat-13 get
+mixer-src adat-9 adat-14 get
+mixer-src adat-9 adat-15 get
+mixer-src adat-9 adat-16 get
+mixer-src adat-9 stream-1 get
+mixer-src adat-9 stream-2 get
+mixer-src adat-9 stream-3 get
+mixer-src adat-9 stream-4 get
+mixer-src adat-9 stream-5 get
+mixer-src adat-9 stream-6 get
+mixer-src adat-9 stream-7 get
+mixer-src adat-9 stream-8 get
+mixer-src adat-9 stream-9 get
+mixer-src adat-9 stream-10 get
+mixer-src adat-9 stream-11 get
+mixer-src adat-9 stream-12 get
+mixer-src adat-9 stream-13 get
+mixer-src adat-9 stream-14 get
+mixer-src adat-9 stream-15 get
+mixer-src adat-9 stream-16 get
+mixer-src adat-9 stream-17 get
+mixer-src adat-9 stream-18 get
+mixer-src adat-9 stream-19 get
+mixer-src adat-9 stream-20 get
+mixer-src adat-9 stream-21 get
+mixer-src adat-9 stream-22 get
+mixer-src adat-9 stream-23 get
+mixer-src adat-9 stream-24 get
+mixer-src adat-9 stream-25 get
+mixer-src adat-9 stream-26 get
+mixer-src adat-9 stream-27 get
+mixer-src adat-9 stream-28 get
+mixer-src adat-10 analog-1 get
+mixer-src adat-10 analog-2 get
+mixer-src adat-10 analog-3 get
+mixer-src adat-10 analog-4 get
+mixer-src adat-10 analog-5 get
+mixer-src adat-10 analog-6 get
+mixer-src adat-10 analog-7 get
+mixer-src adat-10 analog-8 get
+mixer-src adat-10 analog-9 get
+mixer-src adat-10 analog-10 get
+mixer-src adat-10 spdif-1 get
+mixer-src adat-10 spdif-2 get
+mixer-src adat-10 adat-1 get
+mixer-src adat-10 adat-2 get
+mixer-src adat-10 adat-3 get
+mixer-src adat-10 adat-4 get
+mixer-src adat-10 adat-5 get
+mixer-src adat-10 adat-6 get
+mixer-src adat-10 adat-7 get
+mixer-src adat-10 adat-8 get
+mixer-src adat-10 adat-9 get
+mixer-src adat-10 adat-10 get
+mixer-src adat-10 adat-11 get
+mixer-src adat-10 adat-12 get
+mixer-src adat-10 adat-13 get
+mixer-src adat-10 adat-14 get
+mixer-src adat-10 adat-15 get
+mixer-src adat-10 adat-16 get
+mixer-src adat-10 stream-1 get
+mixer-src adat-10 stream-2 get
+mixer-src adat-10 stream-3 get
+mixer-src adat-10 stream-4 get
+mixer-src adat-10 stream-5 get
+mixer-src adat-10 stream-6 get
+mixer-src adat-10 stream-7 get
+mixer-src adat-10 stream-8 get
+mixer-src adat-10 stream-9 get
+mixer-src adat-10 stream-10 get
+mixer-src adat-10 stream-11 get
+mixer-src adat-10 stream-12 get
+mixer-src adat-10 stream-13 get
+mixer-src adat-10 stream-14 get
+mixer-src adat-10 stream-15 get
+mixer-src adat-10 stream-16 get
+mixer-src adat-10 stream-17 get
+mixer-src adat-10 stream-18 get
+mixer-src adat-10 stream-19 get
+mixer-src adat-10 stream-20 get
+mixer-src adat-10 stream-21 get
+mixer-src adat-10 stream-22 get
+mixer-src adat-10 stream-23 get
+mixer-src adat-10 stream-24 get
+mixer-src adat-10 stream-25 get
+mixer-src adat-10 stream-26 get
+mixer-src adat-10 stream-27 get
+mixer-src adat-10 stream-28 get
+mixer-src adat-11 analog-1 get
+mixer-src adat-11 analog-2 get
+mixer-src adat-11 analog-3 get
+mixer-src adat-11 analog-4 get
+mixer-src adat-11 analog-5 get
+mixer-src adat-11 analog-6 get
+mixer-src adat-11 analog-7 get
+mixer-src adat-11 analog-8 get
+mixer-src adat-11 analog-9 get
+mixer-src adat-11 analog-10 get
+mixer-src adat-11 spdif-1 get
+mixer-src adat-11 spdif-2 get
+mixer-src adat-11 adat-1 get
+mixer-src adat-11 adat-2 get
+mixer-src adat-11 adat-3 get
+mixer-src adat-11 adat-4 get
+mixer-src adat-11 adat-5 get
+mixer-src adat-11 adat-6 get
+mixer-src adat-11 adat-7 get
+mixer-src adat-11 adat-8 get
+mixer-src adat-11 adat-9 get
+mixer-src adat-11 adat-10 get
+mixer-src adat-11 adat-11 get
+mixer-src adat-11 adat-12 get
+mixer-src adat-11 adat-13 get
+mixer-src adat-11 adat-14 get
+mixer-src adat-11 adat-15 get
+mixer-src adat-11 adat-16 get
+mixer-src adat-11 stream-1 get
+mixer-src adat-11 stream-2 get
+mixer-src adat-11 stream-3 get
+mixer-src adat-11 stream-4 get
+mixer-src adat-11 stream-5 get
+mixer-src adat-11 stream-6 get
+mixer-src adat-11 stream-7 get
+mixer-src adat-11 stream-8 get
+mixer-src adat-11 stream-9 get
+mixer-src adat-11 stream-10 get
+mixer-src adat-11 stream-11 get
+mixer-src adat-11 stream-12 get
+mixer-src adat-11 stream-13 get
+mixer-src adat-11 stream-14 get
+mixer-src adat-11 stream-15 get
+mixer-src adat-11 stream-16 get
+mixer-src adat-11 stream-17 get
+mixer-src adat-11 stream-18 get
+mixer-src adat-11 stream-19 get
+mixer-src adat-11 stream-20 get
+mixer-src adat-11 stream-21 get
+mixer-src adat-11 stream-22 get
+mixer-src adat-11 stream-23 get
+mixer-src adat-11 stream-24 get
+mixer-src adat-11 stream-25 get
+mixer-src adat-11 stream-26 get
+mixer-src adat-11 stream-27 get
+mixer-src adat-11 stream-28 get
+mixer-src adat-12 analog-1 get
+mixer-src adat-12 analog-2 get
+mixer-src adat-12 analog-3 get
+mixer-src adat-12 analog-4 get
+mixer-src adat-12 analog-5 get
+mixer-src adat-12 analog-6 get
+mixer-src adat-12 analog-7 get
+mixer-src adat-12 analog-8 get
+mixer-src adat-12 analog-9 get
+mixer-src adat-12 analog-10 get
+mixer-src adat-12 spdif-1 get
+mixer-src adat-12 spdif-2 get
+mixer-src adat-12 adat-1 get
+mixer-src adat-12 adat-2 get
+mixer-src adat-12 adat-3 get
+mixer-src adat-12 adat-4 get
+mixer-src adat-12 adat-5 get
+mixer-src adat-12 adat-6 get
+mixer-src adat-12 adat-7 get
+mixer-src adat-12 adat-8 get
+mixer-src adat-12 adat-9 get
+mixer-src adat-12 adat-10 get
+mixer-src adat-12 adat-11 get
+mixer-src adat-12 adat-12 get
+mixer-src adat-12 adat-13 get
+mixer-src adat-12 adat-14 get
+mixer-src adat-12 adat-15 get
+mixer-src adat-12 adat-16 get
+mixer-src adat-12 stream-1 get
+mixer-src adat-12 stream-2 get
+mixer-src adat-12 stream-3 get
+mixer-src adat-12 stream-4 get
+mixer-src adat-12 stream-5 get
+mixer-src adat-12 stream-6 get
+mixer-src adat-12 stream-7 get
+mixer-src adat-12 stream-8 get
+mixer-src adat-12 stream-9 get
+mixer-src adat-12 stream-10 get
+mixer-src adat-12 stream-11 get
+mixer-src adat-12 stream-12 get
+mixer-src adat-12 stream-13 get
+mixer-src adat-12 stream-14 get
+mixer-src adat-12 stream-15 get
+mixer-src adat-12 stream-16 get
+mixer-src adat-12 stream-17 get
+mixer-src adat-12 stream-18 get
+mixer-src adat-12 stream-19 get
+mixer-src adat-12 stream-20 get
+mixer-src adat-12 stream-21 get
+mixer-src adat-12 stream-22 get
+mixer-src adat-12 stream-23 get
+mixer-src adat-12 stream-24 get
+mixer-src adat-12 stream-25 get
+mixer-src adat-12 stream-26 get
+mixer-src adat-12 stream-27 get
+mixer-src adat-12 stream-28 get
+mixer-src adat-13 analog-1 get
+mixer-src adat-13 analog-2 get
+mixer-src adat-13 analog-3 get
+mixer-src adat-13 analog-4 get
+mixer-src adat-13 analog-5 get
+mixer-src adat-13 analog-6 get
+mixer-src adat-13 analog-7 get
+mixer-src adat-13 analog-8 get
+mixer-src adat-13 analog-9 get
+mixer-src adat-13 analog-10 get
+mixer-src adat-13 spdif-1 get
+mixer-src adat-13 spdif-2 get
+mixer-src adat-13 adat-1 get
+mixer-src adat-13 adat-2 get
+mixer-src adat-13 adat-3 get
+mixer-src adat-13 adat-4 get
+mixer-src adat-13 adat-5 get
+mixer-src adat-13 adat-6 get
+mixer-src adat-13 adat-7 get
+mixer-src adat-13 adat-8 get
+mixer-src adat-13 adat-9 get
+mixer-src adat-13 adat-10 get
+mixer-src adat-13 adat-11 get
+mixer-src adat-13 adat-12 get
+mixer-src adat-13 adat-13 get
+mixer-src adat-13 adat-14 get
+mixer-src adat-13 adat-15 get
+mixer-src adat-13 adat-16 get
+mixer-src adat-13 stream-1 get
+mixer-src adat-13 stream-2 get
+mixer-src adat-13 stream-3 get
+mixer-src adat-13 stream-4 get
+mixer-src adat-13 stream-5 get
+mixer-src adat-13 stream-6 get
+mixer-src adat-13 stream-7 get
+mixer-src adat-13 stream-8 get
+mixer-src adat-13 stream-9 get
+mixer-src adat-13 stream-10 get
+mixer-src adat-13 stream-11 get
+mixer-src adat-13 stream-12 get
+mixer-src adat-13 stream-13 get
+mixer-src adat-13 stream-14 get
+mixer-src adat-13 stream-15 get
+mixer-src adat-13 stream-16 get
+mixer-src adat-13 stream-17 get
+mixer-src adat-13 stream-18 get
+mixer-src adat-13 stream-19 get
+mixer-src adat-13 stream-20 get
+mixer-src adat-13 stream-21 get
+mixer-src adat-13 stream-22 get
+mixer-src adat-13 stream-23 get
+mixer-src adat-13 stream-24 get
+mixer-src adat-13 stream-25 get
+mixer-src adat-13 stream-26 get
+mixer-src adat-13 stream-27 get
+mixer-src adat-13 stream-28 get
+mixer-src adat-14 analog-1 get
+mixer-src adat-14 analog-2 get
+mixer-src adat-14 analog-3 get
+mixer-src adat-14 analog-4 get
+mixer-src adat-14 analog-5 get
+mixer-src adat-14 analog-6 get
+mixer-src adat-14 analog-7 get
+mixer-src adat-14 analog-8 get
+mixer-src adat-14 analog-9 get
+mixer-src adat-14 analog-10 get
+mixer-src adat-14 spdif-1 get
+mixer-src adat-14 spdif-2 get
+mixer-src adat-14 adat-1 get
+mixer-src adat-14 adat-2 get
+mixer-src adat-14 adat-3 get
+mixer-src adat-14 adat-4 get
+mixer-src adat-14 adat-5 get
+mixer-src adat-14 adat-6 get
+mixer-src adat-14 adat-7 get
+mixer-src adat-14 adat-8 get
+mixer-src adat-14 adat-9 get
+mixer-src adat-14 adat-10 get
+mixer-src adat-14 adat-11 get
+mixer-src adat-14 adat-12 get
+mixer-src adat-14 adat-13 get
+mixer-src adat-14 adat-14 get
+mixer-src adat-14 adat-15 get
+mixer-src adat-14 adat-16 get
+mixer-src adat-14 stream-1 get
+mixer-src adat-14 stream-2 get
+mixer-src adat-14 stream-3 get
+mixer-src adat-14 stream-4 get
+mixer-src adat-14 stream-5 get
+mixer-src adat-14 stream-6 get
+mixer-src adat-14 stream-7 get
+mixer-src adat-14 stream-8 get
+mixer-src adat-14 stream-9 get
+mixer-src adat-14 stream-10 get
+mixer-src adat-14 stream-11 get
+mixer-src adat-14 stream-12 get
+mixer-src adat-14 stream-13 get
+mixer-src adat-14 stream-14 get
+mixer-src adat-14 stream-15 get
+mixer-src adat-14 stream-16 get
+mixer-src adat-14 stream-17 get
+mixer-src adat-14 stream-18 get
+mixer-src adat-14 stream-19 get
+mixer-src adat-14 stream-20 get
+mixer-src adat-14 stream-21 get
+mixer-src adat-14 stream-22 get
+mixer-src adat-14 stream-23 get
+mixer-src adat-14 stream-24 get
+mixer-src adat-14 stream-25 get
+mixer-src adat-14 stream-26 get
+mixer-src adat-14 stream-27 get
+mixer-src adat-14 stream-28 get
+mixer-src adat-15 analog-1 get
+mixer-src adat-15 analog-2 get
+mixer-src adat-15 analog-3 get
+mixer-src adat-15 analog-4 get
+mixer-src adat-15 analog-5 get
+mixer-src adat-15 analog-6 get
+mixer-src adat-15 analog-7 get
+mixer-src adat-15 analog-8 get
+mixer-src adat-15 analog-9 get
+mixer-src adat-15 analog-10 get
+mixer-src adat-15 spdif-1 get
+mixer-src adat-15 spdif-2 get
+mixer-src adat-15 adat-1 get
+mixer-src adat-15 adat-2 get
+mixer-src adat-15 adat-3 get
+mixer-src adat-15 adat-4 get
+mixer-src adat-15 adat-5 get
+mixer-src adat-15 adat-6 get
+mixer-src adat-15 adat-7 get
+mixer-src adat-15 adat-8 get
+mixer-src adat-15 adat-9 get
+mixer-src adat-15 adat-10 get
+mixer-src adat-15 adat-11 get
+mixer-src adat-15 adat-12 get
+mixer-src adat-15 adat-13 get
+mixer-src adat-15 adat-14 get
+mixer-src adat-15 adat-15 get
+mixer-src adat-15 adat-16 get
+mixer-src adat-15 stream-1 get
+mixer-src adat-15 stream-2 get
+mixer-src adat-15 stream-3 get
+mixer-src adat-15 stream-4 get
+mixer-src adat-15 stream-5 get
+mixer-src adat-15 stream-6 get
+mixer-src adat-15 stream-7 get
+mixer-src adat-15 stream-8 get
+mixer-src adat-15 stream-9 get
+mixer-src adat-15 stream-10 get
+mixer-src adat-15 stream-11 get
+mixer-src adat-15 stream-12 get
+mixer-src adat-15 stream-13 get
+mixer-src adat-15 stream-14 get
+mixer-src adat-15 stream-15 get
+mixer-src adat-15 stream-16 get
+mixer-src adat-15 stream-17 get
+mixer-src adat-15 stream-18 get
+mixer-src adat-15 stream-19 get
+mixer-src adat-15 stream-20 get
+mixer-src adat-15 stream-21 get
+mixer-src adat-15 stream-22 get
+mixer-src adat-15 stream-23 get
+mixer-src adat-15 stream-24 get
+mixer-src adat-15 stream-25 get
+mixer-src adat-15 stream-26 get
+mixer-src adat-15 stream-27 get
+mixer-src adat-15 stream-28 get
+mixer-src adat-16 analog-1 get
+mixer-src adat-16 analog-2 get
+mixer-src adat-16 analog-3 get
+mixer-src adat-16 analog-4 get
+mixer-src adat-16 analog-5 get
+mixer-src adat-16 analog-6 get
+mixer-src adat-16 analog-7 get
+mixer-src adat-16 analog-8 get
+mixer-src adat-16 analog-9 get
+mixer-src adat-16 analog-10 get
+mixer-src adat-16 spdif-1 get
+mixer-src adat-16 spdif-2 get
+mixer-src adat-16 adat-1 get
+mixer-src adat-16 adat-2 get
+mixer-src adat-16 adat-3 get
+mixer-src adat-16 adat-4 get
+mixer-src adat-16 adat-5 get
+mixer-src adat-16 adat-6 get
+mixer-src adat-16 adat-7 get
+mixer-src adat-16 adat-8 get
+mixer-src adat-16 adat-9 get
+mixer-src adat-16 adat-10 get
+mixer-src adat-16 adat-11 get
+mixer-src adat-16 adat-12 get
+mixer-src adat-16 adat-13 get
+mixer-src adat-16 adat-14 get
+mixer-src adat-16 adat-15 get
+mixer-src adat-16 adat-16 get
+mixer-src adat-16 stream-1 get
+mixer-src adat-16 stream-2 get
+mixer-src adat-16 stream-3 get
+mixer-src adat-16 stream-4 get
+mixer-src adat-16 stream-5 get
+mixer-src adat-16 stream-6 get
+mixer-src adat-16 stream-7 get
+mixer-src adat-16 stream-8 get
+mixer-src adat-16 stream-9 get
+mixer-src adat-16 stream-10 get
+mixer-src adat-16 stream-11 get
+mixer-src adat-16 stream-12 get
+mixer-src adat-16 stream-13 get
+mixer-src adat-16 stream-14 get
+mixer-src adat-16 stream-15 get
+mixer-src adat-16 stream-16 get
+mixer-src adat-16 stream-17 get
+mixer-src adat-16 stream-18 get
+mixer-src adat-16 stream-19 get
+mixer-src adat-16 stream-20 get
+mixer-src adat-16 stream-21 get
+mixer-src adat-16 stream-22 get
+mixer-src adat-16 stream-23 get
+mixer-src adat-16 stream-24 get
+mixer-src adat-16 stream-25 get
+mixer-src adat-16 stream-26 get
+mixer-src adat-16 stream-27 get
+mixer-src adat-16 stream-28 get
+mixer-src analog-1 analog-1 set -29.0
+mixer-src analog-1 analog-2 set -29.0
+mixer-src analog-1 analog-3 set -29.0
+mixer-src analog-1 analog-4 set -29.0
+mixer-src analog-1 analog-5 set -29.0
+mixer-src analog-1 analog-6 set -29.0
+mixer-src analog-1 analog-7 set -29.0
+mixer-src analog-1 analog-8 set -29.0
+mixer-src analog-1 analog-9 set -29.0
+mixer-src analog-1 analog-10 set -29.0
+mixer-src analog-1 spdif-1 set -29.0
+mixer-src analog-1 spdif-2 set -29.0
+mixer-src analog-1 adat-1 set -29.0
+mixer-src analog-1 adat-2 set -29.0
+mixer-src analog-1 adat-3 set -29.0
+mixer-src analog-1 adat-4 set -29.0
+mixer-src analog-1 adat-5 set -29.0
+mixer-src analog-1 adat-6 set -29.0
+mixer-src analog-1 adat-7 set -29.0
+mixer-src analog-1 adat-8 set -29.0
+mixer-src analog-1 adat-9 set -29.0
+mixer-src analog-1 adat-10 set -29.0
+mixer-src analog-1 adat-11 set -29.0
+mixer-src analog-1 adat-12 set -29.0
+mixer-src analog-1 adat-13 set -29.0
+mixer-src analog-1 adat-14 set -29.0
+mixer-src analog-1 adat-15 set -29.0
+mixer-src analog-1 adat-16 set -29.0
+mixer-src analog-1 stream-1 set -29.0
+mixer-src analog-1 stream-2 set -29.0
+mixer-src analog-1 stream-3 set -29.0
+mixer-src analog-1 stream-4 set -29.0
+mixer-src analog-1 stream-5 set -29.0
+mixer-src analog-1 stream-6 set -29.0
+mixer-src analog-1 stream-7 set -29.0
+mixer-src analog-1 stream-8 set -29.0
+mixer-src analog-1 stream-9 set -29.0
+mixer-src analog-1 stream-10 set -29.0
+mixer-src analog-1 stream-11 set -29.0
+mixer-src analog-1 stream-12 set -29.0
+mixer-src analog-1 stream-13 set -29.0
+mixer-src analog-1 stream-14 set -29.0
+mixer-src analog-1 stream-15 set -29.0
+mixer-src analog-1 stream-16 set -29.0
+mixer-src analog-1 stream-17 set -29.0
+mixer-src analog-1 stream-18 set -29.0
+mixer-src analog-1 stream-19 set -29.0
+mixer-src analog-1 stream-20 set -29.0
+mixer-src analog-1 stream-21 set -29.0
+mixer-src analog-1 stream-22 set -29.0
+mixer-src analog-1 stream-23 set -29.0
+mixer-src analog-1 stream-24 set -29.0
+mixer-src analog-1 stream-25 set -29.0
+mixer-src analog-1 stream-26 set -29.0
+mixer-src analog-1 stream-27 set -29.0
+mixer-src analog-1 stream-28 set -29.0
+mixer-src analog-2 analog-1 set -29.0
+mixer-src analog-2 analog-2 set -29.0
+mixer-src analog-2 analog-3 set -29.0
+mixer-src analog-2 analog-4 set -29.0
+mixer-src analog-2 analog-5 set -29.0
+mixer-src analog-2 analog-6 set -29.0
+mixer-src analog-2 analog-7 set -29.0
+mixer-src analog-2 analog-8 set -29.0
+mixer-src analog-2 analog-9 set -29.0
+mixer-src analog-2 analog-10 set -29.0
+mixer-src analog-2 spdif-1 set -29.0
+mixer-src analog-2 spdif-2 set -29.0
+mixer-src analog-2 adat-1 set -29.0
+mixer-src analog-2 adat-2 set -29.0
+mixer-src analog-2 adat-3 set -29.0
+mixer-src analog-2 adat-4 set -29.0
+mixer-src analog-2 adat-5 set -29.0
+mixer-src analog-2 adat-6 set -29.0
+mixer-src analog-2 adat-7 set -29.0
+mixer-src analog-2 adat-8 set -29.0
+mixer-src analog-2 adat-9 set -29.0
+mixer-src analog-2 adat-10 set -29.0
+mixer-src analog-2 adat-11 set -29.0
+mixer-src analog-2 adat-12 set -29.0
+mixer-src analog-2 adat-13 set -29.0
+mixer-src analog-2 adat-14 set -29.0
+mixer-src analog-2 adat-15 set -29.0
+mixer-src analog-2 adat-16 set -29.0
+mixer-src analog-2 stream-1 set -29.0
+mixer-src analog-2 stream-2 set -29.0
+mixer-src analog-2 stream-3 set -29.0
+mixer-src analog-2 stream-4 set -29.0
+mixer-src analog-2 stream-5 set -29.0
+mixer-src analog-2 stream-6 set -29.0
+mixer-src analog-2 stream-7 set -29.0
+mixer-src analog-2 stream-8 set -29.0
+mixer-src analog-2 stream-9 set -29.0
+mixer-src analog-2 stream-10 set -29.0
+mixer-src analog-2 stream-11 set -29.0
+mixer-src analog-2 stream-12 set -29.0
+mixer-src analog-2 stream-13 set -29.0
+mixer-src analog-2 stream-14 set -29.0
+mixer-src analog-2 stream-15 set -29.0
+mixer-src analog-2 stream-16 set -29.0
+mixer-src analog-2 stream-17 set -29.0
+mixer-src analog-2 stream-18 set -29.0
+mixer-src analog-2 stream-19 set -29.0
+mixer-src analog-2 stream-20 set -29.0
+mixer-src analog-2 stream-21 set -29.0
+mixer-src analog-2 stream-22 set -29.0
+mixer-src analog-2 stream-23 set -29.0
+mixer-src analog-2 stream-24 set -29.0
+mixer-src analog-2 stream-25 set -29.0
+mixer-src analog-2 stream-26 set -29.0
+mixer-src analog-2 stream-27 set -29.0
+mixer-src analog-2 stream-28 set -29.0
+mixer-src analog-3 analog-1 set -29.0
+mixer-src analog-3 analog-2 set -29.0
+mixer-src analog-3 analog-3 set -29.0
+mixer-src analog-3 analog-4 set -29.0
+mixer-src analog-3 analog-5 set -29.0
+mixer-src analog-3 analog-6 set -29.0
+mixer-src analog-3 analog-7 set -29.0
+mixer-src analog-3 analog-8 set -29.0
+mixer-src analog-3 analog-9 set -29.0
+mixer-src analog-3 analog-10 set -29.0
+mixer-src analog-3 spdif-1 set -29.0
+mixer-src analog-3 spdif-2 set -29.0
+mixer-src analog-3 adat-1 set -29.0
+mixer-src analog-3 adat-2 set -29.0
+mixer-src analog-3 adat-3 set -29.0
+mixer-src analog-3 adat-4 set -29.0
+mixer-src analog-3 adat-5 set -29.0
+mixer-src analog-3 adat-6 set -29.0
+mixer-src analog-3 adat-7 set -29.0
+mixer-src analog-3 adat-8 set -29.0
+mixer-src analog-3 adat-9 set -29.0
+mixer-src analog-3 adat-10 set -29.0
+mixer-src analog-3 adat-11 set -29.0
+mixer-src analog-3 adat-12 set -29.0
+mixer-src analog-3 adat-13 set -29.0
+mixer-src analog-3 adat-14 set -29.0
+mixer-src analog-3 adat-15 set -29.0
+mixer-src analog-3 adat-16 set -29.0
+mixer-src analog-3 stream-1 set -29.0
+mixer-src analog-3 stream-2 set -29.0
+mixer-src analog-3 stream-3 set -29.0
+mixer-src analog-3 stream-4 set -29.0
+mixer-src analog-3 stream-5 set -29.0
+mixer-src analog-3 stream-6 set -29.0
+mixer-src analog-3 stream-7 set -29.0
+mixer-src analog-3 stream-8 set -29.0
+mixer-src analog-3 stream-9 set -29.0
+mixer-src analog-3 stream-10 set -29.0
+mixer-src analog-3 stream-11 set -29.0
+mixer-src analog-3 stream-12 set -29.0
+mixer-src analog-3 stream-13 set -29.0
+mixer-src analog-3 stream-14 set -29.0
+mixer-src analog-3 stream-15 set -29.0
+mixer-src analog-3 stream-16 set -29.0
+mixer-src analog-3 stream-17 set -29.0
+mixer-src analog-3 stream-18 set -29.0
+mixer-src analog-3 stream-19 set -29.0
+mixer-src analog-3 stream-20 set -29.0
+mixer-src analog-3 stream-21 set -29.0
+mixer-src analog-3 stream-22 set -29.0
+mixer-src analog-3 stream-23 set -29.0
+mixer-src analog-3 stream-24 set -29.0
+mixer-src analog-3 stream-25 set -29.0
+mixer-src analog-3 stream-26 set -29.0
+mixer-src analog-3 stream-27 set -29.0
+mixer-src analog-3 stream-28 set -29.0
+mixer-src analog-4 analog-1 set -29.0
+mixer-src analog-4 analog-2 set -29.0
+mixer-src analog-4 analog-3 set -29.0
+mixer-src analog-4 analog-4 set -29.0
+mixer-src analog-4 analog-5 set -29.0
+mixer-src analog-4 analog-6 set -29.0
+mixer-src analog-4 analog-7 set -29.0
+mixer-src analog-4 analog-8 set -29.0
+mixer-src analog-4 analog-9 set -29.0
+mixer-src analog-4 analog-10 set -29.0
+mixer-src analog-4 spdif-1 set -29.0
+mixer-src analog-4 spdif-2 set -29.0
+mixer-src analog-4 adat-1 set -29.0
+mixer-src analog-4 adat-2 set -29.0
+mixer-src analog-4 adat-3 set -29.0
+mixer-src analog-4 adat-4 set -29.0
+mixer-src analog-4 adat-5 set -29.0
+mixer-src analog-4 adat-6 set -29.0
+mixer-src analog-4 adat-7 set -29.0
+mixer-src analog-4 adat-8 set -29.0
+mixer-src analog-4 adat-9 set -29.0
+mixer-src analog-4 adat-10 set -29.0
+mixer-src analog-4 adat-11 set -29.0
+mixer-src analog-4 adat-12 set -29.0
+mixer-src analog-4 adat-13 set -29.0
+mixer-src analog-4 adat-14 set -29.0
+mixer-src analog-4 adat-15 set -29.0
+mixer-src analog-4 adat-16 set -29.0
+mixer-src analog-4 stream-1 set -29.0
+mixer-src analog-4 stream-2 set -29.0
+mixer-src analog-4 stream-3 set -29.0
+mixer-src analog-4 stream-4 set -29.0
+mixer-src analog-4 stream-5 set -29.0
+mixer-src analog-4 stream-6 set -29.0
+mixer-src analog-4 stream-7 set -29.0
+mixer-src analog-4 stream-8 set -29.0
+mixer-src analog-4 stream-9 set -29.0
+mixer-src analog-4 stream-10 set -29.0
+mixer-src analog-4 stream-11 set -29.0
+mixer-src analog-4 stream-12 set -29.0
+mixer-src analog-4 stream-13 set -29.0
+mixer-src analog-4 stream-14 set -29.0
+mixer-src analog-4 stream-15 set -29.0
+mixer-src analog-4 stream-16 set -29.0
+mixer-src analog-4 stream-17 set -29.0
+mixer-src analog-4 stream-18 set -29.0
+mixer-src analog-4 stream-19 set -29.0
+mixer-src analog-4 stream-20 set -29.0
+mixer-src analog-4 stream-21 set -29.0
+mixer-src analog-4 stream-22 set -29.0
+mixer-src analog-4 stream-23 set -29.0
+mixer-src analog-4 stream-24 set -29.0
+mixer-src analog-4 stream-25 set -29.0
+mixer-src analog-4 stream-26 set -29.0
+mixer-src analog-4 stream-27 set -29.0
+mixer-src analog-4 stream-28 set -29.0
+mixer-src analog-5 analog-1 set -29.0
+mixer-src analog-5 analog-2 set -29.0
+mixer-src analog-5 analog-3 set -29.0
+mixer-src analog-5 analog-4 set -29.0
+mixer-src analog-5 analog-5 set -29.0
+mixer-src analog-5 analog-6 set -29.0
+mixer-src analog-5 analog-7 set -29.0
+mixer-src analog-5 analog-8 set -29.0
+mixer-src analog-5 analog-9 set -29.0
+mixer-src analog-5 analog-10 set -29.0
+mixer-src analog-5 spdif-1 set -29.0
+mixer-src analog-5 spdif-2 set -29.0
+mixer-src analog-5 adat-1 set -29.0
+mixer-src analog-5 adat-2 set -29.0
+mixer-src analog-5 adat-3 set -29.0
+mixer-src analog-5 adat-4 set -29.0
+mixer-src analog-5 adat-5 set -29.0
+mixer-src analog-5 adat-6 set -29.0
+mixer-src analog-5 adat-7 set -29.0
+mixer-src analog-5 adat-8 set -29.0
+mixer-src analog-5 adat-9 set -29.0
+mixer-src analog-5 adat-10 set -29.0
+mixer-src analog-5 adat-11 set -29.0
+mixer-src analog-5 adat-12 set -29.0
+mixer-src analog-5 adat-13 set -29.0
+mixer-src analog-5 adat-14 set -29.0
+mixer-src analog-5 adat-15 set -29.0
+mixer-src analog-5 adat-16 set -29.0
+mixer-src analog-5 stream-1 set -29.0
+mixer-src analog-5 stream-2 set -29.0
+mixer-src analog-5 stream-3 set -29.0
+mixer-src analog-5 stream-4 set -29.0
+mixer-src analog-5 stream-5 set -29.0
+mixer-src analog-5 stream-6 set -29.0
+mixer-src analog-5 stream-7 set -29.0
+mixer-src analog-5 stream-8 set -29.0
+mixer-src analog-5 stream-9 set -29.0
+mixer-src analog-5 stream-10 set -29.0
+mixer-src analog-5 stream-11 set -29.0
+mixer-src analog-5 stream-12 set -29.0
+mixer-src analog-5 stream-13 set -29.0
+mixer-src analog-5 stream-14 set -29.0
+mixer-src analog-5 stream-15 set -29.0
+mixer-src analog-5 stream-16 set -29.0
+mixer-src analog-5 stream-17 set -29.0
+mixer-src analog-5 stream-18 set -29.0
+mixer-src analog-5 stream-19 set -29.0
+mixer-src analog-5 stream-20 set -29.0
+mixer-src analog-5 stream-21 set -29.0
+mixer-src analog-5 stream-22 set -29.0
+mixer-src analog-5 stream-23 set -29.0
+mixer-src analog-5 stream-24 set -29.0
+mixer-src analog-5 stream-25 set -29.0
+mixer-src analog-5 stream-26 set -29.0
+mixer-src analog-5 stream-27 set -29.0
+mixer-src analog-5 stream-28 set -29.0
+mixer-src analog-6 analog-1 set -29.0
+mixer-src analog-6 analog-2 set -29.0
+mixer-src analog-6 analog-3 set -29.0
+mixer-src analog-6 analog-4 set -29.0
+mixer-src analog-6 analog-5 set -29.0
+mixer-src analog-6 analog-6 set -29.0
+mixer-src analog-6 analog-7 set -29.0
+mixer-src analog-6 analog-8 set -29.0
+mixer-src analog-6 analog-9 set -29.0
+mixer-src analog-6 analog-10 set -29.0
+mixer-src analog-6 spdif-1 set -29.0
+mixer-src analog-6 spdif-2 set -29.0
+mixer-src analog-6 adat-1 set -29.0
+mixer-src analog-6 adat-2 set -29.0
+mixer-src analog-6 adat-3 set -29.0
+mixer-src analog-6 adat-4 set -29.0
+mixer-src analog-6 adat-5 set -29.0
+mixer-src analog-6 adat-6 set -29.0
+mixer-src analog-6 adat-7 set -29.0
+mixer-src analog-6 adat-8 set -29.0
+mixer-src analog-6 adat-9 set -29.0
+mixer-src analog-6 adat-10 set -29.0
+mixer-src analog-6 adat-11 set -29.0
+mixer-src analog-6 adat-12 set -29.0
+mixer-src analog-6 adat-13 set -29.0
+mixer-src analog-6 adat-14 set -29.0
+mixer-src analog-6 adat-15 set -29.0
+mixer-src analog-6 adat-16 set -29.0
+mixer-src analog-6 stream-1 set -29.0
+mixer-src analog-6 stream-2 set -29.0
+mixer-src analog-6 stream-3 set -29.0
+mixer-src analog-6 stream-4 set -29.0
+mixer-src analog-6 stream-5 set -29.0
+mixer-src analog-6 stream-6 set -29.0
+mixer-src analog-6 stream-7 set -29.0
+mixer-src analog-6 stream-8 set -29.0
+mixer-src analog-6 stream-9 set -29.0
+mixer-src analog-6 stream-10 set -29.0
+mixer-src analog-6 stream-11 set -29.0
+mixer-src analog-6 stream-12 set -29.0
+mixer-src analog-6 stream-13 set -29.0
+mixer-src analog-6 stream-14 set -29.0
+mixer-src analog-6 stream-15 set -29.0
+mixer-src analog-6 stream-16 set -29.0
+mixer-src analog-6 stream-17 set -29.0
+mixer-src analog-6 stream-18 set -29.0
+mixer-src analog-6 stream-19 set -29.0
+mixer-src analog-6 stream-20 set -29.0
+mixer-src analog-6 stream-21 set -29.0
+mixer-src analog-6 stream-22 set -29.0
+mixer-src analog-6 stream-23 set -29.0
+mixer-src analog-6 stream-24 set -29.0
+mixer-src analog-6 stream-25 set -29.0
+mixer-src analog-6 stream-26 set -29.0
+mixer-src analog-6 stream-27 set -29.0
+mixer-src analog-6 stream-28 set -29.0
+mixer-src analog-7 analog-1 set -29.0
+mixer-src analog-7 analog-2 set -29.0
+mixer-src analog-7 analog-3 set -29.0
+mixer-src analog-7 analog-4 set -29.0
+mixer-src analog-7 analog-5 set -29.0
+mixer-src analog-7 analog-6 set -29.0
+mixer-src analog-7 analog-7 set -29.0
+mixer-src analog-7 analog-8 set -29.0
+mixer-src analog-7 analog-9 set -29.0
+mixer-src analog-7 analog-10 set -29.0
+mixer-src analog-7 spdif-1 set -29.0
+mixer-src analog-7 spdif-2 set -29.0
+mixer-src analog-7 adat-1 set -29.0
+mixer-src analog-7 adat-2 set -29.0
+mixer-src analog-7 adat-3 set -29.0
+mixer-src analog-7 adat-4 set -29.0
+mixer-src analog-7 adat-5 set -29.0
+mixer-src analog-7 adat-6 set -29.0
+mixer-src analog-7 adat-7 set -29.0
+mixer-src analog-7 adat-8 set -29.0
+mixer-src analog-7 adat-9 set -29.0
+mixer-src analog-7 adat-10 set -29.0
+mixer-src analog-7 adat-11 set -29.0
+mixer-src analog-7 adat-12 set -29.0
+mixer-src analog-7 adat-13 set -29.0
+mixer-src analog-7 adat-14 set -29.0
+mixer-src analog-7 adat-15 set -29.0
+mixer-src analog-7 adat-16 set -29.0
+mixer-src analog-7 stream-1 set -29.0
+mixer-src analog-7 stream-2 set -29.0
+mixer-src analog-7 stream-3 set -29.0
+mixer-src analog-7 stream-4 set -29.0
+mixer-src analog-7 stream-5 set -29.0
+mixer-src analog-7 stream-6 set -29.0
+mixer-src analog-7 stream-7 set -29.0
+mixer-src analog-7 stream-8 set -29.0
+mixer-src analog-7 stream-9 set -29.0
+mixer-src analog-7 stream-10 set -29.0
+mixer-src analog-7 stream-11 set -29.0
+mixer-src analog-7 stream-12 set -29.0
+mixer-src analog-7 stream-13 set -29.0
+mixer-src analog-7 stream-14 set -29.0
+mixer-src analog-7 stream-15 set -29.0
+mixer-src analog-7 stream-16 set -29.0
+mixer-src analog-7 stream-17 set -29.0
+mixer-src analog-7 stream-18 set -29.0
+mixer-src analog-7 stream-19 set -29.0
+mixer-src analog-7 stream-20 set -29.0
+mixer-src analog-7 stream-21 set -29.0
+mixer-src analog-7 stream-22 set -29.0
+mixer-src analog-7 stream-23 set -29.0
+mixer-src analog-7 stream-24 set -29.0
+mixer-src analog-7 stream-25 set -29.0
+mixer-src analog-7 stream-26 set -29.0
+mixer-src analog-7 stream-27 set -29.0
+mixer-src analog-7 stream-28 set -29.0
+mixer-src analog-8 analog-1 set -29.0
+mixer-src analog-8 analog-2 set -29.0
+mixer-src analog-8 analog-3 set -29.0
+mixer-src analog-8 analog-4 set -29.0
+mixer-src analog-8 analog-5 set -29.0
+mixer-src analog-8 analog-6 set -29.0
+mixer-src analog-8 analog-7 set -29.0
+mixer-src analog-8 analog-8 set -29.0
+mixer-src analog-8 analog-9 set -29.0
+mixer-src analog-8 analog-10 set -29.0
+mixer-src analog-8 spdif-1 set -29.0
+mixer-src analog-8 spdif-2 set -29.0
+mixer-src analog-8 adat-1 set -29.0
+mixer-src analog-8 adat-2 set -29.0
+mixer-src analog-8 adat-3 set -29.0
+mixer-src analog-8 adat-4 set -29.0
+mixer-src analog-8 adat-5 set -29.0
+mixer-src analog-8 adat-6 set -29.0
+mixer-src analog-8 adat-7 set -29.0
+mixer-src analog-8 adat-8 set -29.0
+mixer-src analog-8 adat-9 set -29.0
+mixer-src analog-8 adat-10 set -29.0
+mixer-src analog-8 adat-11 set -29.0
+mixer-src analog-8 adat-12 set -29.0
+mixer-src analog-8 adat-13 set -29.0
+mixer-src analog-8 adat-14 set -29.0
+mixer-src analog-8 adat-15 set -29.0
+mixer-src analog-8 adat-16 set -29.0
+mixer-src analog-8 stream-1 set -29.0
+mixer-src analog-8 stream-2 set -29.0
+mixer-src analog-8 stream-3 set -29.0
+mixer-src analog-8 stream-4 set -29.0
+mixer-src analog-8 stream-5 set -29.0
+mixer-src analog-8 stream-6 set -29.0
+mixer-src analog-8 stream-7 set -29.0
+mixer-src analog-8 stream-8 set -29.0
+mixer-src analog-8 stream-9 set -29.0
+mixer-src analog-8 stream-10 set -29.0
+mixer-src analog-8 stream-11 set -29.0
+mixer-src analog-8 stream-12 set -29.0
+mixer-src analog-8 stream-13 set -29.0
+mixer-src analog-8 stream-14 set -29.0
+mixer-src analog-8 stream-15 set -29.0
+mixer-src analog-8 stream-16 set -29.0
+mixer-src analog-8 stream-17 set -29.0
+mixer-src analog-8 stream-18 set -29.0
+mixer-src analog-8 stream-19 set -29.0
+mixer-src analog-8 stream-20 set -29.0
+mixer-src analog-8 stream-21 set -29.0
+mixer-src analog-8 stream-22 set -29.0
+mixer-src analog-8 stream-23 set -29.0
+mixer-src analog-8 stream-24 set -29.0
+mixer-src analog-8 stream-25 set -29.0
+mixer-src analog-8 stream-26 set -29.0
+mixer-src analog-8 stream-27 set -29.0
+mixer-src analog-8 stream-28 set -29.0
+mixer-src analog-9 analog-1 set -29.0
+mixer-src analog-9 analog-2 set -29.0
+mixer-src analog-9 analog-3 set -29.0
+mixer-src analog-9 analog-4 set -29.0
+mixer-src analog-9 analog-5 set -29.0
+mixer-src analog-9 analog-6 set -29.0
+mixer-src analog-9 analog-7 set -29.0
+mixer-src analog-9 analog-8 set -29.0
+mixer-src analog-9 analog-9 set -29.0
+mixer-src analog-9 analog-10 set -29.0
+mixer-src analog-9 spdif-1 set -29.0
+mixer-src analog-9 spdif-2 set -29.0
+mixer-src analog-9 adat-1 set -29.0
+mixer-src analog-9 adat-2 set -29.0
+mixer-src analog-9 adat-3 set -29.0
+mixer-src analog-9 adat-4 set -29.0
+mixer-src analog-9 adat-5 set -29.0
+mixer-src analog-9 adat-6 set -29.0
+mixer-src analog-9 adat-7 set -29.0
+mixer-src analog-9 adat-8 set -29.0
+mixer-src analog-9 adat-9 set -29.0
+mixer-src analog-9 adat-10 set -29.0
+mixer-src analog-9 adat-11 set -29.0
+mixer-src analog-9 adat-12 set -29.0
+mixer-src analog-9 adat-13 set -29.0
+mixer-src analog-9 adat-14 set -29.0
+mixer-src analog-9 adat-15 set -29.0
+mixer-src analog-9 adat-16 set -29.0
+mixer-src analog-9 stream-1 set -29.0
+mixer-src analog-9 stream-2 set -29.0
+mixer-src analog-9 stream-3 set -29.0
+mixer-src analog-9 stream-4 set -29.0
+mixer-src analog-9 stream-5 set -29.0
+mixer-src analog-9 stream-6 set -29.0
+mixer-src analog-9 stream-7 set -29.0
+mixer-src analog-9 stream-8 set -29.0
+mixer-src analog-9 stream-9 set -29.0
+mixer-src analog-9 stream-10 set -29.0
+mixer-src analog-9 stream-11 set -29.0
+mixer-src analog-9 stream-12 set -29.0
+mixer-src analog-9 stream-13 set -29.0
+mixer-src analog-9 stream-14 set -29.0
+mixer-src analog-9 stream-15 set -29.0
+mixer-src analog-9 stream-16 set -29.0
+mixer-src analog-9 stream-17 set -29.0
+mixer-src analog-9 stream-18 set -29.0
+mixer-src analog-9 stream-19 set -29.0
+mixer-src analog-9 stream-20 set -29.0
+mixer-src analog-9 stream-21 set -29.0
+mixer-src analog-9 stream-22 set -29.0
+mixer-src analog-9 stream-23 set -29.0
+mixer-src analog-9 stream-24 set -29.0
+mixer-src analog-9 stream-25 set -29.0
+mixer-src analog-9 stream-26 set -29.0
+mixer-src analog-9 stream-27 set -29.0
+mixer-src analog-9 stream-28 set -29.0
+mixer-src analog-10 analog-1 set -29.0
+mixer-src analog-10 analog-2 set -29.0
+mixer-src analog-10 analog-3 set -29.0
+mixer-src analog-10 analog-4 set -29.0
+mixer-src analog-10 analog-5 set -29.0
+mixer-src analog-10 analog-6 set -29.0
+mixer-src analog-10 analog-7 set -29.0
+mixer-src analog-10 analog-8 set -29.0
+mixer-src analog-10 analog-9 set -29.0
+mixer-src analog-10 analog-10 set -29.0
+mixer-src analog-10 spdif-1 set -29.0
+mixer-src analog-10 spdif-2 set -29.0
+mixer-src analog-10 adat-1 set -29.0
+mixer-src analog-10 adat-2 set -29.0
+mixer-src analog-10 adat-3 set -29.0
+mixer-src analog-10 adat-4 set -29.0
+mixer-src analog-10 adat-5 set -29.0
+mixer-src analog-10 adat-6 set -29.0
+mixer-src analog-10 adat-7 set -29.0
+mixer-src analog-10 adat-8 set -29.0
+mixer-src analog-10 adat-9 set -29.0
+mixer-src analog-10 adat-10 set -29.0
+mixer-src analog-10 adat-11 set -29.0
+mixer-src analog-10 adat-12 set -29.0
+mixer-src analog-10 adat-13 set -29.0
+mixer-src analog-10 adat-14 set -29.0
+mixer-src analog-10 adat-15 set -29.0
+mixer-src analog-10 adat-16 set -29.0
+mixer-src analog-10 stream-1 set -29.0
+mixer-src analog-10 stream-2 set -29.0
+mixer-src analog-10 stream-3 set -29.0
+mixer-src analog-10 stream-4 set -29.0
+mixer-src analog-10 stream-5 set -29.0
+mixer-src analog-10 stream-6 set -29.0
+mixer-src analog-10 stream-7 set -29.0
+mixer-src analog-10 stream-8 set -29.0
+mixer-src analog-10 stream-9 set -29.0
+mixer-src analog-10 stream-10 set -29.0
+mixer-src analog-10 stream-11 set -29.0
+mixer-src analog-10 stream-12 set -29.0
+mixer-src analog-10 stream-13 set -29.0
+mixer-src analog-10 stream-14 set -29.0
+mixer-src analog-10 stream-15 set -29.0
+mixer-src analog-10 stream-16 set -29.0
+mixer-src analog-10 stream-17 set -29.0
+mixer-src analog-10 stream-18 set -29.0
+mixer-src analog-10 stream-19 set -29.0
+mixer-src analog-10 stream-20 set -29.0
+mixer-src analog-10 stream-21 set -29.0
+mixer-src analog-10 stream-22 set -29.0
+mixer-src analog-10 stream-23 set -29.0
+mixer-src analog-10 stream-24 set -29.0
+mixer-src analog-10 stream-25 set -29.0
+mixer-src analog-10 stream-26 set -29.0
+mixer-src analog-10 stream-27 set -29.0
+mixer-src analog-10 stream-28 set -29.0
+mixer-src spdif-1 analog-1 set -29.0
+mixer-src spdif-1 analog-2 set -29.0
+mixer-src spdif-1 analog-3 set -29.0
+mixer-src spdif-1 analog-4 set -29.0
+mixer-src spdif-1 analog-5 set -29.0
+mixer-src spdif-1 analog-6 set -29.0
+mixer-src spdif-1 analog-7 set -29.0
+mixer-src spdif-1 analog-8 set -29.0
+mixer-src spdif-1 analog-9 set -29.0
+mixer-src spdif-1 analog-10 set -29.0
+mixer-src spdif-1 spdif-1 set -29.0
+mixer-src spdif-1 spdif-2 set -29.0
+mixer-src spdif-1 adat-1 set -29.0
+mixer-src spdif-1 adat-2 set -29.0
+mixer-src spdif-1 adat-3 set -29.0
+mixer-src spdif-1 adat-4 set -29.0
+mixer-src spdif-1 adat-5 set -29.0
+mixer-src spdif-1 adat-6 set -29.0
+mixer-src spdif-1 adat-7 set -29.0
+mixer-src spdif-1 adat-8 set -29.0
+mixer-src spdif-1 adat-9 set -29.0
+mixer-src spdif-1 adat-10 set -29.0
+mixer-src spdif-1 adat-11 set -29.0
+mixer-src spdif-1 adat-12 set -29.0
+mixer-src spdif-1 adat-13 set -29.0
+mixer-src spdif-1 adat-14 set -29.0
+mixer-src spdif-1 adat-15 set -29.0
+mixer-src spdif-1 adat-16 set -29.0
+mixer-src spdif-1 stream-1 set -29.0
+mixer-src spdif-1 stream-2 set -29.0
+mixer-src spdif-1 stream-3 set -29.0
+mixer-src spdif-1 stream-4 set -29.0
+mixer-src spdif-1 stream-5 set -29.0
+mixer-src spdif-1 stream-6 set -29.0
+mixer-src spdif-1 stream-7 set -29.0
+mixer-src spdif-1 stream-8 set -29.0
+mixer-src spdif-1 stream-9 set -29.0
+mixer-src spdif-1 stream-10 set -29.0
+mixer-src spdif-1 stream-11 set -29.0
+mixer-src spdif-1 stream-12 set -29.0
+mixer-src spdif-1 stream-13 set -29.0
+mixer-src spdif-1 stream-14 set -29.0
+mixer-src spdif-1 stream-15 set -29.0
+mixer-src spdif-1 stream-16 set -29.0
+mixer-src spdif-1 stream-17 set -29.0
+mixer-src spdif-1 stream-18 set -29.0
+mixer-src spdif-1 stream-19 set -29.0
+mixer-src spdif-1 stream-20 set -29.0
+mixer-src spdif-1 stream-21 set -29.0
+mixer-src spdif-1 stream-22 set -29.0
+mixer-src spdif-1 stream-23 set -29.0
+mixer-src spdif-1 stream-24 set -29.0
+mixer-src spdif-1 stream-25 set -29.0
+mixer-src spdif-1 stream-26 set -29.0
+mixer-src spdif-1 stream-27 set -29.0
+mixer-src spdif-1 stream-28 set -29.0
+mixer-src spdif-2 analog-1 set -29.0
+mixer-src spdif-2 analog-2 set -29.0
+mixer-src spdif-2 analog-3 set -29.0
+mixer-src spdif-2 analog-4 set -29.0
+mixer-src spdif-2 analog-5 set -29.0
+mixer-src spdif-2 analog-6 set -29.0
+mixer-src spdif-2 analog-7 set -29.0
+mixer-src spdif-2 analog-8 set -29.0
+mixer-src spdif-2 analog-9 set -29.0
+mixer-src spdif-2 analog-10 set -29.0
+mixer-src spdif-2 spdif-1 set -29.0
+mixer-src spdif-2 spdif-2 set -29.0
+mixer-src spdif-2 adat-1 set -29.0
+mixer-src spdif-2 adat-2 set -29.0
+mixer-src spdif-2 adat-3 set -29.0
+mixer-src spdif-2 adat-4 set -29.0
+mixer-src spdif-2 adat-5 set -29.0
+mixer-src spdif-2 adat-6 set -29.0
+mixer-src spdif-2 adat-7 set -29.0
+mixer-src spdif-2 adat-8 set -29.0
+mixer-src spdif-2 adat-9 set -29.0
+mixer-src spdif-2 adat-10 set -29.0
+mixer-src spdif-2 adat-11 set -29.0
+mixer-src spdif-2 adat-12 set -29.0
+mixer-src spdif-2 adat-13 set -29.0
+mixer-src spdif-2 adat-14 set -29.0
+mixer-src spdif-2 adat-15 set -29.0
+mixer-src spdif-2 adat-16 set -29.0
+mixer-src spdif-2 stream-1 set -29.0
+mixer-src spdif-2 stream-2 set -29.0
+mixer-src spdif-2 stream-3 set -29.0
+mixer-src spdif-2 stream-4 set -29.0
+mixer-src spdif-2 stream-5 set -29.0
+mixer-src spdif-2 stream-6 set -29.0
+mixer-src spdif-2 stream-7 set -29.0
+mixer-src spdif-2 stream-8 set -29.0
+mixer-src spdif-2 stream-9 set -29.0
+mixer-src spdif-2 stream-10 set -29.0
+mixer-src spdif-2 stream-11 set -29.0
+mixer-src spdif-2 stream-12 set -29.0
+mixer-src spdif-2 stream-13 set -29.0
+mixer-src spdif-2 stream-14 set -29.0
+mixer-src spdif-2 stream-15 set -29.0
+mixer-src spdif-2 stream-16 set -29.0
+mixer-src spdif-2 stream-17 set -29.0
+mixer-src spdif-2 stream-18 set -29.0
+mixer-src spdif-2 stream-19 set -29.0
+mixer-src spdif-2 stream-20 set -29.0
+mixer-src spdif-2 stream-21 set -29.0
+mixer-src spdif-2 stream-22 set -29.0
+mixer-src spdif-2 stream-23 set -29.0
+mixer-src spdif-2 stream-24 set -29.0
+mixer-src spdif-2 stream-25 set -29.0
+mixer-src spdif-2 stream-26 set -29.0
+mixer-src spdif-2 stream-27 set -29.0
+mixer-src spdif-2 stream-28 set -29.0
+mixer-src adat-1 analog-1 set -29.0
+mixer-src adat-1 analog-2 set -29.0
+mixer-src adat-1 analog-3 set -29.0
+mixer-src adat-1 analog-4 set -29.0
+mixer-src adat-1 analog-5 set -29.0
+mixer-src adat-1 analog-6 set -29.0
+mixer-src adat-1 analog-7 set -29.0
+mixer-src adat-1 analog-8 set -29.0
+mixer-src adat-1 analog-9 set -29.0
+mixer-src adat-1 analog-10 set -29.0
+mixer-src adat-1 spdif-1 set -29.0
+mixer-src adat-1 spdif-2 set -29.0
+mixer-src adat-1 adat-1 set -29.0
+mixer-src adat-1 adat-2 set -29.0
+mixer-src adat-1 adat-3 set -29.0
+mixer-src adat-1 adat-4 set -29.0
+mixer-src adat-1 adat-5 set -29.0
+mixer-src adat-1 adat-6 set -29.0
+mixer-src adat-1 adat-7 set -29.0
+mixer-src adat-1 adat-8 set -29.0
+mixer-src adat-1 adat-9 set -29.0
+mixer-src adat-1 adat-10 set -29.0
+mixer-src adat-1 adat-11 set -29.0
+mixer-src adat-1 adat-12 set -29.0
+mixer-src adat-1 adat-13 set -29.0
+mixer-src adat-1 adat-14 set -29.0
+mixer-src adat-1 adat-15 set -29.0
+mixer-src adat-1 adat-16 set -29.0
+mixer-src adat-1 stream-1 set -29.0
+mixer-src adat-1 stream-2 set -29.0
+mixer-src adat-1 stream-3 set -29.0
+mixer-src adat-1 stream-4 set -29.0
+mixer-src adat-1 stream-5 set -29.0
+mixer-src adat-1 stream-6 set -29.0
+mixer-src adat-1 stream-7 set -29.0
+mixer-src adat-1 stream-8 set -29.0
+mixer-src adat-1 stream-9 set -29.0
+mixer-src adat-1 stream-10 set -29.0
+mixer-src adat-1 stream-11 set -29.0
+mixer-src adat-1 stream-12 set -29.0
+mixer-src adat-1 stream-13 set -29.0
+mixer-src adat-1 stream-14 set -29.0
+mixer-src adat-1 stream-15 set -29.0
+mixer-src adat-1 stream-16 set -29.0
+mixer-src adat-1 stream-17 set -29.0
+mixer-src adat-1 stream-18 set -29.0
+mixer-src adat-1 stream-19 set -29.0
+mixer-src adat-1 stream-20 set -29.0
+mixer-src adat-1 stream-21 set -29.0
+mixer-src adat-1 stream-22 set -29.0
+mixer-src adat-1 stream-23 set -29.0
+mixer-src adat-1 stream-24 set -29.0
+mixer-src adat-1 stream-25 set -29.0
+mixer-src adat-1 stream-26 set -29.0
+mixer-src adat-1 stream-27 set -29.0
+mixer-src adat-1 stream-28 set -29.0
+mixer-src adat-2 analog-1 set -29.0
+mixer-src adat-2 analog-2 set -29.0
+mixer-src adat-2 analog-3 set -29.0
+mixer-src adat-2 analog-4 set -29.0
+mixer-src adat-2 analog-5 set -29.0
+mixer-src adat-2 analog-6 set -29.0
+mixer-src adat-2 analog-7 set -29.0
+mixer-src adat-2 analog-8 set -29.0
+mixer-src adat-2 analog-9 set -29.0
+mixer-src adat-2 analog-10 set -29.0
+mixer-src adat-2 spdif-1 set -29.0
+mixer-src adat-2 spdif-2 set -29.0
+mixer-src adat-2 adat-1 set -29.0
+mixer-src adat-2 adat-2 set -29.0
+mixer-src adat-2 adat-3 set -29.0
+mixer-src adat-2 adat-4 set -29.0
+mixer-src adat-2 adat-5 set -29.0
+mixer-src adat-2 adat-6 set -29.0
+mixer-src adat-2 adat-7 set -29.0
+mixer-src adat-2 adat-8 set -29.0
+mixer-src adat-2 adat-9 set -29.0
+mixer-src adat-2 adat-10 set -29.0
+mixer-src adat-2 adat-11 set -29.0
+mixer-src adat-2 adat-12 set -29.0
+mixer-src adat-2 adat-13 set -29.0
+mixer-src adat-2 adat-14 set -29.0
+mixer-src adat-2 adat-15 set -29.0
+mixer-src adat-2 adat-16 set -29.0
+mixer-src adat-2 stream-1 set -29.0
+mixer-src adat-2 stream-2 set -29.0
+mixer-src adat-2 stream-3 set -29.0
+mixer-src adat-2 stream-4 set -29.0
+mixer-src adat-2 stream-5 set -29.0
+mixer-src adat-2 stream-6 set -29.0
+mixer-src adat-2 stream-7 set -29.0
+mixer-src adat-2 stream-8 set -29.0
+mixer-src adat-2 stream-9 set -29.0
+mixer-src adat-2 stream-10 set -29.0
+mixer-src adat-2 stream-11 set -29.0
+mixer-src adat-2 stream-12 set -29.0
+mixer-src adat-2 stream-13 set -29.0
+mixer-src adat-2 stream-14 set -29.0
+mixer-src adat-2 stream-15 set -29.0
+mixer-src adat-2 stream-16 set -29.0
+mixer-src adat-2 stream-17 set -29.0
+mixer-src adat-2 stream-18 set -29.0
+mixer-src adat-2 stream-19 set -29.0
+mixer-src adat-2 stream-20 set -29.0
+mixer-src adat-2 stream-21 set -29.0
+mixer-src adat-2 stream-22 set -29.0
+mixer-src adat-2 stream-23 set -29.0
+mixer-src adat-2 stream-24 set -29.0
+mixer-src adat-2 stream-25 set -29.0
+mixer-src adat-2 stream-26 set -29.0
+mixer-src adat-2 stream-27 set -29.0
+mixer-src adat-2 stream-28 set -29.0
+mixer-src adat-3 analog-1 set -29.0
+mixer-src adat-3 analog-2 set -29.0
+mixer-src adat-3 analog-3 set -29.0
+mixer-src adat-3 analog-4 set -29.0
+mixer-src adat-3 analog-5 set -29.0
+mixer-src adat-3 analog-6 set -29.0
+mixer-src adat-3 analog-7 set -29.0
+mixer-src adat-3 analog-8 set -29.0
+mixer-src adat-3 analog-9 set -29.0
+mixer-src adat-3 analog-10 set -29.0
+mixer-src adat-3 spdif-1 set -29.0
+mixer-src adat-3 spdif-2 set -29.0
+mixer-src adat-3 adat-1 set -29.0
+mixer-src adat-3 adat-2 set -29.0
+mixer-src adat-3 adat-3 set -29.0
+mixer-src adat-3 adat-4 set -29.0
+mixer-src adat-3 adat-5 set -29.0
+mixer-src adat-3 adat-6 set -29.0
+mixer-src adat-3 adat-7 set -29.0
+mixer-src adat-3 adat-8 set -29.0
+mixer-src adat-3 adat-9 set -29.0
+mixer-src adat-3 adat-10 set -29.0
+mixer-src adat-3 adat-11 set -29.0
+mixer-src adat-3 adat-12 set -29.0
+mixer-src adat-3 adat-13 set -29.0
+mixer-src adat-3 adat-14 set -29.0
+mixer-src adat-3 adat-15 set -29.0
+mixer-src adat-3 adat-16 set -29.0
+mixer-src adat-3 stream-1 set -29.0
+mixer-src adat-3 stream-2 set -29.0
+mixer-src adat-3 stream-3 set -29.0
+mixer-src adat-3 stream-4 set -29.0
+mixer-src adat-3 stream-5 set -29.0
+mixer-src adat-3 stream-6 set -29.0
+mixer-src adat-3 stream-7 set -29.0
+mixer-src adat-3 stream-8 set -29.0
+mixer-src adat-3 stream-9 set -29.0
+mixer-src adat-3 stream-10 set -29.0
+mixer-src adat-3 stream-11 set -29.0
+mixer-src adat-3 stream-12 set -29.0
+mixer-src adat-3 stream-13 set -29.0
+mixer-src adat-3 stream-14 set -29.0
+mixer-src adat-3 stream-15 set -29.0
+mixer-src adat-3 stream-16 set -29.0
+mixer-src adat-3 stream-17 set -29.0
+mixer-src adat-3 stream-18 set -29.0
+mixer-src adat-3 stream-19 set -29.0
+mixer-src adat-3 stream-20 set -29.0
+mixer-src adat-3 stream-21 set -29.0
+mixer-src adat-3 stream-22 set -29.0
+mixer-src adat-3 stream-23 set -29.0
+mixer-src adat-3 stream-24 set -29.0
+mixer-src adat-3 stream-25 set -29.0
+mixer-src adat-3 stream-26 set -29.0
+mixer-src adat-3 stream-27 set -29.0
+mixer-src adat-3 stream-28 set -29.0
+mixer-src adat-4 analog-1 set -29.0
+mixer-src adat-4 analog-2 set -29.0
+mixer-src adat-4 analog-3 set -29.0
+mixer-src adat-4 analog-4 set -29.0
+mixer-src adat-4 analog-5 set -29.0
+mixer-src adat-4 analog-6 set -29.0
+mixer-src adat-4 analog-7 set -29.0
+mixer-src adat-4 analog-8 set -29.0
+mixer-src adat-4 analog-9 set -29.0
+mixer-src adat-4 analog-10 set -29.0
+mixer-src adat-4 spdif-1 set -29.0
+mixer-src adat-4 spdif-2 set -29.0
+mixer-src adat-4 adat-1 set -29.0
+mixer-src adat-4 adat-2 set -29.0
+mixer-src adat-4 adat-3 set -29.0
+mixer-src adat-4 adat-4 set -29.0
+mixer-src adat-4 adat-5 set -29.0
+mixer-src adat-4 adat-6 set -29.0
+mixer-src adat-4 adat-7 set -29.0
+mixer-src adat-4 adat-8 set -29.0
+mixer-src adat-4 adat-9 set -29.0
+mixer-src adat-4 adat-10 set -29.0
+mixer-src adat-4 adat-11 set -29.0
+mixer-src adat-4 adat-12 set -29.0
+mixer-src adat-4 adat-13 set -29.0
+mixer-src adat-4 adat-14 set -29.0
+mixer-src adat-4 adat-15 set -29.0
+mixer-src adat-4 adat-16 set -29.0
+mixer-src adat-4 stream-1 set -29.0
+mixer-src adat-4 stream-2 set -29.0
+mixer-src adat-4 stream-3 set -29.0
+mixer-src adat-4 stream-4 set -29.0
+mixer-src adat-4 stream-5 set -29.0
+mixer-src adat-4 stream-6 set -29.0
+mixer-src adat-4 stream-7 set -29.0
+mixer-src adat-4 stream-8 set -29.0
+mixer-src adat-4 stream-9 set -29.0
+mixer-src adat-4 stream-10 set -29.0
+mixer-src adat-4 stream-11 set -29.0
+mixer-src adat-4 stream-12 set -29.0
+mixer-src adat-4 stream-13 set -29.0
+mixer-src adat-4 stream-14 set -29.0
+mixer-src adat-4 stream-15 set -29.0
+mixer-src adat-4 stream-16 set -29.0
+mixer-src adat-4 stream-17 set -29.0
+mixer-src adat-4 stream-18 set -29.0
+mixer-src adat-4 stream-19 set -29.0
+mixer-src adat-4 stream-20 set -29.0
+mixer-src adat-4 stream-21 set -29.0
+mixer-src adat-4 stream-22 set -29.0
+mixer-src adat-4 stream-23 set -29.0
+mixer-src adat-4 stream-24 set -29.0
+mixer-src adat-4 stream-25 set -29.0
+mixer-src adat-4 stream-26 set -29.0
+mixer-src adat-4 stream-27 set -29.0
+mixer-src adat-4 stream-28 set -29.0
+mixer-src adat-5 analog-1 set -29.0
+mixer-src adat-5 analog-2 set -29.0
+mixer-src adat-5 analog-3 set -29.0
+mixer-src adat-5 analog-4 set -29.0
+mixer-src adat-5 analog-5 set -29.0
+mixer-src adat-5 analog-6 set -29.0
+mixer-src adat-5 analog-7 set -29.0
+mixer-src adat-5 analog-8 set -29.0
+mixer-src adat-5 analog-9 set -29.0
+mixer-src adat-5 analog-10 set -29.0
+mixer-src adat-5 spdif-1 set -29.0
+mixer-src adat-5 spdif-2 set -29.0
+mixer-src adat-5 adat-1 set -29.0
+mixer-src adat-5 adat-2 set -29.0
+mixer-src adat-5 adat-3 set -29.0
+mixer-src adat-5 adat-4 set -29.0
+mixer-src adat-5 adat-5 set -29.0
+mixer-src adat-5 adat-6 set -29.0
+mixer-src adat-5 adat-7 set -29.0
+mixer-src adat-5 adat-8 set -29.0
+mixer-src adat-5 adat-9 set -29.0
+mixer-src adat-5 adat-10 set -29.0
+mixer-src adat-5 adat-11 set -29.0
+mixer-src adat-5 adat-12 set -29.0
+mixer-src adat-5 adat-13 set -29.0
+mixer-src adat-5 adat-14 set -29.0
+mixer-src adat-5 adat-15 set -29.0
+mixer-src adat-5 adat-16 set -29.0
+mixer-src adat-5 stream-1 set -29.0
+mixer-src adat-5 stream-2 set -29.0
+mixer-src adat-5 stream-3 set -29.0
+mixer-src adat-5 stream-4 set -29.0
+mixer-src adat-5 stream-5 set -29.0
+mixer-src adat-5 stream-6 set -29.0
+mixer-src adat-5 stream-7 set -29.0
+mixer-src adat-5 stream-8 set -29.0
+mixer-src adat-5 stream-9 set -29.0
+mixer-src adat-5 stream-10 set -29.0
+mixer-src adat-5 stream-11 set -29.0
+mixer-src adat-5 stream-12 set -29.0
+mixer-src adat-5 stream-13 set -29.0
+mixer-src adat-5 stream-14 set -29.0
+mixer-src adat-5 stream-15 set -29.0
+mixer-src adat-5 stream-16 set -29.0
+mixer-src adat-5 stream-17 set -29.0
+mixer-src adat-5 stream-18 set -29.0
+mixer-src adat-5 stream-19 set -29.0
+mixer-src adat-5 stream-20 set -29.0
+mixer-src adat-5 stream-21 set -29.0
+mixer-src adat-5 stream-22 set -29.0
+mixer-src adat-5 stream-23 set -29.0
+mixer-src adat-5 stream-24 set -29.0
+mixer-src adat-5 stream-25 set -29.0
+mixer-src adat-5 stream-26 set -29.0
+mixer-src adat-5 stream-27 set -29.0
+mixer-src adat-5 stream-28 set -29.0
+mixer-src adat-6 analog-1 set -29.0
+mixer-src adat-6 analog-2 set -29.0
+mixer-src adat-6 analog-3 set -29.0
+mixer-src adat-6 analog-4 set -29.0
+mixer-src adat-6 analog-5 set -29.0
+mixer-src adat-6 analog-6 set -29.0
+mixer-src adat-6 analog-7 set -29.0
+mixer-src adat-6 analog-8 set -29.0
+mixer-src adat-6 analog-9 set -29.0
+mixer-src adat-6 analog-10 set -29.0
+mixer-src adat-6 spdif-1 set -29.0
+mixer-src adat-6 spdif-2 set -29.0
+mixer-src adat-6 adat-1 set -29.0
+mixer-src adat-6 adat-2 set -29.0
+mixer-src adat-6 adat-3 set -29.0
+mixer-src adat-6 adat-4 set -29.0
+mixer-src adat-6 adat-5 set -29.0
+mixer-src adat-6 adat-6 set -29.0
+mixer-src adat-6 adat-7 set -29.0
+mixer-src adat-6 adat-8 set -29.0
+mixer-src adat-6 adat-9 set -29.0
+mixer-src adat-6 adat-10 set -29.0
+mixer-src adat-6 adat-11 set -29.0
+mixer-src adat-6 adat-12 set -29.0
+mixer-src adat-6 adat-13 set -29.0
+mixer-src adat-6 adat-14 set -29.0
+mixer-src adat-6 adat-15 set -29.0
+mixer-src adat-6 adat-16 set -29.0
+mixer-src adat-6 stream-1 set -29.0
+mixer-src adat-6 stream-2 set -29.0
+mixer-src adat-6 stream-3 set -29.0
+mixer-src adat-6 stream-4 set -29.0
+mixer-src adat-6 stream-5 set -29.0
+mixer-src adat-6 stream-6 set -29.0
+mixer-src adat-6 stream-7 set -29.0
+mixer-src adat-6 stream-8 set -29.0
+mixer-src adat-6 stream-9 set -29.0
+mixer-src adat-6 stream-10 set -29.0
+mixer-src adat-6 stream-11 set -29.0
+mixer-src adat-6 stream-12 set -29.0
+mixer-src adat-6 stream-13 set -29.0
+mixer-src adat-6 stream-14 set -29.0
+mixer-src adat-6 stream-15 set -29.0
+mixer-src adat-6 stream-16 set -29.0
+mixer-src adat-6 stream-17 set -29.0
+mixer-src adat-6 stream-18 set -29.0
+mixer-src adat-6 stream-19 set -29.0
+mixer-src adat-6 stream-20 set -29.0
+mixer-src adat-6 stream-21 set -29.0
+mixer-src adat-6 stream-22 set -29.0
+mixer-src adat-6 stream-23 set -29.0
+mixer-src adat-6 stream-24 set -29.0
+mixer-src adat-6 stream-25 set -29.0
+mixer-src adat-6 stream-26 set -29.0
+mixer-src adat-6 stream-27 set -29.0
+mixer-src adat-6 stream-28 set -29.0
+mixer-src adat-7 analog-1 set -29.0
+mixer-src adat-7 analog-2 set -29.0
+mixer-src adat-7 analog-3 set -29.0
+mixer-src adat-7 analog-4 set -29.0
+mixer-src adat-7 analog-5 set -29.0
+mixer-src adat-7 analog-6 set -29.0
+mixer-src adat-7 analog-7 set -29.0
+mixer-src adat-7 analog-8 set -29.0
+mixer-src adat-7 analog-9 set -29.0
+mixer-src adat-7 analog-10 set -29.0
+mixer-src adat-7 spdif-1 set -29.0
+mixer-src adat-7 spdif-2 set -29.0
+mixer-src adat-7 adat-1 set -29.0
+mixer-src adat-7 adat-2 set -29.0
+mixer-src adat-7 adat-3 set -29.0
+mixer-src adat-7 adat-4 set -29.0
+mixer-src adat-7 adat-5 set -29.0
+mixer-src adat-7 adat-6 set -29.0
+mixer-src adat-7 adat-7 set -29.0
+mixer-src adat-7 adat-8 set -29.0
+mixer-src adat-7 adat-9 set -29.0
+mixer-src adat-7 adat-10 set -29.0
+mixer-src adat-7 adat-11 set -29.0
+mixer-src adat-7 adat-12 set -29.0
+mixer-src adat-7 adat-13 set -29.0
+mixer-src adat-7 adat-14 set -29.0
+mixer-src adat-7 adat-15 set -29.0
+mixer-src adat-7 adat-16 set -29.0
+mixer-src adat-7 stream-1 set -29.0
+mixer-src adat-7 stream-2 set -29.0
+mixer-src adat-7 stream-3 set -29.0
+mixer-src adat-7 stream-4 set -29.0
+mixer-src adat-7 stream-5 set -29.0
+mixer-src adat-7 stream-6 set -29.0
+mixer-src adat-7 stream-7 set -29.0
+mixer-src adat-7 stream-8 set -29.0
+mixer-src adat-7 stream-9 set -29.0
+mixer-src adat-7 stream-10 set -29.0
+mixer-src adat-7 stream-11 set -29.0
+mixer-src adat-7 stream-12 set -29.0
+mixer-src adat-7 stream-13 set -29.0
+mixer-src adat-7 stream-14 set -29.0
+mixer-src adat-7 stream-15 set -29.0
+mixer-src adat-7 stream-16 set -29.0
+mixer-src adat-7 stream-17 set -29.0
+mixer-src adat-7 stream-18 set -29.0
+mixer-src adat-7 stream-19 set -29.0
+mixer-src adat-7 stream-20 set -29.0
+mixer-src adat-7 stream-21 set -29.0
+mixer-src adat-7 stream-22 set -29.0
+mixer-src adat-7 stream-23 set -29.0
+mixer-src adat-7 stream-24 set -29.0
+mixer-src adat-7 stream-25 set -29.0
+mixer-src adat-7 stream-26 set -29.0
+mixer-src adat-7 stream-27 set -29.0
+mixer-src adat-7 stream-28 set -29.0
+mixer-src adat-8 analog-1 set -29.0
+mixer-src adat-8 analog-2 set -29.0
+mixer-src adat-8 analog-3 set -29.0
+mixer-src adat-8 analog-4 set -29.0
+mixer-src adat-8 analog-5 set -29.0
+mixer-src adat-8 analog-6 set -29.0
+mixer-src adat-8 analog-7 set -29.0
+mixer-src adat-8 analog-8 set -29.0
+mixer-src adat-8 analog-9 set -29.0
+mixer-src adat-8 analog-10 set -29.0
+mixer-src adat-8 spdif-1 set -29.0
+mixer-src adat-8 spdif-2 set -29.0
+mixer-src adat-8 adat-1 set -29.0
+mixer-src adat-8 adat-2 set -29.0
+mixer-src adat-8 adat-3 set -29.0
+mixer-src adat-8 adat-4 set -29.0
+mixer-src adat-8 adat-5 set -29.0
+mixer-src adat-8 adat-6 set -29.0
+mixer-src adat-8 adat-7 set -29.0
+mixer-src adat-8 adat-8 set -29.0
+mixer-src adat-8 adat-9 set -29.0
+mixer-src adat-8 adat-10 set -29.0
+mixer-src adat-8 adat-11 set -29.0
+mixer-src adat-8 adat-12 set -29.0
+mixer-src adat-8 adat-13 set -29.0
+mixer-src adat-8 adat-14 set -29.0
+mixer-src adat-8 adat-15 set -29.0
+mixer-src adat-8 adat-16 set -29.0
+mixer-src adat-8 stream-1 set -29.0
+mixer-src adat-8 stream-2 set -29.0
+mixer-src adat-8 stream-3 set -29.0
+mixer-src adat-8 stream-4 set -29.0
+mixer-src adat-8 stream-5 set -29.0
+mixer-src adat-8 stream-6 set -29.0
+mixer-src adat-8 stream-7 set -29.0
+mixer-src adat-8 stream-8 set -29.0
+mixer-src adat-8 stream-9 set -29.0
+mixer-src adat-8 stream-10 set -29.0
+mixer-src adat-8 stream-11 set -29.0
+mixer-src adat-8 stream-12 set -29.0
+mixer-src adat-8 stream-13 set -29.0
+mixer-src adat-8 stream-14 set -29.0
+mixer-src adat-8 stream-15 set -29.0
+mixer-src adat-8 stream-16 set -29.0
+mixer-src adat-8 stream-17 set -29.0
+mixer-src adat-8 stream-18 set -29.0
+mixer-src adat-8 stream-19 set -29.0
+mixer-src adat-8 stream-20 set -29.0
+mixer-src adat-8 stream-21 set -29.0
+mixer-src adat-8 stream-22 set -29.0
+mixer-src adat-8 stream-23 set -29.0
+mixer-src adat-8 stream-24 set -29.0
+mixer-src adat-8 stream-25 set -29.0
+mixer-src adat-8 stream-26 set -29.0
+mixer-src adat-8 stream-27 set -29.0
+mixer-src adat-8 stream-28 set -29.0
+mixer-src adat-9 analog-1 set -29.0
+mixer-src adat-9 analog-2 set -29.0
+mixer-src adat-9 analog-3 set -29.0
+mixer-src adat-9 analog-4 set -29.0
+mixer-src adat-9 analog-5 set -29.0
+mixer-src adat-9 analog-6 set -29.0
+mixer-src adat-9 analog-7 set -29.0
+mixer-src adat-9 analog-8 set -29.0
+mixer-src adat-9 analog-9 set -29.0
+mixer-src adat-9 analog-10 set -29.0
+mixer-src adat-9 spdif-1 set -29.0
+mixer-src adat-9 spdif-2 set -29.0
+mixer-src adat-9 adat-1 set -29.0
+mixer-src adat-9 adat-2 set -29.0
+mixer-src adat-9 adat-3 set -29.0
+mixer-src adat-9 adat-4 set -29.0
+mixer-src adat-9 adat-5 set -29.0
+mixer-src adat-9 adat-6 set -29.0
+mixer-src adat-9 adat-7 set -29.0
+mixer-src adat-9 adat-8 set -29.0
+mixer-src adat-9 adat-9 set -29.0
+mixer-src adat-9 adat-10 set -29.0
+mixer-src adat-9 adat-11 set -29.0
+mixer-src adat-9 adat-12 set -29.0
+mixer-src adat-9 adat-13 set -29.0
+mixer-src adat-9 adat-14 set -29.0
+mixer-src adat-9 adat-15 set -29.0
+mixer-src adat-9 adat-16 set -29.0
+mixer-src adat-9 stream-1 set -29.0
+mixer-src adat-9 stream-2 set -29.0
+mixer-src adat-9 stream-3 set -29.0
+mixer-src adat-9 stream-4 set -29.0
+mixer-src adat-9 stream-5 set -29.0
+mixer-src adat-9 stream-6 set -29.0
+mixer-src adat-9 stream-7 set -29.0
+mixer-src adat-9 stream-8 set -29.0
+mixer-src adat-9 stream-9 set -29.0
+mixer-src adat-9 stream-10 set -29.0
+mixer-src adat-9 stream-11 set -29.0
+mixer-src adat-9 stream-12 set -29.0
+mixer-src adat-9 stream-13 set -29.0
+mixer-src adat-9 stream-14 set -29.0
+mixer-src adat-9 stream-15 set -29.0
+mixer-src adat-9 stream-16 set -29.0
+mixer-src adat-9 stream-17 set -29.0
+mixer-src adat-9 stream-18 set -29.0
+mixer-src adat-9 stream-19 set -29.0
+mixer-src adat-9 stream-20 set -29.0
+mixer-src adat-9 stream-21 set -29.0
+mixer-src adat-9 stream-22 set -29.0
+mixer-src adat-9 stream-23 set -29.0
+mixer-src adat-9 stream-24 set -29.0
+mixer-src adat-9 stream-25 set -29.0
+mixer-src adat-9 stream-26 set -29.0
+mixer-src adat-9 stream-27 set -29.0
+mixer-src adat-9 stream-28 set -29.0
+mixer-src adat-10 analog-1 set -29.0
+mixer-src adat-10 analog-2 set -29.0
+mixer-src adat-10 analog-3 set -29.0
+mixer-src adat-10 analog-4 set -29.0
+mixer-src adat-10 analog-5 set -29.0
+mixer-src adat-10 analog-6 set -29.0
+mixer-src adat-10 analog-7 set -29.0
+mixer-src adat-10 analog-8 set -29.0
+mixer-src adat-10 analog-9 set -29.0
+mixer-src adat-10 analog-10 set -29.0
+mixer-src adat-10 spdif-1 set -29.0
+mixer-src adat-10 spdif-2 set -29.0
+mixer-src adat-10 adat-1 set -29.0
+mixer-src adat-10 adat-2 set -29.0
+mixer-src adat-10 adat-3 set -29.0
+mixer-src adat-10 adat-4 set -29.0
+mixer-src adat-10 adat-5 set -29.0
+mixer-src adat-10 adat-6 set -29.0
+mixer-src adat-10 adat-7 set -29.0
+mixer-src adat-10 adat-8 set -29.0
+mixer-src adat-10 adat-9 set -29.0
+mixer-src adat-10 adat-10 set -29.0
+mixer-src adat-10 adat-11 set -29.0
+mixer-src adat-10 adat-12 set -29.0
+mixer-src adat-10 adat-13 set -29.0
+mixer-src adat-10 adat-14 set -29.0
+mixer-src adat-10 adat-15 set -29.0
+mixer-src adat-10 adat-16 set -29.0
+mixer-src adat-10 stream-1 set -29.0
+mixer-src adat-10 stream-2 set -29.0
+mixer-src adat-10 stream-3 set -29.0
+mixer-src adat-10 stream-4 set -29.0
+mixer-src adat-10 stream-5 set -29.0
+mixer-src adat-10 stream-6 set -29.0
+mixer-src adat-10 stream-7 set -29.0
+mixer-src adat-10 stream-8 set -29.0
+mixer-src adat-10 stream-9 set -29.0
+mixer-src adat-10 stream-10 set -29.0
+mixer-src adat-10 stream-11 set -29.0
+mixer-src adat-10 stream-12 set -29.0
+mixer-src adat-10 stream-13 set -29.0
+mixer-src adat-10 stream-14 set -29.0
+mixer-src adat-10 stream-15 set -29.0
+mixer-src adat-10 stream-16 set -29.0
+mixer-src adat-10 stream-17 set -29.0
+mixer-src adat-10 stream-18 set -29.0
+mixer-src adat-10 stream-19 set -29.0
+mixer-src adat-10 stream-20 set -29.0
+mixer-src adat-10 stream-21 set -29.0
+mixer-src adat-10 stream-22 set -29.0
+mixer-src adat-10 stream-23 set -29.0
+mixer-src adat-10 stream-24 set -29.0
+mixer-src adat-10 stream-25 set -29.0
+mixer-src adat-10 stream-26 set -29.0
+mixer-src adat-10 stream-27 set -29.0
+mixer-src adat-10 stream-28 set -29.0
+mixer-src adat-11 analog-1 set -29.0
+mixer-src adat-11 analog-2 set -29.0
+mixer-src adat-11 analog-3 set -29.0
+mixer-src adat-11 analog-4 set -29.0
+mixer-src adat-11 analog-5 set -29.0
+mixer-src adat-11 analog-6 set -29.0
+mixer-src adat-11 analog-7 set -29.0
+mixer-src adat-11 analog-8 set -29.0
+mixer-src adat-11 analog-9 set -29.0
+mixer-src adat-11 analog-10 set -29.0
+mixer-src adat-11 spdif-1 set -29.0
+mixer-src adat-11 spdif-2 set -29.0
+mixer-src adat-11 adat-1 set -29.0
+mixer-src adat-11 adat-2 set -29.0
+mixer-src adat-11 adat-3 set -29.0
+mixer-src adat-11 adat-4 set -29.0
+mixer-src adat-11 adat-5 set -29.0
+mixer-src adat-11 adat-6 set -29.0
+mixer-src adat-11 adat-7 set -29.0
+mixer-src adat-11 adat-8 set -29.0
+mixer-src adat-11 adat-9 set -29.0
+mixer-src adat-11 adat-10 set -29.0
+mixer-src adat-11 adat-11 set -29.0
+mixer-src adat-11 adat-12 set -29.0
+mixer-src adat-11 adat-13 set -29.0
+mixer-src adat-11 adat-14 set -29.0
+mixer-src adat-11 adat-15 set -29.0
+mixer-src adat-11 adat-16 set -29.0
+mixer-src adat-11 stream-1 set -29.0
+mixer-src adat-11 stream-2 set -29.0
+mixer-src adat-11 stream-3 set -29.0
+mixer-src adat-11 stream-4 set -29.0
+mixer-src adat-11 stream-5 set -29.0
+mixer-src adat-11 stream-6 set -29.0
+mixer-src adat-11 stream-7 set -29.0
+mixer-src adat-11 stream-8 set -29.0
+mixer-src adat-11 stream-9 set -29.0
+mixer-src adat-11 stream-10 set -29.0
+mixer-src adat-11 stream-11 set -29.0
+mixer-src adat-11 stream-12 set -29.0
+mixer-src adat-11 stream-13 set -29.0
+mixer-src adat-11 stream-14 set -29.0
+mixer-src adat-11 stream-15 set -29.0
+mixer-src adat-11 stream-16 set -29.0
+mixer-src adat-11 stream-17 set -29.0
+mixer-src adat-11 stream-18 set -29.0
+mixer-src adat-11 stream-19 set -29.0
+mixer-src adat-11 stream-20 set -29.0
+mixer-src adat-11 stream-21 set -29.0
+mixer-src adat-11 stream-22 set -29.0
+mixer-src adat-11 stream-23 set -29.0
+mixer-src adat-11 stream-24 set -29.0
+mixer-src adat-11 stream-25 set -29.0
+mixer-src adat-11 stream-26 set -29.0
+mixer-src adat-11 stream-27 set -29.0
+mixer-src adat-11 stream-28 set -29.0
+mixer-src adat-12 analog-1 set -29.0
+mixer-src adat-12 analog-2 set -29.0
+mixer-src adat-12 analog-3 set -29.0
+mixer-src adat-12 analog-4 set -29.0
+mixer-src adat-12 analog-5 set -29.0
+mixer-src adat-12 analog-6 set -29.0
+mixer-src adat-12 analog-7 set -29.0
+mixer-src adat-12 analog-8 set -29.0
+mixer-src adat-12 analog-9 set -29.0
+mixer-src adat-12 analog-10 set -29.0
+mixer-src adat-12 spdif-1 set -29.0
+mixer-src adat-12 spdif-2 set -29.0
+mixer-src adat-12 adat-1 set -29.0
+mixer-src adat-12 adat-2 set -29.0
+mixer-src adat-12 adat-3 set -29.0
+mixer-src adat-12 adat-4 set -29.0
+mixer-src adat-12 adat-5 set -29.0
+mixer-src adat-12 adat-6 set -29.0
+mixer-src adat-12 adat-7 set -29.0
+mixer-src adat-12 adat-8 set -29.0
+mixer-src adat-12 adat-9 set -29.0
+mixer-src adat-12 adat-10 set -29.0
+mixer-src adat-12 adat-11 set -29.0
+mixer-src adat-12 adat-12 set -29.0
+mixer-src adat-12 adat-13 set -29.0
+mixer-src adat-12 adat-14 set -29.0
+mixer-src adat-12 adat-15 set -29.0
+mixer-src adat-12 adat-16 set -29.0
+mixer-src adat-12 stream-1 set -29.0
+mixer-src adat-12 stream-2 set -29.0
+mixer-src adat-12 stream-3 set -29.0
+mixer-src adat-12 stream-4 set -29.0
+mixer-src adat-12 stream-5 set -29.0
+mixer-src adat-12 stream-6 set -29.0
+mixer-src adat-12 stream-7 set -29.0
+mixer-src adat-12 stream-8 set -29.0
+mixer-src adat-12 stream-9 set -29.0
+mixer-src adat-12 stream-10 set -29.0
+mixer-src adat-12 stream-11 set -29.0
+mixer-src adat-12 stream-12 set -29.0
+mixer-src adat-12 stream-13 set -29.0
+mixer-src adat-12 stream-14 set -29.0
+mixer-src adat-12 stream-15 set -29.0
+mixer-src adat-12 stream-16 set -29.0
+mixer-src adat-12 stream-17 set -29.0
+mixer-src adat-12 stream-18 set -29.0
+mixer-src adat-12 stream-19 set -29.0
+mixer-src adat-12 stream-20 set -29.0
+mixer-src adat-12 stream-21 set -29.0
+mixer-src adat-12 stream-22 set -29.0
+mixer-src adat-12 stream-23 set -29.0
+mixer-src adat-12 stream-24 set -29.0
+mixer-src adat-12 stream-25 set -29.0
+mixer-src adat-12 stream-26 set -29.0
+mixer-src adat-12 stream-27 set -29.0
+mixer-src adat-12 stream-28 set -29.0
+mixer-src adat-13 analog-1 set -29.0
+mixer-src adat-13 analog-2 set -29.0
+mixer-src adat-13 analog-3 set -29.0
+mixer-src adat-13 analog-4 set -29.0
+mixer-src adat-13 analog-5 set -29.0
+mixer-src adat-13 analog-6 set -29.0
+mixer-src adat-13 analog-7 set -29.0
+mixer-src adat-13 analog-8 set -29.0
+mixer-src adat-13 analog-9 set -29.0
+mixer-src adat-13 analog-10 set -29.0
+mixer-src adat-13 spdif-1 set -29.0
+mixer-src adat-13 spdif-2 set -29.0
+mixer-src adat-13 adat-1 set -29.0
+mixer-src adat-13 adat-2 set -29.0
+mixer-src adat-13 adat-3 set -29.0
+mixer-src adat-13 adat-4 set -29.0
+mixer-src adat-13 adat-5 set -29.0
+mixer-src adat-13 adat-6 set -29.0
+mixer-src adat-13 adat-7 set -29.0
+mixer-src adat-13 adat-8 set -29.0
+mixer-src adat-13 adat-9 set -29.0
+mixer-src adat-13 adat-10 set -29.0
+mixer-src adat-13 adat-11 set -29.0
+mixer-src adat-13 adat-12 set -29.0
+mixer-src adat-13 adat-13 set -29.0
+mixer-src adat-13 adat-14 set -29.0
+mixer-src adat-13 adat-15 set -29.0
+mixer-src adat-13 adat-16 set -29.0
+mixer-src adat-13 stream-1 set -29.0
+mixer-src adat-13 stream-2 set -29.0
+mixer-src adat-13 stream-3 set -29.0
+mixer-src adat-13 stream-4 set -29.0
+mixer-src adat-13 stream-5 set -29.0
+mixer-src adat-13 stream-6 set -29.0
+mixer-src adat-13 stream-7 set -29.0
+mixer-src adat-13 stream-8 set -29.0
+mixer-src adat-13 stream-9 set -29.0
+mixer-src adat-13 stream-10 set -29.0
+mixer-src adat-13 stream-11 set -29.0
+mixer-src adat-13 stream-12 set -29.0
+mixer-src adat-13 stream-13 set -29.0
+mixer-src adat-13 stream-14 set -29.0
+mixer-src adat-13 stream-15 set -29.0
+mixer-src adat-13 stream-16 set -29.0
+mixer-src adat-13 stream-17 set -29.0
+mixer-src adat-13 stream-18 set -29.0
+mixer-src adat-13 stream-19 set -29.0
+mixer-src adat-13 stream-20 set -29.0
+mixer-src adat-13 stream-21 set -29.0
+mixer-src adat-13 stream-22 set -29.0
+mixer-src adat-13 stream-23 set -29.0
+mixer-src adat-13 stream-24 set -29.0
+mixer-src adat-13 stream-25 set -29.0
+mixer-src adat-13 stream-26 set -29.0
+mixer-src adat-13 stream-27 set -29.0
+mixer-src adat-13 stream-28 set -29.0
+mixer-src adat-14 analog-1 set -29.0
+mixer-src adat-14 analog-2 set -29.0
+mixer-src adat-14 analog-3 set -29.0
+mixer-src adat-14 analog-4 set -29.0
+mixer-src adat-14 analog-5 set -29.0
+mixer-src adat-14 analog-6 set -29.0
+mixer-src adat-14 analog-7 set -29.0
+mixer-src adat-14 analog-8 set -29.0
+mixer-src adat-14 analog-9 set -29.0
+mixer-src adat-14 analog-10 set -29.0
+mixer-src adat-14 spdif-1 set -29.0
+mixer-src adat-14 spdif-2 set -29.0
+mixer-src adat-14 adat-1 set -29.0
+mixer-src adat-14 adat-2 set -29.0
+mixer-src adat-14 adat-3 set -29.0
+mixer-src adat-14 adat-4 set -29.0
+mixer-src adat-14 adat-5 set -29.0
+mixer-src adat-14 adat-6 set -29.0
+mixer-src adat-14 adat-7 set -29.0
+mixer-src adat-14 adat-8 set -29.0
+mixer-src adat-14 adat-9 set -29.0
+mixer-src adat-14 adat-10 set -29.0
+mixer-src adat-14 adat-11 set -29.0
+mixer-src adat-14 adat-12 set -29.0
+mixer-src adat-14 adat-13 set -29.0
+mixer-src adat-14 adat-14 set -29.0
+mixer-src adat-14 adat-15 set -29.0
+mixer-src adat-14 adat-16 set -29.0
+mixer-src adat-14 stream-1 set -29.0
+mixer-src adat-14 stream-2 set -29.0
+mixer-src adat-14 stream-3 set -29.0
+mixer-src adat-14 stream-4 set -29.0
+mixer-src adat-14 stream-5 set -29.0
+mixer-src adat-14 stream-6 set -29.0
+mixer-src adat-14 stream-7 set -29.0
+mixer-src adat-14 stream-8 set -29.0
+mixer-src adat-14 stream-9 set -29.0
+mixer-src adat-14 stream-10 set -29.0
+mixer-src adat-14 stream-11 set -29.0
+mixer-src adat-14 stream-12 set -29.0
+mixer-src adat-14 stream-13 set -29.0
+mixer-src adat-14 stream-14 set -29.0
+mixer-src adat-14 stream-15 set -29.0
+mixer-src adat-14 stream-16 set -29.0
+mixer-src adat-14 stream-17 set -29.0
+mixer-src adat-14 stream-18 set -29.0
+mixer-src adat-14 stream-19 set -29.0
+mixer-src adat-14 stream-20 set -29.0
+mixer-src adat-14 stream-21 set -29.0
+mixer-src adat-14 stream-22 set -29.0
+mixer-src adat-14 stream-23 set -29.0
+mixer-src adat-14 stream-24 set -29.0
+mixer-src adat-14 stream-25 set -29.0
+mixer-src adat-14 stream-26 set -29.0
+mixer-src adat-14 stream-27 set -29.0
+mixer-src adat-14 stream-28 set -29.0
+mixer-src adat-15 analog-1 set -29.0
+mixer-src adat-15 analog-2 set -29.0
+mixer-src adat-15 analog-3 set -29.0
+mixer-src adat-15 analog-4 set -29.0
+mixer-src adat-15 analog-5 set -29.0
+mixer-src adat-15 analog-6 set -29.0
+mixer-src adat-15 analog-7 set -29.0
+mixer-src adat-15 analog-8 set -29.0
+mixer-src adat-15 analog-9 set -29.0
+mixer-src adat-15 analog-10 set -29.0
+mixer-src adat-15 spdif-1 set -29.0
+mixer-src adat-15 spdif-2 set -29.0
+mixer-src adat-15 adat-1 set -29.0
+mixer-src adat-15 adat-2 set -29.0
+mixer-src adat-15 adat-3 set -29.0
+mixer-src adat-15 adat-4 set -29.0
+mixer-src adat-15 adat-5 set -29.0
+mixer-src adat-15 adat-6 set -29.0
+mixer-src adat-15 adat-7 set -29.0
+mixer-src adat-15 adat-8 set -29.0
+mixer-src adat-15 adat-9 set -29.0
+mixer-src adat-15 adat-10 set -29.0
+mixer-src adat-15 adat-11 set -29.0
+mixer-src adat-15 adat-12 set -29.0
+mixer-src adat-15 adat-13 set -29.0
+mixer-src adat-15 adat-14 set -29.0
+mixer-src adat-15 adat-15 set -29.0
+mixer-src adat-15 adat-16 set -29.0
+mixer-src adat-15 stream-1 set -29.0
+mixer-src adat-15 stream-2 set -29.0
+mixer-src adat-15 stream-3 set -29.0
+mixer-src adat-15 stream-4 set -29.0
+mixer-src adat-15 stream-5 set -29.0
+mixer-src adat-15 stream-6 set -29.0
+mixer-src adat-15 stream-7 set -29.0
+mixer-src adat-15 stream-8 set -29.0
+mixer-src adat-15 stream-9 set -29.0
+mixer-src adat-15 stream-10 set -29.0
+mixer-src adat-15 stream-11 set -29.0
+mixer-src adat-15 stream-12 set -29.0
+mixer-src adat-15 stream-13 set -29.0
+mixer-src adat-15 stream-14 set -29.0
+mixer-src adat-15 stream-15 set -29.0
+mixer-src adat-15 stream-16 set -29.0
+mixer-src adat-15 stream-17 set -29.0
+mixer-src adat-15 stream-18 set -29.0
+mixer-src adat-15 stream-19 set -29.0
+mixer-src adat-15 stream-20 set -29.0
+mixer-src adat-15 stream-21 set -29.0
+mixer-src adat-15 stream-22 set -29.0
+mixer-src adat-15 stream-23 set -29.0
+mixer-src adat-15 stream-24 set -29.0
+mixer-src adat-15 stream-25 set -29.0
+mixer-src adat-15 stream-26 set -29.0
+mixer-src adat-15 stream-27 set -29.0
+mixer-src adat-15 stream-28 set -29.0
+mixer-src adat-16 analog-1 set -29.0
+mixer-src adat-16 analog-2 set -29.0
+mixer-src adat-16 analog-3 set -29.0
+mixer-src adat-16 analog-4 set -29.0
+mixer-src adat-16 analog-5 set -29.0
+mixer-src adat-16 analog-6 set -29.0
+mixer-src adat-16 analog-7 set -29.0
+mixer-src adat-16 analog-8 set -29.0
+mixer-src adat-16 analog-9 set -29.0
+mixer-src adat-16 analog-10 set -29.0
+mixer-src adat-16 spdif-1 set -29.0
+mixer-src adat-16 spdif-2 set -29.0
+mixer-src adat-16 adat-1 set -29.0
+mixer-src adat-16 adat-2 set -29.0
+mixer-src adat-16 adat-3 set -29.0
+mixer-src adat-16 adat-4 set -29.0
+mixer-src adat-16 adat-5 set -29.0
+mixer-src adat-16 adat-6 set -29.0
+mixer-src adat-16 adat-7 set -29.0
+mixer-src adat-16 adat-8 set -29.0
+mixer-src adat-16 adat-9 set -29.0
+mixer-src adat-16 adat-10 set -29.0
+mixer-src adat-16 adat-11 set -29.0
+mixer-src adat-16 adat-12 set -29.0
+mixer-src adat-16 adat-13 set -29.0
+mixer-src adat-16 adat-14 set -29.0
+mixer-src adat-16 adat-15 set -29.0
+mixer-src adat-16 adat-16 set -29.0
+mixer-src adat-16 stream-1 set -29.0
+mixer-src adat-16 stream-2 set -29.0
+mixer-src adat-16 stream-3 set -29.0
+mixer-src adat-16 stream-4 set -29.0
+mixer-src adat-16 stream-5 set -29.0
+mixer-src adat-16 stream-6 set -29.0
+mixer-src adat-16 stream-7 set -29.0
+mixer-src adat-16 stream-8 set -29.0
+mixer-src adat-16 stream-9 set -29.0
+mixer-src adat-16 stream-10 set -29.0
+mixer-src adat-16 stream-11 set -29.0
+mixer-src adat-16 stream-12 set -29.0
+mixer-src adat-16 stream-13 set -29.0
+mixer-src adat-16 stream-14 set -29.0
+mixer-src adat-16 stream-15 set -29.0
+mixer-src adat-16 stream-16 set -29.0
+mixer-src adat-16 stream-17 set -29.0
+mixer-src adat-16 stream-18 set -29.0
+mixer-src adat-16 stream-19 set -29.0
+mixer-src adat-16 stream-20 set -29.0
+mixer-src adat-16 stream-21 set -29.0
+mixer-src adat-16 stream-22 set -29.0
+mixer-src adat-16 stream-23 set -29.0
+mixer-src adat-16 stream-24 set -29.0
+mixer-src adat-16 stream-25 set -29.0
+mixer-src adat-16 stream-26 set -29.0
+mixer-src adat-16 stream-27 set -29.0
+mixer-src adat-16 stream-28 set -29.0
+
+output analog-1 get
+output analog-2 get
+output analog-3 get
+output analog-4 get
+output analog-5 get
+output analog-6 get
+output analog-7 get
+output analog-8 get
+output analog-9 get
+output analog-10 get
+output spdif-1 get
+output spdif-2 get
+output adat-1 get
+output adat-2 get
+output adat-3 get
+output adat-4 get
+output adat-5 get
+output adat-6 get
+output adat-7 get
+output adat-8 get
+output adat-9 get
+output adat-10 get
+output adat-11 get
+output adat-12 get
+output adat-13 get
+output adat-14 get
+output adat-15 get
+output adat-16 get
+
+output analog-1 set -12.3
+output analog-2 set -12.3
+output analog-3 set -12.3
+output analog-4 set -12.3
+output analog-5 set -12.3
+output analog-6 set -12.3
+output analog-7 set -12.3
+output analog-8 set -12.3
+output analog-9 set -12.3
+output analog-10 set -12.3
+output spdif-1 set -12.3
+output spdif-2 set -12.3
+output adat-1 set -12.3
+output adat-2 set -12.3
+output adat-3 set -12.3
+output adat-4 set -12.3
+output adat-5 set -12.3
+output adat-6 set -12.3
+output adat-7 set -12.3
+output adat-8 set -12.3
+output adat-9 set -12.3
+output adat-10 set -12.3
+output adat-11 set -12.3
+output adat-12 set -12.3
+output adat-13 set -12.3
+output adat-14 set -12.3
+output adat-15 set -12.3
+output adat-16 set -12.3
