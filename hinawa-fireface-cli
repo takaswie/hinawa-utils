@@ -101,11 +101,35 @@ def handle_mixer_src(unit, args):
             print(unit.get_mixer_src(target, src))
             return True
     print('Arguments for mixer-src command:')
-    print('  mixer-src TARGET SRC OP dB')
+    print('  mixer-src TARGET SRC OP [dB]')
     print('    TARGET: [{0}]'.format('|'.join(targets)))
     print('    SRC:    [{0}]'.format('|'.join(srcs)))
     print('    OP:     [{0}]'.format('|'.join(ops)))
-    print('    dB:     [{0}, {1:.1f}..{2:.1f}]'.format(mute, minimum, maximum))
+    print('    dB:     [{0}, {1:.1f}..{2:.1f}] if OP=set'.format(mute, minimum, maximum))
+    return False
+
+
+def handle_output(unit, args):
+    ops = ('set', 'get')
+    targets = unit.get_out_labels()
+    mute = unit.get_mixer_mute_db()
+    minimum = unit.get_mixer_min_db()
+    maximum = unit.get_mixer_max_db()
+    if len(args) >= 2 and args[0] in targets and args[1] in ops:
+        target = args[0]
+        op = args[1]
+        if op == 'set' and len(args) >= 3:
+            db = float(args[2])
+            unit.set_out_volume(target, db)
+            return True
+        elif op == 'get':
+            print(unit.get_out_volume(target))
+            return True
+    print('Arguments for output command:')
+    print('  output TARGET [dB]')
+    print('    TARGET: [{0}]'.format('|'.join(targets)))
+    print('    OP:     [{0}]'.format('|'.join(ops)))
+    print('    dB:     [{0}, {1:.1f}..{2:.1f}] if OP=set'.format(mute, minimum, maximum))
     return False
 
 
@@ -114,6 +138,7 @@ cmds = {
     'multiple-option':  handle_multiple_option,
     'single-option':    handle_single_option,
     'mixer-src':        handle_mixer_src,
+    'output':           handle_output,
 }
 
 fullpath = CliKit.seek_snd_unit_path()
