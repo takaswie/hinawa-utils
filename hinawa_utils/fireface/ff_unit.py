@@ -69,13 +69,13 @@ class FFUnit(Hinawa.SndUnit):
         if self._path.exists() and self._path.is_file():
             self.__load_cache()
         else:
-            self.__option_cache = FFOptionReg.create_initial_cache(self.__name)
+            self.__option_cache = self.__create_option_initial_cache()
             self.__mixer_cache = self.__create_mixer_initial_cache()
             self.__out_cache = self.__create_out_initial_cache()
             self.__save_cache()
             self.__set_mixers()
 
-        self.__set_options()
+        self.__load_option_settings()
 
     def __load_cache(self):
         self.__option_cache = []
@@ -103,11 +103,6 @@ class FFUnit(Hinawa.SndUnit):
             for frame in self.__out_cache:
                 f.write('out {0:08x}\n'.format(frame))
 
-    def __set_options(self):
-        req = Hinawa.FwReq()
-        frames = pack('<3I', *self.__option_cache)
-        req.write(self, self.__regs[0], frames)
-
     def __set_mixers(self):
         req = Hinawa.FwReq()
         targets = FFMixerRegs.get_mixer_labels()
@@ -120,6 +115,33 @@ class FFUnit(Hinawa.SndUnit):
     def get_model_name(self):
         return self.__name
 
+    #
+    # Configuration for options.
+    #
+    def __create_option_initial_cache(self):
+        cache = [0x00] * 3
+        self.__create_multiple_option_initial_cache(cache)
+        self.__create_single_option_initial_cache(cache)
+        return cache
+
+    def __load_option_settings(self):
+        # Assist ALSA fireface driver to handle MIDI messages from Fireface 400.
+        if self.__name == 'Fireface400':
+            FFOptionReg.build_single_option(self.__option_cache,
+                                            'midi-low-addr', '0x00000000', True)
+        req = Hinawa.FwReq()
+        frames = pack('<3I', *self.__option_cache)
+        req.write(self, self.__regs[0], frames)
+
+    def __create_multiple_option_initial_cache(self, cache):
+        default_params = {
+            'line-in':          '-10dB',
+            'line-out':         '-10dB',
+            'primary-clk-src':  FFClkLabels.SPDIF.value,
+        }
+        for target, value in default_params.items():
+            FFOptionReg.build_multiple_option(cache, target, value)
+
     def get_multiple_option_labels(self):
         return FFOptionReg.get_multiple_option_labels()
     def get_multiple_option_value_labels(self, target):
@@ -127,9 +149,50 @@ class FFUnit(Hinawa.SndUnit):
     def set_multiple_option(self, target, val):
         FFOptionReg.build_multiple_option(self.__option_cache, target, val)
         self.__save_cache()
-        self.__set_options()
+        self.__load_option_settings()
     def get_multiple_option(self, target):
         return FFOptionReg.parse_multiple_option(self.__option_cache, target)
+
+    def __create_single_option_initial_cache(self, cache):
+        default_params = {
+            'auto-sync': {
+                'internal':     True,   'base-441':     True,
+                'base-480':     True,   'double':       True,
+                'quadruple':    True,
+            },
+            'front-input': {
+                'in-1':         False,  'in-7':         False,
+                'in-8':         False,
+            },
+            'rear-input': {
+                'in-1':         True,   'in-7':         True,
+                'in-8':         True,
+            },
+            'phantom-power': {
+                'mic-7':        False,  'mic-8':        False,
+                'mic-9':        False,  'mic-10':       False,
+            },
+            'spdif-in': {
+                'optical':      False,  'track-maker':  False,
+            },
+            'spdif-out': {
+                'professional': False,  'emphasis':     False,
+                'non-audio':    False,  'optical':      False,
+            },
+            'instruments': {
+                'drive':        False,  'limit':        True,
+                'speaker-emu':  False,
+            },
+            'wdclk-out': {
+                'single-speed': True,
+            },
+            'in-error': {
+                'continue':     True,
+            },
+        }
+        for target, params in default_params.items():
+            for item, enable in params.items():
+                FFOptionReg.build_single_option(cache, target, item, enable)
 
     def get_single_option_labels(self):
         return FFOptionReg.get_single_option_labels()
@@ -139,7 +202,7 @@ class FFUnit(Hinawa.SndUnit):
         FFOptionReg.build_single_option(self.__option_cache, target, item,
                                         enable)
         self.__save_cache()
-        self.__set_options()
+        self.__load_option_settings()
     def get_single_option(self, target, item):
         return FFOptionReg.parse_single_option(self.__option_cache, target,
                                                item)
