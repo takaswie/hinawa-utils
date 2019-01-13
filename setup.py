@@ -30,6 +30,7 @@ setuptools.setup(
         'hinawa_utils.dg00x',
         'hinawa_utils.dice',
         'hinawa_utils.efw',
+        'hinawa_utils.fireface',
         'hinawa_utils.ieee1212',
         'hinawa_utils.ieee1394',
         'hinawa_utils.misc',
