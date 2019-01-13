@@ -76,22 +76,25 @@ class FFUnit(Hinawa.SndUnit):
         self.__set_options()
 
     def __load_cache(self):
-        self.__option_cache = [0x00] * 3
+        self.__option_cache = []
         self.__mixer_cache = []
         with self._path.open(mode='r') as f:
             for i, line in enumerate(f):
-                val = int(line.strip(), base=16)
-                if i < len(self.__option_cache):
-                    self.__option_cache[i] = val
-                else:
-                    self.__mixer_cache.append(val)
+                line = line.strip()
+                tokens = line.split(' ')
+                reg_type = tokens[0]
+                reg_val = int(tokens[1], 16)
+                if reg_type == 'option':
+                    self.__option_cache.append(reg_val)
+                elif reg_type == 'mixer':
+                    self.__mixer_cache.append(reg_val)
 
     def __save_cache(self):
         with self._path.open(mode='w+') as f:
             for frame in self.__option_cache:
-                f.write('{0:08x}\n'.format(frame))
+                f.write('option {0:08x}\n'.format(frame))
             for frame in self.__mixer_cache:
-                f.write('{0:08x}\n'.format(frame))
+                f.write('mixer {0:08x}\n'.format(frame))
 
     def __set_options(self):
         req = Hinawa.FwReq()
