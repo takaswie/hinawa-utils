@@ -72,8 +72,8 @@ class FFUnit(Hinawa.SndUnit):
             self.__option_cache = self.__create_option_initial_cache()
             self.__mixer_cache = self.__create_mixer_initial_cache()
             self.__out_cache = self.__create_out_initial_cache()
+            self.__load_settings()
             self.__write_cache_to_file()
-            self.__set_mixers()
 
         self.__load_option_settings()
 
@@ -103,14 +103,15 @@ class FFUnit(Hinawa.SndUnit):
             for frame in self.__out_cache:
                 f.write('out {0:08x}\n'.format(frame))
 
-    def __set_mixers(self):
-        req = Hinawa.FwReq()
-        targets = FFMixerRegs.get_mixer_labels()
-        srcs = FFMixerRegs.get_mixer_src_labels()
-        for target in targets:
-            for src in srcs:
+    def __load_settings(self):
+        self.__load_option_settings()
+        for target in self.get_mixer_labels():
+            for src in self.get_mixer_src_labels():
                 db = self.get_mixer_src(target, src)
                 self.set_mixer_src(target, src, db)
+        for target in self.get_out_labels():
+            db = self.get_out_volume(target)
+            self.set_out_volume(target, db)
 
     def get_model_name(self):
         return self.__name
