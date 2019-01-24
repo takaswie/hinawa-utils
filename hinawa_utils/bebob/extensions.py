@@ -9,8 +9,9 @@ import time
 __all__ = ['BcoPlugInfo', 'BcoSubunitInfo', 'BcoVendorDependent',
            'BcoStreamFormatInfo']
 
+
 class BcoPlugInfo():
-    ADDR_DIR  = ('input', 'output')
+    ADDR_DIR = ('input', 'output')
     ADDR_MODE = ('unit', 'subunit', 'function-block')
     ADDR_UNIT_TYPE = ('isoc', 'external', 'async')
 
@@ -26,7 +27,7 @@ class BcoPlugInfo():
 
     @classmethod
     def get_unit_addr(cls, addr_dir, addr_unit_type, plug):
-        if addr_dir not in  cls.ADDR_DIR:
+        if addr_dir not in cls.ADDR_DIR:
             raise ValueError('Invalid argument for address direction')
         if addr_unit_type not in cls.ADDR_UNIT_TYPE:
             raise ValueError('Invalid argument for address unit type')
@@ -317,6 +318,7 @@ class BcoPlugInfo():
                 info.append(addr)
         return info
 
+
 class BcoSubunitInfo():
     FB_PURPOSE = {
         0x00: 'input-gain',
@@ -353,7 +355,8 @@ class BcoSubunitInfo():
             raise ValueError('Invalid argument for subunit id')
         args = bytearray(0xff for i in range(30))
         args[0] = 0x01
-        args[1] = (AvcGeneral.SUBUNIT_TYPES.index(subunit_type) << 3) | subunit_id
+        args[1] = (AvcGeneral.SUBUNIT_TYPES.index(
+            subunit_type) << 3) | subunit_id
         args[2] = 0x31
         args[3] = page
         args[4] = 0xff
@@ -375,6 +378,7 @@ class BcoSubunitInfo():
             entry['outputs'] = params[9 + 5 * i]
             entries.append(entry)
         return entries
+
 
 class BcoVendorDependent():
     SUPPORTED_SPEC = ('con', 'pro')
@@ -460,9 +464,9 @@ class BcoVendorDependent():
 
     @classmethod
     def set_digital_channel_status(cls, fcp, spec, name, values):
-        if   spec is 'con':
+        if spec is 'con':
             attrs = cls.SUPPORTED_CON_STATUS
-            subcmds  = cls.__CON_SUBCMDS
+            subcmds = cls.__CON_SUBCMDS
         elif spec is 'pro':
             attrs = cls.SUPPORTED_PRO_STATUS
             subcmds = cls.__PRO_SUBCMDS
@@ -489,9 +493,9 @@ class BcoVendorDependent():
 
     @classmethod
     def get_digital_channel_status(cls, fcp, spec, name):
-        if   spec is 'con':
+        if spec is 'con':
             attrs = cls.SUPPORTED_CON_STATUS
-            subcmds  = cls.__CON_SUBCMDS
+            subcmds = cls.__CON_SUBCMDS
         elif spec is 'pro':
             attrs = cls.SUPPORTED_PRO_STATUS
             subcmds = cls.__PRO_SUBCMDS
@@ -526,6 +530,7 @@ class BcoVendorDependent():
         if params[3] == 0x00:
             return False
         return True
+
 
 class BcoStreamFormatInfo():
     format_types = ('Compound', 'Sync')

@@ -10,6 +10,7 @@ from hinawa_utils.misc.cli_kit import CliKit
 
 from hinawa_utils.bebob.maudio_unit import MaudioUnit
 
+
 def _handle_target_volume(unit, args, cmd, targets_func, set_func, get_func):
     chs = ('0', '1')
     ops = ('set', 'get')
@@ -35,11 +36,13 @@ def _handle_target_volume(unit, args, cmd, targets_func, set_func, get_func):
     print('    dB:       [-128.00..128.00] if OP=set')
     return False
 
+
 def handle_input_gain(unit, args):
     return _handle_target_volume(unit, args, 'input-gain',
                                  unit.protocol.get_input_labels,
                                  unit.protocol.set_input_gain,
                                  unit.protocol.get_input_gain)
+
 
 def handle_aux_input(unit, args):
     return _handle_target_volume(unit, args, 'aux-input',
@@ -47,17 +50,20 @@ def handle_aux_input(unit, args):
                                  unit.protocol.set_aux_input,
                                  unit.protocol.get_aux_input)
 
+
 def handle_output_volume(unit, args):
     return _handle_target_volume(unit, args, 'output-volume',
                                  unit.protocol.get_output_labels,
                                  unit.protocol.set_output_volume,
                                  unit.protocol.get_output_volume)
 
+
 def handle_headphone_volume(unit, args):
     return _handle_target_volume(unit, args, 'headphone-volume',
                                  unit.protocol.get_headphone_labels,
                                  unit.protocol.set_headphone_volume,
                                  unit.protocol.get_headphone_volume)
+
 
 def handle_input_balance(unit, args):
     chs = ('0', '1')
@@ -84,6 +90,7 @@ def handle_input_balance(unit, args):
     print('    BALANCE:[-128.0..128.0] (left-right) if OP=set')
     return False
 
+
 def handle_aux_balance(unit, args):
     chs = ('0', '1')
     ops = ('set', 'get')
@@ -105,6 +112,7 @@ def handle_aux_balance(unit, args):
     print('    BALACE: [-128.0..128.0] (left-right) if OP=set]')
     return False
 
+
 def handle_aux_volume(unit, args):
     chs = ('0', '1')
     ops = ('set', 'get')
@@ -125,6 +133,7 @@ def handle_aux_volume(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    dB:     [-128.0..128.0] if OP=set')
     return False
+
 
 def handle_mixer_routing(unit, args):
     ops = ('set', 'get')
@@ -151,6 +160,7 @@ def handle_mixer_routing(unit, args):
     print('    ENABLE: [0|1]')
     return False
 
+
 def _handle_target_source(unit, args, cmd, targets_func, sources_func,
                           set_func, get_func):
     ops = ('set', 'get')
@@ -174,8 +184,9 @@ def _handle_target_source(unit, args, cmd, targets_func, sources_func,
     for target in targets:
         sources = sources_func(target)
         print('    SRC:       [{0}] if TARGET={1} and OP=set'.format(
-                                                '|'.join(sources), target))
+            '|'.join(sources), target))
     return False
+
 
 def handle_headphone_source(unit, args):
     return _handle_target_source(unit, args, 'headphone-source',
@@ -184,12 +195,14 @@ def handle_headphone_source(unit, args):
                                  unit.protocol.set_headphone_source,
                                  unit.protocol.get_headphone_source)
 
+
 def handle_output_source(unit, args):
     return _handle_target_source(unit, args,  'output-source',
                                  unit.protocol.get_output_labels,
                                  unit.protocol.get_output_source_labels,
                                  unit.protocol.set_output_source,
                                  unit.protocol.get_output_source)
+
 
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
@@ -210,6 +223,7 @@ def handle_clock_source(unit, args):
     print('  Packet streaming should be stopped.')
     return False
 
+
 def handle_listen_metering(unit, args):
     # This is handled by another context.
     def handle_unix_signal(signum, frame):
@@ -226,6 +240,7 @@ def handle_listen_metering(unit, args):
         print('')
         time.sleep(0.1)
     return True
+
 
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
@@ -245,6 +260,7 @@ def handle_sampling_rate(unit, args):
     print('    RATE:   {0}'.format('|'.join(map(str, rates))))
     return False
 
+
 cmds = {
     'input-gain':           handle_input_gain,
     'input-balance':        handle_input_balance,
@@ -261,7 +277,7 @@ if fullpath:
         cmds['aux-input'] = handle_aux_input
         cmds['aux-volume'] = handle_aux_volume
         if (hasattr(unit.protocol, 'set_aux_balance') and
-            hasattr(unit.protocol, 'get_aux_balance')):
+                hasattr(unit.protocol, 'get_aux_balance')):
             cmds['aux-balance'] = handle_aux_balance
     if len(unit.protocol.get_output_labels()) > 0:
         cmds['output-volume'] = handle_output_volume

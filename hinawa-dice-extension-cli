@@ -10,6 +10,7 @@ from json import dumps
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.dice.dice_extended_unit import DiceExtendedUnit
 
+
 def _print_stream_params(direction, index, params):
     print('{0} stream {1}:'.format(direction.upper(), index))
     print('  pcm:    {0}'.format(params['pcm']))
@@ -18,6 +19,7 @@ def _print_stream_params(direction, index, params):
     for i, name in enumerate(params['formation']):
         print('    {0}: {1}'.format(i, name))
     print('  ac3:    0x{0:08x}'.format(params['ac3']))
+
 
 def handle_current_status(unit, args):
     print('Capabilities:')
@@ -66,9 +68,11 @@ def handle_current_status(unit, args):
                 continue
             gain_r = unit.get_mixer_gain(output, input, 0)
             gain_l = unit.get_mixer_gain(output, input, 1)
-            print('  {0} {1}({2}): {3} dB, {4} dB'.format(output, input, source, gain_r, gain_l))
+            print('  {0} {1}({2}): {3} dB, {4} dB'.format(
+                output, input, source, gain_r, gain_l))
 
     return True
+
 
 def _print_dot_formatted_text(inputs, tx_stream_map, rx_streams, output_map,
                               mixer_in_map, mixer_out_map):
@@ -177,6 +181,7 @@ def _print_dot_formatted_text(inputs, tx_stream_map, rx_streams, output_map,
 
     print('}')
 
+
 def _print_json_formatted_text(inputs, tx_stream_map, rx_streams, output_map,
                                mixer_in_map, mixer_out_map):
     data = {
@@ -188,6 +193,7 @@ def _print_json_formatted_text(inputs, tx_stream_map, rx_streams, output_map,
         'mixer-out-map':    mixer_out_map,
     }
     print(dumps(data))
+
 
 def _print_pretty_format(inputs, tx_stream_map, rx_streams, output_map,
                          mixer_in_map, mixer_out_map):
@@ -210,6 +216,7 @@ def _print_pretty_format(inputs, tx_stream_map, rx_streams, output_map,
     for mixer_out, mixer_out_srcs in mixer_out_map.items():
         for mixer_out_src in mixer_out_srcs:
             print('  {0: <16} -> {1}'.format(mixer_out_src, mixer_out))
+
 
 def handle_current_routing(unit, args):
     ops = {
@@ -247,7 +254,7 @@ def handle_current_routing(unit, args):
                 if mixer_in_src == 'None':
                     continue
                 if (unit.get_mixer_gain(mixer_out, mixer_in, 0) != -float('inf') or
-                    unit.get_mixer_gain(mixer_out, mixer_in, 1) != -float('inf')):
+                        unit.get_mixer_gain(mixer_out, mixer_in, 1) != -float('inf')):
                     mixer_out_map[mixer_out].append(mixer_in)
 
         ops[op](inputs, tx_stream_map, rx_streams, output_map, mixer_in_map,
@@ -257,6 +264,7 @@ def handle_current_routing(unit, args):
     print('  print-routing OP')
     print('    OP: [{0}]'.format('|'.join(ops)))
     return False
+
 
 def handle_stream_params(unit, args):
     rates = unit.get_supported_sampling_rates()
@@ -272,6 +280,7 @@ def handle_stream_params(unit, args):
     print('    RATE:   [{0}]'.format('|'.join(map(str, rates))))
     return False
 
+
 def handle_router_entries(unit, args):
     rates = unit.get_supported_sampling_rates()
     if len(args) >= 1 and int(args[0]) in rates:
@@ -284,6 +293,7 @@ def handle_router_entries(unit, args):
     print('  router-entries RATE')
     print('    RATE:   [{0}]'.format('|'.join(map(str, rates))))
     return False
+
 
 def _handle_target_source(unit, args, cmd, targets_func, sources_func,
                           set_func, get_func):
@@ -307,20 +317,24 @@ def _handle_target_source(unit, args, cmd, targets_func, sources_func,
     print('    SOURCE:    [{0}] if OP=set'.format('|'.join(srcs)))
     return False
 
+
 def handle_output_source(unit, args):
     return _handle_target_source(unit, args, 'output-source',
-                        unit.get_output_labels, unit.get_output_source_labels,
-                        unit.set_output_source, unit.get_output_source)
+                                 unit.get_output_labels, unit.get_output_source_labels,
+                                 unit.set_output_source, unit.get_output_source)
+
 
 def handle_capture_source(unit, args):
     return _handle_target_source(unit, args, 'capture-source',
-                unit.get_tx_stream_labels, unit.get_tx_stream_source_labels,
-                unit.set_tx_stream_source, unit.get_tx_stream_source)
+                                 unit.get_tx_stream_labels, unit.get_tx_stream_source_labels,
+                                 unit.set_tx_stream_source, unit.get_tx_stream_source)
+
 
 def handle_mixer_source(unit, args):
     return _handle_target_source(unit, args, 'mixer-source',
-                    unit.get_mixer_input_labels, unit.get_mixer_source_labels,
-                    unit.set_mixer_source, unit.get_mixer_source)
+                                 unit.get_mixer_input_labels, unit.get_mixer_source_labels,
+                                 unit.set_mixer_source, unit.get_mixer_source)
+
 
 def handle_mixer_gain(unit, args):
     chs = ('0', '1')
@@ -356,6 +370,7 @@ def handle_mixer_gain(unit, args):
         print('  {0}: {1}/{2}'.format(output, saturation[0], saturation[1]))
     return False
 
+
 def handle_mixer_panning(unit, args):
     chs = ('0', '1')
     ops = ('set', 'get')
@@ -387,6 +402,7 @@ def handle_mixer_panning(unit, args):
     print('    BALANCE:[0.00...100.00] (left-right) if OP=set ')
     return False
 
+
 def handle_standalone_clock(unit, args):
     ops = ('set', 'get')
     clocks = unit.get_supported_clock_sources()
@@ -404,6 +420,7 @@ def handle_standalone_clock(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    CLOCK:  [{0}]'.format('|'.join(clocks)))
     return False
+
 
 def handle_standalone_params(unit, args):
     ops = ('set', 'get')
@@ -453,6 +470,7 @@ def handle_standalone_params(unit, args):
             print('      {0}=[{1}] if CLOCK={2}'.format(mode, vals, clk))
     return False
 
+
 def handle_listen_metering(unit, args):
     # This is handled by another context.
     def handle_unix_signal(signum, frame):
@@ -464,10 +482,12 @@ def handle_listen_metering(unit, args):
             for src_blk_ch, dst_params in src_blk_params.items():
                 for dst_blk_id, dst_blk_params in dst_params.items():
                     for dst_blk_ch, peak in dst_blk_params.items():
-                        print(src_blk_id, src_blk_ch, dst_blk_id, dst_blk_ch, peak)
+                        print(src_blk_id, src_blk_ch,
+                              dst_blk_id, dst_blk_ch, peak)
         print('')
         sleep(0.1)
     return True
+
 
 def handle_storage_operation(unit, args):
     ops = {
@@ -483,6 +503,7 @@ def handle_storage_operation(unit, args):
     print('  store-config OP')
     print('    OP:     [{0}]'.format('|'.join(ops)))
     return False
+
 
 cmds = {
     'current-status':   handle_current_status,
@@ -505,6 +526,6 @@ if fullpath:
     if (unit.get_caps('general')['storage-available'] and
         unit.get_caps('general')['storable-stream-conf'] and
         unit.get_caps('router')['is-storable'] and
-        unit.get_caps('mixer')['is-storable']):
+            unit.get_caps('mixer')['is-storable']):
         cmds['storage-operation'] = handle_storage_operation
     CliKit.dispatch_command(unit, cmds)

@@ -8,6 +8,7 @@ from hinawa_utils.ieee1212.root_directory_parser import Ieee1212RootDirectoryPar
 
 __all__ = ['Ieee1394ConfigRomParser']
 
+
 class Ieee1394ConfigRomParser(Ieee1212RootDirectoryParser):
     _NAME = '1394'
 
@@ -27,18 +28,18 @@ class Ieee1394ConfigRomParser(Ieee1212RootDirectoryParser):
     # IEEE 1394:1995 refers to ISO/IEC 13213:1994 (ANSI/IEEE Std 1212:1994).
     __NODE_CAPABILITIES = {
         'misc': {
-            'spt':  15, # The SPLIT_TIMEOUT register is implemented.
-            'ms':  14, # The messages-passing registers are implemented.
-            'int':  13, # The INTERRUPT_TARGET and INTERRUPT_MASK registers are
+            'spt':  15,  # The SPLIT_TIMEOUT register is implemented.
+            'ms':  14,  # The messages-passing registers are implemented.
+            'int':  13,  # The INTERRUPT_TARGET and INTERRUPT_MASK registers are
                         # implemented.
         },
         'testing': {
-            'ext':  12, # The ARGUMENT registers are implemented.
-            'bas':  11, # Node implements TEST_START&TEST_STATUS registers and
-                        # testing state.
+            'ext':  12,  # The ARGUMENT registers are implemented.
+            'bas':  11,  # Node implements TEST_START&TEST_STATUS registers and
+            # testing state.
         },
         'addressing': {
-            'prv':  10, # The node implements the private space.
+            'prv':  10,  # The node implements the private space.
             '64':   9,  # The node uses 64-bit aaddressing (otherwise 32-bit
                         # addressing).
             'fix':  8,  # The node uses the fixed addressing scheme (otherwise
@@ -64,7 +65,8 @@ class Ieee1394ConfigRomParser(Ieee1212RootDirectoryParser):
 
         name = data[0:4].decode('US-ASCII')
         if name != self._NAME:
-            raise ValueError('Invalid data for Configuration ROM in IEEE 1394.')
+            raise ValueError(
+                'Invalid data for Configuration ROM in IEEE 1394.')
 
         info['name'] = name
 

@@ -5,6 +5,7 @@ from hinawa_utils.motu.motu_protocol_abstract import MotuProtocolAbstract
 
 __all__ = ['MotuProtocolV2']
 
+
 class MotuProtocolV2(MotuProtocolAbstract):
     # direction/index/mask/shift
     OPT_IFACE_MODE_ATTRS = {
@@ -30,7 +31,7 @@ class MotuProtocolV2(MotuProtocolAbstract):
 
     def set_sampling_rate(self, rate):
         frames = self.read(0x0b14, 4)
-        frames[3]  &= ~0x00000038
+        frames[3] &= ~0x00000038
         frames[3] |= self.SUPPORTED_SAMPLING_RATES_X4.index(rate) << 3
         self.write(0x0b14, frames)
 

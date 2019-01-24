@@ -5,6 +5,7 @@
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.dg00x.dg003_unit import Dg003Unit
 
+
 def handle_mixer_state(unit, args):
     ops = ('set', 'get')
     states = ('Disabled', 'Enabled')
@@ -24,6 +25,7 @@ def handle_mixer_state(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    ENABLED:[{0}]'.format('|'.join(states)))
     return False
+
 
 def handle_mixer_source(unit, args):
     srcs = unit.get_mixer_src_labels()
@@ -60,6 +62,7 @@ def handle_mixer_source(unit, args):
     print('    dB:     [-inf, -175.000...0.000]')
     print('    BALANCE:[0.000...100.000]')
     return False
+
 
 cmds = {
     'mixer-state':  handle_mixer_state,

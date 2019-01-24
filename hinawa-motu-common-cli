@@ -9,6 +9,7 @@ from hinawa_utils.motu.motu_unit import MotuUnit
 
 from gi.repository import GLib
 
+
 def handle_opt_iface_mode(uniit, args):
     ops = ('set', 'get')
     if len(args) > 2 and args[0] in ops:
@@ -32,6 +33,7 @@ def handle_opt_iface_mode(uniit, args):
     print('    MODE:       [{0}]'.format('|'.join(modes)))
     return False
 
+
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
@@ -48,6 +50,7 @@ def handle_sampling_rate(unit, args):
     rates = [str(r) for r in unit.get_sampling_rates()]
     print('    RATE:      [{0}]'.format('|'.join(rates)))
     return False
+
 
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
@@ -66,12 +69,16 @@ def handle_clock_source(unit, args):
     print('    SOURCE:    [{0}]'.format('|'.join(sources)))
     return False
 
+
 def handle_listen_message(unit, args):
     loop = GLib.MainLoop()
+
     def handle_unix_signal():
         loop.quit()
+
     def handle_notified(unit, notification):
         print('{0:08x}'.format(notification))
+
     def handle_disconnect(unit, loop):
         loop.quit()
     unit.connect('notified', handle_notified)
@@ -79,6 +86,7 @@ def handle_listen_message(unit, args):
     unit.connect('disconnected', handle_disconnect, loop)
     loop.run()
     return True
+
 
 cmds = {
     'opt-iface-mode':   handle_opt_iface_mode,

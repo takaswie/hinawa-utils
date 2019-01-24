@@ -7,11 +7,12 @@ from hinawa_utils.ta1394.audio import AvcAudio
 
 __all__ = ['MaudioProtocolNormal']
 
+
 class MaudioProtocolFw410(MaudioProtocolNormal):
-    __SELECTOR_FB        = 0x07
-    __PROCESSING_OUT_FB  = 0x07
-    __PROCESSING_IN_FB   = 0x00
-    __PROCESSING_OUT_CH  = 0x01
+    __SELECTOR_FB = 0x07
+    __PROCESSING_OUT_FB = 0x07
+    __PROCESSING_IN_FB = 0x00
+    __PROCESSING_OUT_CH = 0x01
 
     def set_headphone_source(self, target, source):
         if target not in self.get_headphone_labels():
@@ -35,9 +36,9 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
 
                 in_ch = elems[1][0]
                 AvcAudio.set_processing_mixer_state(self.unit.fcp, 0,
-                            'current', self.__PROCESSING_OUT_FB,
-                            self.__PROCESSING_IN_FB, in_ch,
-                            self.__PROCESSING_OUT_CH, data)
+                                                    'current', self.__PROCESSING_OUT_FB,
+                                                    self.__PROCESSING_IN_FB, in_ch,
+                                                    self.__PROCESSING_OUT_CH, data)
 
     def get_headphone_source(self, target):
         if target not in self.get_headphone_labels():
@@ -51,9 +52,9 @@ class MaudioProtocolFw410(MaudioProtocolNormal):
             for i, elems in enumerate(self.mixers):
                 in_ch = elems[1][0]
                 data = AvcAudio.get_processing_mixer_state(self.unit.fcp, 0,
-                            'current',
-                            self.__PROCESSING_OUT_FB, self.__PROCESSING_IN_FB,
-                            in_ch, self.__PROCESSING_OUT_CH)
+                                                           'current',
+                                                           self.__PROCESSING_OUT_FB, self.__PROCESSING_IN_FB,
+                                                           in_ch, self.__PROCESSING_OUT_CH)
                 if data[0] == 0x00 and data[1] == 0x00:
                     return self.labels['mixers'][i]
 

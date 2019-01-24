@@ -12,6 +12,7 @@ from hinawa_utils.bebob.config_rom_parser import BebobConfigRomParser
 
 __all__ = ['BebobUnit']
 
+
 class BebobUnit(Hinawa.SndUnit):
     REG_INFO = 0xffffc8020000
 
@@ -46,6 +47,7 @@ class BebobUnit(Hinawa.SndUnit):
             if 0x00 in params:
                 return '00000000'
             return params.decode('US-ASCII')
+
         def _get_time_literal(params):
             if 0x00 in params:
                 return '000000'
@@ -55,12 +57,12 @@ class BebobUnit(Hinawa.SndUnit):
         params = req.read(self, BebobUnit.REG_INFO, 104)
 
         info = {}
-        info['manufacturer']        = _get_string_literal(params[0:8])
-        info['protocol-version']    = unpack('<I', params[8:12])[0]
-        info['guid']                = (unpack('<Q', params[12:20])[0] << 32) | \
-                                      unpack('<I', params[20:24])[0]
-        info['model-id']            = unpack('<I', params[24:28])[0]
-        info['model-revision']      = unpack('<I', params[28:32])[0]
+        info['manufacturer'] = _get_string_literal(params[0:8])
+        info['protocol-version'] = unpack('<I', params[8:12])[0]
+        info['guid'] = (unpack('<Q', params[12:20])[0] << 32) | \
+            unpack('<I', params[20:24])[0]
+        info['model-id'] = unpack('<I', params[24:28])[0]
+        info['model-revision'] = unpack('<I', params[28:32])[0]
         info['software'] = {
             'build-date':   _get_string_literal(params[32:40]),
             'build-time':   _get_time_literal(params[40:46]),

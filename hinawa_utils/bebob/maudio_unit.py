@@ -9,6 +9,7 @@ from hinawa_utils.bebob.maudio_protocol_special import MaudioProtocolSpecial
 
 __all__ = ['MaudioUnit']
 
+
 class MaudioUnit(BebobUnit):
     __SUPPORTED_MODELS = {
         # (VendorID, ModelID): Protocol

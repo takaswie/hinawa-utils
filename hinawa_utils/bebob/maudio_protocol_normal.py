@@ -16,6 +16,7 @@ from hinawa_utils.ta1394.audio import AvcAudio
 
 __all__ = ['MaudioProtocolNormal']
 
+
 class MaudioProtocolNormal(MaudioProtocolAbstract):
     __IDS = (
         0x00000a,    # Ozonic
@@ -77,53 +78,53 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
 
     # = __LABELS['inputs']
     __INPUTS = (
-        (( 3, (1, 2)), ( 4, (1, 2)), ( 1, (1, 2)), ( 2, (1, 2))),
-        (( 1, (1, 2)), ( 2, (1, 2)), ( 4, (1, 2)), ( 3, (1, 2))),
-        (( 4, (1, 2)), ( 5, (1, 2)), ( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2))),
-        (( 3, (1, 2)), ( 4, (1, 2)),
-         ( 2, (1, 2)), ( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8))),
+        ((3, (1, 2)), (4, (1, 2)), (1, (1, 2)), (2, (1, 2))),
+        ((1, (1, 2)), (2, (1, 2)), (4, (1, 2)), (3, (1, 2))),
+        ((4, (1, 2)), (5, (1, 2)), (1, (1, 2)), (2, (1, 2)), (3, (1, 2))),
+        ((3, (1, 2)), (4, (1, 2)),
+         (2, (1, 2)), (1, (1, 2)), (1, (3, 4)), (1, (5, 6)), (1, (7, 8))),
     )
 
     # = __LABELS['inputs']
     __AUX__INPUTS = (
         (),
         (),
-        (( 9, (1, 2)), (10, (1, 2)), ( 6, (1, 2)), ( 7, (1, 2)), ( 8, (1, 2))),
-        (( 7, (1, 2)), ( 8, (1, 2)), ( 9, (1, 2)), ( 6, (1, 2)),
-         ( 5, (1, 2)), ( 5, (3, 4)), ( 5, (5, 6)), ( 5, (7, 8))),
+        ((9, (1, 2)), (10, (1, 2)), (6, (1, 2)), (7, (1, 2)), (8, (1, 2))),
+        ((7, (1, 2)), (8, (1, 2)), (9, (1, 2)), (6, (1, 2)),
+         (5, (1, 2)), (5, (3, 4)), (5, (5, 6)), (5, (7, 8))),
     )
 
     __AUX_OUTPUT = (
         None,
         None,
         11,
-         9,
+        9,
     )
 
     # = __LABELS['inputs']
     __MIXER_SOURCES = (
-        (( 2, (1, 2)), ( 3, (1, 2)), ( 0, (1, 2)), ( 1, (1, 2))),
-        (( 0, (1, 2)), ( 1, (1, 2)), ( 3, (1, 2)), ( 2, (1, 2))),
-        (( 3, (1, 2)), ( 4, (1, 2)), ( 0, (1, 2)), ( 1, (1, 2)), ( 2, (1, 2))),
-        (( 2, (1, 2)), ( 3, (1, 2)),
-         ( 1, (1, 2)), ( 0, (1, 2)), ( 0, (3, 4)), ( 0, (5, 6)),
-         ( 0, (7, 8))),
+        ((2, (1, 2)), (3, (1, 2)), (0, (1, 2)), (1, (1, 2))),
+        ((0, (1, 2)), (1, (1, 2)), (3, (1, 2)), (2, (1, 2))),
+        ((3, (1, 2)), (4, (1, 2)), (0, (1, 2)), (1, (1, 2)), (2, (1, 2))),
+        ((2, (1, 2)), (3, (1, 2)),
+         (1, (1, 2)), (0, (1, 2)), (0, (3, 4)), (0, (5, 6)),
+         (0, (7, 8))),
     )
 
     # = __LABELS['mixers']
     __MIXERS = (
-        (( 1, (1, 2)), ( 1, (1, 2))),
-        (( 1, (1, 2)), ( 1, (3, 4))),
-        (( 1, (1, 2)), ( 2, (1, 2)), ( 3, (1, 2))),
-        (( 1, (1, 2)), ( 1, (3, 4)), ( 1, (5, 6)), ( 1, (7, 8)), ( 1, (9, 10))),
+        ((1, (1, 2)), (1, (1, 2))),
+        ((1, (1, 2)), (1, (3, 4))),
+        ((1, (1, 2)), (2, (1, 2)), (3, (1, 2))),
+        ((1, (1, 2)), (1, (3, 4)), (1, (5, 6)), (1, (7, 8)), (1, (9, 10))),
     )
 
     # = __LABELS['outputs']
     __OUTPUT_SOURCES = (
         (),
         (),
-        ( 1, 2, 3),
-        ( 2, 3, 4, 5, 6),
+        (1, 2, 3),
+        (2, 3, 4, 5, 6),
     )
 
     # = __LABELS['outputs']
@@ -137,8 +138,8 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
     __HP_SOURCES = (
         (),
         (),
-        (( 4, (0, 1, 2, 3)), ),
-        (( 7, (2, 3, 4, 5, 6, 7)), ),
+        ((4, (0, 1, 2, 3)), ),
+        ((7, (2, 3, 4, 5, 6, 7)), ),
     )
 
     __HP_OUTS = (
@@ -200,6 +201,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         data = AvcAudio.build_data_from_db(db)
         AvcAudio.set_feature_volume_state(self.unit.fcp, 0, 'current', fb, ch,
                                           data)
+
     def _get_volume(self, targets, index, ch):
         fb, ch = self._refer_fb_data(targets, index, ch)
         data = AvcAudio.get_feature_volume_state(self.unit.fcp, 0, 'current',
@@ -208,13 +210,16 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
 
     def get_input_labels(self):
         return self.labels['inputs']
+
     def _refer_input_data(self, target):
         if target not in self.labels['inputs']:
             raise ValueError('Invalid argument for input')
         return self.labels['inputs'].index(target)
+
     def set_input_gain(self, target, ch, db):
         index = self._refer_input_data(target)
         self._set_volume(self.__inputs, index, ch, db)
+
     def get_input_gain(self, target, ch):
         index = self._refer_input_data(target)
         return self._get_volume(self.__inputs, index, ch)
@@ -226,12 +231,14 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
                 continue
             labels.append(label)
         return labels
+
     def set_input_balance(self, target, ch, balance):
         index = self._refer_input_data(target)
         fb, ch = self._refer_fb_data(self.__inputs, index, ch)
         data = AvcAudio.build_data_from_db(balance)
         AvcAudio.set_feature_lr_state(self.unit.fcp, 0, 'current', fb, ch,
                                       data)
+
     def get_input_balance(self, target, ch):
         index = self._refer_input_data(target)
         fb, ch = self._refer_fb_data(self.__inputs, index, ch)
@@ -243,13 +250,16 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         if len(self.__outputs) == 0:
             return ()
         return self.labels['outputs']
+
     def _refer_out_data(self, target):
         if target not in self.labels['outputs']:
             raise ValueError('Invalid argument for output')
         return self.labels['outputs'].index(target)
+
     def set_output_volume(self, target, ch, db):
         index = self._refer_out_data(target)
         self._set_volume(self.__outputs, index, ch, db)
+
     def get_output_volume(self, target, ch):
         index = self._refer_out_data(target)
         return self._get_volume(self.__outputs, index, ch)
@@ -261,6 +271,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         data = AvcAudio.build_data_from_db(db)
         AvcAudio.set_feature_volume_state(self.unit.fcp, 0, 'current', fb, ch,
                                           data)
+
     def get_aux_volume(self, ch):
         if ch > 2:
             raise ValueError('Invalid argument for master channel')
@@ -277,6 +288,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         ch += 1
         AvcAudio.set_feature_lr_state(self.unit.fcp, 0, 'current', fb, ch,
                                       data)
+
     def get_aux_balance(self, ch):
         if ch > 2:
             raise ValueError('Invalid argument for master channel')
@@ -291,6 +303,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         for i in range(len(self.__hp_outs)):
             labels.append('headphone-{0}/{1}'.format(i * 2 + 1, i * 2 + 2))
         return labels
+
     def _refer_hp_data(self, target):
         matches = match('^headphone-([0-9]*)/([0-9]*)$', target)
         if not matches:
@@ -300,9 +313,11 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         if right != left + 1:
             raise ValueError('Invalid argument for headphone')
         return left
+
     def set_headphone_volume(self, target, ch, db):
         index = self._refer_hp_data(target)
         self._set_volume(self.__hp_outs, index, ch, db)
+
     def get_headphone_volume(self, target, ch):
         index = self._refer_hp_data(target)
         return self._get_volume(self.__hp_outs, index, ch)
@@ -311,17 +326,21 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         if not self.__aux_output:
             return ()
         return self.labels['inputs']
+
     def set_aux_input(self, target, ch, db):
         index = self._refer_input_data(target)
         self._set_volume(self.__aux_inputs, index, ch, db)
+
     def get_aux_input(self, target, ch):
         index = self._refer_input_data(target)
         return self._get_volume(self.__aux_inputs, index, ch)
 
     def get_mixer_labels(self):
         return self.labels['mixers']
+
     def get_mixer_source_labels(self):
         return self.labels['inputs']
+
     def _refer_mixer_data(self, target, source):
         if source not in self.labels['inputs']:
             raise ValueError('Invalid argument for mixer input')
@@ -334,6 +353,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         out_fb = self.mixers[mixer][0]
         out_ch = self.mixers[mixer][1][0]  # Use left channel.
         return (in_fb, in_ch, out_fb, out_ch)
+
     def set_mixer_routing(self, target, source, enable):
         in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(target, source)
         if enable:
@@ -342,6 +362,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
             data = (0x80, 0x00)
         AvcAudio.set_processing_mixer_state(self.unit.fcp, 0, 'current',
                                             out_fb, in_fb, in_ch, out_ch, data)
+
     def get_mixer_routing(self, target, source):
         in_fb, in_ch, out_fb, out_ch = self._refer_mixer_data(target, source)
         data = AvcAudio.get_processing_mixer_state(self.unit.fcp, 0, 'current',
@@ -356,6 +377,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
             if self.__aux_output:
                 labels.append("aux-1/2")
         return labels
+
     def set_headphone_source(self, target, source):
         index = self._refer_hp_data(target)
         if source in self.labels['mixers']:
@@ -367,6 +389,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         fb = self.__hp_sources[index][0]
         value = self.__hp_sources[index][1][ch]
         AvcAudio.set_selector_state(self.unit.fcp, 0, 'current', fb, value)
+
     def get_headphone_source(self, target):
         index = self._refer_hp_data(target)
         fb = self.__hp_sources[index][0]
@@ -383,6 +406,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         if self.__aux_output:
             labels.append("aux-1/2")
         return labels
+
     def set_output_source(self, target, source):
         index = self._refer_out_data(target)
         if source in self.labels['mixers'][index]:
@@ -393,6 +417,7 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
             raise ValueError('Invalid argument for output target')
         fb = self.__output_sources[index]
         AvcAudio.set_selector_state(self.unit.fcp, 0, 'current', fb, value)
+
     def get_output_source(self, target):
         index = self._refer_out_data(target)
         fb = self.__output_sources[index]
@@ -424,12 +449,14 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
 
     def get_clock_source_labels(self):
         return self.__clocks.keys()
+
     def set_clock_source(self, src):
         if self.unit.get_property('streaming'):
             raise ValueError('Packet streaming already runs.')
         dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
         addr = self.__clocks[src]
         AvcCcm.set_signal_source(self.unit.fcp, addr, dst)
+
     def get_clock_source(self):
         dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
         curr = AvcCcm.get_signal_source(self.unit.fcp, dst)
@@ -444,5 +471,5 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
                                                         'output', 0)
         if in_rate != out_rate:
             raise OSError('Unexpected state of the unit: {0}!={1}'.format(
-                                                            in_rate, out_rate))
+                in_rate, out_rate))
         return in_rate

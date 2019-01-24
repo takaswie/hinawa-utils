@@ -5,6 +5,7 @@
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.bebob.apogee_ensemble_unit import ApogeeEnsembleUnit
 
+
 def handle_clock_src(unit, args):
     ops = ('set', 'get')
     srcs = unit.get_clock_src_labels()
@@ -24,11 +25,13 @@ def handle_clock_src(unit, args):
     print('  Packet streaming should be stopped.')
     return False
 
+
 def handle_knob_states(unit, args):
     states = unit.get_knob_states()
     for key, val in states.items():
         print('{0}: {1}'.format(key, val))
     return True
+
 
 def handle_knob_volume(unit, args):
     ops = ('set', 'get')
@@ -51,6 +54,7 @@ def handle_knob_volume(unit, args):
     print('    dB:     [-127.00..0.00] if OP=set')
     return False
 
+
 def handle_stream_mode(unit, args):
     ops = ('set', 'get')
     modes = unit.get_stream_mode_labels()
@@ -71,6 +75,7 @@ def handle_stream_mode(unit, args):
     print('  This operation corresponds bus-reset.')
     return False
 
+
 def handle_display_mode(unit, args):
     ops = ('set', 'get')
     if len(args) >= 1 and args[0] in ops:
@@ -87,6 +92,7 @@ def handle_display_mode(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    ENABLE: [0|1] if OP=set')
     return False
+
 
 def handle_display_target(unit, args):
     ops = ('set', 'get')
@@ -106,6 +112,7 @@ def handle_display_target(unit, args):
     print('    TARGET: [{0}] if OP=set'.format('|'.join(targets)))
     return False
 
+
 def handle_display_illuminate(unit, args):
     ops = ('set', 'get')
     if len(args) >= 1 and args[0] in ops:
@@ -123,6 +130,7 @@ def handle_display_illuminate(unit, args):
     print('    ENABLE: [0|1]')
     return False
 
+
 def handle_display_overhold(unit, args):
     ops = ('set', 'get')
     if len(args) >= 1 and args[0] in ops:
@@ -139,6 +147,7 @@ def handle_display_overhold(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    ENABLE: [0|1]')
     return False
+
 
 def handle_opt_iface_mode(unit, args):
     ops = ('set', 'get')
@@ -161,6 +170,7 @@ def handle_opt_iface_mode(unit, args):
     print('    MODE:   [{0}]'.format('|'.join(modes)))
     return False
 
+
 def handle_cd_mode(unit, args):
     ops = ('set', 'get')
     if len(args) >= 1 and args[0] in ops:
@@ -177,6 +187,7 @@ def handle_cd_mode(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    ENABLE: [0|1]')
     return False
+
 
 def handle_in_attenuate(unit, args):
     ops = ('set', 'get')
@@ -199,6 +210,7 @@ def handle_in_attenuate(unit, args):
     print('    ATTR:   [{0}] if OP=set'.format('|'.join(attrs)))
     return False
 
+
 def handle_in_limit(unit, args):
     ops = ('set', 'get')
     targets = unit.get_line_in_labels()
@@ -218,6 +230,7 @@ def handle_in_limit(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    ENABLE: [0|1] if OP=set')
     return False
+
 
 def handle_mic_polarity(unit, args):
     ops = ('set', 'get')
@@ -239,6 +252,7 @@ def handle_mic_polarity(unit, args):
     print('    INVERT: [0|1] if OP=set')
     return False
 
+
 def handle_mic_power(unit, args):
     ops = ('set', 'get')
     targets = unit.get_mic_labels()
@@ -258,6 +272,7 @@ def handle_mic_power(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    ENABLE: [0|1] if OP=set')
     return False
+
 
 def handle_out_attenuate(unit, args):
     ops = ('set', 'get')
@@ -280,6 +295,7 @@ def handle_out_attenuate(unit, args):
     print('    ATTR:   [{0}] if OP=set'.format('|'.join(attrs)))
     return False
 
+
 def handle_cap_src(unit, args):
     ops = ('set', 'get')
     targets = unit.get_cap_labels()
@@ -300,6 +316,7 @@ def handle_cap_src(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    SRC:    [{0}] if OP=set'.format('|'.join(srcs)))
     return False
+
 
 def handle_out_src(unit, args):
     ops = ('set', 'get')
@@ -322,6 +339,7 @@ def handle_out_src(unit, args):
     print('    SRC:    [{0}] if OP=set'.format('|'.join(srcs)))
     return False
 
+
 def handle_hp_src(unit, args):
     ops = ('set', 'get')
     targets = unit.get_hp_labels()
@@ -342,6 +360,7 @@ def handle_hp_src(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    SRC:    [{0}] if OP=set'.format('|'.join(srcs)))
     return False
+
 
 def handle_mixer_src(unit, args):
     ops = ('set', 'get')
@@ -369,9 +388,11 @@ def handle_mixer_src(unit, args):
     print('    BALANCE:[0.0..100.0] if OP=set')
     return False
 
+
 def handle_reset_meters(unit, args):
     unit.reset_meters()
     return True
+
 
 def handle_16bit_mode(unit, args):
     ops = ('set', 'get')
@@ -390,6 +411,7 @@ def handle_16bit_mode(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    TARGET: [{0}] if OP=set'.format('|'.join(targets)))
     return False
+
 
 def handle_spdif_resample(unit, args):
     ops = ('set', 'get')
@@ -418,6 +440,7 @@ def handle_spdif_resample(unit, args):
     print('    DIRECTION:  [{0}] if OP=set'.format('|'.join(directions)))
     print('    RATE:       [{0}] if OP=set'.format('|'.join(map(str, rates))))
     return False
+
 
 cmds = {
     'clock-source':     handle_clock_src,

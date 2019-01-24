@@ -7,6 +7,7 @@ from hinawa_utils.ta1394.audio import AvcAudio
 
 __all__ = ['PhaseGoProtocolCoax']
 
+
 class PhaseGoProtocolCoax(PhaseGoProtocolAbstract):
     __MIXER_OUTPUT_FB = 1
     __OUTPUT_LABELS = {
@@ -34,12 +35,12 @@ class PhaseGoProtocolCoax(PhaseGoProtocolAbstract):
             raise ValueError('Invalid argument for input level.')
         data = self.__ANALOG_INPUT_LEVELS[level]
         AvcAudio.set_feature_volume_state(self.fcp, 0, 'current',
-                                self.__ANALOG_INPUT_FB,
-                                self.__ANALOG_INPUT_FB_PN, data)
+                                          self.__ANALOG_INPUT_FB,
+                                          self.__ANALOG_INPUT_FB_PN, data)
 
     def get_analog_input_level(self):
         result = AvcAudio.get_feature_volume_state(self.fcp, 0, 'current',
-                            self.__ANALOG_INPUT_FB, self.__ANALOG_INPUT_FB_PN)
+                                                   self.__ANALOG_INPUT_FB, self.__ANALOG_INPUT_FB_PN)
         for name, data in self.__ANALOG_INPUT_LEVELS.items():
             if data == result:
                 return name

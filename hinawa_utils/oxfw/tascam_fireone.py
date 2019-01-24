@@ -13,7 +13,7 @@ class TascamFireone(OxfwUnit):
 
         if self.vendor_name != 'TASCAM' or self.model_name != 'FireOne':
             raise ValueError('Unsupported model: {0}, {1}'.format(
-                                            self.vendor_name, self.model_name))
+                self.vendor_name, self.model_name))
 
     def get_display_mode_labels(self):
         return TascamProtocol.get_display_mode_labels()

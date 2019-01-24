@@ -134,6 +134,7 @@ class ApogeeEnsembleUnit(BebobUnit):
         labels = list(self.__CLOCK_SRCS.keys())
         labels.append('Internal')
         return labels
+
     def set_clock_src(self, src):
         if self.get_property('streaming'):
             raise OSError('Packet streaming started.')
@@ -146,6 +147,7 @@ class ApogeeEnsembleUnit(BebobUnit):
         else:
             src = self.__CLOCK_SRCS[src]
         AvcCcm.set_signal_source(self.fcp, src, dst)
+
     def get_clock_src(self):
         plugs = self.__get_clock_plugs()
         dst = plugs['input']
@@ -160,8 +162,10 @@ class ApogeeEnsembleUnit(BebobUnit):
 
     def get_stream_mode_labels(self):
         return HwCmd.get_stream_mode_labels()
+
     def set_stream_mode(self, mode):
         HwCmd.set_stream_mode(mode)
+
     def get_stream_mode(self):
         sync_plug_ids = {
             5: '8x8',
@@ -187,11 +191,13 @@ class ApogeeEnsembleUnit(BebobUnit):
                 raise ValueError('Sampling rate should be 44100.')
         HwCmd.set_cd_mode(self.__cache, self.fcp, enable)
         self.__save_cache()
+
     def get_cd_mode(self):
         return HwCmd.get_cd_mode(self.__cache)
 
     def get_16bit_mode_labels(self):
         return HwCmd.get_16bit_mode_labels()
+
     def set_16bit_mode(self, target):
         if target != 'none':
             rate = AvcConnection.get_plug_signal_format(self.fcp, 'output', 0)
@@ -199,6 +205,7 @@ class ApogeeEnsembleUnit(BebobUnit):
                 raise ValueError('Sampling rate should be 44100 or 48000.')
         HwCmd.set_16bit_mode(self.__cache, self.fcp, target)
         self.__save_cache()
+
     def get_16bit_mode(self):
         return HwCmd.get_16bit_mode(self.__cache)
 
@@ -206,141 +213,177 @@ class ApogeeEnsembleUnit(BebobUnit):
     def set_display_mode(self, enable):
         DisplayCmd.set_mode(self.__cache, self.fcp, enable)
         self.__save_cache()
+
     def get_display_mode(self):
         return DisplayCmd.get_mode(self.__cache)
 
     def get_display_target_labels(self):
         return DisplayCmd.get_target_labels()
+
     def set_display_target(self, target):
         DisplayCmd.set_target(self.__cache, self.fcp, target)
         self.__save_cache()
+
     def get_display_target(self):
         return DisplayCmd.get_target(self.__cache)
 
     def set_display_illuminate(self, enable):
         DisplayCmd.set_illuminate(self.__cache, self.fcp, enable)
         self.__save_cache()
+
     def get_display_illuminate(self):
         return DisplayCmd.get_illuminate(self.__cache)
 
     def set_display_overhold(self, enable):
         DisplayCmd.set_overhold(self.__cache, self.fcp, enable)
         self.__save_cache()
+
     def get_display_overhold(self):
         return DisplayCmd.get_overhold(self.__cache)
 
     def get_opt_iface_target_labels(self):
         return OptIfaceCmd.get_target_labels()
+
     def get_opt_iface_mode_labels(self):
         return OptIfaceCmd.get_mode_labels()
+
     def set_opt_iface_mode(self, target, mode):
         OptIfaceCmd.set_mode(self.__cache, self.fcp, target, mode)
         self.__save_cache()
+
     def get_opt_iface_mode(self, target):
         return OptIfaceCmd.get_mode(self.__cache, target)
 
     # Knob configurations.
     def get_knob_out_labels(self):
         return KnobCmd.get_knob_out_labels()
+
     def set_knob_out_volume(self, target, db):
         KnobCmd.set_out_vol(self.fcp, target, db)
+
     def get_knob_states(self):
         return KnobCmd.get_states(self.fcp)
 
     # Microphone configurations.
     def get_mic_labels(self):
         return MicCmd.get_mic_labels()
+
     def set_polarity(self, target, invert):
         MicCmd.set_polarity(self.__cache, self.fcp, target, invert)
         self.__save_cache()
+
     def get_polarity(self, target):
         return MicCmd.get_polarity(self.__cache, target)
 
     def set_phantom_power(self, target, enable):
         MicCmd.set_power(self.__cache, self.fcp, target, enable)
         self.__save_cache()
+
     def get_phantom_power(self, target):
         return MicCmd.get_power(self.__cache, target)
 
     # Line input/output configurations.
     def get_line_in_labels(self):
         return InputCmd.get_in_labels()
+
     def set_soft_limit(self, target, enable):
         InputCmd.set_soft_limit(self.__cache, self.fcp, target, enable)
         self.__save_cache()
+
     def get_soft_limit(self, target):
         return InputCmd.get_soft_limit(self.__cache, target)
 
     def get_in_attr_labels(self):
         return InputCmd.get_attr_labels()
+
     def set_in_attr(self, target, attr):
         InputCmd.set_attr(self.__cache, self.fcp, target, attr)
         self.__save_cache()
+
     def get_in_attr(self, target):
         return InputCmd.get_attr(self.__cache, target)
 
     def get_line_out_labels(self):
         return OutputCmd.get_target_labels()
+
     def get_out_attr_labels(self):
         return OutputCmd.get_attr_labels()
+
     def set_out_attr(self, target, attr):
         OutputCmd.set_attr(self.__cache, self.fcp, target, attr)
         self.__save_cache()
+
     def get_out_attr(self, target):
         return OutputCmd.get_attr(self.__cache, target)
 
     # Route configurations.
     def get_out_labels(self):
         return RouteCmd.get_out_labels()
+
     def get_out_src_labels(self):
         return RouteCmd.get_out_src_labels()
+
     def set_out_src(self, target, src):
         RouteCmd.set_out_src(self.__cache, self.fcp, target, src)
         self.__save_cache()
+
     def get_out_src(self, target):
         return RouteCmd.get_out_src(self.__cache, target)
 
     def get_cap_labels(self):
         return RouteCmd.get_cap_labels()
+
     def get_cap_src_labels(self):
         return RouteCmd.get_cap_src_labels()
+
     def set_cap_src(self, target, src):
         RouteCmd.set_cap_src(self.__cache, self.fcp, target, src)
         self.__save_cache()
+
     def get_cap_src(self, target):
         return RouteCmd.get_cap_src(self.__cache, target)
 
     def get_hp_labels(self):
         return RouteCmd.get_hp_labels()
+
     def get_hp_src_labels(self):
         return RouteCmd.get_hp_src_labels()
+
     def set_hp_src(self, target, src):
         RouteCmd.set_hp_src(self.__cache, self.fcp, target, src)
         self.__save_cache()
+
     def get_hp_src(self, target):
         return RouteCmd.get_hp_src(self.__cache, target)
 
     # Internal multiplexer configuration.
     def get_mixer_labels(self):
         return MixerCmd.get_target_labels()
+
     def get_mixer_src_labels(self):
         return MixerCmd.get_src_labels()
+
     def set_mixer_src(self, target, src, db, balance):
         MixerCmd.set_src_gain(self.__cache, self.fcp, target, src, db, balance)
         self.__save_cache()
+
     def get_mixer_src(self, target, src):
         return MixerCmd.get_src_gain(self.__cache, target, src)
 
     # S/PDIF resampler configuration.
     def get_spdif_resample_iface_labels(self):
         return SpdifResampleCmd.get_iface_labels()
+
     def get_spdif_resample_direction_labels(self):
         return SpdifResampleCmd.get_direction_labels()
+
     def get_spdif_resample_rate_labels(self):
         return SpdifResampleCmd.get_rate_labels()
+
     def set_spdif_resample(self, enable, iface, direction, rate):
         SpdifResampleCmd.set_params(self.__cache, self.fcp, enable, iface,
                                     direction, rate)
         self.__save_cache()
+
     def get_spdif_resample(self):
         return SpdifResampleCmd.get_params(self.__cache)

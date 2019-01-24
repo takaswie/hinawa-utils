@@ -5,6 +5,7 @@
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.dice.dice_unit import DiceUnit
 
+
 def handle_current_status(unit, args):
     print('owner address: {0:016x}'.format(unit.get_owner_addr()))
     print('global enabled: {0}'.format(unit.get_enabled()))
@@ -16,7 +17,8 @@ def handle_current_status(unit, args):
         print('  {0}: {1}'.format(name, ', '.join(value)))
     print('measured rate: {0}'.format(unit.get_measured_sampling_rate()))
     print('dice version: {0}'.format(unit.get_dice_version()))
-    print('latest notification: 0x{0:08x}'.format(unit.get_latest_notification()))
+    print('latest notification: 0x{0:08x}'.format(
+        unit.get_latest_notification()))
     print('clock source: {0}'.format(unit.get_clock_source()))
     print('sampling rate: {0}'.format(unit.get_sampling_rate()))
     print('nickname: {0}'.format(unit.get_nickname()))
@@ -62,6 +64,7 @@ def handle_current_status(unit, args):
 
     return True
 
+
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
     rates = unit.get_supported_sampling_rates()
@@ -78,6 +81,7 @@ def handle_sampling_rate(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    RATE:   [{0}]'.format('|'.join(map(str, rates))))
     return False
+
 
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
@@ -96,6 +100,7 @@ def handle_clock_source(unit, args):
     print('    SOURCE: [{0}]'.format('|'.join(sources)))
     return False
 
+
 def handle_nickname(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
@@ -110,6 +115,7 @@ def handle_nickname(unit, args):
     print('  nickname OPERATION [SOURCE]')
     print('    OPERATION: {0}'.format(', '.join(ops)))
     return False
+
 
 cmds = {
     'current-status':   handle_current_status,

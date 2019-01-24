@@ -6,18 +6,20 @@ from enum import Enum
 
 __all__ = ['Ieee1212ConfigRomLexer']
 
+
 class EntryType(Enum):
-    IMMEDIATE   = 0x00
-    CSR_OFFSET  = 0x01
-    LEAF        = 0x02
-    DIRECTORY   = 0x03
+    IMMEDIATE = 0x00
+    CSR_OFFSET = 0x01
+    LEAF = 0x02
+    DIRECTORY = 0x03
 
     @classmethod
     def check_value(cls, value):
         return value in (item.value for item in cls)
 
     def __repr__(self):
-        return "'" + self.name  + "'"
+        return "'" + self.name + "'"
+
 
 class Ieee1212ConfigRomLexer():
     @classmethod

@@ -29,6 +29,8 @@ else:
     sys.exit()
 
 # For Echo Audio Fireworks series.
+
+
 def handle_echoaudio_keys(key_id, type_name, data):
     OUI_COMPANIES = {
         0x000ff2: 'Loud Technologies Inc.',
@@ -44,14 +46,20 @@ def handle_echoaudio_keys(key_id, type_name, data):
     return None
 
 # For Apple iSight.
+
+
 def handle_iidc_v1_30_keys(key_id, type_name, data):
     if key_id == 0x00 and type_name == 'CSR_OFFSET':
         return ['IIDC_COMMAND_REGS_BASE', data]
     return None
+
+
 def handle_isight_audio_keys(key_id, type_name, data):
     if key_id == 0x00 and type_name == 'CSR_OFFSET':
         return ['ISIGHT_AUDIO_REG_BASE', data]
     return None
+
+
 def handle_isight_factory_keys(key_id, type_name, data):
     LABELS = {
         0x01: 'ISIGHT_FACTORY_REG_A',
@@ -64,6 +72,8 @@ def handle_isight_factory_keys(key_id, type_name, data):
     elif key_id == 0x38 and type_name == 'IMMEDIATE':
         return ['ISIGHT_FACTORY_DATA', data]
     return None
+
+
 def handle_isight_iris_keys(key_id, type_name, data):
     if key_id == 0x3c and type_name == 'IMMEDIATE':
         return ['ISIGHT_IRIS_DATA', data]
@@ -72,6 +82,8 @@ def handle_isight_iris_keys(key_id, type_name, data):
     return None
 
 # For TASCAM FireWire series.
+
+
 def handle_teac_keys(key_id, type_name, data):
     if key_id == 0x02 and type_name == 'LEAF':
         content = data[8:].decode('US-ASCII') + '\0'
@@ -79,6 +91,8 @@ def handle_teac_keys(key_id, type_name, data):
     return None
 
 # For Digidesign Digi 00x series.
+
+
 def handle_microsoft_keys(key_id, type_name, data):
     if key_id == 0x01 and type_name == 'LEAF':
         width = data[0] >> 4
@@ -94,14 +108,20 @@ def handle_microsoft_keys(key_id, type_name, data):
     return None
 
 # For Cool Stream iSweet.
+
+
 def handle_ame_root_keys(key_id, type_name, data):
     if key_id == 0x06 and type_name == 'IMMEDIATE':
         return ['DEVICE_ID', data]
     return None
+
+
 def handle_iidc_v1_04_keys(key_id, type_name, data):
     if key_id == 0x00 and type_name == 'CSR_OFFSET':
         return ['COMMAND_REGS_BASE', data]
     return None
+
+
 def handle_ame_unit_dep_keys(key_id, type_name, data):
     if key_id == 0x02 and type_name == 'LEAF':
         descriptor_type = data[0]
@@ -118,6 +138,7 @@ def handle_ame_unit_dep_keys(key_id, type_name, data):
         content = data[8:].decode('US-ASCII') + '\0'
         return ['MODEL_NAME', content[:content.find('\0')]]
     return None
+
 
 pp = PrettyPrinter(indent=2, compact=False)
 

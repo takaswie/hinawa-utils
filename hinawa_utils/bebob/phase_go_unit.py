@@ -8,6 +8,7 @@ from hinawa_utils.bebob.phase_go_protocol_opt import PhaseGoProtocolOpt
 
 __all__ = ['PhaseGoUnit']
 
+
 class PhaseGoUnit(BebobUnit):
     _SUPPORTED_MODELS = {
         # (VendorID, ModelID): ProtocolClass

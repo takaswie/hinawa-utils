@@ -9,6 +9,7 @@ from gi.repository import GLib
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.dg00x.dg00x_unit import Dg00xUnit
 
+
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
@@ -27,6 +28,7 @@ def handle_clock_source(unit, args):
     print('    OPERATION: {0}'.format('|'.join(ops)))
     print('    SOURCE:    {0}'.format('|'.join(unit.SUPPORTED_CLOCK_SOURCES)))
     return False
+
 
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
@@ -48,6 +50,7 @@ def handle_sampling_rate(unit, args):
     print('    RATE:      {0}'.format('|'.join(rates)))
     return False
 
+
 def handle_mixer_mode(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
@@ -63,6 +66,7 @@ def handle_mixer_mode(unit, args):
     print('    OPERATION: {0}'.format('|'.join(ops)))
     print('    MODE:      0, 1')
     return False
+
 
 def handle_opt_iface(unit, args):
     ops = ('set', 'get')
@@ -80,15 +84,20 @@ def handle_opt_iface(unit, args):
     print('Arguments for optical-interface command:')
     print('  optical-interface OPERATION [MODE]')
     print('    OPERATION: {0}'.format('|'.join(ops)))
-    print('    MODE:      {0}'.format('|'.join(unit.SUPPORTED_OPTICAL_INTERFACES)))
+    print('    MODE:      {0}'.format(
+        '|'.join(unit.SUPPORTED_OPTICAL_INTERFACES)))
     return False
+
 
 def handle_listen_message(self, args):
     loop = GLib.MainLoop()
+
     def handle_unix_signal():
         loop.quit()
+
     def handle_message(unit, message):
         print('{0:08x}'.format(message))
+
     def handle_disconnect(unit, loop):
         loop.quit()
     self.connect('message', handle_message)
@@ -96,6 +105,7 @@ def handle_listen_message(self, args):
     self.connect('disconnected', handle_disconnect, loop)
     loop.run()
     return True
+
 
 cmds = {
     'clock-source':         handle_clock_source,

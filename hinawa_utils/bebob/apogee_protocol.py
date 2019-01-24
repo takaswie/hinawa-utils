@@ -15,39 +15,39 @@ __all__ = ['HwCmd', 'DisplayCmd', 'OptIfaceCmd', 'MicCmd', 'InputCmd',
 
 
 class VendorCmd(Enum):
-    INPUT_LIMIT     = 0xe4
-    MIC_POWER       = 0xe5
-    IO_ATTR         = 0xe8
-    IO_ROUTING      = 0xef
-    HW              = 0xeb
-    HP_SRC          = 0xab
-    MIXER_SRC1      = 0xb0
-    MIXER_SRC2      = 0xb1
-    MIXER_SRC3      = 0xb2
-    MIXER_SRC4      = 0xb3
-    OPT_IFACE_MODE  = 0xf1
-    DOWNGRADE       = 0xf2
-    SPDIF_RESAMPLE  = 0xf3
-    MIC_POLARITY    = 0xf5
-    KNOB_VALUE      = 0xf6
-    HW_STATUS       = 0xff
+    INPUT_LIMIT = 0xe4
+    MIC_POWER = 0xe5
+    IO_ATTR = 0xe8
+    IO_ROUTING = 0xef
+    HW = 0xeb
+    HP_SRC = 0xab
+    MIXER_SRC1 = 0xb0
+    MIXER_SRC2 = 0xb1
+    MIXER_SRC3 = 0xb2
+    MIXER_SRC4 = 0xb3
+    OPT_IFACE_MODE = 0xf1
+    DOWNGRADE = 0xf2
+    SPDIF_RESAMPLE = 0xf3
+    MIC_POLARITY = 0xf5
+    KNOB_VALUE = 0xf6
+    HW_STATUS = 0xff
 
 
 class HwCmdOp(Enum):
-    STREAM_MODE         = 0x06
-    DISPLAY_ILLUMINATE  = 0x08
-    DISPLAY_MODE        = 0x09
-    DISPLAY_TARGET      = 0x0a
-    DISPLAY_OVERHOLD    = 0x0e
-    METER_RESET         = 0x0f
-    CD_MODE             = 0xf5
+    STREAM_MODE = 0x06
+    DISPLAY_ILLUMINATE = 0x08
+    DISPLAY_MODE = 0x09
+    DISPLAY_TARGET = 0x0a
+    DISPLAY_OVERHOLD = 0x0e
+    METER_RESET = 0x0f
+    CD_MODE = 0xf5
 
 
 class ApogeeProtocol():
     __OUI = (0x00, 0x03, 0xdb)
 
     @classmethod
-    def command_set(cls, fcp:Hinawa.FwFcp, cmd:VendorCmd, args:bytearray):
+    def command_set(cls, fcp: Hinawa.FwFcp, cmd: VendorCmd, args: bytearray):
         data = bytearray()
         data.append(cmd.value)
 
@@ -89,7 +89,7 @@ class HwCmd():
     }
 
     @classmethod
-    def create_cache(cls, cache:dict):
+    def create_cache(cls, cache: dict):
         cache[cls.__NAME] = {
             'cd':       False,
             '16bit':    'none',
@@ -100,7 +100,7 @@ class HwCmd():
         return list(cls.__STREAM_MODES.keys())
 
     @classmethod
-    def set_stream_mode(cls, fcp:Hinawa.FwFcp, mode:str):
+    def set_stream_mode(cls, fcp: Hinawa.FwFcp, mode: str):
         if mode not in cls.__STREAM_MODES:
             raise ValueError('Invalid argument for mode of stream.')
         args = bytearray(2)
@@ -109,7 +109,7 @@ class HwCmd():
         ApogeeProtocol.command_set(fcp, VendorCmd.HW, args)
 
     @classmethod
-    def set_cd_mode(cls, cache:dict, fcp:Hinawa.FwFcp, enable:bool):
+    def set_cd_mode(cls, cache: dict, fcp: Hinawa.FwFcp, enable: bool):
         if not isinstance(enable, bool):
             raise ValueError('Invalid argument for mode of cd.')
         val = 0x01 if enable else 0x00
@@ -119,23 +119,26 @@ class HwCmd():
         args[1] = val
         ApogeeProtocol.command_set(fcp, VendorCmd.HW, args)
         cache[cls.__NAME]['cd'] = enable
+
     @classmethod
-    def get_cd_mode(cls, cache:dict):
+    def get_cd_mode(cls, cache: dict):
         return cache[cls.__NAME]['cd']
 
     @classmethod
     def get_16bit_mode_labels(cls):
         return list(cls.__DOWNGRADE_TARGETS.keys())
+
     @classmethod
-    def set_16bit_mode(cls, cache:dict, fcp:Hinawa.FwFcp, target:str):
+    def set_16bit_mode(cls, cache: dict, fcp: Hinawa.FwFcp, target: str):
         if target not in cls.__DOWNGRADE_TARGETS:
             raise ValueError('Invalid argument for target of 16bit mode.')
         args = bytearray(1)
         args[0] = cls.__DOWNGRADE_TARGETS[target]
         ApogeeProtocol.command_set(fcp, VendorCmd.DOWNGRADE, args)
         cache[cls.__NAME]['16bit'] = target
+
     @classmethod
-    def get_16bit_mode(cls, cache:dict):
+    def get_16bit_mode(cls, cache: dict):
         return cache[cls.__NAME]['16bit']
 
 
@@ -148,7 +151,7 @@ class DisplayCmd():
     }
 
     @classmethod
-    def create_cache(cls, cache:dict):
+    def create_cache(cls, cache: dict):
         cache[cls.__NAME] = {
             'illuminate': False,
             'mode': False,
@@ -168,51 +171,55 @@ class DisplayCmd():
         return ApogeeProtocol.command_set(fcp, VendorCmd.HW, args)
 
     @classmethod
-    def set_illuminate(cls, cache:dict, fcp:Hinawa.FwFcp, enable:bool):
+    def set_illuminate(cls, cache: dict, fcp: Hinawa.FwFcp, enable: bool):
         if not isinstance(enable, bool):
             raise ValueError('Invalid argument for illuminate of display.')
         val = 0x01 if enable else 0x00
         cls.__command_set(fcp, HwCmdOp.DISPLAY_ILLUMINATE, val)
         cache[cls.__NAME]['illuminate'] = enable
+
     @classmethod
-    def get_illuminate(cls, cache:dict):
+    def get_illuminate(cls, cache: dict):
         return cache[cls.__NAME]['illuminate']
 
     @classmethod
-    def set_mode(cls, cache:dict, fcp:Hinawa.FwFcp, enable:bool):
+    def set_mode(cls, cache: dict, fcp: Hinawa.FwFcp, enable: bool):
         if not isinstance(enable, bool):
             raise ValueError('Invalid argument for mode of display.')
         val = 0x01 if enable else 0x00
         cls.__command_set(fcp, HwCmdOp.DISPLAY_MODE, val)
         cache[cls.__NAME]['mode'] = enable
+
     @classmethod
-    def get_mode(cls, cache:dict):
+    def get_mode(cls, cache: dict):
         return cache[cls.__NAME]['mode']
 
     @classmethod
-    def set_target(cls, cache:dict, fcp:Hinawa.FwFcp, target:str):
+    def set_target(cls, cache: dict, fcp: Hinawa.FwFcp, target: str):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for target of display.')
         val = cls.__TARGETS[target]
         cls.__command_set(fcp, HwCmdOp.DISPLAY_TARGET, val)
         cache[cls.__NAME]['target'] = target
+
     @classmethod
-    def get_target(cls, cache:dict):
+    def get_target(cls, cache: dict):
         return cache[cls.__NAME]['target']
 
     @classmethod
-    def set_overhold(cls, cache:dict, fcp:Hinawa.FwFcp, enable:bool):
+    def set_overhold(cls, cache: dict, fcp: Hinawa.FwFcp, enable: bool):
         if not isinstance(enable, bool):
             raise ValueError('Invalid argument for overhold of display.')
         val = 0x01 if enable else 0x00
         cls.__command_set(fcp, HwCmdOp.DISPLAY_OVERHOLD, val)
         cache[cls.__NAME]['overhold'] = enable
+
     @classmethod
-    def get_overhold(cls, cache:dict):
+    def get_overhold(cls, cache: dict):
         return cache[cls.__NAME]['overhold']
 
     @classmethod
-    def reset_meter(cls, fcp:Hinawa.FwFcp):
+    def reset_meter(cls, fcp: Hinawa.FwFcp):
         cls.__command_set(fcp, HwCmdOp.METER_RESET, 0x00)
 
 
@@ -229,7 +236,7 @@ class OptIfaceCmd():
     }
 
     @classmethod
-    def create_cache(cls, cache:dict):
+    def create_cache(cls, cache: dict):
         cache[cls.__NAME] = {}
         for target in cls.__TARGETS:
             cache[cls.__NAME][target] = 'S/PDIF'
@@ -237,11 +244,13 @@ class OptIfaceCmd():
     @classmethod
     def get_target_labels(cls):
         return list(cls.__TARGETS.keys())
+
     @classmethod
     def get_mode_labels(cls):
         return list(cls.__MODES.keys())
+
     @classmethod
-    def set_mode(cls, cache:dict, fcp:Hinawa.FwFcp, target:str, mode:str):
+    def set_mode(cls, cache: dict, fcp: Hinawa.FwFcp, target: str, mode: str):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for target of optical iface.')
         if mode not in cls.__MODES:
@@ -251,8 +260,9 @@ class OptIfaceCmd():
         args[1] = cls.__MODES[mode]
         ApogeeProtocol.command_set(fcp, VendorCmd.OPT_IFACE_MODE, args)
         cache[cls.__NAME][target] = mode
+
     @classmethod
-    def get_mode(cls, cache:dict, target:str):
+    def get_mode(cls, cache: dict, target: str):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for optical iface.')
         return cache[cls.__NAME][target]
@@ -269,7 +279,7 @@ class MicCmd():
     }
 
     @classmethod
-    def create_cache(cls, cache:dict):
+    def create_cache(cls, cache: dict):
         cache[cls.__NAME] = {}
         for item in ('power', 'polarity'):
             cache[cls.__NAME][item] = {}
@@ -290,24 +300,26 @@ class MicCmd():
         return list(cls.__TARGETS.keys())
 
     @classmethod
-    def set_power(cls, cache:dict, fcp:Hinawa.FwFcp, target:str, enable:bool):
+    def set_power(cls, cache: dict, fcp: Hinawa.FwFcp, target: str, enable: bool):
         val = 0x01 if enable else 0x00
         cls.__command_set(fcp, VendorCmd.MIC_POWER, target, val)
         cache[cls.__NAME]['power'][target] = enable
+
     @classmethod
-    def get_power(cls, cache:dict, target:str):
+    def get_power(cls, cache: dict, target: str):
         if target not in MicCmd.get_mic_labels():
             raise ValueError('Invalid argument for mic.')
         return cache[cls.__NAME]['power'][target]
 
     @classmethod
-    def set_polarity(cls, cache:dict, fcp:Hinawa.FwFcp, target:str,
-                     invert:bool):
+    def set_polarity(cls, cache: dict, fcp: Hinawa.FwFcp, target: str,
+                     invert: bool):
         val = 0x01 if invert else 0x00
         cls.__command_set(fcp, VendorCmd.MIC_POLARITY, target, val)
         cache[cls.__NAME]['polarity'][target] = invert
+
     @classmethod
-    def get_polarity(cls, cache:dict, target:str):
+    def get_polarity(cls, cache: dict, target: str):
         if target not in MicCmd.get_mic_labels():
             raise ValueError('Invalid argument for mic.')
         return cache[cls.__NAME]['polarity'][target]
@@ -333,7 +345,7 @@ class InputCmd():
     }
 
     @classmethod
-    def create_cache(cls, cache:dict):
+    def create_cache(cls, cache: dict):
         cache[cls.__NAME] = {
             'soft-limit': {},
             'attr': {},
@@ -345,11 +357,13 @@ class InputCmd():
     @classmethod
     def get_in_labels(cls):
         return list(cls.__TARGETS.keys())
+
     @classmethod
     def get_attr_labels(cls):
         return list(cls.__ATTRS.keys())
+
     @classmethod
-    def set_soft_limit(cls, cache:dict, fcp:Hinawa.FwFcp, target, enable):
+    def set_soft_limit(cls, cache: dict, fcp: Hinawa.FwFcp, target, enable):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for line input.')
         val = 0x01 if enable else 0x00
@@ -359,14 +373,15 @@ class InputCmd():
         args[1] = val
         ApogeeProtocol.command_set(fcp, VendorCmd.INPUT_LIMIT, args)
         cache[cls.__NAME]['soft-limit'][target] = enable
+
     @classmethod
-    def get_soft_limit(cls, cache:dict, target:str):
+    def get_soft_limit(cls, cache: dict, target: str):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for line input.')
         return cache[cls.__NAME]['soft-limit'][target]
 
     @classmethod
-    def set_attr(cls, cache:dict, fcp:Hinawa.FwFcp, target:str, attr:str):
+    def set_attr(cls, cache: dict, fcp: Hinawa.FwFcp, target: str, attr: str):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for line input.')
         if attr not in cls.__ATTRS:
@@ -378,8 +393,9 @@ class InputCmd():
         args[2] = cls.__ATTRS[attr]
         ApogeeProtocol.command_set(fcp, VendorCmd.IO_ATTR, args)
         cache[cls.__NAME]['attr'][target] = attr
+
     @classmethod
-    def get_attr(cls, cache:dict, target:str):
+    def get_attr(cls, cache: dict, target: str):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for line input.')
         return cache[cls.__NAME]['attr'][target]
@@ -405,7 +421,7 @@ class OutputCmd():
     }
 
     @classmethod
-    def create_cache(cls, cache:dict):
+    def create_cache(cls, cache: dict):
         cache[cls.__NAME] = {
             'attr': {},
         }
@@ -415,11 +431,13 @@ class OutputCmd():
     @classmethod
     def get_target_labels(cls):
         return list(cls.__TARGETS.keys())
+
     @classmethod
     def get_attr_labels(cls):
         return list(cls.__ATTRS.keys())
+
     @classmethod
-    def set_attr(cls, cache:dict, fcp:Hinawa.FwFcp, target:str, attr:str):
+    def set_attr(cls, cache: dict, fcp: Hinawa.FwFcp, target: str, attr: str):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for line output.')
         if attr not in cls.__ATTRS:
@@ -431,8 +449,9 @@ class OutputCmd():
         args[2] = cls.__ATTRS[attr]
         ApogeeProtocol.command_set(fcp, VendorCmd.IO_ATTR, args)
         cache[cls.__NAME]['attr'][target] = attr
+
     @classmethod
-    def get_attr(cls, cache:dict, target):
+    def get_attr(cls, cache: dict, target):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for line output.')
         return cache[cls.__NAME]['attr'][target]
@@ -478,7 +497,7 @@ class MixerCmd():
     }
 
     @classmethod
-    def create_cache(cls, cache:dict):
+    def create_cache(cls, cache: dict):
         cache[cls.__NAME] = {}
         for target in cls.__TARGETS:
             right = True
@@ -493,15 +512,17 @@ class MixerCmd():
     @classmethod
     def get_target_labels(cls):
         return list(cls.__TARGETS.keys())
+
     @classmethod
     def get_src_labels(cls):
         srcs = []
         for cmd, sources in cls.__SRCS.items():
             srcs.extend(sources)
         return srcs
+
     @classmethod
-    def set_src_gain(cls, cache:dict, fcp:Hinawa.FwFcp, target:str, src:str,
-                     db:float, balance:float):
+    def set_src_gain(cls, cache: dict, fcp: Hinawa.FwFcp, target: str, src: str,
+                     db: float, balance: float):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for mixer.')
         if db < -48 or db > 0:
@@ -536,8 +557,9 @@ class MixerCmd():
 
         ApogeeProtocol.command_set(fcp, cmd, args)
         cache[cls.__NAME][target][src] = data
+
     @classmethod
-    def get_src_gain(cls, cache:dict, target:str, src:str):
+    def get_src_gain(cls, cache: dict, target: str, src: str):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for mixer.')
         for cmd, srcs in cls.__SRCS.items():
@@ -652,7 +674,7 @@ class RouteCmd():
     }
 
     @classmethod
-    def create_cache(cls, cache:dict):
+    def create_cache(cls, cache: dict):
         cache[cls.__NAME] = {
             'out':  {},
             'cap':  {},
@@ -678,19 +700,22 @@ class RouteCmd():
     @classmethod
     def get_out_labels(cls):
         return cls.__OUT_TARGETS
+
     @classmethod
     def get_out_src_labels(cls):
         return cls.__OUT_SRCS
+
     @classmethod
-    def set_out_src(cls, cache:dict, fcp:Hinawa.FwFcp, target:str, src:str):
+    def set_out_src(cls, cache: dict, fcp: Hinawa.FwFcp, target: str, src: str):
         if target not in cls.__OUT_TARGETS:
             raise ValueError('Invalid argument for output.')
         if src not in cls.__OUT_SRCS:
             raise ValueError('Invalid argument for source of output.')
         cls.__command_set(fcp, target, src)
         cache[cls.__NAME]['out'][target] = src
+
     @classmethod
-    def get_out_src(cls, cache:dict, target:str):
+    def get_out_src(cls, cache: dict, target: str):
         if target not in cls.__OUT_TARGETS:
             raise ValueError('Invalid argument for output.')
         return cache[cls.__NAME]['out'][target]
@@ -698,19 +723,22 @@ class RouteCmd():
     @classmethod
     def get_cap_labels(cls):
         return cls.__CAP_TARGETS
+
     @classmethod
     def get_cap_src_labels(cls):
         return cls.__CAP_SRCS
+
     @classmethod
-    def set_cap_src(cls, cache:dict, fcp:Hinawa.FwFcp, target:str, src:str):
+    def set_cap_src(cls, cache: dict, fcp: Hinawa.FwFcp, target: str, src: str):
         if target not in cls.__CAP_TARGETS:
             raise ValueError('Invalid argument for capture.')
         if src not in cls.__CAP_SRCS:
             raise ValueError('Invalid argument for source of capture.')
         cls.__command_set(fcp, target, src)
         cache[cls.__NAME]['cap'][target] = src
+
     @classmethod
-    def get_cap_src(cls, cache:dict, target:str):
+    def get_cap_src(cls, cache: dict, target: str):
         if target not in RouteCmd.get_cap_labels():
             raise ValueError('Invalid argument for capture.')
         return cache[cls.__NAME]['cap'][target]
@@ -718,11 +746,13 @@ class RouteCmd():
     @classmethod
     def get_hp_labels(cls):
         return list(cls.__HP_TARGETS.keys())
+
     @classmethod
     def get_hp_src_labels(cls):
         return list(cls.__HP_SRCS.keys())
+
     @classmethod
-    def set_hp_src(cls, cache:dict, fcp:Hinawa.FwFcp, target:str, src:str):
+    def set_hp_src(cls, cache: dict, fcp: Hinawa.FwFcp, target: str, src: str):
         if target not in cls.__HP_TARGETS:
             raise ValueError('Invalid argument for heaphone.')
         if src not in cls.__HP_SRCS:
@@ -732,8 +762,9 @@ class RouteCmd():
         args[1] = cls.__HP_SRCS[src]
         ApogeeProtocol.command_set(fcp, VendorCmd.HP_SRC, args)
         cache[cls.__NAME]['hp'][target] = src
+
     @classmethod
-    def get_hp_src(cls, cache:dict, target:str):
+    def get_hp_src(cls, cache: dict, target: str):
         if target not in cls.__HP_TARGETS:
             raise ValueError('Invalid argument for heaphone.')
         return cache[cls.__NAME]['hp'][target]
@@ -787,7 +818,7 @@ class KnobCmd():
         return list(cls.__TARGETS.keys())
 
     @classmethod
-    def set_out_vol(cls, fcp:Hinawa.FwFcp, target:str, db:float):
+    def set_out_vol(cls, fcp: Hinawa.FwFcp, target: str, db: float):
         if target not in cls.__TARGETS:
             raise ValueError('Invalid argument for output.')
         val = cls.__parse_val_from_db(db)
@@ -798,7 +829,7 @@ class KnobCmd():
         ApogeeProtocol.command_set(fcp, VendorCmd.KNOB_VALUE, args)
 
     @classmethod
-    def get_states(cls, fcp:Hinawa.FwFcp):
+    def get_states(cls, fcp: Hinawa.FwFcp):
         args = bytearray(1)
         args[0] = 0x01
         resp = ApogeeProtocol.command_set(fcp, VendorCmd.HW_STATUS, args)
@@ -840,21 +871,24 @@ class SpdifResampleCmd():
     }
 
     @classmethod
-    def create_cache(cls, cache:dict):
+    def create_cache(cls, cache: dict):
         cache[cls.__NAME] = (False, 'optical', 'output', 44100)
 
     @classmethod
     def get_iface_labels(cls):
         return list(cls.__IFACES.keys())
+
     @classmethod
     def get_direction_labels(cls):
         return list(cls.__DIRECTIONS.keys())
+
     @classmethod
     def get_rate_labels(cls):
         return list(cls.__RATES.keys())
+
     @classmethod
-    def set_params(cls, cache:dict, fcp:Hinawa.FwFcp, enable:bool, iface:str,
-                   direction:str, rate:int):
+    def set_params(cls, cache: dict, fcp: Hinawa.FwFcp, enable: bool, iface: str,
+                   direction: str, rate: int):
         if not isinstance(enable, bool):
             raise ValueError('Invalid argument for state.')
         if iface not in cls.__IFACES:
@@ -870,6 +904,7 @@ class SpdifResampleCmd():
         args[3] = cls.__RATES[rate]
         ApogeeProtocol.command_set(fcp, VendorCmd.SPDIF_RESAMPLE, args)
         cache[cls.__NAME] = (enable, iface, direction, rate)
+
     @classmethod
-    def get_params(cls, cache:dict):
+    def get_params(cls, cache: dict):
         return list(cache[cls.__NAME])

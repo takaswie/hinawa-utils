@@ -5,6 +5,7 @@
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.tscm.tscm_console_unit import TscmConsoleUnit
 
+
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
@@ -24,6 +25,7 @@ def handle_clock_source(unit, args):
     print('    SRC:    [{0}]'.format('|'.join(unit.supported_clock_sources)))
     return False
 
+
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
@@ -41,11 +43,13 @@ def handle_sampling_rate(unit, args):
     print('    RATE:   [{0}]'.format('|'.join(rates)))
     return False
 
+
 def handle_firmware_versions(unit, args):
     info = unit.get_firmware_versions()
     for name, value in info.items():
         print('{0}: {1}'.format(name, value))
     return True
+
 
 def handle_routing(unit, args, cmd, labels, set_func, get_func):
     ops = ('set', 'get')
@@ -64,11 +68,13 @@ def handle_routing(unit, args, cmd, labels, set_func, get_func):
     print('    SRC:    [{0}]'.format('|'.join(labels)))
     return False
 
+
 def handle_coax_out_src(unit, args):
     return handle_routing(unit, args, 'coaxial-out-source',
                           unit.get_coax_out_src_labels(),
                           unit.set_coax_out_src,
                           unit.get_coax_out_src)
+
 
 def handle_opt_out_src(unit, args):
     return handle_routing(unit, args, 'optical-out-source',
@@ -76,11 +82,13 @@ def handle_opt_out_src(unit, args):
                           unit.set_opt_out_src,
                           unit.get_opt_out_src)
 
+
 def handle_stream_spdif_in_src(unit, args):
     return handle_routing(unit, args, 'stream-spdif-in-source',
                           unit.get_stream_spdif_in_src_labels(),
                           unit.set_stream_spdif_in_src,
                           unit.get_stream_spdif_in_src)
+
 
 def handle_input_threshold(unit, args):
     ops = ('set', 'get')
@@ -101,6 +109,7 @@ def handle_input_threshold(unit, args):
     print('    LEVEL:  [-inf, -90..0]')
     return True
 
+
 def handle_master_fader(unit, args):
     ops = ('set', 'get')
     modes = ('False', 'True')
@@ -118,6 +127,7 @@ def handle_master_fader(unit, args):
     print('    MODE:   [{0}]'.format('|'.join(modes)))
     return False
 
+
 def handle_bright_led(unit, args):
     if len(args) > 1:
         pos = int(args[0])
@@ -129,6 +139,7 @@ def handle_bright_led(unit, args):
     print('    POS:    [0-???]')
     print('    STATE:  [{0}]'.format('|'.join(unit.supported_led_status)))
     return False
+
 
 cmds = {
     'clock-source':         handle_clock_source,

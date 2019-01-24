@@ -5,6 +5,7 @@
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.bebob.phase_go_unit import PhaseGoUnit
 
+
 def handle_current_status(unit, args):
     print('Current status:')
     print('  Packet Streaming:')
@@ -49,6 +50,7 @@ def handle_current_status(unit, args):
 
     return True
 
+
 def handle_firmware_info(unit, args):
     print('BeBoB firmware information:')
     for category, values in unit.firmware_info.items():
@@ -59,6 +61,7 @@ def handle_firmware_info(unit, args):
         else:
             print('  {0}: {1}'.format(category, values))
     return True
+
 
 def handle_output_source(unit, args):
     ops = ('set', 'get')
@@ -81,6 +84,7 @@ def handle_output_source(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    SOURCE: [{0}]'.format('|'.join(sources)))
     return False
+
 
 def _handle_target_request(unit, args, cmd, items, targets):
     chs = ('1', '2')
@@ -115,6 +119,7 @@ def _handle_target_request(unit, args, cmd, items, targets):
     print('    ENABLE: [0|1]           if ITEM=mute   and OP=set')
     return False
 
+
 def handle_mixer_input(unit, args):
     items = {
         'volume':   (unit.protocol.set_mixer_input_volume,
@@ -124,6 +129,7 @@ def handle_mixer_input(unit, args):
     }
     return _handle_target_request(unit, args, 'mixer-input', items,
                                   unit.protocol.get_mixer_input_labels())
+
 
 def handle_mixer_output(unit, args):
     items = {
@@ -161,6 +167,7 @@ def handle_mixer_output(unit, args):
     print('    ENABLE: [0|1]           if ITEM=mute   and OP=set')
     return False
 
+
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
     rates = unit.protocol.get_sampling_rate_labels()
@@ -181,6 +188,7 @@ def handle_sampling_rate(unit, args):
     print('    OP:     {0}'.format('|'.join(ops)))
     print('    RATE:   {0}'.format('|'.join(map(str, rates))))
     return False
+
 
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
@@ -203,6 +211,7 @@ def handle_clock_source(unit, args):
     print('    SOURCE:    [{0}]'.format('|'.join(sources)))
     return False
 
+
 def handle_analog_input_level(unit, args):
     ops = ('set', 'get')
     levels = unit.protocol.get_analog_input_level_labels()
@@ -220,6 +229,7 @@ def handle_analog_input_level(unit, args):
     print('    LEVEL:  [{0}] if OP=set'.format('|'.join(levels)))
     return False
 
+
 def handle_analog_output(unit, args):
     items = {
         'volume':   (unit.protocol.set_analog_output_volume,
@@ -229,6 +239,7 @@ def handle_analog_output(unit, args):
     }
     return _handle_target_request(unit, args, 'analog-output', items,
                                   unit.protocol.get_analog_output_labels())
+
 
 cmds = {
     'current-status':   handle_current_status,

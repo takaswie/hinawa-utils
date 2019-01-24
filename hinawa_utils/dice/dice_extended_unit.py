@@ -18,6 +18,7 @@ from hinawa_utils.dice.presonus_firestudio_spec import PresonusFirestudioSpec
 
 __all__ = ['DiceExtendedUnit']
 
+
 class DiceExtendedUnit(DiceUnit):
     _RATE_MODES = {
         'low':      (32000, 48000),
@@ -239,17 +240,20 @@ class DiceExtendedUnit(DiceUnit):
             if dst[1] not in ('mixer-tx0', 'mixer-tx1', 'avs0', 'avs1'):
                 labels.append(dst[0])
         return labels
+
     def get_output_source_labels(self):
         labels = ['None']
         for src in self._srcs:
             labels.append(src[0])
         return labels
+
     def set_output_source(self, target, source):
         if target not in self.get_output_labels():
             raise ValueError('Invalid argument for output pair.')
         if source not in self.get_output_source_labels():
             raise ValueError('Invalid argument for output source pair.')
         self._set_target_source(target, source)
+
     def get_output_source(self, target):
         if target not in self.get_output_labels():
             raise ValueError('Invalid argument for output pair.')
@@ -261,17 +265,20 @@ class DiceExtendedUnit(DiceUnit):
             if dst[1] in ('avs0', 'avs1'):
                 labels.append(dst[0])
         return labels
+
     def get_tx_stream_source_labels(self):
         labels = ['None']
         for src in self._srcs:
             labels.append(src[0])
         return labels
+
     def set_tx_stream_source(self, target, source):
         if target not in self.get_tx_stream_labels():
             raise ValueError('Invalid argument for tx stream.')
         if source not in self.get_tx_stream_source_labels():
             raise ValueError('Invalid argument for source of tx stream.')
         self._set_target_source(target, source)
+
     def get_tx_stream_source(self, target):
         if target not in self.get_tx_stream_labels():
             raise ValueError('Invalid argument for tx stream.')
@@ -283,12 +290,14 @@ class DiceExtendedUnit(DiceUnit):
             if src[1] == 'mixer':
                 labels.append(src[0])
         return labels
+
     def get_mixer_input_labels(self):
         labels = []
         for dst in self._dsts:
             if dst[1] in ('mixer-tx0', 'mixer-tx1'):
                 labels.append(dst[0])
         return labels
+
     def get_mixer_source_labels(self):
         labels = ['None']
         for src in self._srcs:
@@ -302,6 +311,7 @@ class DiceExtendedUnit(DiceUnit):
         if source not in self.get_mixer_source_labels():
             raise ValueError('Invalid argument for mixer source pair.')
         self._set_target_source(target, source)
+
     def get_mixer_source(self, target):
         if target not in self.get_mixer_input_labels():
             raise ValueError('Invalid argument for mixer pair.')
@@ -339,8 +349,10 @@ class DiceExtendedUnit(DiceUnit):
 
         # normalize.
         if total > ExtMixerSpace.MAX_COEFF:
-            gains[0]['val'] = gains[0]['val'] * ExtMixerSpace.MAX_COEFF // total
-            gains[1]['val'] = gains[1]['val'] * ExtMixerSpace.MAX_COEFF // total
+            gains[0]['val'] = gains[0]['val'] * \
+                ExtMixerSpace.MAX_COEFF // total
+            gains[1]['val'] = gains[1]['val'] * \
+                ExtMixerSpace.MAX_COEFF // total
 
         return gains
 

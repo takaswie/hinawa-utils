@@ -7,6 +7,7 @@ from hinawa_utils.ta1394.general import AvcGeneral
 
 __all__ = ['AvcAudio']
 
+
 class AvcAudio():
     ATTRIBUTES = ('resolution', 'minimum', 'maximum', 'default', 'duration',
                   'current', 'move', 'delta')
@@ -374,6 +375,7 @@ class AvcAudio():
             return 128.0
         else:
             return unpack('>h', data)[0] * 128 / 0x7fff
+
     @classmethod
     def build_data_from_db(cls, db):
         if db == 128.0:

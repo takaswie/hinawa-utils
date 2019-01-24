@@ -10,6 +10,7 @@ from hinawa_utils.ta1394.audio import AvcAudio
 
 __all__ = ['EdirolFaUnit']
 
+
 class EdirolFaUnit(BebobUnit):
     _FBS = {
         # Edirol FA-66.
@@ -27,6 +28,7 @@ class EdirolFaUnit(BebobUnit):
             'digital-in-1/2',
         ),
     }
+
     def __init__(self, path):
         super().__init__(path)
         if (self.vendor_id, self.model_id) not in self._FBS:
@@ -42,11 +44,13 @@ class EdirolFaUnit(BebobUnit):
         fb = self._fbs.index(target) + 1
         data = AvcAudio.build_data_from_db(gain)
         AvcAudio.set_feature_volume_state(self.fcp, 0, 'current', fb, ch, data)
+
     def get_mixer_input_gain(self, target, ch):
         if target not in self._fbs:
             raise ValueError('Invalid argument for input.')
         fb = self._fbs.index(target) + 1
-        data = AvcAudio.get_feature_volume_state(self.fcp, 0, 'current', fb, ch)
+        data = AvcAudio.get_feature_volume_state(
+            self.fcp, 0, 'current', fb, ch)
         return AvcAudio.parse_data_to_db(data)
 
     def set_mixer_input_balance(self, target, ch, balance):
@@ -55,6 +59,7 @@ class EdirolFaUnit(BebobUnit):
         fb = self._fbs.index(target) + 1
         data = AvcAudio.build_data_from_db(balance)
         AvcAudio.set_feature_lr_state(self.fcp, 0, 'current', fb, ch, data)
+
     def get_mixer_input_balance(self, target, ch):
         if target not in self._fbs:
             raise ValueError('Invalid argument for input.')

@@ -5,6 +5,7 @@ from hinawa_utils.ieee1394.config_rom_parser import Ieee1394ConfigRomParser
 
 __all__ = ['EfwConfigRomParser']
 
+
 class EfwConfigRomParser(Ieee1394ConfigRomParser):
     __OUI_ECHO = 0x001486
     __MANUFACTURER_OUI = {
@@ -14,7 +15,8 @@ class EfwConfigRomParser(Ieee1394ConfigRomParser):
 
     def __init__(self):
         super().__init__()
-        self.add_vendor_dep_handle(self.__OUI_ECHO, self.__handle_echoaudio_keys)
+        self.add_vendor_dep_handle(
+            self.__OUI_ECHO, self.__handle_echoaudio_keys)
 
     def __handle_echoaudio_keys(self, key_id, type_name, data):
         if key_id != 0x08 or type_name != 'IMMEDIATE':
@@ -54,7 +56,7 @@ class EfwConfigRomParser(Ieee1394ConfigRomParser):
                 if (entry[0] != ['SPECIFIER_ID', 0x00a02d] or
                     entry[1] != ['VERSION',      0x010000] or
                     entry[2] != ['MODEL',        info['model-id']] or
-                    entry[3] != ['DESCRIPTOR',   info['model-name']]):
+                        entry[3] != ['DESCRIPTOR',   info['model-name']]):
                     raise ValueError('Invalid data of config ROM.')
             else:
                 info[alt] = entry[1]

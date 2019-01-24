@@ -15,6 +15,7 @@ from hinawa_utils.ta1394.streamformat import AvcStreamFormatInfo
 
 __all__ = ['OxfwUnit']
 
+
 class OxfwUnit(Hinawa.SndUnit):
     def __init__(self, path):
         if match('/dev/snd/hwC[0-9]*D0', path):
@@ -51,7 +52,8 @@ class OxfwUnit(Hinawa.SndUnit):
         req = Hinawa.FwReq()
 
         data = req.read(self, 0xfffff0050000, 4)
-        hw_info['asic-type'] = 'FW{0:x}'.format(unpack('>H', data[0:2])[0] >> 4)
+        hw_info['asic-type'] = 'FW{0:x}'.format(
+            unpack('>H', data[0:2])[0] >> 4)
         hw_info['firmware-version'] = '{0}.{1}'.format(data[2], data[3])
 
         data = req.read(self, 0xfffff0090020, 4)
@@ -62,7 +64,7 @@ class OxfwUnit(Hinawa.SndUnit):
     def _parse_supported_sampling_rates(self):
         sampling_rates = {}
         playback = []
-        capture  = []
+        capture = []
         # Assume that PCM playback is available for all of models.
         for rate in AvcConnection.SAMPLING_RATES:
             if AvcConnection.ask_plug_signal_format(self.fcp, 'input', 0, rate):
@@ -81,19 +83,19 @@ class OxfwUnit(Hinawa.SndUnit):
     def _parse_supported_stream_formats(self):
         supported_stream_formats = {}
         supported_stream_formats['playback'] = \
-                        AvcStreamFormatInfo.get_formats(self.fcp, 'input', 0)
+            AvcStreamFormatInfo.get_formats(self.fcp, 'input', 0)
         if len(supported_stream_formats['playback']) == 0:
             supported_stream_formats['playback'] = \
-                        self._assume_supported_stram_formats('input', 0)
+                self._assume_supported_stram_formats('input', 0)
             self._assumed = True
         else:
             self._assumed = False
         if not self._playback_only:
             supported_stream_formats['capture'] = \
-                        AvcStreamFormatInfo.get_formats(self.fcp, 'output', 0)
+                AvcStreamFormatInfo.get_formats(self.fcp, 'output', 0)
             if len(supported_stream_formats['capture']) == 0:
                 supported_stream_formats['capture'] = \
-                        self._assume_supported_stram_formats('output', 0)
+                    self._assume_supported_stram_formats('output', 0)
         return supported_stream_formats
 
     def _assume_supported_stram_formats(self, direction, plug):
@@ -117,7 +119,8 @@ class OxfwUnit(Hinawa.SndUnit):
             if capture not in self.supported_stream_formats['capture']:
                 raise ValueError('Invalid argument for capture stream format')
             if playback['sampling-rate'] != capture['sampling-rate']:
-                raise ValueError('Sampling rate mis-match between playback and capture')
+                raise ValueError(
+                    'Sampling rate mis-match between playback and capture')
         if self._assumed:
             rate = playback['sampling-rate']
             AvcConnection.set_plug_signal_format(self.fcp, 'output', 0, rate)

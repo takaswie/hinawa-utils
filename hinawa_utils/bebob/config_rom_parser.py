@@ -5,6 +5,7 @@ from hinawa_utils.ieee1394.config_rom_parser import Ieee1394ConfigRomParser
 
 __all__ = ['BebobConfigRomParser']
 
+
 class BebobConfigRomParser(Ieee1394ConfigRomParser):
     def parse_rom(self, data):
         entries = super().parse_rom(data)

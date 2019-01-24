@@ -3,6 +3,7 @@
 
 from hinawa_utils.dice.tcat_protocol_extension import ExtMixerSpace, ExtCurrentConfigSpace
 
+
 class TcatTcd22xxSpec():
     # These four properties should be overridden by derived classes.
     MODELS = (
@@ -49,7 +50,7 @@ class TcatTcd22xxSpec():
         STREAMS = ('avs0', 'avs1')
 
         stream_configs = \
-                ExtCurrentConfigSpace.read_stream_config(protocol, req, mode)
+            ExtCurrentConfigSpace.read_stream_config(protocol, req, mode)
 
         dsts = []
 
@@ -86,11 +87,12 @@ class TcatTcd22xxSpec():
         dsts = []
 
         stream_srcs, stream_dsts = \
-                self._get_available_stream_ports(protocol, req, mode)
+            self._get_available_stream_ports(protocol, req, mode)
         srcs.extend(stream_srcs)
         dsts.extend(stream_dsts)
 
-        mixer_srcs, mixer_dsts = self._get_available_mixer_ports(protocol, mode)
+        mixer_srcs, mixer_dsts = self._get_available_mixer_ports(
+            protocol, mode)
         srcs.extend(mixer_srcs)
         dsts.extend(mixer_dsts)
 
@@ -237,13 +239,13 @@ class TcatTcd22xxSpec():
                 raise ValueError('Invalid entry for output port.')
 
         real_srcs, real_dsts = \
-                        self._get_available_real_ports(protocol, mode, inputs,
-                                                       outputs)
+            self._get_available_real_ports(protocol, mode, inputs,
+                                           outputs)
         srcs.extend(real_srcs)
         dsts.extend(real_dsts)
 
         virt_srcs, virt_dsts = \
-                            self._get_available_virt_ports(protocol, req, mode)
+            self._get_available_virt_ports(protocol, req, mode)
         srcs.extend(virt_srcs)
         dsts.extend(virt_dsts)
 
@@ -255,8 +257,8 @@ class TcatTcd22xxSpec():
         for entry in entries:
             # Skip mixer-to-mixer entries.
             if (entry['src-blk'] == 'mixer' and
-                entry['dst-blk'] in ('mixer-tx0', 'mixer-tx1')):
-                    continue
+                    entry['dst-blk'] in ('mixer-tx0', 'mixer-tx1')):
+                continue
 
             # Skip entries with mute or reserved.
             if entry['dst-blk'] == 'mute':
@@ -312,7 +314,7 @@ class TcatTcd22xxSpec():
                 }
 
             if (index < len(routes) and routes[index] != entry and
-                len(routes) < maximum):
+                    len(routes) < maximum):
                 routes.insert(index, entry)
 
         return routes

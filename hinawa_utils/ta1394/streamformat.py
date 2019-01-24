@@ -5,6 +5,7 @@ from hinawa_utils.ta1394.general import AvcGeneral
 
 __all__ = ['AvcStreamFormatInfo']
 
+
 class AvcStreamFormatInfo():
     PLUG_DIRECTION = ('input', 'output')
     HIERARCHY_ROOTS = ('DVCR', 'Audio&Music', 'BT.601', 'invalid', 'reserved')

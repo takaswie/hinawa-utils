@@ -5,6 +5,7 @@ from hinawa_utils.dice.tcat_tcd22xx_spec import TcatTcd22xxSpec
 
 __all__ = ['FocusriteSaffireproSpec']
 
+
 class FocusriteSaffireproSpec(TcatTcd22xxSpec):
     MODELS = (
         (0x00130e, 0x000007),   # Saffire Pro 24

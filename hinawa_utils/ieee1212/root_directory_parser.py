@@ -8,15 +8,17 @@ from hinawa_utils.ieee1212.config_rom_lexer import EntryType
 
 __all__ = ['Ieee1212RootDirectoryParser']
 
+
 class DirectoryContext(Enum):
-    VENDOR          = auto()
-    SPECIFIER       = auto()
-    BUS_DEPENDENT   = auto()
-    KEYWORD         = auto()
+    VENDOR = auto()
+    SPECIFIER = auto()
+    BUS_DEPENDENT = auto()
+    KEYWORD = auto()
+
 
 class DescriptorType(Enum):
     TEXTUAL = 0x00
-    ICON    = 0x01
+    ICON = 0x01
 
     @classmethod
     def check_value(cls, value):
@@ -25,26 +27,28 @@ class DescriptorType(Enum):
 #
 # Table 16 - Key definitions
 #
+
+
 class KeyType(Enum):
-    ROOT                    = 0x00  # For my convenience.
-    DESCRIPTOR              = 0x01
-    BUS_DEPENDENT_INFO      = 0x02
-    VENDOR                  = 0x03
-    HARDWARE_VERSION        = 0x04
-    MODULE                  = 0x07
-    NODE_CAPABILITIES       = 0x0c
-    EUI_64                  = 0x0d
-    UNIT                    = 0x11
-    SPECIFIER_ID            = 0x12
-    VERSION                 = 0x13
-    DEPENDENT_INFO          = 0x14
-    UNIT_LOCATION           = 0x15
-    MODEL                   = 0x17
-    INSTANCE                = 0x18
-    KEYWORD                 = 0x19
-    FEATURE                 = 0x1a
-    MODIFIABLE_DESCRIPTOR   = 0x1f
-    DIRECTORY_ID            = 0x20
+    ROOT = 0x00  # For my convenience.
+    DESCRIPTOR = 0x01
+    BUS_DEPENDENT_INFO = 0x02
+    VENDOR = 0x03
+    HARDWARE_VERSION = 0x04
+    MODULE = 0x07
+    NODE_CAPABILITIES = 0x0c
+    EUI_64 = 0x0d
+    UNIT = 0x11
+    SPECIFIER_ID = 0x12
+    VERSION = 0x13
+    DEPENDENT_INFO = 0x14
+    UNIT_LOCATION = 0x15
+    MODEL = 0x17
+    INSTANCE = 0x18
+    KEYWORD = 0x19
+    FEATURE = 0x1a
+    MODIFIABLE_DESCRIPTOR = 0x1f
+    DIRECTORY_ID = 0x20
 
     @classmethod
     def check_value(cls, value):
@@ -131,6 +135,7 @@ class Ieee1212RootDirectoryParser():
     #
     # 7.5.4.1 Textual descriptors
     #
+
     def _parse_textual_descriptor(self, data):
         WIDTH_DEFINITIONS = {
             0x00:   'Fixed one-byte characters',
@@ -153,7 +158,7 @@ class Ieee1212RootDirectoryParser():
         # character_set == IANA MIBenum
         if character_set != 0:
             return OSError('Character set {0} is not supported.'.format(
-                                                                character_set))
+                character_set))
 
         # At present, 'US-ASCII' is supported only.
         if language & 0x8000 or language > 0:
@@ -184,7 +189,7 @@ class Ieee1212RootDirectoryParser():
         if specifier_id == 0x00:
             if not DescriptorType.check_value(descriptor_type):
                 raise OSError('Descritpor type {0} is not supported.'.format(
-                                                            descriptor_type))
+                    descriptor_type))
             type_id = DescriptorType(descriptor_type)
             return TYPE_PARSERS[type_id](data)
 
@@ -242,10 +247,10 @@ class Ieee1212RootDirectoryParser():
         info = {}
 
         info['base-address'] = \
-                (unpack('>I', data[0:4])[0] << 32) | unpack('>I', data[4:8])[0]
+            (unpack('>I', data[0:4])[0] << 32) | unpack('>I', data[4:8])[0]
         data = data[4:]
         info['upper-bound'] = \
-                (unpack('>I', data[0:4])[0] << 32) | unpack('>I', data[4:8])[0]
+            (unpack('>I', data[0:4])[0] << 32) | unpack('>I', data[4:8])[0]
         return info
 
     #
@@ -258,20 +263,20 @@ class Ieee1212RootDirectoryParser():
         info = {}
         info['max_descriptor_size'] = unpack('>I', data[0:2])[0] * 4
         info['descriptor_address'] = \
-                (unpack('>H', data[2:4])[0] << 32) | unpack('>I', data[4:8])[0]
+            (unpack('>H', data[2:4])[0] << 32) | unpack('>I', data[4:8])[0]
         return info
 
     def _parse_leaf(self, key_type, ctx, data):
         LEAF_PARSERS = {
-                KeyType.DESCRIPTOR:         self._parse_descriptor_leaf,
-                KeyType.BUS_DEPENDENT_INFO: self._parse_bus_dependent_info_leaf,
-                KeyType.VENDOR:             self._parse_vendor_leaf,
-                KeyType.MODULE:             self._parse_eui_64_leaf,
-                KeyType.EUI_64:             self._parse_eui_64_leaf,
-                KeyType.DEPENDENT_INFO:     self._parse_dependent_info_leaf,
-                KeyType.UNIT_LOCATION:      self._parse_unit_location_leaf,
-                KeyType.KEYWORD:            self._parse_keyword_leaf,
-                KeyType.MODIFIABLE_DESCRIPTOR: self._parse_modifiable_desc_leaf,
+            KeyType.DESCRIPTOR:         self._parse_descriptor_leaf,
+            KeyType.BUS_DEPENDENT_INFO: self._parse_bus_dependent_info_leaf,
+            KeyType.VENDOR:             self._parse_vendor_leaf,
+            KeyType.MODULE:             self._parse_eui_64_leaf,
+            KeyType.EUI_64:             self._parse_eui_64_leaf,
+            KeyType.DEPENDENT_INFO:     self._parse_dependent_info_leaf,
+            KeyType.UNIT_LOCATION:      self._parse_unit_location_leaf,
+            KeyType.KEYWORD:            self._parse_keyword_leaf,
+            KeyType.MODIFIABLE_DESCRIPTOR: self._parse_modifiable_desc_leaf,
         }
         if key_type not in LEAF_PARSERS or not LEAF_PARSERS[key_type]:
             raise OSError('Key {0} is not supported.'.format(key_type))
@@ -382,7 +387,8 @@ class Ieee1212RootDirectoryParser():
                 version = entry[1]
                 break
         else:
-            raise ValueError('Mandatory entries are missing in feature directory.')
+            raise ValueError(
+                'Mandatory entries are missing in feature directory.')
         ctx = (DirectoryContext.SPECIFIER, (specifier_id, version))
 
         keys = self._merge_common_keys(DEFINED_KEYS)
@@ -416,7 +422,8 @@ class Ieee1212RootDirectoryParser():
                 version = entry[1]
                 break
         else:
-            raise ValueError('Mandatory entries are missing in unit directory.')
+            raise ValueError(
+                'Mandatory entries are missing in unit directory.')
         ctx = (DirectoryContext.SPECIFIER, (specifier_id, version))
 
         keys = self._merge_common_keys(DEFINED_KEYS)
@@ -466,7 +473,8 @@ class Ieee1212RootDirectoryParser():
                 keyword = self._parse_leaf(entry[0][0], ctx, entry[1])
                 break
         else:
-            raise ValueError('Mandatory entry is missing in instance directory.')
+            raise ValueError(
+                'Mandatory entry is missing in instance directory.')
 
         ctx = (DirectoryContext.KEYWORD, keyword)
 
@@ -491,7 +499,7 @@ class Ieee1212RootDirectoryParser():
     def _parse_directory_entries(self, dir_key_type, ctx, entries, keys):
         TYPE_PARSERS = {
             EntryType.IMMEDIATE:    self.__parse_immediate,
-            EntryType.CSR_OFFSET:   lambda key_type, ctx, data: data,
+            EntryType.CSR_OFFSET: lambda key_type, ctx, data: data,
             EntryType.LEAF:         self._parse_leaf,
             EntryType.DIRECTORY:    self._parse_directory,
         }

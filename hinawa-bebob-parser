@@ -20,6 +20,7 @@ path = '/dev/fw{0}'.format(argv[1])
 mode = int(argv[2])
 unit = PlugParser(path)
 
+
 def dump_plug_info_to_stdio_as_json(unit):
     info = {
         'units': unit.unit_plugs,
@@ -28,6 +29,7 @@ def dump_plug_info_to_stdio_as_json(unit):
         'stream-formats': unit.stream_formats,
     }
     print(json.dumps(info))
+
 
 def dump_plug_info_to_stdio_as_ids_only(unit):
     for type, dir_plugs in unit.unit_plugs.items():
@@ -46,10 +48,10 @@ def dump_plug_info_to_stdio_as_ids_only(unit):
             for fb_type, fb_type_plugs in id_plugs.items():
                 for fb_id, fb_id_plugs in fb_type_plugs.items():
                     for plug_id, attrs in fb_id_plugs['outputs'].items():
-                        print(type, id, fb_type, fb_id, 'output', plug_id, \
+                        print(type, id, fb_type, fb_id, 'output', plug_id,
                               attrs['name'])
                     for plug_id, attrs in fb_id_plugs['inputs'].items():
-                        print(type, id, fb_type, fb_id, 'input', plug_id, \
+                        print(type, id, fb_type, fb_id, 'input', plug_id,
                               attrs['name'])
 
     for type, dir_fmts in unit.stream_formats.items():
@@ -58,10 +60,10 @@ def dump_plug_info_to_stdio_as_ids_only(unit):
                 for j, entry in enumerate(entries):
                     print(type, dir, i, j, entry['type'])
 
+
 if mode == 0:
     dump_plug_info_to_stdio_as_ids_only(unit)
 else:
     dump_plug_info_to_stdio_as_json(unit)
 
 sys.exit()
-

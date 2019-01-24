@@ -5,6 +5,7 @@
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.tscm.tscm_rack_unit import TscmRackUnit
 
+
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
@@ -24,6 +25,7 @@ def handle_clock_source(unit, args):
     print('    SRC:    [{0}]'.format('|'.join(unit.supported_clock_sources)))
     return False
 
+
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
@@ -41,11 +43,13 @@ def handle_sampling_rate(unit, args):
     print('    RATE:   [{0}]'.format('|'.join(rates)))
     return False
 
+
 def handle_firmware_versions(unit, args):
     info = unit.get_firmware_versions()
     for name, value in info.items():
         print('{0}: {1}'.format(name, value))
     return True
+
 
 def handle_routing(unit, args, cmd, labels, set_func, get_func):
     ops = ('set', 'get')
@@ -64,11 +68,13 @@ def handle_routing(unit, args, cmd, labels, set_func, get_func):
     print('    SRC:    [{0}]'.format('|'.join(labels)))
     return False
 
+
 def handle_coax_out_src(unit, args):
     return handle_routing(unit, args, 'coaxial-out-source',
                           unit.get_coax_out_src_labels(),
                           unit.set_coax_out_src,
                           unit.get_coax_out_src)
+
 
 def handle_opt_out_src(unit, args):
     return handle_routing(unit, args, 'optical-out-source',
@@ -76,11 +82,13 @@ def handle_opt_out_src(unit, args):
                           unit.set_opt_out_src,
                           unit.get_opt_out_src)
 
+
 def handle_stream_spdif_in_src(unit, args):
     return handle_routing(unit, args, 'stream-spdif-in-source',
                           unit.get_stream_spdif_in_src_labels(),
                           unit.set_stream_spdif_in_src,
                           unit.get_stream_spdif_in_src)
+
 
 def handle_input_threshold(unit, args):
     ops = ('set', 'get')
@@ -100,6 +108,7 @@ def handle_input_threshold(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    LEVEL:  [-inf, -90..0]')
     return True
+
 
 def handle_monitor_input(unit, args):
     ops = ('set', 'get')
@@ -140,6 +149,7 @@ def handle_monitor_input(unit, args):
     print('    MUTE:   [0|1] if OP=set')
     print('    BALANCE:[0-99] (left-to-right, percentage) if OP=set')
     return False
+
 
 cmds = {
     'clock-source':         handle_clock_source,

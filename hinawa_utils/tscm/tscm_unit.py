@@ -13,6 +13,7 @@ from hinawa_utils.tscm.config_rom_parser import TscmConfigRomParser
 
 __all__ = ['TscmUnit']
 
+
 class TscmUnit(Hinawa.SndUnit):
     _BASE_ADDR = 0xffff00000000
 
@@ -80,7 +81,8 @@ class TscmUnit(Hinawa.SndUnit):
 
     def set_clock_source(self, src):
         if src not in self.supported_clock_sources:
-            raise ValueError('Invalid argument for clock source: {0}'.format(src))
+            raise ValueError(
+                'Invalid argument for clock source: {0}'.format(src))
         src = self.supported_clock_sources.index(src) + 1
         frames = self.read_quadlet(0x0228)
         frames = bytearray(frames)

@@ -9,6 +9,7 @@ import signal
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.efw.efw_unit import EfwUnit
 
+
 def handle_hardware_info(unit, args):
     print('Mode: {0}'.format(unit.info['model']))
     print('Supported features:')
@@ -51,6 +52,7 @@ def handle_hardware_info(unit, args):
 
     return True
 
+
 def handle_clock_source(unit, args):
     ops = ('set', 'get')
     sources = []
@@ -72,6 +74,7 @@ def handle_clock_source(unit, args):
     print('    OP:        [{0}]'.format('|'.join(ops)))
     print('    SOURCE:    [{0}]'.format('|'.join(sources)))
     return False
+
 
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
@@ -95,6 +98,7 @@ def handle_sampling_rate(unit, args):
     print('    SOURCE:    [{0}]'.format('|'.join(map(str, rates))))
     return False
 
+
 def handle_control_room(unit, args):
     ops = ('set', 'get')
     sources = unit.get_control_room_source_labels()
@@ -112,6 +116,7 @@ def handle_control_room(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    SOURCE: [{0}]'.format('|'.join(sources)))
     return False
+
 
 def handle_digital_input(unit, args):
     ops = ('set', 'get')
@@ -131,6 +136,7 @@ def handle_digital_input(unit, args):
     print('    MODE:   [{0}] if OP=set'.format('|'.join(modes)))
     return False
 
+
 def handle_phantom_powering(unit, args):
     ops = ('set', 'get')
     if len(args) >= 1 and args[0] in ops:
@@ -147,6 +153,7 @@ def handle_phantom_powering(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    ENABLE: [0|1]')
     return False
+
 
 def handle_box_state(unit, args):
     states = unit.get_box_states()
@@ -171,6 +178,7 @@ def handle_box_state(unit, args):
         print('    VALUE:  [{0}] if NAME={1}'.format('|'.join(labels), state))
     return False
 
+
 def handle_rx_stream_mapping(unit, args):
     ops = ('set', 'get')
     # Generate stereo pair for outputs
@@ -181,14 +189,15 @@ def handle_rx_stream_mapping(unit, args):
         if index % 2 == 0:
             if prev is not name:
                 num = 0
-            targets.append('{0}-{1}/{2}'.format(name, num * 2 + 1, num * 2 + 2))
+            targets.append('{0}-{1}/{2}'.format(name,
+                                                num * 2 + 1, num * 2 + 2))
             prev = name
             num += 1
     # Generate stereo pair for sources
     sources = []
     for ch in range(unit.info['rx-stream-channels'][0]):
         if ch % 2 == 0:
-            sources.append('stream-{0}/{1}'.format(ch+ 1, ch + 2))
+            sources.append('stream-{0}/{1}'.format(ch + 1, ch + 2))
     maps = unit.get_stream_mapping()
     if len(args) >= 2:
         target, op = args[0:2]
@@ -208,6 +217,7 @@ def handle_rx_stream_mapping(unit, args):
     print('    SOURCE: [{0}]'.format('|'.join(sources)))
     return False
 
+
 def handle_tx_stream_mapping(unit, args):
     ops = ('set', 'get')
     # Generate stereo pair for inputs
@@ -225,7 +235,7 @@ def handle_tx_stream_mapping(unit, args):
     sinks = []
     for ch in range(unit.info['tx-stream-channels'][0]):
         if ch % 2 == 0:
-            sinks.append('stream-{0}/{1}'.format(ch+ 1, ch + 2))
+            sinks.append('stream-{0}/{1}'.format(ch + 1, ch + 2))
     maps = unit.get_stream_mapping()
     if len(args) >= 2:
         op, input = args[0:2]
@@ -245,6 +255,7 @@ def handle_tx_stream_mapping(unit, args):
     print('    INPUT:  [{0}]'.format('|'.join(inputs)))
     print('    SINK:   [{0}]'.format('|'.join(sinks)))
     return False
+
 
 def handle_output(unit, args):
     items = {
@@ -284,6 +295,7 @@ def handle_output(unit, args):
         print('    ENABLE: [0|1]         if OP=get ITEM=nominal')
     return False
 
+
 def handle_input(unit, args):
     items = {
         'nominal':  (unit.set_phys_in_nominal, unit.get_phys_in_nominal),
@@ -309,6 +321,7 @@ def handle_input(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    ENABLE: [0|1] if OP=set')
     return False
+
 
 def handle_playback(unit, args):
     items = {
@@ -343,6 +356,7 @@ def handle_playback(unit, args):
     print('    ENABLE: [0|1]       if OP=set and ITEM=mute')
     print('    ENABLE: [0|1]       if OP=set and ITEM=solo')
     return False
+
 
 def handle_monitor(unit, args):
     items = {
@@ -382,6 +396,7 @@ def handle_monitor(unit, args):
     print('    BALANCE:[0..255] (left-right)   if OP=set and ITEM=pan')
     return False
 
+
 def handle_listen_metering(unit, args):
     # This is handled by another context.
     def handle_unix_signal(signum, frame):
@@ -394,6 +409,7 @@ def handle_listen_metering(unit, args):
         print('')
         time.sleep(0.1)
     return True
+
 
 def get_available_commands(features):
     cmds = {
@@ -425,6 +441,7 @@ def get_available_commands(features):
         cmds['digital-input'] = handle_digital_input
 
     return cmds
+
 
 fullpath = CliKit.seek_snd_unit_path()
 if fullpath:

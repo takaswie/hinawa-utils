@@ -7,6 +7,7 @@ from hinawa_utils.ieee1394.config_rom_parser import Ieee1394ConfigRomParser
 
 __all__ = ['Dg00xConfigRomParser']
 
+
 class Dg00xConfigRomParser(Ieee1394ConfigRomParser):
     _OUI_MICROSOFT = 0x0050f2
 
@@ -55,7 +56,7 @@ class Dg00xConfigRomParser(Ieee1394ConfigRomParser):
                 if (entry[0][0] != 'SPECIFIER_ID' or
                     entry[1][0] != 'VERSION' or
                     entry[2][0] != 'MODEL' or
-                    entry[3][0] != 'DESCRIPTOR'):
+                        entry[3][0] != 'DESCRIPTOR'):
                     raise ValueError('Invalid data in unit directory.')
                 info['model-revision'] = entry[0][1]
                 info['model-version'] = entry[1][1]

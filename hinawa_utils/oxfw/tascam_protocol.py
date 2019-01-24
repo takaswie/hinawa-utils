@@ -11,10 +11,10 @@ from hinawa_utils.ta1394.general import AvcGeneral
 
 
 class VendorCmd(Enum):
-    DISPLAY_MODE    = 0x10
-    CONTROL_MODE    = 0x11
-    INPUT_MODE      = 0x12
-    FIRMWARE_VER    = 0x13
+    DISPLAY_MODE = 0x10
+    CONTROL_MODE = 0x11
+    INPUT_MODE = 0x12
+    FIRMWARE_VER = 0x13
 
 
 class TascamProtocol():

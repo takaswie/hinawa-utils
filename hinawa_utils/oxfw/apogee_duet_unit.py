@@ -17,7 +17,7 @@ class ApogeeDuetUnit(OxfwUnit):
         if (self.vendor_name != 'Apogee Electronics' or
                 self.model_name != 'Duet'):
             raise ValueError('Unsupported model: {0}, {1}'.format(
-                                            self.vendor_name, self.model_name))
+                self.vendor_name, self.model_name))
 
     #
     # Mic configurations.

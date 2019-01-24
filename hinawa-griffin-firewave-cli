@@ -6,6 +6,7 @@ from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.oxfw.oxfw_unit import OxfwUnit
 from hinawa_utils.ta1394.audio import AvcAudio
 
+
 def handle_current_status(unit, args):
     print('Current status:')
     print('  Packet Streaming:')
@@ -27,6 +28,7 @@ def handle_current_status(unit, args):
     print('  ID:               {0}'.format(unit.hw_info['asic-id']))
     print('  firmware version: {0}'.format(unit.hw_info['firmware-version']))
     return True
+
 
 def handle_output_volume(unit, args):
     ops = ('set', 'get')
@@ -50,6 +52,7 @@ def handle_output_volume(unit, args):
     print('    dB: [-128.0..128.0] if OP=set')
     return False
 
+
 def handle_ouptut_mute(unit, args):
     ops = ('set', 'get')
     if len(args) > 0 and args[0] in ops:
@@ -58,13 +61,15 @@ def handle_ouptut_mute(unit, args):
             mute = int(args[1])
             AvcAudio.set_feature_mute_state(unit.fcp, 0, 'current', 1, 0, mute)
         else:
-            print(AvcAudio.get_feature_mute_state(unit.fcp, 0, 'current', 1, 0))
+            print(AvcAudio.get_feature_mute_state(
+                unit.fcp, 0, 'current', 1, 0))
         return True
     print('Arguments for output-mute command:')
     print('  output-mute OPERATION [MUTE]')
     print('    OPERATION: {0}'.format(', '.join(ops)))
     print('    MUTE:      0, 1')
     return False
+
 
 cmds = {
     'current-status':   handle_current_status,

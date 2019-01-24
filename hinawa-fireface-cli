@@ -13,7 +13,8 @@ def handle_status(unit, args):
     for target in unit.get_single_option_labels():
         print('  {0}'.format(target))
         for item in unit.get_single_option_item_labels(target):
-            print('    {0}: {1}'.format(item, unit.get_single_option(target, item)))
+            print('    {0}: {1}'.format(
+                item, unit.get_single_option(target, item)))
     for target in unit.get_multiple_option_labels():
         print('  {0}: {1}'.format(target, unit.get_multiple_option(target)))
 
@@ -50,7 +51,8 @@ def handle_multiple_option(unit, args):
     print('    OP      [{0}]'.format('|'.join(ops)))
     for target in targets:
         vals = unit.get_multiple_option_value_labels(target)
-        print('    ITEM    [{0}] if TARGET={1} and OP=set'.format('|'.join(vals), target))
+        print('    ITEM    [{0}] if TARGET={1} and OP=set'.format(
+            '|'.join(vals), target))
     return False
 
 
@@ -75,7 +77,8 @@ def handle_single_option(unit, args):
     print('    TARGET: [{0}]'.format('|'.join(targets)))
     for target in targets:
         items = unit.get_single_option_item_labels(target)
-        print('    ITEM    [{0}] if TARGET={1}'.format('|'.join(items), target))
+        print('    ITEM    [{0}] if TARGET={1}'.format(
+            '|'.join(items), target))
     print('    OP      [{0}]'.format('|'.join(ops)))
     print('    ENABLE: [0|1]')
     return False
@@ -105,7 +108,8 @@ def handle_mixer_src(unit, args):
     print('    TARGET: [{0}]'.format('|'.join(targets)))
     print('    SRC:    [{0}]'.format('|'.join(srcs)))
     print('    OP:     [{0}]'.format('|'.join(ops)))
-    print('    dB:     [{0}, {1:.1f}..{2:.1f}] if OP=set'.format(mute, minimum, maximum))
+    print('    dB:     [{0}, {1:.1f}..{2:.1f}] if OP=set'.format(
+        mute, minimum, maximum))
     return False
 
 
@@ -129,7 +133,8 @@ def handle_output(unit, args):
     print('  output TARGET [dB]')
     print('    TARGET: [{0}]'.format('|'.join(targets)))
     print('    OP:     [{0}]'.format('|'.join(ops)))
-    print('    dB:     [{0}, {1:.1f}..{2:.1f}] if OP=set'.format(mute, minimum, maximum))
+    print('    dB:     [{0}, {1:.1f}..{2:.1f}] if OP=set'.format(
+        mute, minimum, maximum))
     return False
 
 

@@ -5,6 +5,7 @@ from hinawa_utils.tscm.tscm_unit import TscmUnit
 
 __all__ = ['TscmConsoleUnit']
 
+
 class TscmConsoleUnit(TscmUnit):
     def __init__(self, path):
         super().__init__(path)
@@ -28,6 +29,7 @@ class TscmConsoleUnit(TscmUnit):
         else:
             frames[1] = 0x40
         self.write_quadlet(0x022c, frames)
+
     def get_master_fader(self):
         frames = self.read_quadlet(0x022c)
         return bool(frames[3] & 0x40)

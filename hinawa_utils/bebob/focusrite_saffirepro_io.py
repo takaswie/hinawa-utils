@@ -13,6 +13,7 @@ from hinawa_utils.ta1394.general import AvcConnection
 
 __all__ = ['FocusriteSaffireproIoUnit']
 
+
 class FocusriteSaffireproIoUnit(BebobUnit):
     _BASE_ADDR = 0x000100000000
 
@@ -75,8 +76,8 @@ class FocusriteSaffireproIoUnit(BebobUnit):
     }
 
     _RATE_MODES = {
-        'low':      ( 44100,  48000),
-        'middle':   ( 88200,  96000),
+        'low':      (44100,  48000),
+        'middle':   (88200,  96000),
         'high':     (176400, 192000),
     }
 
@@ -138,6 +139,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
 
     def get_mixer_input_labels(self):
         return self._INPUTS
+
     def set_mixer_input_balance(self, target, ch, balance):
         if target not in self._INPUTS:
             raise ValueError('Invalid value for input target.')
@@ -148,6 +150,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         quads[pos] = int(total * balance // 100)
         quads[pos + 2] = int(total * (100 - balance) // 100)
         self._write_quads(offset, quads)
+
     def get_mixer_input_balance(self, target, ch):
         if target not in self._INPUTS:
             raise ValueError('Invalid value for input target.')
@@ -156,6 +159,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         pos = ch - 1
         total = quads[pos] + quads[pos + 2]
         return quads[pos] * 100 // total
+
     def set_mixer_input_gain(self, target, ch, db):
         if target not in self._INPUTS:
             raise ValueError('Invalid value for input target.')
@@ -168,6 +172,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         quads[pos] = int(value * quads[pos] // total)
         quads[pos + 2] = int(value * quads[pos + 2] // total)
         self._write_quads(offset, quads)
+
     def get_mixer_input_gain(self, target, ch):
         if target not in self._INPUTS:
             raise ValueError('Invalid value for input target.')
@@ -180,6 +185,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
 
     def get_output_destination_labels(self):
         return self._OUTPUTS
+
     def get_output_source_labels(self, target):
         labels = []
         labels.append('Stream-1/2')
@@ -187,6 +193,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
             labels.append(target.replace('Analog-', 'Stream-'))
         labels.append('Mixer-1/2')
         return labels
+
     def set_output_source(self, target, source):
         if target not in self._OUTPUTS:
             raise ValueError('Invalid value for output target.')
@@ -200,6 +207,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         quads[labels.index(source)] = 0x00007fff
         quads[len(labels) + labels.index(source)] = 0x00007fff
         self._write_quads(offset, quads)
+
     def get_output_source(self, target):
         if target not in self._OUTPUTS:
             raise ValueError('Invalid value for output target.')
@@ -213,26 +221,31 @@ class FocusriteSaffireproIoUnit(BebobUnit):
 
     def get_output_labels(self):
         return list(self._OUTPUT_PARAMS_OFFSETS.keys())
+
     def _write_output_quad(self, target, quads):
         if target not in self._OUTPUT_PARAMS_OFFSETS:
             raise ValueError('Invalid value for output target.')
         offset = self._OUTPUT_PARAMS_OFFSETS[target]
         self._write_quads(offset, quads)
+
     def _read_output_quad(self, target):
         if target not in self._OUTPUT_PARAMS_OFFSETS:
             raise ValueError('Invalid value for output target.')
         offset = self._OUTPUT_PARAMS_OFFSETS[target]
         return self._read_quads(offset, 1)
+
     def set_output_volume(self, target, db):
         quads = self._read_output_quad(target)
         data = AvcAudio.build_data_from_db(db)
         quads[0] &= ~0x0000ffff
         quads[0] |= unpack('>H', data)[0]
         self._write_output_quad(target, quads)
+
     def get_output_volume(self, target):
         quads = self._read_output_quad(target)
         data = pack('>I', quads[0])
         return AvcAudio.parse_data_to_db(data[2:])
+
     def set_output_mute(self, target, enable):
         quads = self._read_output_quad(target)
         if enable:
@@ -240,9 +253,11 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         else:
             quads[0] &= ~(1 << 24)
         self._write_output_quad(target, quads)
+
     def get_output_mute(self, target):
         quads = self._read_output_quad(target)
         return bool(quads[0] & (1 << 24))
+
     def set_output_hwctl(self, target, enable):
         quads = self._read_output_quad(target)
         if enable:
@@ -250,9 +265,11 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         else:
             quads[0] &= ~(1 << 26)
         self._write_output_quad(target, quads)
+
     def get_output_hwctl(self, target):
         quads = self._read_output_quad(target)
         return bool(quads[0] & (1 << 26))
+
     def set_output_pad(self, target, enable):
         quads = self._read_output_quad(target)
         if enable:
@@ -260,9 +277,11 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         else:
             quads[0] &= ~(1 << 27)
         self._write_output_quad(target, quads)
+
     def get_output_pad(self, target):
         quads = self._read_output_quad(target)
         return bool(quads[0] & (1 << 27))
+
     def set_output_dim(self, target, enable):
         quads = self._read_output_quad(target)
         if enable:
@@ -270,12 +289,14 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         else:
             quads[0] &= ~(1 << 28)
         self._write_output_quad(target, quads)
+
     def get_output_dim(self, target):
         quads = self._read_output_quad(target)
         return bool(quads[0] & (1 << 28))
 
     def get_supported_rate_modes(self):
         return self._caps['rate-modes']
+
     def set_rate_mode(self, mode):
         if self.get_property('streaming'):
             raise OSError('Packet streaming starts')
@@ -286,6 +307,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         # This corresponds to bus reset and the unit disappears from the bus,
         # then appears with a set mode.
         self._write_quads(0x150, quads)
+
     def get_rate_mode(self):
         rate = AvcConnection.get_plug_signal_format(self.fcp, 'input', 0)
         for mode, rates in self._RATE_MODES.items():
@@ -303,6 +325,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         else:
             raise OSError('Invalid state for sampling rate.')
         return rates
+
     def set_sampling_rate(self, rate):
         if self.get_property('streaming'):
             raise OSError('Packet streaming starts')
@@ -316,6 +339,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
             raise ValueError('Invalid argument for sampling rate.')
         AvcConnection.set_plug_signal_format(self.fcp, 'input', 0, rate)
         AvcConnection.set_plug_signal_format(self.fcp, 'output', 0, rate)
+
     def get_sampling_rate(self):
         in_rate = AvcConnection.get_plug_signal_format(self.fcp, 'input', 0)
         out_rate = AvcConnection.get_plug_signal_format(self.fcp, 'output', 0)
@@ -325,6 +349,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
 
     def get_supported_clock_sources(self):
         return self._caps['clocks']
+
     def set_clock_source(self, source):
         if self.get_property('streaming'):
             raise OSError('Packet streaming starts')
@@ -333,6 +358,7 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         quads = []
         quads.append(self._CLOCK_BITS[source])
         self._write_quads(0x0174, quads)
+
     def get_clock_source(self):
         quads = self._read_quads(0x0174, 1)
         quads[0] & 0xff

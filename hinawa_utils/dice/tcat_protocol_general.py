@@ -5,6 +5,7 @@ from struct import unpack
 
 __all__ = ['TcatProtocolGeneral']
 
+
 class TcatProtocolGeneral():
     _BASE_ADDR = 0xffffe0000000
     _MAXIMUM_TRX_LENGTH = 512

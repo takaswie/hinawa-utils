@@ -10,6 +10,7 @@ from hinawa_utils.ta1394.config_rom_parser import Ta1394ConfigRomParser
 
 __all__ = ['DiceUnit']
 
+
 class DiceUnit(Hinawa.SndDice):
     def __init__(self, path):
         if path.find('/dev/snd/hw') == 0:

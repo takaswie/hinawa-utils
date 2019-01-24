@@ -7,6 +7,7 @@ from hinawa_utils.ta1394.audio import AvcAudio
 
 __all__ = ['PhaseGoProtocolOpt']
 
+
 class PhaseGoProtocolOpt(PhaseGoProtocolAbstract):
     __MIXER_OUTPUT_FB = 2
     __OUTPUT_LABELS = {

@@ -8,6 +8,7 @@ from hinawa_utils.dg00x.dg00x_unit import Dg00xUnit
 
 __all__ = ['Dg003Unit']
 
+
 class Dg003Unit(Dg00xUnit):
     __OFFSET_MIXER_SRC = 0x0300
     __MAX_COEFF = 0x1fffffff

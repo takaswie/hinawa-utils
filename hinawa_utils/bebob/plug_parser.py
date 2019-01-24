@@ -12,6 +12,7 @@ from hinawa_utils.bebob.extensions import BcoStreamFormatInfo
 
 __all__ = ['PlugParser']
 
+
 class PlugParser(BebobUnit):
     def __init__(self, path):
         super().__init__(path)
@@ -62,7 +63,8 @@ class PlugParser(BebobUnit):
         if plug['type'] is 'IsoStream':
             clusters = BcoPlugInfo.get_plug_clusters(self.fcp, addr)
             for cluster in range(len(clusters)):
-                clst = BcoPlugInfo.get_plug_cluster_info(self.fcp, addr, cluster + 1)
+                clst = BcoPlugInfo.get_plug_cluster_info(
+                    self.fcp, addr, cluster + 1)
                 plug['clusters'].append(clst)
         plug['input'] = []
         plug['outputs'] = []
@@ -106,7 +108,8 @@ class PlugParser(BebobUnit):
         if plug['type'] == 'IsoStream':
             clusters = BcoPlugInfo.get_plug_clusters(self.fcp, addr)
             for cluster in range(len(clusters)):
-                clst = BcoPlugInfo.get_plug_cluster_info(self.fcp, addr, cluster + 1)
+                clst = BcoPlugInfo.get_plug_cluster_info(
+                    self.fcp, addr, cluster + 1)
                 plug['clusters'].append(clst)
         plug['input'] = {}
         plug['outputs'] = []
@@ -133,7 +136,7 @@ class PlugParser(BebobUnit):
                 entries = []
                 for page in range(0xff):
                     elems = BcoSubunitInfo.get_subunit_fb_info(self.fcp,
-                                        subunit_type, subunit_id, page, 0xff)
+                                                               subunit_type, subunit_id, page, 0xff)
                     if len(elems) == 0:
                         break
                     entries.extend(elems)
@@ -150,11 +153,11 @@ class PlugParser(BebobUnit):
                     fb['inputs'] = {}
                     for i in range(entry['inputs']):
                         plug = self._parse_fb_plug('input', subunit_type,
-                                                subunit_id, fb_type, fb_id, i)
+                                                   subunit_id, fb_type, fb_id, i)
                         fb['inputs'][i] = plug
                     for i in range(entry['outputs']):
                         plug = self._parse_fb_plug('output', subunit_type,
-                                                subunit_id, fb_type, fb_id, i)
+                                                   subunit_id, fb_type, fb_id, i)
                         fb['outputs'][i] = plug
 
                     fbs[fb_type][fb_id] = fb
@@ -167,7 +170,7 @@ class PlugParser(BebobUnit):
                        num):
         plug = {}
         addr = BcoPlugInfo.get_function_block_addr(dir, subunit_type,
-                                            subunit_id, fb_type, fb_id, num)
+                                                   subunit_id, fb_type, fb_id, num)
         plug['type'] = BcoPlugInfo.get_plug_type(self.fcp, addr)
         plug['name'] = BcoPlugInfo.get_plug_name(self.fcp, addr)
         plug['channels'] = []
@@ -179,7 +182,8 @@ class PlugParser(BebobUnit):
         if plug['type'] is 'IsoStream':
             clusters = BcoPlugInfo.get_plug_clusters(self.fcp, addr)
             for cluster in range(len(clusters)):
-                clst = BcoPlugInfo.get_plug_cluster_info(self.fcp, addr, cluster + 1)
+                clst = BcoPlugInfo.get_plug_cluster_info(
+                    self.fcp, addr, cluster + 1)
                 plug['clusters'].append(clst)
         plug['input'] = {}
         plug['outputs'] = []

@@ -5,6 +5,7 @@ from hinawa_utils.ieee1394.config_rom_parser import Ieee1394ConfigRomParser
 
 __all__ = ['TscmConfigRomParser']
 
+
 class TscmConfigRomParser(Ieee1394ConfigRomParser):
     __OUI = 0x00022e
 
@@ -47,14 +48,15 @@ class TscmConfigRomParser(Ieee1394ConfigRomParser):
                 entry = entry[1]
                 if (entry[0] != ['SPECIFIER_ID', self.__OUI] or
                     entry[1][0] != 'VERSION' or
-                    entry[2][0] != 'DEPENDENT_INFO'):
+                        entry[2][0] != 'DEPENDENT_INFO'):
                     raise ValueError('Invalid data in unit directory.')
                 info['model-version'] = entry[1][1]
 
                 entry = entry[2][1]
                 if (entry[0][0] != 'DESCRIPTOR' or
-                    entry[1][0] != 'MODEL_NAME'):
-                    raise ValueError('Invalid data in dependent info directory.')
+                        entry[1][0] != 'MODEL_NAME'):
+                    raise ValueError(
+                        'Invalid data in dependent info directory.')
                 info['vendor-name'] = entry[0][1]
                 info['model-name'] = entry[1][1]
             else:

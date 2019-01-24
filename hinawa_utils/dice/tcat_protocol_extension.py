@@ -10,6 +10,8 @@ __all__ = ['ExtCtlSpace', 'ExtCapsSpace', 'ExtCmdSpace', 'ExtMixerSpace',
            'ExtCurrentConfigSpace', 'ExtStandaloneSpace', 'ExtAppSpace']
 
 # '3.1 External control private space'
+
+
 class ExtCtlSpace():
     _EXT_OFFSET = 0x00200000
 
@@ -44,10 +46,10 @@ class ExtCtlSpace():
         layout = {}
 
         data = protocol.read_transactions(req, cls._EXT_OFFSET,
-                                           len(cls._SECTIONS) * 8)
+                                          len(cls._SECTIONS) * 8)
         for name, offset in cls._SECTIONS.items():
             layout[name] = {
-                'offset': unpack('>I', data[offset    : offset + 4])[0] * 4,
+                'offset': unpack('>I', data[offset: offset + 4])[0] * 4,
                 'length': unpack('>I', data[offset + 4: offset + 8])[0] * 4,
             }
 
@@ -55,11 +57,13 @@ class ExtCtlSpace():
         return layout
 
 # '3.2 Capability space'
+
+
 class ExtCapsSpace():
-    _OFFSET_ROUTER_CAPS     = 0x00
-    _OFFSET_MIXER_CAPS      = 0x04
-    _OFFSET_GENERAL_CAPS    = 0x08
-    _OFFSET_RESERVED_CAPS   = 0x0c
+    _OFFSET_ROUTER_CAPS = 0x00
+    _OFFSET_MIXER_CAPS = 0x04
+    _OFFSET_GENERAL_CAPS = 0x08
+    _OFFSET_RESERVED_CAPS = 0x0c
 
     _ASIC_TYPES = {
         0x00: 'DICE-II',
@@ -73,10 +77,10 @@ class ExtCapsSpace():
         caps = {}
 
         data = data[cls._OFFSET_ROUTER_CAPS:]
-        caps['is-exposed']  = bool(data[3] & 0x01)
+        caps['is-exposed'] = bool(data[3] & 0x01)
         caps['is-readonly'] = bool(data[3] & 0x02)
         caps['is-storable'] = bool(data[3] & 0x04)
-        caps['maximum-routes']  = unpack('>H', data[0:2])[0]
+        caps['maximum-routes'] = unpack('>H', data[0:2])[0]
 
         return caps
 
@@ -85,13 +89,13 @@ class ExtCapsSpace():
         caps = {}
 
         data = data[cls._OFFSET_MIXER_CAPS:]
-        caps['is-exposed']          = bool(data[3] & 0x01)
-        caps['is-readonly']         = bool(data[3] & 0x02)
-        caps['is-storable']         = bool(data[3] & 0x04)
-        caps['input-device-id']     = (data[3] & 0xf0) >> 4
-        caps['output-device-id']    = data[2] & 0x0f
-        caps['input-channels']      = data[1]
-        caps['output-channels']     = data[0]
+        caps['is-exposed'] = bool(data[3] & 0x01)
+        caps['is-readonly'] = bool(data[3] & 0x02)
+        caps['is-storable'] = bool(data[3] & 0x04)
+        caps['input-device-id'] = (data[3] & 0xf0) >> 4
+        caps['output-device-id'] = data[2] & 0x0f
+        caps['input-channels'] = data[1]
+        caps['output-channels'] = data[0]
         return caps
 
     @classmethod
@@ -99,12 +103,12 @@ class ExtCapsSpace():
         caps = {}
 
         data = data[cls._OFFSET_GENERAL_CAPS:]
-        caps['dynamic-stream-conf']     = bool(data[3] & 0x01)
-        caps['storage-available']       = bool(data[3] & 0x02)
-        caps['peak-available']          = bool(data[3] & 0x04)
-        caps['maximum-tx-streams']      = (data[3] & 0xf0) >> 4
-        caps['maximum-rx-streams']      = data[2] & 0x0f
-        caps['storable-stream-conf']    = bool(data[2] & 0x10)
+        caps['dynamic-stream-conf'] = bool(data[3] & 0x01)
+        caps['storage-available'] = bool(data[3] & 0x02)
+        caps['peak-available'] = bool(data[3] & 0x04)
+        caps['maximum-tx-streams'] = (data[3] & 0xf0) >> 4
+        caps['maximum-rx-streams'] = data[2] & 0x0f
+        caps['storable-stream-conf'] = bool(data[2] & 0x10)
         asic_type = data[1]
         if asic_type < len(cls._ASIC_TYPES) - 1:
             caps['asic-type'] = cls._ASIC_TYPES[asic_type]
@@ -119,8 +123,8 @@ class ExtCapsSpace():
         length = protocol._ext_layout['caps']['length']
         data = ExtCtlSpace.read_section(protocol, req, 'caps', 0, length)
 
-        caps['router']  = cls._parse_router_caps(data)
-        caps['mixer']   = cls._parse_mixer_caps(data)
+        caps['router'] = cls._parse_router_caps(data)
+        caps['mixer'] = cls._parse_mixer_caps(data)
         caps['general'] = cls._parse_general_caps(data)
         caps['reserved'] = data[cls._OFFSET_RESERVED_CAPS:]
 
@@ -129,6 +133,8 @@ class ExtCapsSpace():
         return caps
 
 # '3.3 Command space'
+
+
 class ExtCmdSpace():
     _OFFSET_OPCODE = 0x0000
     _OFFSET_RETURN = 0x0004
@@ -174,7 +180,8 @@ class ExtCmdSpace():
         data[1] = cls._RATE_MODES[mode]
         data[3] = cls._OP_CODES.index(cmd)
 
-        ExtCtlSpace.write_section(protocol, req, 'cmd', cls._OFFSET_OPCODE, data)
+        ExtCtlSpace.write_section(
+            protocol, req, 'cmd', cls._OFFSET_OPCODE, data)
 
         # Completion is notified as clearing of bit flags in the register.
         count = 10
@@ -194,6 +201,8 @@ class ExtCmdSpace():
             raise IOError('Fail to execute requested operation.')
 
 # '3.4 Mixer space'
+
+
 class ExtMixerSpace():
     # These are TCD-2200/2210 specification.
     MIXER_IN_MAX_PORTS = {
@@ -228,7 +237,8 @@ class ExtMixerSpace():
             raise ValueError('Invalid value for output channel')
         if in_ch >= protocol._ext_caps['mixer']['input-channels']:
             raise ValueError('Invalid value for input channel')
-        offset = (out_ch * protocol._ext_caps['mixer']['input-channels'] + in_ch) * 4
+        offset = (
+            out_ch * protocol._ext_caps['mixer']['input-channels'] + in_ch) * 4
         if offset >= protocol._ext_layout['mixer']['length']:
             raise OSError('Inconsistency between channels and length of space')
 
@@ -274,6 +284,8 @@ class ExtMixerSpace():
         return unpack('>H', data[2:4])[0]
 
 # '3.6 New router space'
+
+
 class ExtNewRouterSpace():
     _SRC_BLK_IDS = (
         'aes', 'adat', 'mixer', 'reserved0',
@@ -380,6 +392,8 @@ class ExtNewRouterSpace():
         return cls.parse_data(protocol, req, 'new-router', 0, length)
 
 # '3.5 Peak space'
+
+
 class ExtPeakSpace():
     @classmethod
     def get(cls, protocol, req):
@@ -397,6 +411,8 @@ class ExtPeakSpace():
         return entries
 
 # '3.7 New stream config space'
+
+
 class ExtNewStreamConfigSpace():
     @classmethod
     def _parse_entry(cls, data):
@@ -458,9 +474,11 @@ class ExtNewStreamConfigSpace():
         offset = protocol._ext_layout['new-stream-config']['offset']
         length = protocol._ext_layout['new-stream-config']['length']
         return ExtNewStreamConfigSpace.parse_data(protocol, req,
-                                            'new-stream-config', offset, length)
+                                                  'new-stream-config', offset, length)
 
 # '3.8 Current config space'
+
+
 class ExtCurrentConfigSpace():
     _RATE_MODES = {
         'low':      0x0000,
@@ -486,9 +504,11 @@ class ExtCurrentConfigSpace():
         offset = cls._RATE_MODES[mode] + 0x1000
 
         return ExtNewStreamConfigSpace.parse_data(protocol, req,
-                                            'current-config', offset, 0x1000)
+                                                  'current-config', offset, 0x1000)
 
 # '3.9 Stand alone config space'
+
+
 class ExtStandaloneSpace():
     _AES_EXT_OPTIONS = {
         'high-rate': {
@@ -532,14 +552,17 @@ class ExtStandaloneSpace():
             raise ValueError('Invalid argument for clock source.')
         val = {v: k for k, v in protocol.CLOCK_BITS.items()}[source]
 
-        data = ExtCtlSpace.read_section(protocol, req, 'standalone-config', 0, 4)
+        data = ExtCtlSpace.read_section(
+            protocol, req, 'standalone-config', 0, 4)
         if val != data[3]:
             data[3] = val
-            ExtCtlSpace.write_section(protocol, req, 'standalone-config', 0, data)
+            ExtCtlSpace.write_section(
+                protocol, req, 'standalone-config', 0, data)
 
     @classmethod
     def read_clock_source(cls, protocol, req):
-        data = ExtCtlSpace.read_section(protocol, req, 'standalone-config', 0, 4)
+        data = ExtCtlSpace.read_section(
+            protocol, req, 'standalone-config', 0, 4)
         val = data[3]
         if (val not in protocol.CLOCK_BITS or
                 protocol._clock_source_labels[val] == 'Unused'):
@@ -594,7 +617,8 @@ class ExtStandaloneSpace():
         data = pack('>I', val)
 
         offset = cls._STANDALONE_SPACE_OFFSETS[source]
-        ExtCtlSpace.write_section(protocol, req, 'standalone-config', offset, data)
+        ExtCtlSpace.write_section(
+            protocol, req, 'standalone-config', offset, data)
 
     @classmethod
     def read_clock_source_params(cls, protocol, req, source):
@@ -611,8 +635,8 @@ class ExtStandaloneSpace():
         if source == 'word-clock':
             mode = {v: k for k, v in param_options['mode'].items()}[val & 0x03]
             params['mode'] = mode
-            params['mul']  = ((val >> 2) & 0x3fff) + 1
-            params['div']  = (val >> 16) + 1
+            params['mul'] = ((val >> 2) & 0x3fff) + 1
+            params['div'] = (val >> 16) + 1
         elif source == 'internal':
             index = val & 0x0f
             if index not in protocol.RATE_BITS:
@@ -628,6 +652,8 @@ class ExtStandaloneSpace():
         return params
 
 # '3.10 Application space'
+
+
 class ExtAppSpace():
     @classmethod
     def set(cls, protocol, req, offset, data):

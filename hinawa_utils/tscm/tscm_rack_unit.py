@@ -8,6 +8,7 @@ from hinawa_utils.tscm.tscm_unit import TscmUnit
 
 __all__ = ['TscmRackUnit']
 
+
 class TscmRackUnit(TscmUnit):
     _OFFSET_CH_CTL = 0x0408
 
@@ -78,7 +79,8 @@ class TscmRackUnit(TscmUnit):
 
     def _get_frames(self, ch):
         if ch not in self._CH_LABELS:
-            raise ValueError('Invalid argument for channel label: {0}'.format(ch))
+            raise ValueError(
+                'Invalid argument for channel label: {0}'.format(ch))
         pos = self._CH_LABELS.index(ch) * self._CH_FRAME_SIZE
         return self._cache[pos:pos + self._CH_FRAME_SIZE]
 
@@ -92,16 +94,19 @@ class TscmRackUnit(TscmUnit):
         else:
             frames[0] &= ~0x80
         self._write_frames(frames)
+
     def get_mute(self, ch):
         frames = self._get_frames(ch)
         return bool(frames[0] & 0x80)
 
     def set_balance(self, ch, balance):
         if balance < 0 or balance > 99:
-            raise ValueError('Invalid argument for LR Balance: {0}'.format(balance))
+            raise ValueError(
+                'Invalid argument for LR Balance: {0}'.format(balance))
         frames = self._get_frames(ch)
         frames[1] = balance * 0xff // 99
         self._write_frames(frames)
+
     def get_balance(self, ch):
         frames = self._get_frames(ch)
         return frames[1] * 99 // 0xff
@@ -115,6 +120,7 @@ class TscmRackUnit(TscmUnit):
         frames[2] = data[0]
         frames[3] = data[1]
         self._write_frames(frames)
+
     def get_gain(self, ch):
         frames = self._get_frames(ch)
         return unpack('>H', frames[2:4])[0] * 99 // 0x7fff

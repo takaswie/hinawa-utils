@@ -5,6 +5,7 @@ from hinawa_utils.dice.tcat_tcd22xx_spec import TcatTcd22xxSpec
 
 __all__ = ['PresonusFirestudioSpec']
 
+
 class PresonusFirestudioSpec(TcatTcd22xxSpec):
     MODELS = (
         (0x000a92, 0x000008),   # Firestudio 26x26

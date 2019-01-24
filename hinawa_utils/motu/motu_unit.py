@@ -12,6 +12,7 @@ from hinawa_utils.motu.config_rom_parser import MotuConfigRomParser
 
 __all__ = ['MotuUnit']
 
+
 class MotuUnit(Hinawa.SndMotu):
     SUPPORTED_MODELS = {
         0x102802: ('828',       MotuProtocolV1),
@@ -88,7 +89,8 @@ class MotuUnit(Hinawa.SndMotu):
 
     def get_opt_iface_mode(self, direction, index):
         if direction not in self._protocol.get_supported_opt_iface_directions():
-            raise ValueError('Invalid argument for direction of optical iface.')
+            raise ValueError(
+                'Invalid argument for direction of optical iface.')
 
         if index not in self._protocol.get_supported_opt_iface_indexes():
             raise ValueError('Invalid argument for index of optical iface.')

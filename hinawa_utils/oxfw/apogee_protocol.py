@@ -15,28 +15,28 @@ __all__ = ['MicCmd', 'InputCmd', 'OutputCmd', 'MixerCmd', 'DisplayCmd',
 
 
 class VendorCmd(Enum):
-    MIC_POLARITY    = 0x00
-    IN_LEVEL        = 0x01
-    IN_ATTR         = 0x02
-    MIC_POWER       = 0x03
-    OUT_ATTR        = 0x04
-    IN_GAIN         = 0x05
-    HW_STATUS       = 0x07
+    MIC_POLARITY = 0x00
+    IN_LEVEL = 0x01
+    IN_ATTR = 0x02
+    MIC_POWER = 0x03
+    OUT_ATTR = 0x04
+    IN_GAIN = 0x05
+    HW_STATUS = 0x07
     # Unknown: 0x08
-    OUT_MUTE        = 0x09
-    IN_SRC          = 0x0c
-    MIXER_SRC       = 0x10
-    OUT_SRC         = 0x11
+    OUT_MUTE = 0x09
+    IN_SRC = 0x0c
+    MIXER_SRC = 0x10
+    OUT_SRC = 0x11
     DISPLAY_OVERHOLD = 0x13
-    DISPLAY_CLEAR   = 0x14
-    OUT_VOLUME      = 0x15
+    DISPLAY_CLEAR = 0x14
+    OUT_VOLUME = 0x15
     # Out mute is engaged for speaker: 0x16
     # Out mute is engaged for headphone: 0x17
     # Out mute is not engaged for speaker: 0x18
     # Out mute is not engaged for headphone: 0x19
-    DISPLAY_TARGET  = 0x1b
-    IN_CLICKLESS    = 0x1e
-    DISPLAY_FOLLOW  = 0x22
+    DISPLAY_TARGET = 0x1b
+    IN_CLICKLESS = 0x1e
+    DISPLAY_FOLLOW = 0x22
 
 
 class ApogeeProtocol():
@@ -441,8 +441,8 @@ class DisplayCmd():
     }
 
     __FOLLOWS = {
-       False:   0x60,
-       True:    0x70,
+        False:   0x60,
+        True:    0x70,
     }
 
     @classmethod

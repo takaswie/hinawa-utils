@@ -5,6 +5,7 @@ from hinawa_utils.motu.motu_protocol_abstract import MotuProtocolAbstract
 
 __all__ = ['MotuProtocolV1']
 
+
 class MotuProtocolV1(MotuProtocolAbstract):
     SUPPORTED_MODELS = ('828', '896')
 

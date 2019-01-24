@@ -6,6 +6,7 @@ from hinawa_utils.misc.cli_kit import CliKit
 
 from hinawa_utils.bebob.edirol_fa import EdirolFaUnit
 
+
 def handle_mixer_input_gain(unit, args):
     chs = ('1', '2')
     ops = ('set', 'get')
@@ -31,6 +32,7 @@ def handle_mixer_input_gain(unit, args):
     print('    dB:       [-128.00..128.00] if OP=set')
     return False
 
+
 def handle_mixer_input_balance(unit, args):
     chs = ('1', '2')
     ops = ('set', 'get')
@@ -55,6 +57,7 @@ def handle_mixer_input_balance(unit, args):
     print('    OP:     [{0}]'.format('|'.join(ops)))
     print('    BALANCE:[-128.0..128.0] (left-right) if OP=set')
     return False
+
 
 cmds = {
     'mixer-input-gain':     handle_mixer_input_gain,

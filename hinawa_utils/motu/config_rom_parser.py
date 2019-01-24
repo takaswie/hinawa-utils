@@ -5,6 +5,7 @@ from hinawa_utils.ieee1394.config_rom_parser import Ieee1394ConfigRomParser
 
 __all__ = ['MotuConfigRomParser']
 
+
 class MotuConfigRomParser(Ieee1394ConfigRomParser):
     __OUI_MOTU = 0x0001f2
 
@@ -30,7 +31,7 @@ class MotuConfigRomParser(Ieee1394ConfigRomParser):
                 entry = entry[1]
                 if (entry[0] != ['SPECIFIER_ID', self.__OUI_MOTU] or
                     entry[1][0] != 'VERSION' or
-                    entry[2][0] != 'MODEL'):
+                        entry[2][0] != 'MODEL'):
                     raise ValueError('Invalid data of unit directory.')
                 info['version'] = entry[1][1]
                 info['model-id'] = entry[2][1]

@@ -5,6 +5,7 @@ from hinawa_utils.dice.tcat_tcd22xx_spec import TcatTcd22xxSpec
 
 __all__ = ['MaudioProfireSpec']
 
+
 class MaudioProfireSpec(TcatTcd22xxSpec):
     MODELS = (
         (0x000d6c, 0x000010),   # Profire 2626

@@ -11,6 +11,7 @@ from gi.repository import Hinawa
 
 __all__ = ['CliKit']
 
+
 class CliKit():
     @staticmethod
     def _seek_snd_unit_from_guid(guid):
@@ -90,12 +91,12 @@ class CliKit():
                             continue
                         if cmd not in cmds:
                             print('Invalid command in {0}: {1}: {2}'.format(
-                                                        str(path), i, cmd))
+                                str(path), i, cmd))
                             return False
 
                         if not cmds[cmd](unit, args[1:]):
                             print('Invalid arguments in {0}:{1}: {2}'.format(
-                                                        str(path), i, cmd))
+                                str(path), i, cmd))
                             return False
                 return True
         cls._dump_commands(cmds)

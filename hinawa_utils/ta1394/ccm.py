@@ -5,6 +5,7 @@ from hinawa_utils.ta1394.general import AvcGeneral
 
 __all__ = ['AvcCcm']
 
+
 class AvcCcm():
     PLUG_MODE = ('unit', 'subunit')
     PLUG_UNIT_TYPE = ('isoc', 'external')

@@ -5,6 +5,7 @@
 from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.bebob.focusrite_saffirepro_io import FocusriteSaffireproIoUnit
 
+
 def handle_mixer_input(unit, args):
     ITEMS = {
         'balance':  (unit.set_mixer_input_balance,
@@ -39,6 +40,7 @@ def handle_mixer_input(unit, args):
     print('    dB:     [-128.0..128.0] if ITEM=gain and OP=set')
     print('    BALANCE:[0..99] (left-to-right) if ITEM=balance and OP=set')
     return False
+
 
 def handle_output_params(unit, args):
     ITEMS = {
@@ -76,6 +78,7 @@ def handle_output_params(unit, args):
     print('    PAD:    [0|1] if ITEM=pad and OP=set')
     return False
 
+
 def handle_output_source(unit, args):
     OPS = ('set', 'get')
     targets = unit.get_output_destination_labels()
@@ -98,8 +101,9 @@ def handle_output_source(unit, args):
     for target in targets:
         sources = unit.get_output_source_labels(target)
         print('    SRC:       [{0}] if TARGET={1} and OP=set'.format(
-                                                '|'.join(sources), target))
+            '|'.join(sources), target))
     return False
+
 
 def handle_rate_mode(unit, args):
     OPS = ('set', 'get')
@@ -121,6 +125,7 @@ def handle_rate_mode(unit, args):
     print('  The set operation corresponds to bus reset.')
     return False
 
+
 def handle_sampling_rate(unit, args):
     OPS = ('set', 'get')
     rates = unit.get_supported_sampling_rates()
@@ -140,6 +145,7 @@ def handle_sampling_rate(unit, args):
     print('  Packet streaming should be stopped.')
     return False
 
+
 def handle_clock_source(unit, args):
     OPS = ('set', 'get')
     sources = unit.get_supported_clock_sources()
@@ -158,6 +164,7 @@ def handle_clock_source(unit, args):
     print('    SRC:    [{0}] if OP=set'.format('|'.join(sources)))
     print('  Packet streaming should be stopped.')
     return False
+
 
 cmds = {
     'mixer-input':      handle_mixer_input,

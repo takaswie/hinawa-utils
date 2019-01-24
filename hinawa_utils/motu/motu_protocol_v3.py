@@ -5,6 +5,7 @@ from hinawa_utils.motu.motu_protocol_abstract import MotuProtocolAbstract
 
 __all__ = ['MotuProtocolV3']
 
+
 class MotuProtocolV3(MotuProtocolAbstract):
     def get_supported_sampling_rates(self):
         return self.SUPPORTED_SAMPLING_RATES_X4

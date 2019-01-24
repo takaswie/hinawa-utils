@@ -6,12 +6,15 @@ from hinawa_utils.misc.cli_kit import CliKit
 from hinawa_utils.oxfw.tascam_fireone import TascamFireone
 
 # Helper functions
+
+
 def handle_current_status(unit, args):
     print('Current status:')
     print('  Packet Streaming:')
     print('    running:          {0}'.format(unit.get_property('streaming')))
     fmts = unit.get_current_stream_formats()
-    print('    sampling-rate:    {0}'.format(fmts['playback']['sampling-rate']))
+    print(
+        '    sampling-rate:    {0}'.format(fmts['playback']['sampling-rate']))
     print('  Control surface:')
     print('    display-mode:     {0}'.format(unit.get_display_mode()))
     print('    control-mode:     {0}'.format(unit.get_control_mode()))
@@ -23,6 +26,7 @@ def handle_current_status(unit, args):
     print('TASCAM firmware information:')
     print('  version:          {0}'.format(unit.get_firmware_version()))
     return True
+
 
 def handle_display_mode(unit, args):
     ops = ('set', 'get')
@@ -41,6 +45,7 @@ def handle_display_mode(unit, args):
     print('    MODE:     {0}'.format(', '.join(modes)))
     return False
 
+
 def handle_control_mode(unit, args):
     ops = ('set', 'get')
     modes = unit.get_control_mode_labels()
@@ -58,6 +63,7 @@ def handle_control_mode(unit, args):
     print('    MODE:     {0}'.format(', '.join(modes)))
     return False
 
+
 def handle_input_mode(unit, args):
     ops = ('set', 'get')
     modes = unit.get_input_mode_labels()
@@ -74,6 +80,7 @@ def handle_input_mode(unit, args):
     print('    OPERATION: {0}'.format(', '.join(ops)))
     print('    MODE:     {0}'.format(', '.join(modes)))
     return False
+
 
 def handle_sampling_rate(unit, args):
     ops = ('set', 'get')
@@ -110,6 +117,7 @@ def handle_sampling_rate(unit, args):
     rates = [str(fmt['sampling-rate']) for fmt in fmts]
     print('    MODE:     {0}'.format(', '.join(rates)))
     return True
+
 
 cmds = {
     'current-status':   handle_current_status,

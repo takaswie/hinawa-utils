@@ -7,6 +7,7 @@ from hinawa_utils.ta1394.general import AvcConnection
 
 __all__ = ['MaudioProtocolAbstract']
 
+
 class MaudioProtocolAbstract(metaclass=ABCMeta):
     _METER_LABELS = ('analog-in-1', 'analog-in-2',
                      'digital-in-1', 'digital-in-2',
@@ -29,9 +30,11 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     @abstractmethod
     def get_input_labels(self):
         pass
+
     @abstractmethod
     def set_input_gain(self, target, ch, db):
         pass
+
     @abstractmethod
     def get_input_gain(self, target, ch):
         pass
@@ -39,8 +42,10 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     # For input LR balance.
     def get_input_balance_labels(self):
         pass
+
     def set_input_balance(self, target, ch, balance):
         pass
+
     def get_input_balance(self, target, ch):
         pass
 
@@ -48,9 +53,11 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     @abstractmethod
     def get_output_labels(self):
         pass
+
     @abstractmethod
     def set_output_volume(self, target, ch, db):
         pass
+
     @abstractmethod
     def get_output_volume(self, target, ch):
         pass
@@ -59,9 +66,11 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     @abstractmethod
     def get_aux_input_labels(self):
         pass
+
     @abstractmethod
     def set_aux_input(self, target, ch, db):
         pass
+
     @abstractmethod
     def get_aux_input(self, target, ch):
         pass
@@ -70,6 +79,7 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     @abstractmethod
     def set_aux_volume(self, ch, db):
         pass
+
     @abstractmethod
     def get_aux_volume(self, ch):
         pass
@@ -78,9 +88,11 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     @abstractmethod
     def get_headphone_labels(self):
         pass
+
     @abstractmethod
     def set_headphone_volume(self, target, ch, db):
         pass
+
     @abstractmethod
     def get_headphone_volume(self, target, ch):
         pass
@@ -89,12 +101,15 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     @abstractmethod
     def get_mixer_labels(self):
         pass
+
     @abstractmethod
     def get_mixer_source_labels(self):
         pass
+
     @abstractmethod
     def set_mixer_routing(self, target, source, enable):
         pass
+
     @abstractmethod
     def get_mixer_routing(self, target, source):
         pass
@@ -103,9 +118,11 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     @abstractmethod
     def get_headphone_source_labels(self, target):
         pass
+
     @abstractmethod
     def set_headphone_source(self, target, source):
         pass
+
     @abstractmethod
     def get_headphone_source(self, target):
         pass
@@ -114,9 +131,11 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     @abstractmethod
     def get_output_source_labels(self, target):
         pass
+
     @abstractmethod
     def set_output_source(self, target, source):
         pass
+
     @abstractmethod
     def get_output_source(self, target):
         pass
@@ -124,6 +143,7 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     # For metering.
     def get_meter_labels(self):
         return self._METER_LABELS
+
     @abstractmethod
     def get_meters(self):
         pass
@@ -132,9 +152,11 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
     @abstractmethod
     def get_clock_source_labels(self):
         pass
+
     @abstractmethod
     def set_clock_source(self, src):
         pass
+
     @abstractmethod
     def get_clock_source(self):
         pass
@@ -151,6 +173,7 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
                 continue
             rates.append(rate)
         return rates
+
     def set_sampling_rate(self, rate):
         if self.unit.get_property('streaming'):
             raise ValueError('Packet streaming already runs.')
@@ -162,6 +185,7 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
         AvcConnection.set_plug_signal_format(self.unit.fcp, 'input', 0, rate)
         AvcConnection.set_plug_signal_format(self.unit.fcp, 'output', 0, rate)
         self.unit.fcp.set_property('timeout', old_timeout)
+
     @abstractmethod
     def get_sampling_rate(self):
         pass

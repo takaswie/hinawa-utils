@@ -11,6 +11,7 @@ from hinawa_utils.dice.dice_unit import DiceUnit
 
 __all__ = ['AlesisIoUnit']
 
+
 class AlesisIoUnit(DiceUnit):
     __OUI_ALESIS = 0x000595
 
@@ -141,7 +142,7 @@ class AlesisIoUnit(DiceUnit):
             labels.append('Analog-{0}/{1}'.format(ch, ch + 1))
         # MEMO: Any source from stream input receives no influences from
         # out-volume/mute.
-        #for ch in range(1, 8, 2):
+        # for ch in range(1, 8, 2):
         #    labels.append('Stream-{0}/{1}'.format(ch, ch + 1))
         if not self.__specs['has_adat_b']:
             for ch in range(1, 8, 2):
@@ -180,7 +181,8 @@ class AlesisIoUnit(DiceUnit):
 
         offsets = [
             offset + 0x0038 + (self.__MIXER_LABELS.index(dst) * 2) * 0x0080,
-            offset + 0x0038 + (self.__MIXER_LABELS.index(dst) * 2 + 1) * 0x0080,
+            offset + 0x0038 + (self.__MIXER_LABELS.index(dst)
+                               * 2 + 1) * 0x0080,
         ]
 
         return offsets

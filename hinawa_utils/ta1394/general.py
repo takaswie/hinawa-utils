@@ -7,6 +7,7 @@ from gi.repository import Hinawa
 
 __all__ = ['AvcGeneral', 'AvcConnection']
 
+
 class AvcGeneral():
     SUBUNIT_TYPES = ('monitor', 'audio', 'printer', 'disc',
                      'tape-recorder-player', 'tuner', 'ca', 'camera',
@@ -20,7 +21,7 @@ class AvcGeneral():
         if cmd[0] != 0x00:
             raise ValueError('Invalid command code for control')
         params = fcp.transact(cmd)
-        if   params[0] == 0x08:
+        if params[0] == 0x08:
             raise OSError('Not implemented')
         elif params[0] == 0x0a:
             raise OSError('Rejected')
@@ -35,7 +36,7 @@ class AvcGeneral():
         if cmd[0] != 0x01:
             raise ValueError('Invalid command code for status')
         params = fcp.transact(cmd)
-        if   params[0] == 0x08:
+        if params[0] == 0x08:
             raise OSError('Not implemented')
         elif params[0] == 0x0a:
             raise OSError('Rejected')
@@ -52,7 +53,7 @@ class AvcGeneral():
         if cmd[0] != 0x02:
             raise ValueError('Invalid command code for inquire')
         params = fcp.transact(cmd)
-        if   params[0] == 0x08:
+        if params[0] == 0x08:
             raise OSError('Not Implemented')
         elif params[0] != 0x0c:
             raise OSError('Unknown status')
@@ -129,6 +130,7 @@ class AvcGeneral():
         params = cls.command_status(fcp, args)
         return params[6:]
 
+
 class AvcConnection():
     PLUG_DIRECTION = ('output', 'input')
     SAMPLING_RATES = (32000, 44100, 48000, 88200, 96000, 176400, 192000)
@@ -146,11 +148,11 @@ class AvcConnection():
         args.append(0xff)
         params = AvcGeneral.command_status(fcp, args)
         return {'isoc': {
-                    'input':    params[4],
-                    'output':   params[5]},
-                'external': {
-                    'input':    params[6],
-                    'output':   params[7]}}
+            'input':    params[4],
+            'output':   params[5]},
+            'external': {
+            'input':    params[6],
+            'output':   params[7]}}
 
     @classmethod
     def get_subunit_plug_info(cls, fcp, subunit_type, subunit_id):
@@ -160,7 +162,8 @@ class AvcConnection():
             raise ValueError('Invalid argument for subunit id')
         args = bytearray()
         args.append(0x01)
-        args.append((AvcGeneral.SUBUNIT_TYPES.index(subunit_type) << 3) | subunit_id)
+        args.append((AvcGeneral.SUBUNIT_TYPES.index(
+            subunit_type) << 3) | subunit_id)
         args.append(0x02)
         args.append(0x00)
         args.append(0xff)
