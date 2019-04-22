@@ -349,7 +349,12 @@ class EftFlash():
         args = array('I')
         args.append(offset)
         args.append(quadlets)
-        return cls._execute_command(unit, 1, args)
+        resp = cls._execute_command(unit, 1, args)
+        if resp[0] != offset:
+            raise OSError('Unexpected parameter for offset in response.')
+        if resp[1] != quadlets:
+            raise OSError('Unexpected parameter for quadlets in response.')
+        return resp[2:]
 
     @classmethod
     def write_block(cls, unit, offset, data):
