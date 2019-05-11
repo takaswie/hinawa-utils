@@ -327,27 +327,6 @@ class BcoSubunitInfo():
     }
 
     @classmethod
-    def get_subunits(cls, fcp):
-        args = bytearray()
-        args.append(0x01)
-        args.append(0xff)
-        args.append(0x31)
-        args.append(0x00)   # Any values are approved.
-        args.append(0xff)
-        args.append(0xff)
-        args.append(0xff)
-        args.append(0xff)
-        params = AvcGeneral.command_status(fcp, args)
-        subunits = []
-        for i in range(4, 7):
-            if params[i] is not 0xff:
-                subunit = {}
-                subunit['type'] = AvcGeneral.SUBUNIT_TYPES[params[i] >> 3]
-                subunit['id'] = params[i] & 0x7
-                subunits.append(subunit)
-        return subunits
-
-    @classmethod
     def get_subunit_fb_info(cls, fcp, subunit_type, subunit_id, page, fb_type):
         if subunit_type not in AvcGeneral.SUBUNIT_TYPES:
             raise ValueError('Invalid argument for subunit type')

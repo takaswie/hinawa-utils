@@ -76,22 +76,28 @@ class PlugParser(BebobUnit):
 
     def __parse_subunit_plugs(self):
         subunit_plugs = {}
-        subunits = BcoSubunitInfo.get_subunits(self.fcp)
-        for subunit in subunits:
-            type = subunit['type']
-            id = subunit['id']
-            if type not in subunit_plugs:
-                subunit_plugs[type] = {}
-            if id not in subunit_plugs[type]:
-                subunit_plugs[type][id] = {}
-                subunit_plugs[type][id]['output'] = {}
-                subunit_plugs[type][id]['input'] = {}
+        for page in range(AvcGeneral.MAXIMUM_SUBUNIT_PAGE + 1):
+            try:
+                subunits = AvcGeneral.get_subunit_info(self.fcp, page)
+            except:
+                break
 
-            info = AvcConnection.get_subunit_plug_info(self.fcp, type, 0)
-            for dir, num in info.items():
-                for i in range(num):
-                    plug = self.__parse_subunit_plug(dir, type, 0, i)
-                    subunit_plugs[type][id][dir][i] = plug
+            for entry in subunits:
+                type = entry['type']
+                maximum_id = entry['maximum-id']
+                if type not in subunit_plugs:
+                    subunit_plugs[type] = {}
+                for id in range(maximum_id + 1):
+                    if id not in subunit_plugs[type]:
+                        subunit_plugs[type][id] = {}
+                        subunit_plugs[type][id]['output'] = {}
+                        subunit_plugs[type][id]['input'] = {}
+
+                info = AvcConnection.get_subunit_plug_info(self.fcp, type, 0)
+                for dir, num in info.items():
+                    for i in range(num):
+                        plug = self.__parse_subunit_plug(dir, type, 0, i)
+                        subunit_plugs[type][id][dir][i] = plug
         return subunit_plugs
 
     def __parse_subunit_plug(self, dir, type, id, num):
