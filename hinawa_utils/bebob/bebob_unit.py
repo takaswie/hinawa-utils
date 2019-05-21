@@ -8,7 +8,11 @@ import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
 
+from hinawa_utils.ta1394.general import AvcGeneral, AvcConnection
+from hinawa_utils.ta1394.ccm import AvcCcm
+
 from hinawa_utils.bebob.config_rom_parser import BebobConfigRomParser
+from hinawa_utils.bebob.extensions import BcoPlugInfo
 
 __all__ = ['BebobUnit']
 
@@ -83,3 +87,160 @@ class BebobUnit(Hinawa.SndUnit):
         }
 
         return info
+
+    def _get_subunit_plug_info(self):
+        subunits = {}
+        for page in range(AvcGeneral.MAXIMUM_SUBUNIT_PAGE + 1):
+            try:
+                info = AvcGeneral.get_subunit_info(self.fcp, 0)
+            except:
+                break
+
+            for entry in info:
+                subunit_type = entry['type']
+                maximum_id = entry['maximum-id']
+
+                for subunit_id in range(maximum_id + 1):
+                    try:
+                        data = AvcConnection.get_subunit_plug_info(self.fcp,
+                                                    subunit_type, subunit_id)
+                    except:
+                        continue
+
+                    id = (subunit_type, subunit_id)
+                    if id not in subunits:
+                        subunits[id] = {}
+                    for direction, count in data.items():
+                        subunits[id][direction] = count
+
+        return subunits
+
+    def get_plug_info_list(self):
+        plugs = {}
+        seqid = 0
+
+        units = AvcConnection.get_unit_plug_info(self.fcp)
+        for type, data in units.items():
+            for direction, count in data.items():
+                for plug_id in range(count):
+                    # Use the same format as Plug Input/Output Specific Data
+                    # to keep enough informaton.
+                    plug_info = {
+                        'dir': direction,
+                        'mode': 'unit',
+                        'data': {
+                            'unit-type': type,
+                            'plug': plug_id,
+                        },
+                    }
+                    plugs[seqid] = plug_info
+                    seqid += 1
+
+        subunits = self._get_subunit_plug_info()
+        for id, data in subunits.items():
+            for direction, count in data.items():
+                for plug_id in range(count):
+                    # Use the same format as Plug Input/Output Specific Data
+                    # to keep enough informaton.
+                    plug_info = {
+                        'dir': direction,
+                        'mode': 'subunit',
+                        'data': {
+                            'subunit-type': id[0],
+                            'subunit-id': id[1],
+                            'plug': plug_id,
+                        },
+                    }
+                    plugs[seqid] = plug_info
+                    seqid += 1
+
+        return plugs
+
+    def get_avail_connections(self, plug_info_list):
+        src_candidates = {}
+        dst_candidates = {}
+        avail = {}
+
+        for seqid, info in plug_info_list.items():
+            data = info['data']
+            if info['mode'] == 'unit':
+                addr = AvcCcm.get_unit_signal_addr(data['unit-type'],
+                                                   data['plug'])
+                if info['dir'] == 'output':
+                    target = dst_candidates
+                else:
+                    target = src_candidates
+            elif info['mode'] == 'subunit':
+                addr = AvcCcm.get_subunit_signal_addr(data['subunit-type'],
+                                            data['subunit-id'], data['plug'])
+                # Inverse direction against plugs of unit.
+                if info['dir'] == 'output':
+                    target = src_candidates
+                else:
+                    target = dst_candidates
+            else:
+                continue
+
+            target[seqid] = addr
+
+        for dst_seqid, dst_addr in dst_candidates.items():
+            try:
+                curr_src_info = AvcCcm.get_signal_source(self.fcp, dst_addr)
+            except:
+                curr_src_info = None
+
+            for src_seqid, src_addr in src_candidates.items():
+                try:
+                    AvcCcm.ask_signal_source(self.fcp, src_addr, dst_addr)
+                except:
+                    continue
+
+                if dst_seqid not in avail:
+                    avail[dst_seqid] = []
+
+                src_info = AvcCcm.parse_signal_addr(src_addr)
+                avail[dst_seqid].append((src_seqid, src_info == curr_src_info))
+
+        return avail
+
+    def get_plug_spec(self, info):
+        data = info['data']
+        if info['mode'] == 'unit':
+            addr = BcoPlugInfo.get_unit_addr(info['dir'],
+                                             data['unit-type'], data['plug'])
+        elif info['mode'] == 'subunit':
+            addr = BcoPlugInfo.get_subunit_addr(info['dir'],
+                    data['subunit-type'], data['subunit-id'], data['plug'])
+        else:
+            raise ValueError('Invalid mode of plug info.')
+
+        spec = {
+            'name': BcoPlugInfo.get_plug_name(self.fcp, addr),
+            'type': BcoPlugInfo.get_plug_type(self.fcp, addr),
+        }
+
+        if info['dir'] == 'input':
+            spec['input'] = BcoPlugInfo.get_plug_input(self.fcp, addr),
+        else:
+            spec['outputs'] = BcoPlugInfo.get_plug_outputs(self.fcp, addr),
+
+        return spec
+
+        if info['mode'] == 'unit':
+            spec['clusters'] = []
+            clusters = BcoPlugInfo.get_plug_clusters(self.fcp, addr)
+
+            for i, cluster in enumerate(clusters):
+                mapping = []
+                name = BcoPlugInfo.get_plug_cluster_info(self.fcp, addr, i + 1)
+                for info in cluster:
+                    idx, pos = info
+                    ch_name = BcoPlugInfo.get_plug_ch_name(self.fcp, addr, idx)
+                    mapping.append(ch_name)
+                entry = {
+                    'name': name,
+                    'channels': mapping,
+                }
+                spec['clusters'].append(entry)
+
+        return spec

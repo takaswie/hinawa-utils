@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+
+from hinawa_utils.misc.cli_kit import CliKit
+from hinawa_utils.bebob.bebob_unit import BebobUnit
+from hinawa_utils.bebob.extensions import BcoPlugInfo
+
+def handle_dump_connections(unit, args):
+    plug_info_list = unit.get_plug_info_list()
+    conns = unit.get_avail_connections(plug_info_list)
+
+    if len(conns) == 0:
+        print('nothing avail.')
+        return True
+
+    for dst_seqid, avails in conns.items():
+        dst_spec = unit.get_plug_spec(plug_info_list[dst_seqid])
+        print('{0:2d}: {1}'.format(dst_seqid, dst_spec['name']))
+
+        for avail in avails:
+            src_seqid, used = avail
+            src_spec = unit.get_plug_spec(plug_info_list[src_seqid])
+            if used:
+                print('   < {0:2d}: {1}'.format(src_seqid, src_spec['name']))
+            else:
+                print('   * {0:2d}: {1}'.format(src_seqid, src_spec['name']))
+
+    return True
+
+def handle_graph_connections(unit, args):
+    plug_info_list = unit.get_plug_info_list()
+
+    unit_plugs = {}
+    subunit_plugs = {}
+
+    for seqid, info in plug_info_list.items():
+        dir = info['dir']
+        mode = info['mode']
+        data = info['data']
+        if mode == 'unit':
+            unit_type = data['unit-type']
+            if unit_type not in unit_plugs:
+                unit_plugs[unit_type] = {}
+            if dir not in unit_plugs[unit_type]:
+                unit_plugs[unit_type][dir] = {}
+            unit_plugs[unit_type][dir][seqid] = info
+        elif mode == 'subunit':
+            subunit_type = (data['subunit-type'], data['subunit-id'])
+            if subunit_type not in subunit_plugs:
+                subunit_plugs[subunit_type] = {}
+            if dir not in subunit_plugs[subunit_type]:
+                subunit_plugs[subunit_type][dir] = {}
+            subunit_plugs[subunit_type][dir][seqid] = info
+
+    print('digraph {')
+    print('  rankdir = "LR"')
+
+    for unit_type, entries in unit_plugs.items():
+        if len(entries) == 0:
+            continue
+
+        for dir, plugs in entries.items():
+            print('    subgraph cluster_unit_{0}_{1} {{'.format(unit_type, dir))
+            print('      label = "{0} {1}"'.format(unit_type, dir))
+            for seqid, info in plugs.items():
+                spec = unit.get_plug_spec(info)
+                print('      {0} [label = "{1}"]'.format(seqid, spec['name']))
+            print('    }')
+
+    for subunit_type, entries in subunit_plugs.items():
+        if len(entries) == 0:
+            continue
+
+        print('  subgraph cluster_subunit_{0[0]}_{0[1]} {{'.format(subunit_type))
+        print('    label = "{0[0]} subunit {0[1]}"'.format(subunit_type))
+
+        for dir, plugs in entries.items():
+            print('    subgraph cluster_subunit_{0[0]}_{0[1]}_{1} {{'.format(
+                subunit_type, dir))
+            print('      label = "{0}"'.format(dir))
+            for seqid, info in plugs.items():
+                spec = unit.get_plug_spec(info)
+                print('      {0} [label = "{1}"]'.format(seqid, spec['name']))
+            print('    }')
+        print('  }')
+
+    conns = unit.get_avail_connections(plug_info_list)
+    for dst_seqid, avails in conns.items():
+        for avail in avails:
+            src_seqid, used = avail
+            if used:
+                print('{0} -> {1}'.format(src_seqid, dst_seqid))
+            else:
+                print('{0} -> {1} [style=dashed]'.format(src_seqid, dst_seqid))
+
+    print('}')
+
+cmds = {
+    'dump-connections':     handle_dump_connections,
+    'graph-connections':    handle_graph_connections,
+}
+
+fullpath = CliKit.seek_snd_unit_path()
+if fullpath:
+    unit = BebobUnit(fullpath)
+    CliKit.dispatch_command(unit, cmds)
