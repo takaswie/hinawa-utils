@@ -59,12 +59,12 @@ def handle_graph_connections(unit, args):
             continue
 
         for dir, plugs in entries.items():
-            print('    subgraph cluster_unit_{0}_{1} {{'.format(unit_type, dir))
-            print('      label = "{0} {1}"'.format(unit_type, dir))
+            print('  subgraph cluster_unit_{0}_{1} {{'.format(unit_type, dir))
+            print('    label = "{0} {1}"'.format(unit_type, dir))
             for seqid, info in plugs.items():
                 spec = unit.get_plug_spec(info)
-                print('      {0} [label = "{1}"]'.format(seqid, spec['name']))
-            print('    }')
+                print('    {0} [label = "{1}"]'.format(seqid, spec['name']))
+            print('  }')
 
     for subunit_type, entries in subunit_plugs.items():
         if len(entries) == 0:
