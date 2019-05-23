@@ -29,6 +29,11 @@ def handle_dump_connections(unit, args):
 def handle_graph_connections(unit, args):
     plug_info_list = unit.get_plug_info_list()
 
+    specs = {}
+    for seqid, info in plug_info_list.items():
+        spec = unit.get_plug_spec(info)
+        specs[seqid] = spec
+
     unit_plugs = {}
     subunit_plugs = {}
 
@@ -62,8 +67,9 @@ def handle_graph_connections(unit, args):
             print('  subgraph cluster_unit_{0}_{1} {{'.format(unit_type, dir))
             print('    label = "{0} {1}"'.format(unit_type, dir))
             for seqid, info in plugs.items():
-                spec = unit.get_plug_spec(info)
-                print('    {0} [label = "{1}"]'.format(seqid, spec['name']))
+                spec = specs[seqid]
+                label = '{0} ({1})'.format(spec['name'], spec['type'])
+                print('    {0} [label = "{1}"]'.format(seqid, label))
             print('  }')
 
     for subunit_type, entries in subunit_plugs.items():
@@ -78,19 +84,30 @@ def handle_graph_connections(unit, args):
                 subunit_type, dir))
             print('      label = "{0}"'.format(dir))
             for seqid, info in plugs.items():
-                spec = unit.get_plug_spec(info)
-                print('      {0} [label = "{1}"]'.format(seqid, spec['name']))
+                spec = specs[seqid]
+                label = '{0} ({1})'.format(spec['name'], spec['type'])
+                print('      {0} [label = "{1}"]'.format(seqid, label))
             print('    }')
         print('  }')
 
     conns = unit.get_avail_connections(plug_info_list)
     for dst_seqid, avails in conns.items():
+        dst_spec = specs[dst_seqid]
         for avail in avails:
             src_seqid, used = avail
-            if used:
-                print('{0} -> {1}'.format(src_seqid, dst_seqid))
+            src_spec = specs[src_seqid]
+
+            decorations = []
+            if not used:
+                decorations.append('style=dashed')
+            if dst_spec['type'] == 'Sync' or src_spec['type'] == 'Sync':
+                decorations.append('constraint=false')
+            if len(decorations) > 0:
+                decoration = '[{0}]'.format(' '.join(decorations))
             else:
-                print('{0} -> {1} [style=dashed]'.format(src_seqid, dst_seqid))
+                decoration = ''
+
+            print('  {0} -> {1} {2}'.format(src_seqid, dst_seqid, decoration))
 
     print('}')
 
