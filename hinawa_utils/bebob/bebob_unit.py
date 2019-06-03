@@ -88,6 +88,29 @@ class BebobUnit(Hinawa.SndUnit):
 
         return info
 
+    def get_unit_plug_list(self):
+        plugs = {}
+        seqid = 0
+
+        units = AvcConnection.get_unit_plug_info(self.fcp)
+        for type, data in units.items():
+            for direction, count in data.items():
+                for plug_id in range(count):
+                    # Use the same format as Plug Input/Output Specific Data
+                    # to keep enough informaton.
+                    plug_info = {
+                        'dir': direction,
+                        'mode': 'unit',
+                        'data': {
+                            'unit-type': type,
+                            'plug': plug_id,
+                        },
+                    }
+                    plugs['unit_{0}'.format(seqid)] = plug_info
+                    seqid += 1
+
+            return plugs
+
     def _get_subunit_plug_info(self):
         subunits = {}
         for page in range(AvcGeneral.MAXIMUM_SUBUNIT_PAGE + 1):
@@ -115,26 +138,9 @@ class BebobUnit(Hinawa.SndUnit):
 
         return subunits
 
-    def get_plug_info_list(self):
+    def get_subunit_plug_list(self):
         plugs = {}
         seqid = 0
-
-        units = AvcConnection.get_unit_plug_info(self.fcp)
-        for type, data in units.items():
-            for direction, count in data.items():
-                for plug_id in range(count):
-                    # Use the same format as Plug Input/Output Specific Data
-                    # to keep enough informaton.
-                    plug_info = {
-                        'dir': direction,
-                        'mode': 'unit',
-                        'data': {
-                            'unit-type': type,
-                            'plug': plug_id,
-                        },
-                    }
-                    plugs[seqid] = plug_info
-                    seqid += 1
 
         subunits = self._get_subunit_plug_info()
         for id, data in subunits.items():
@@ -151,36 +157,34 @@ class BebobUnit(Hinawa.SndUnit):
                             'plug': plug_id,
                         },
                     }
-                    plugs[seqid] = plug_info
+                    plugs['subunit_{0}'.format(seqid)] = plug_info
                     seqid += 1
 
         return plugs
 
-    def get_avail_connections(self, plug_info_list):
+    def get_avail_connections(self, unit_plug_list, subunit_plug_list):
         src_candidates = {}
         dst_candidates = {}
         avail = {}
 
-        for seqid, info in plug_info_list.items():
+        for seqid, info in unit_plug_list.items():
             data = info['data']
-            if info['mode'] == 'unit':
-                addr = AvcCcm.get_unit_signal_addr(data['unit-type'],
-                                                   data['plug'])
-                if info['dir'] == 'output':
-                    target = dst_candidates
-                else:
-                    target = src_candidates
-            elif info['mode'] == 'subunit':
-                addr = AvcCcm.get_subunit_signal_addr(data['subunit-type'],
-                                            data['subunit-id'], data['plug'])
-                # Inverse direction against plugs of unit.
-                if info['dir'] == 'output':
-                    target = src_candidates
-                else:
-                    target = dst_candidates
+            addr = AvcCcm.get_unit_signal_addr(data['unit-type'], data['plug'])
+            if info['dir'] == 'output':
+                target = dst_candidates
             else:
-                continue
+                target = src_candidates
+            target[seqid] = addr
 
+        for seqid, info in subunit_plug_list.items():
+            data = info['data']
+            addr = AvcCcm.get_subunit_signal_addr(data['subunit-type'],
+                                            data['subunit-id'], data['plug'])
+            # Inverse direction against plugs of unit.
+            if info['dir'] == 'output':
+                target = src_candidates
+            else:
+                target = dst_candidates
             target[seqid] = addr
 
         for dst_seqid, dst_addr in dst_candidates.items():
