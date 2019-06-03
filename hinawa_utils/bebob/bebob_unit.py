@@ -92,7 +92,7 @@ class BebobUnit(Hinawa.SndUnit):
         subunits = {}
         for page in range(AvcGeneral.MAXIMUM_SUBUNIT_PAGE + 1):
             try:
-                info = AvcGeneral.get_subunit_info(self.fcp, 0)
+                info = AvcGeneral.get_subunit_info(self.fcp, page)
             except:
                 break
 
