@@ -69,7 +69,9 @@ def handle_graph_connections(unit, args):
             for seqid, info in plugs.items():
                 spec = specs[seqid]
                 label = '{0} ({1})'.format(spec['name'], spec['type'])
-                print('    {0} [label = "{1}"]'.format(seqid, label))
+                shape = 'box' if spec['type'] == 'Sync' else 'ellipse'
+                print('    {0} [label = "{1}", shape = "{2}"]'.format(
+                    seqid, label, shape))
             print('  }')
 
     for subunit_type, entries in subunit_plugs.items():
@@ -86,7 +88,9 @@ def handle_graph_connections(unit, args):
             for seqid, info in plugs.items():
                 spec = specs[seqid]
                 label = '{0} ({1})'.format(spec['name'], spec['type'])
-                print('      {0} [label = "{1}"]'.format(seqid, label))
+                shape = 'box' if spec['type'] == 'Sync' else 'ellipse'
+                print('    {0} [label = "{1}", shape = "{2}"]'.format(
+                    seqid, label, shape))
             print('    }')
         print('  }')
 
