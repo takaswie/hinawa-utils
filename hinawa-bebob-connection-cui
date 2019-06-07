@@ -136,6 +136,8 @@ def handle_graph_connections(unit, args):
 
     print('}')
 
+    return True
+
 cmds = {
     'dump-connections':     handle_dump_connections,
     'graph-connections':    handle_graph_connections,
