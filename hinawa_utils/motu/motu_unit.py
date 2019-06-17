@@ -15,12 +15,13 @@ __all__ = ['MotuUnit']
 
 class MotuUnit(Hinawa.SndMotu):
     SUPPORTED_MODELS = {
-        0x102802: ('828',       MotuProtocolV1),
-        0x101800: ('828mk2',    MotuProtocolV2),
-        0x107800: ('Traveler',  MotuProtocolV2),
-        0x106800: ('828mk3',    MotuProtocolV3),    # FireWire only
-        0x100800: ('828mk3',    MotuProtocolV3),    # Hybrid
-        0x104800: ('AudioExpress', MotuProtocolV3),
+        0x000001: ('828',       MotuProtocolV1),
+        0x000002: ('828',       MotuProtocolV1),
+        0x000003: ('828mk2',    MotuProtocolV2),
+        0x000009: ('Traveler',  MotuProtocolV2),
+        0x000015: ('828mk3',    MotuProtocolV3),    # FireWire only
+        0x000035: ('828mk3',    MotuProtocolV3),    # Hybrid
+        0x000033: ('AudioExpress', MotuProtocolV3),
     }
 
     def __init__(self, path):
