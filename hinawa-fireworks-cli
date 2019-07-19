@@ -435,7 +435,7 @@ def get_available_commands(features):
 
     count = 0
     for iface in ('spdif-coax', 'spdif-opt', 'aesebu-xlr', 'adat-opt'):
-        if iface in features:
+        if features[iface]:
             count += 1
     if count > 1:
         cmds['digital-input'] = handle_digital_input
