@@ -55,7 +55,7 @@ def handle_graph_connections(unit, args):
     unit_plugs = {}
     subunit_plugs = {}
 
-    for seqid, info in unit_plugs.items():
+    for seqid, info in unit_plug_list.items():
         dir = info['dir']
         mode = info['mode']
         data = info['data']
