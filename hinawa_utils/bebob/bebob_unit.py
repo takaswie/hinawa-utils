@@ -109,7 +109,7 @@ class BebobUnit(Hinawa.SndUnit):
                     plugs['unit_{0}'.format(seqid)] = plug_info
                     seqid += 1
 
-            return plugs
+        return plugs
 
     def _get_subunit_plug_info(self):
         subunits = {}
