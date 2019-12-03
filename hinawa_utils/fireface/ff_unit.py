@@ -98,6 +98,12 @@ class FFUnit(Hinawa.SndUnit):
         self.__unit_th.join()
         self.__node_th.join()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, ex_type, ex_value, trace):
+        self.release()
+
     def __read_cache_from_file(self):
         self.__option_cache = []
         self.__mixer_cache = []
