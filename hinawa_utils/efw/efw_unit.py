@@ -47,6 +47,12 @@ class EfwUnit(Hinawa.SndEfw):
         self.__unit_th.join()
         self.__node_th.join()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, ex_type, ex_value, trace):
+        self.release()
+
     def _fixup_info(self):
         # Mapping for channels on tx stream is supported by Onyx1200F only.
         if self.info['model'] == 'Onyx1200F':
