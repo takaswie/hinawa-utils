@@ -56,6 +56,12 @@ class BebobUnit(Hinawa.SndUnit):
         self.__unit_th.join()
         self.__node_th.join()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, ex_type, ex_value, trace):
+        self.release()
+
     def _get_firmware_info(self):
         def _get_string_literal(params):
             if 0x00 in params:
