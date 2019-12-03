@@ -445,6 +445,6 @@ def get_available_commands(features):
 
 fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
-    unit = EfwUnit(fullpath)
-    cmds = get_available_commands(unit.info['features'])
-    CliKit.dispatch_command(unit, cmds)
+    with EfwUnit(fullpath) as unit:
+        cmds = get_available_commands(unit.info['features'])
+        CliKit.dispatch_command(unit, cmds)

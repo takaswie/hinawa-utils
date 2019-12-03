@@ -522,10 +522,10 @@ cmds = {
 
 fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
-    unit = DiceExtendedUnit(fullpath)
-    if (unit.get_caps('general')['storage-available'] and
-        unit.get_caps('general')['storable-stream-conf'] and
-        unit.get_caps('router')['is-storable'] and
-            unit.get_caps('mixer')['is-storable']):
-        cmds['storage-operation'] = handle_storage_operation
-    CliKit.dispatch_command(unit, cmds)
+    with DiceExtendedUnit(fullpath) as unit:
+        if (unit.get_caps('general')['storage-available'] and
+            unit.get_caps('general')['storable-stream-conf'] and
+            unit.get_caps('router')['is-storable'] and
+                unit.get_caps('mixer')['is-storable']):
+            cmds['storage-operation'] = handle_storage_operation
+        CliKit.dispatch_command(unit, cmds)

@@ -272,17 +272,17 @@ cmds = {
 
 fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
-    unit = MaudioUnit(fullpath)
-    if len(unit.protocol.get_aux_input_labels()) > 0:
-        cmds['aux-input'] = handle_aux_input
-        cmds['aux-volume'] = handle_aux_volume
-        if (hasattr(unit.protocol, 'set_aux_balance') and
-                hasattr(unit.protocol, 'get_aux_balance')):
-            cmds['aux-balance'] = handle_aux_balance
-    if len(unit.protocol.get_output_labels()) > 0:
-        cmds['output-volume'] = handle_output_volume
-        cmds['output-source'] = handle_output_source
-    if len(unit.protocol.get_headphone_labels()) > 0:
-        cmds['headphone-volume'] = handle_headphone_volume
-        cmds['headphone-source'] = handle_headphone_source
-    CliKit.dispatch_command(unit, cmds)
+    with MaudioUnit(fullpath) as unit:
+        if len(unit.protocol.get_aux_input_labels()) > 0:
+            cmds['aux-input'] = handle_aux_input
+            cmds['aux-volume'] = handle_aux_volume
+            if (hasattr(unit.protocol, 'set_aux_balance') and
+                    hasattr(unit.protocol, 'get_aux_balance')):
+                cmds['aux-balance'] = handle_aux_balance
+        if len(unit.protocol.get_output_labels()) > 0:
+            cmds['output-volume'] = handle_output_volume
+            cmds['output-source'] = handle_output_source
+        if len(unit.protocol.get_headphone_labels()) > 0:
+            cmds['headphone-volume'] = handle_headphone_volume
+            cmds['headphone-source'] = handle_headphone_source
+        CliKit.dispatch_command(unit, cmds)

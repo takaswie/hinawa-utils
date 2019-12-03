@@ -148,5 +148,5 @@ cmds = {
 
 fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
-    unit = FFUnit(fullpath)
-    CliKit.dispatch_command(unit, cmds)
+    with FFUnit(fullpath) as unit:
+        CliKit.dispatch_command(unit, cmds)

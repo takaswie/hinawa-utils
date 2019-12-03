@@ -267,7 +267,7 @@ cmds = {
 
 fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
-    unit = AlesisIoUnit(fullpath)
-    if unit.name == 'iO|26':
-        cmds['use-spdif-source'] = handle_enable_spdif_source
-    CliKit.dispatch_command(unit, cmds)
+    with AlesisIoUnit(fullpath) as unit:
+        if unit.name == 'iO|26':
+            cmds['use-spdif-source'] = handle_enable_spdif_source
+        CliKit.dispatch_command(unit, cmds)

@@ -154,7 +154,7 @@ cmds = {
 
 fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
-    unit = TscmConsoleUnit(fullpath)
-    if unit.model_name == 'FW-1884':
-        cmds['optical-out-source'] = handle_opt_out_src
-    CliKit.dispatch_command(unit, cmds)
+    with TscmConsoleUnit(fullpath) as unit:
+        if unit.model_name == 'FW-1884':
+            cmds['optical-out-source'] = handle_opt_out_src
+        CliKit.dispatch_command(unit, cmds)

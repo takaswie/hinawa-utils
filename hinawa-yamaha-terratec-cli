@@ -253,9 +253,9 @@ cmds = {
 
 fullpath = CliKit.seek_snd_unit_path()
 if fullpath:
-    unit = PhaseGoUnit(fullpath)
-    if hasattr(unit.protocol, 'get_analog_input_level_labels'):
-        cmds['input-level'] = handle_analog_input_level
-    if hasattr(unit.protocol, 'get_analog_output_labels'):
-        cmds['analog-output'] = handle_analog_output
-    CliKit.dispatch_command(unit, cmds)
+    with PhaseGoUnit(fullpath) as unit:
+        if hasattr(unit.protocol, 'get_analog_input_level_labels'):
+            cmds['input-level'] = handle_analog_input_level
+        if hasattr(unit.protocol, 'get_analog_output_labels'):
+            cmds['analog-output'] = handle_analog_output
+        CliKit.dispatch_command(unit, cmds)
