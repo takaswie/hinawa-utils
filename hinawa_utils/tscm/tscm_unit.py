@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from re import match
 from struct import pack, unpack
 from math import log10, pow
 
@@ -40,19 +39,11 @@ class TscmUnit(Hinawa.SndUnit):
     __MAX_THRESHOLD = 0x7fff
 
     def __init__(self, path):
-        if match('/dev/snd/hwC[0-9]*D0', path):
-            super().__init__()
-            self.open(path)
-            if self.get_property('type') != 6:
-                raise ValueError('The character device is not for Tascam unit')
-            self.listen()
-        elif match('/dev/fw[0-9]*', path):
-            # Just using parent class.
-            super(Hinawa.FwUnit, self).__init__()
-            Hinawa.FwUnit.open(self, path)
-            Hinawa.FwUnit.listen(self)
-        else:
-            raise ValueError('Invalid argument for character device')
+        super().__init__()
+        self.open(path)
+        if self.get_property('type') != 6:
+            raise ValueError('The character device is not for Tascam unit')
+        self.listen()
 
         parser = TscmConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
