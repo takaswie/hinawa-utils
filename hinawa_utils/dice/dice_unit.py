@@ -48,6 +48,12 @@ class DiceUnit(Hinawa.SndDice):
         self.__unit_th.join()
         self.__node_th.join()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, ex_type, ex_value, trace):
+        self.release()
+
     def get_owner_addr(self):
         req = Hinawa.FwReq()
         return self._protocol.read_owner_addr(req)
