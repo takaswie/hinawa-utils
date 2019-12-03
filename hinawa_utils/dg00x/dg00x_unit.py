@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from re import match
-
 import gi
 gi.require_version('Hinawa', '2.0')
 from gi.repository import Hinawa
@@ -20,19 +18,11 @@ class Dg00xUnit(Hinawa.SndDg00x):
     SUPPORTED_OPTICAL_INTERFACES = ('ADAT', 'S/PDIF')
 
     def __init__(self, path):
-        if match('/dev/snd/hwC[0-9]*D0', path):
-            super().__init__()
-            self.open(path)
-            if self.get_property('type') != 5:
-                raise ValueError('The character device is not for Dg00x unit')
-            self.listen()
-        elif match('/dev/fw[0-9]*', path):
-            # Just using parent class.
-            super(Hinawa.FwUnit, self).__init__()
-            Hinawa.FwUnit.open(self, path)
-            Hinawa.FwUnit.listen(self)
-        else:
-            raise ValueError('Invalid argument for character device')
+        super().__init__()
+        self.open(path)
+        if self.get_property('type') != 5:
+            raise ValueError('The character device is not for Dg00x unit')
+        self.listen()
 
         parser = Dg00xConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
