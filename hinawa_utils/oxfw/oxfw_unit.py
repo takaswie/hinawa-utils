@@ -2,7 +2,6 @@
 # Copyright (C) 2018 Takashi Sakamoto
 
 from struct import unpack
-from re import match
 from time import sleep
 
 import gi
@@ -18,21 +17,11 @@ __all__ = ['OxfwUnit']
 
 class OxfwUnit(Hinawa.SndUnit):
     def __init__(self, path):
-        if match('/dev/snd/hwC[0-9]*D0', path):
-            super().__init__()
-            self.open(path)
-            if self.get_property('type') != 4:
-                raise ValueError('The character device is not for OXFW unit')
-            self.listen()
-            self._on_juju = False,
-        elif match('/dev/fw[0-9]*', path):
-            # Just using parent class.
-            super(Hinawa.FwUnit, self).__init__()
-            Hinawa.FwUnit.open(self, path)
-            Hinawa.FwUnit.listen(self)
-            self._on_juju = True
-        else:
-            raise ValueError('Invalid argument for character device')
+        super().__init__()
+        self.open(path)
+        if self.get_property('type') != 4:
+            raise ValueError('The character device is not for OXFW unit')
+        self.listen()
 
         parser = Ta1394ConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
