@@ -4,10 +4,12 @@
 import sys
 import string
 from pathlib import Path
+from signal import SIGINT
 
 import gi
+gi.require_version('GLib', '2.0')
 gi.require_version('Hinawa', '2.0')
-from gi.repository import Hinawa
+from gi.repository import GLib, Hinawa
 
 __all__ = ['CliKit']
 
@@ -70,9 +72,17 @@ class CliKit():
         return None
 
     @classmethod
+    def handle_unix_signal(cls, unit):
+        del unit
+
+    @classmethod
     def dispatch_command(cls, unit, cmds):
         args = sys.argv
         if len(args) > 2:
+            # Install signal handler to cancel event dispatcher.
+            GLib.unix_signal_add(GLib.PRIORITY_HIGH, SIGINT,
+                                 cls.handle_unix_signal, unit)
+
             if args[2] in cmds:
                 cmd = args[2]
                 return cmds[cmd](unit, args[3:])
