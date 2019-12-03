@@ -38,7 +38,7 @@ class OxfwUnit(Hinawa.SndUnit):
         self.__node_th.start()
 
         parser = Ta1394ConfigRomParser()
-        info = parser.parse_rom(self.get_config_rom())
+        info = parser.parse_rom(self.get_node().get_config_rom())
         self.vendor_name = info['vendor-name']
         self.model_name = info['model-name']
 

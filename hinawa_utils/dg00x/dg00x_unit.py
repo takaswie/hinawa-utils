@@ -40,7 +40,7 @@ class Dg00xUnit(Hinawa.SndDg00x):
         self.__node_th.start()
 
         parser = Dg00xConfigRomParser()
-        info = parser.parse_rom(self.get_config_rom())
+        info = parser.parse_rom(self.get_node().get_config_rom())
         self._model_name = info['model-name']
 
     def release(self):

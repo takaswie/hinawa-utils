@@ -47,7 +47,7 @@ class MotuUnit(Hinawa.SndMotu):
         self.__node_th.start()
 
         parser = MotuConfigRomParser()
-        info = parser.parse_rom(self.get_config_rom())
+        info = parser.parse_rom(self.get_node().get_config_rom())
 
         if info['model-id'] in self.SUPPORTED_MODELS:
             name, protocol = self.SUPPORTED_MODELS[info['model-id']]

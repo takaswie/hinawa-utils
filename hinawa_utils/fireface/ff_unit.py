@@ -70,7 +70,7 @@ class FFUnit(Hinawa.SndUnit):
         self.__node_th.start()
 
         parser = FFConfigRomParser()
-        info = parser.parse_rom(self.get_config_rom())
+        info = parser.parse_rom(self.get_node().get_config_rom())
         if info['model_id'] not in self.__MODELS:
             raise OSError('Unsupported model.')
 

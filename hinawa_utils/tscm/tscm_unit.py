@@ -60,7 +60,7 @@ class TscmUnit(Hinawa.SndUnit):
         self.__node_th.start()
 
         parser = TscmConfigRomParser()
-        info = parser.parse_rom(self.get_config_rom())
+        info = parser.parse_rom(self.get_node().get_config_rom())
         self.model_name = info['model-name']
         self.__specs = self.__SPECS[self.model_name]
 

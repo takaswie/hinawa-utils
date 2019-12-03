@@ -41,7 +41,7 @@ class BebobUnit(Hinawa.SndUnit):
         self.__node_th.start()
 
         parser = BebobConfigRomParser()
-        info = parser.parse_rom(self.get_config_rom())
+        info = parser.parse_rom(self.get_node().get_config_rom())
         self.vendor_id = info['vendor-id']
         self.model_id = info['model-id']
 
