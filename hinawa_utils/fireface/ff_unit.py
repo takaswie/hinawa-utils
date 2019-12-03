@@ -1,13 +1,15 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
+from threading import Thread
 from math import log10
 from struct import pack, unpack
 from pathlib import Path
 
 import gi
+gi.require_version('GLib', '2.0')
 gi.require_version('Hinawa', '2.0')
-from gi.repository import Hinawa
+from gi.repository import GLib, Hinawa
 
 from hinawa_utils.fireface.ff_config_rom_parser import FFConfigRomParser
 from hinawa_utils.fireface.ff_option_reg import FFOptionReg
@@ -53,7 +55,19 @@ class FFUnit(Hinawa.SndUnit):
     def __init__(self, path):
         super().__init__()
         self.open(path)
-        self.listen()
+
+        ctx = GLib.MainContext.new()
+        self.create_source().attach(ctx)
+        self.__unit_dispatcher = GLib.MainLoop.new(ctx, False)
+        self.__unit_th = Thread(target=lambda d: d.run(), args=(self.__unit_dispatcher, ))
+        self.__unit_th.start()
+
+        node = self.get_node()
+        ctx = GLib.MainContext.new()
+        node.create_source().attach(ctx)
+        self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
+        self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
+        self.__node_th.start()
 
         parser = FFConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
@@ -77,6 +91,12 @@ class FFUnit(Hinawa.SndUnit):
             self.__write_cache_to_file()
 
         self.__load_option_settings()
+
+    def release(self):
+        self.__unit_dispatcher.quit()
+        self.__node_dispatcher.quit()
+        self.__unit_th.join()
+        self.__node_th.join()
 
     def __read_cache_from_file(self):
         self.__option_cache = []
