@@ -1,12 +1,14 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
+from threading import Thread
 from struct import unpack
 from time import sleep
 
 import gi
+gi.require_version('GLib', '2.0')
 gi.require_version('Hinawa', '2.0')
-from gi.repository import Hinawa
+from gi.repository import GLib, Hinawa
 
 from hinawa_utils.ta1394.config_rom_parser import Ta1394ConfigRomParser
 from hinawa_utils.ta1394.general import AvcConnection
@@ -21,7 +23,19 @@ class OxfwUnit(Hinawa.SndUnit):
         self.open(path)
         if self.get_property('type') != 4:
             raise ValueError('The character device is not for OXFW unit')
-        self.listen()
+
+        ctx = GLib.MainContext.new()
+        self.create_source().attach(ctx)
+        self.__unit_dispatcher = GLib.MainLoop.new(ctx, False)
+        self.__unit_th = Thread(target=lambda d: d.run(), args=(self.__unit_dispatcher, ))
+        self.__unit_th.start()
+
+        node = self.get_node()
+        ctx = GLib.MainContext.new()
+        node.create_source().attach(ctx)
+        self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
+        self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
+        self.__node_th.start()
 
         parser = Ta1394ConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
@@ -29,11 +43,18 @@ class OxfwUnit(Hinawa.SndUnit):
         self.model_name = info['model-name']
 
         self.fcp = Hinawa.FwFcp()
-        self.fcp.listen(self)
+        self.fcp.bind(self.get_node())
 
         self.hw_info = self._parse_hardware_info()
         self.supported_sampling_rates = self._parse_supported_sampling_rates()
         self.supported_stream_formats = self._parse_supported_stream_formats()
+
+    def release(self):
+        self.fcp.unbind()
+        self.__unit_dispatcher.quit()
+        self.__node_dispatcher.quit()
+        self.__unit_th.join()
+        self.__node_th.join()
 
     def _parse_hardware_info(self):
         hw_info = {}
