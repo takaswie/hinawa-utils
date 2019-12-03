@@ -70,6 +70,12 @@ class TscmUnit(Hinawa.SndUnit):
         self.__unit_th.join()
         self.__node_th.join()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, ex_type, ex_value, trace):
+        self.release()
+
     def read_quadlet(self, offset):
         req = Hinawa.FwReq()
         return req.read(self, self._BASE_ADDR + offset, 4)
