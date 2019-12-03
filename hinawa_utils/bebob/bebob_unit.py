@@ -1,11 +1,13 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
+from threading import Thread
 from struct import unpack
 
 import gi
+gi.require_version('GLib', '2.0')
 gi.require_version('Hinawa', '2.0')
-from gi.repository import Hinawa
+from gi.repository import GLib, Hinawa
 
 from hinawa_utils.ta1394.general import AvcGeneral, AvcConnection
 from hinawa_utils.ta1394.ccm import AvcCcm
@@ -24,7 +26,19 @@ class BebobUnit(Hinawa.SndUnit):
         self.open(path)
         if self.get_property('type') != 3:
             raise ValueError('The character device is not for BeBoB unit')
-        self.listen()
+
+        ctx = GLib.MainContext.new()
+        self.create_source().attach(ctx)
+        self.__unit_dispatcher = GLib.MainLoop.new(ctx, False)
+        self.__unit_th = Thread(target=lambda d: d.run(), args=(self.__unit_dispatcher, ))
+        self.__unit_th.start()
+
+        node = self.get_node()
+        ctx = GLib.MainContext.new()
+        node.create_source().attach(ctx)
+        self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
+        self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
+        self.__node_th.start()
 
         parser = BebobConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
@@ -32,8 +46,15 @@ class BebobUnit(Hinawa.SndUnit):
         self.model_id = info['model-id']
 
         self.fcp = Hinawa.FwFcp()
-        self.fcp.listen(self)
+        self.fcp.bind(self.get_node())
         self.firmware_info = self._get_firmware_info()
+
+    def release(self):
+        self.fcp.unbind()
+        self.__unit_dispatcher.quit()
+        self.__node_dispatcher.quit()
+        self.__unit_th.join()
+        self.__node_th.join()
 
     def _get_firmware_info(self):
         def _get_string_literal(params):
