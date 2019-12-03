@@ -1,9 +1,12 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
+from threading import Thread
+
 import gi
+gi.require_version('GLib', '2.0')
 gi.require_version('Hinawa', '2.0')
-from gi.repository import Hinawa
+from gi.repository import GLib, Hinawa
 
 from hinawa_utils.motu.motu_protocol_v1 import MotuProtocolV1
 from hinawa_utils.motu.motu_protocol_v2 import MotuProtocolV2
@@ -29,7 +32,19 @@ class MotuUnit(Hinawa.SndMotu):
         self.open(path)
         if self.get_property('type') != 7:
             raise ValueError('The character device is not for Motu unit.')
-        self.listen()
+
+        ctx = GLib.MainContext.new()
+        self.create_source().attach(ctx)
+        self.__unit_dispatcher = GLib.MainLoop.new(ctx, False)
+        self.__unit_th = Thread(target=lambda d: d.run(), args=(self.__unit_dispatcher, ))
+        self.__unit_th.start()
+
+        node = self.get_node()
+        ctx = GLib.MainContext.new()
+        node.create_source().attach(ctx)
+        self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
+        self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
+        self.__node_th.start()
 
         parser = MotuConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
@@ -40,6 +55,12 @@ class MotuUnit(Hinawa.SndMotu):
             self._protocol = protocol(self, False)
         else:
             raise OSError('Unsupported model')
+
+    def release(self):
+        self.__unit_dispatcher.quit()
+        self.__node_dispatcher.quit()
+        self.__unit_th.join()
+        self.__node_th.join()
 
     def get_sampling_rates(self):
         return self._protocol.get_supported_sampling_rates()
