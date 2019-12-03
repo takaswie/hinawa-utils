@@ -62,6 +62,12 @@ class MotuUnit(Hinawa.SndMotu):
         self.__unit_th.join()
         self.__node_th.join()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, ex_type, ex_value, trace):
+        self.release()
+
     def get_sampling_rates(self):
         return self._protocol.get_supported_sampling_rates()
 
