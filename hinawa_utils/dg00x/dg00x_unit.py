@@ -49,6 +49,12 @@ class Dg00xUnit(Hinawa.SndDg00x):
         self.__unit_th.join()
         self.__node_th.join()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, ex_type, ex_value, trace):
+        self.release()
+
     def _read_transaction(self, offset, size):
         req = Hinawa.FwReq()
         addr = self.__BASE_ADDR + offset
