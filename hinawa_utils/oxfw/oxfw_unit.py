@@ -56,6 +56,12 @@ class OxfwUnit(Hinawa.SndUnit):
         self.__unit_th.join()
         self.__node_th.join()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, ex_type, ex_value, trace):
+        self.release()
+
     def _parse_hardware_info(self):
         hw_info = {}
 
