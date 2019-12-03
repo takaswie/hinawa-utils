@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-from re import match
 from struct import unpack
 
 import gi
@@ -21,21 +20,11 @@ class BebobUnit(Hinawa.SndUnit):
     REG_INFO = 0xffffc8020000
 
     def __init__(self, path):
-        if match('/dev/snd/hwC[0-9]*D0', path):
-            super().__init__()
-            self.open(path)
-            if self.get_property('type') != 3:
-                raise ValueError('The character device is not for BeBoB unit')
-            self._on_juju = False,
-            self.listen()
-        elif match('/dev/fw[0-9]*', path):
-            # Just using parent class.
-            super(Hinawa.FwUnit, self).__init__()
-            Hinawa.FwUnit.open(self, path)
-            Hinawa.FwUnit.listen(self)
-            self._on_juju = True
-        else:
-            raise ValueError('Invalid argument for character device')
+        super().__init__()
+        self.open(path)
+        if self.get_property('type') != 3:
+            raise ValueError('The character device is not for BeBoB unit')
+        self.listen()
 
         parser = BebobConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
