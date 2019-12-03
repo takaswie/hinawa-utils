@@ -13,21 +13,11 @@ __all__ = ['DiceUnit']
 
 class DiceUnit(Hinawa.SndDice):
     def __init__(self, path):
-        if path.find('/dev/snd/hw') == 0:
-            super().__init__()
-            self.open(path)
-            if self.get_property('type') != 1:
-                raise ValueError('The character device is not for Dice unit')
-            self.listen()
-            self._on_juju = False
-        elif path.find('/dev/fw') == 0:
-            # Just using parent class.
-            super(Hinawa.FwUnit, self).__init__()
-            Hinawa.FwUnit.open(self, path)
-            Hinawa.FwUnit.listen(self)
-            self._on_juju = True
-        else:
-            raise ValueError('Invalid argument for character device')
+        super().__init__()
+        self.open(path)
+        if self.get_property('type') != 1:
+            raise ValueError('The character device is not for Dice unit')
+        self.listen()
 
         parser = Ta1394ConfigRomParser()
         info = parser.parse_rom(self.get_config_rom())
@@ -64,8 +54,6 @@ class DiceUnit(Hinawa.SndDice):
     def set_clock_source(self, source):
         if self.get_property('streaming'):
             raise RuntimeError('Packet streaming started.')
-        if self._on_juju:
-            raise RuntimeError('This operation is not supported withou ALSA.')
         req = Hinawa.FwReq()
         labels = self._protocol.get_clock_source_names()
         if source not in labels or source == 'Unused':
@@ -86,8 +74,6 @@ class DiceUnit(Hinawa.SndDice):
     def set_sampling_rate(self, rate):
         if self.get_property('streaming'):
             raise RuntimeError('Packet streaming started.')
-        if self._on_juju:
-            raise RuntimeError('This operation is not supported withou ALSA.')
         req = Hinawa.FwReq()
         self._protocol.write_sampling_rate(req, rate)
 
