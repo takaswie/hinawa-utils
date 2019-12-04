@@ -39,8 +39,14 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
 
     def read(self, offset, size):
         req = Hinawa.FwReq()
+        if size == 4:
+            tcode = Hinawa.FwTcode.READ_QUADLET_REQUEST
+        else:
+            tcode = Hinawa.FwTcode.READ_BLOCK_REQUEST
         addr = self.BASE_ADDR + offset
-        frames = req.read(self._unit, addr, size)
+        frames = bytearray(size)
+        frames = req.transaction(self._unit.get_node(), tcode, addr, size,
+                                 frames)
         if self._debug:
             print('    read: {0:012x}:'.format(addr))
             for i, frame in enumerate(frames):
@@ -49,13 +55,17 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
 
     def write(self, offset, frames):
         req = Hinawa.FwReq(timeout=100)
+        if len(frames) == 4:
+            tcode = Hinawa.FwTcode.WRITE_QUADLET_REQUEST
+        else:
+            tcode = Hinawa.FwTcode.WRITE_BLOCK_REQUEST
         addr = self.BASE_ADDR + offset
         if self._debug:
             print('    write: {0:012x}:'.format(addr))
             for i, frame in enumerate(frames):
                 print('        {0:04x}: {1:02x}'.format(offset + i, frame))
 
-        req.write(self._unit, addr, frames)
+        req.transaction(self.get_node(), tcode, addr, len(frames), frames)
 
     @abstractmethod
     def get_supported_sampling_rates(self):
