@@ -273,7 +273,10 @@ class InputCmd():
     @classmethod
     def get_meters(cls, unit: Hinawa.FwUnit):
         req = Hinawa.FwReq()
-        frames = req.read(unit, cls.__ADDR_IN_METERS, 8)
+        frames = bytearray(8)
+        frames = req.transaction(unit.get_node(),
+                                 Hinawa.FwTcode.READ_BLOCK_REQUEST,
+                                 cls.__ADDR_IN_METERS, 8, frames)
         vals = unpack('>2I', frames)
         meters = {
             'analog-1': vals[0],
@@ -418,7 +421,10 @@ class MixerCmd():
     @classmethod
     def get_meters(cls, unit: Hinawa.FwUnit):
         req = Hinawa.FwReq()
-        frames = req.read(unit, cls.__ADDR_SRC_LEVELS, 16)
+        frames = bytearray(16)
+        frames = req.transaction(unit.get_node(),
+                                 Hinawa.FwTcode.READ_BLOCK_REQUEST,
+                                 cls.__ADDR_SRC_LEVELS, 16, frames)
         vals = unpack('>4I', frames)
         meters = {
             'stream-1': vals[0],
