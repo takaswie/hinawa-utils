@@ -129,8 +129,13 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
         count = 0
         req = Hinawa.FwReq()
         while True:
+            if len(data) == 4:
+                tcode = Hinawa.FwTcode.WRITE_QUADLET_REQUEST
+            else:
+                tcode = Hinawa.FwTcode.WRITE_BLOCK_REQUEST
             try:
-                req.write(self.unit, self.BASE_ADDR + offset, data)
+                req.transaction(self.unit.get_node(), tcode,
+                                self.BASE_ADDR + offset, len(data), data)
                 break
             except Exception as e:
                 if count > 10:
@@ -393,7 +398,10 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
     def get_meters(self):
         meters = {}
         req = Hinawa.FwReq()
-        data = req.read(self.unit, self._ADDR_FOR_METERING, 84)
+        data = [0] * 84
+        data = req.transaction(self.unit.get_node(),
+                               Hinawa.FwTcode.READ_BLOCK_REQUEST,
+                               self._ADDR_FOR_METERING, 84, data)
         meters['switch-0'] = data[0]
         meters['rotery-0'] = data[1]
         meters['rotery-1'] = data[2]
