@@ -159,7 +159,8 @@ class FFUnit(Hinawa.SndUnit):
                                             'midi-low-addr', '0x00000000', True)
         req = Hinawa.FwReq()
         frames = pack('<3I', *self.__option_cache)
-        req.write(self, self.__regs[0], frames)
+        req.transaction(self.get_node(), Hinawa.FwTcode.WRITE_BLOCK_REQUEST,
+                        self.__regs[0], len(frames), frames)
 
     def __create_multiple_option_initial_cache(self, cache):
         default_params = {
@@ -243,7 +244,10 @@ class FFUnit(Hinawa.SndUnit):
 
     def get_sync_status(self):
         req = Hinawa.FwReq()
-        frames = req.read(self, 0x0000801c0000, 8)
+        frames = bytearray(8)
+        frames = req.transaction(self.get_node(),
+                    Hinawa.FwTcode.READ_BLOCK_REQUEST,
+                    0x0000801c0000, 8, frames)
         quads = unpack('<2I', frames)
 
         return FFStatusReg.parse(quads)
@@ -287,7 +291,8 @@ class FFUnit(Hinawa.SndUnit):
         val = self.__build_val_from_db(db)
         data = pack('<I', val)
         req = Hinawa.FwReq()
-        req.write(self, self.__regs[1] + offset, data)
+        req.transaction(self.get_node(), Hinawa.FwTcode.WRITE_BLOCK_REQUEST,
+                        self.__regs[1] + offset, len(data), data)
         self.__mixer_cache[offset // 4] = val
         self.__write_cache_to_file()
 
@@ -316,7 +321,8 @@ class FFUnit(Hinawa.SndUnit):
         val = self.__build_val_from_db(db)
         data = pack('<I', val)
         req = Hinawa.FwReq()
-        req.write(self, self.__regs[2] + offset, data)
+        req.transaction(self.get_node(), Hinawa.FwTcode.WRITE_BLOCK_REQUEST,
+                        self.__regs[2] + offset, len(data), data)
         self.__out_cache[offset // 4] = val
 
     def get_out_volume(self, target):
