@@ -67,13 +67,17 @@ class OxfwUnit(Hinawa.SndUnit):
 
         req = Hinawa.FwReq()
 
-        data = req.read(self, 0xfffff0050000, 4)
+        frames = bytearray(4)
+        frames = req.transaction(self.get_node(),
+                Hinawa.FwTcode.READ_QUADLET_REQUEST, 0xfffff0050000, 4, frames)
         hw_info['asic-type'] = 'FW{0:x}'.format(
-            unpack('>H', data[0:2])[0] >> 4)
-        hw_info['firmware-version'] = '{0}.{1}'.format(data[2], data[3])
+            unpack('>H', frames[0:2])[0] >> 4)
+        hw_info['firmware-version'] = '{0}.{1}'.format(frames[2], frames[3])
 
-        data = req.read(self, 0xfffff0090020, 4)
-        hw_info['asic-id'] = data.decode('US-ASCII').rstrip('\0')
+        frames = bytearray(4)
+        frames = req.transaction(self.get_node(),
+                Hinawa.FwTcode.READ_QUADLET_REQUEST, 0xfffff0090020, 4, frames)
+        hw_info['asic-id'] = frames.decode('US-ASCII').rstrip('\0')
 
         return hw_info
 
