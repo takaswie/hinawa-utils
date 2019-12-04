@@ -58,12 +58,22 @@ class Dg00xUnit(Hinawa.SndDg00x):
     def _read_transaction(self, offset, size):
         req = Hinawa.FwReq()
         addr = self.__BASE_ADDR + offset
-        return req.read(self, addr, size)
+        if size == 4:
+            tcode = Hinawa.FwTcode.READ_QUADLET_REQUEST
+        else:
+            tcode = Hinawa.FwTcode.READ_BLOCK_REQUEST
+        frames = bytearray(size)
+        return req.transaction(self.get_node(), tcode, addr, size, frames)
 
     def _write_transaction(self, offset, size):
         req = Hinawa.FwReq()
         addr = self.__BASE_ADDR + offset
-        return req.write(self, addr, size)
+        if size == 4:
+            tcode = Hinawa.FwTcode.WRITE_QUADLET_REQUEST
+        else:
+            tcode = Hinawa.FwTcode.WRITE_BLOCK_REQUEST
+        frames = bytearray(size)
+        return req.transaction(self.get_node(), tcode, addr, size, frames)
 
     def set_clock_source(self, source):
         if source not in self.SUPPORTED_CLOCK_SOURCES:
