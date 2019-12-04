@@ -21,7 +21,8 @@ class AvcGeneral():
             raise ValueError('Invalid argument for FwFcp')
         if cmd[0] != 0x00:
             raise ValueError('Invalid command code for control')
-        params = fcp.transact(cmd)
+        params = [0] * 256
+        params = fcp.transaction(cmd, params)
         if params[0] == 0x08:
             raise OSError('Not implemented')
         elif params[0] == 0x0a:
@@ -36,7 +37,8 @@ class AvcGeneral():
             raise ValueError('Invalid argument for FwFcp')
         if cmd[0] != 0x01:
             raise ValueError('Invalid command code for status')
-        params = fcp.transact(cmd)
+        params = [0] * 256
+        params = fcp.transaction(cmd, params)
         if params[0] == 0x08:
             raise OSError('Not implemented')
         elif params[0] == 0x0a:
@@ -53,7 +55,8 @@ class AvcGeneral():
             raise ValueError('Invalid argument for FwFcp')
         if cmd[0] != 0x02:
             raise ValueError('Invalid command code for inquire')
-        params = fcp.transact(cmd)
+        params = [0] * 256
+        params = fcp.transaction(cmd, params)
         if params[0] == 0x08:
             raise OSError('Not Implemented')
         elif params[0] != 0x0c:
