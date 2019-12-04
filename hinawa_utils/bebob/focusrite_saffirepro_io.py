@@ -125,13 +125,24 @@ class FocusriteSaffireproIoUnit(BebobUnit):
             frames.extend(pack('>I', quads[0]))
             quads = quads[1:]
         req = Hinawa.FwReq()
-        req.write(self, self._BASE_ADDR + offset, frames)
+        if len(frames) == 4:
+            tcode = Hinawa.FwTcode.WRITE_QUADLET_REQUEST
+        else:
+            tcode = Hinawa.FwTcode.WRITE_BLOCK_REQUEST
+        req.transaction(self.get_node(), tcode,
+                        self._BASE_ADDR + offset, len(frames), frames)
 
     def _read_quads(self, offset, count):
         quads = []
         req = Hinawa.FwReq()
         size = count * 4
-        frames = req.read(self, self._BASE_ADDR + offset, size)
+        if size == 4:
+            tcode = Hinawa.FwTcode.READ_QUADLET_REQUEST
+        else:
+            tcode = Hinawa.FwTcode.READ_BLOCK_REQUEST
+        frames = bytearray(size)
+        frames = req.transaction(self.get_node(), tcode,
+                                 self._BASE_ADDR + offset, size, frames)
         for i in range(count):
             quads.append(unpack('>I', frames[0:4])[0])
             frames = frames[4:]
