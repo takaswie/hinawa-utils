@@ -78,11 +78,16 @@ class TscmUnit(Hinawa.SndUnit):
 
     def read_quadlet(self, offset):
         req = Hinawa.FwReq()
-        return req.read(self, self._BASE_ADDR + offset, 4)
+        frames = bytearray(4)
+        return req.transaction(self.get_node(),
+                        Hinawa.FwTcode.READ_QUADLET_REQUEST,
+                        self._BASE_ADDR + offset, 4, frames)
 
     def write_quadlet(self, offset, frames):
         req = Hinawa.FwReq()
-        return req.write(self, self._BASE_ADDR + offset, frames)
+        return req.transaction(self.get_node(),
+                        Hinawa.FwTcode.WRITE_QUADLET_REQUEST,
+                        self, self._BASE_ADDR + offset, 4, frames)
 
     def get_firmware_versions(self):
         info = {}
