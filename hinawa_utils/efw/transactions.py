@@ -148,7 +148,8 @@ class EftInfo():
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
-        return unit.transact(0, cmd, args)
+        params = [0] * 256
+        return unit.transaction(0, cmd, args, params)
 
     @classmethod
     def get_spec(cls, unit):
@@ -336,7 +337,8 @@ class EftFlash():
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
-        return unit.transact(1, cmd, args)
+        params = [0] * 256
+        return unit.transaction(1, cmd, args, params)
 
     @classmethod
     def erase(cls, unit, offset):
@@ -400,7 +402,8 @@ class EftTransmit():
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
-        return unit.transact(2, cmd, args)
+        params = [0] * 256
+        return unit.transaction(2, cmd, args, params)
 
     @classmethod
     def set_mode(cls, unit, mode):
@@ -471,7 +474,8 @@ class EftHwctl():
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
-        return unit.transact(3, cmd, args)
+        params = [0] * 256
+        return unit.transaction(3, cmd, args, params)
 
     @classmethod
     def set_clock(cls, unit, rate, source, reset):
@@ -548,7 +552,8 @@ class EftPhysOutput():
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
-        return unit.transact(4, cmd, args)
+        params = [0] * 256
+        return unit.transaction(4, cmd, args, params)
 
     @classmethod
     def set_param(cls, unit, operation, channel, value):
@@ -600,7 +605,8 @@ class EftPhysInput():
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
-        return unit.transact(5, cmd, args)
+        params = [0] * 256
+        return unit.transaction(5, cmd, args, params)
 
     @classmethod
     def set_param(cls, unit, operation, channel, value):
@@ -640,7 +646,8 @@ class EftPlayback():
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
-        return unit.transact(6, cmd, args)
+        params = [0] * 256
+        return unit.transaction(6, cmd, args, params)
 
     @classmethod
     def set_param(cls, unit, operation, channel, value):
@@ -684,7 +691,8 @@ class EftCapture():
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
-        return unit.transact(7, cmd, args)
+        params = [0] * 256
+        return unit.transaction(7, cmd, args, params)
 
 #
 # Category No.8, for input monitoring multiplexer commands
@@ -698,7 +706,8 @@ class EftMonitor():
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
-        return unit.transact(8, cmd, args)
+        params = [0] * 256
+        return unit.transaction(8, cmd, args, params)
 
     @classmethod
     def set_param(cls, unit, operation, in_ch, out_ch, value):
@@ -755,7 +764,8 @@ class EftIoconf():
     def _execute_command(unit, cmd, args):
         if not isinstance(unit, Hinawa.SndEfw):
             raise ValueError('Invalid argument for SndEfw')
-        return unit.transact(9, cmd, args)
+        params = [0] * 256
+        return unit.transaction(9, cmd, args, params)
 
     @classmethod
     def set_control_room_mirroring(cls, unit, output_pair):
