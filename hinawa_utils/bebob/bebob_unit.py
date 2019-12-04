@@ -74,7 +74,10 @@ class BebobUnit(Hinawa.SndUnit):
             return params.decode('US-ASCII')
 
         req = Hinawa.FwReq()
-        params = req.read(self, BebobUnit.REG_INFO, 104)
+        frames = bytearray(104)
+        params = req.transaction(self.get_node(),
+                    Hinawa.FwTcode.READ_BLOCK_REQUEST, BebobUnit.REG_INFO, 104,
+                    frames)
 
         info = {}
         info['manufacturer'] = _get_string_literal(params[0:8])
