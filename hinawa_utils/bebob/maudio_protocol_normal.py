@@ -434,7 +434,10 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         labels = self.labels['meters']
         meters = {}
         req = Hinawa.FwReq()
-        data = req.read(self.unit, self._ADDR_FOR_METERING, self.__meters)
+        frames = [0] * 256
+        data = req.transaction(self.unit.get_node(),
+                Hinawa.FwTcode.READ_BLOCK_REQUEST, self._ADDR_FOR_METERING,
+                self.__meters, frames)
         for i, name in enumerate(labels):
             meters[name] = unpack('>I', data[i * 4:(i + 1) * 4])[0]
         if len(data) > len(labels) * 4:
