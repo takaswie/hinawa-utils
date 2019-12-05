@@ -8,7 +8,7 @@ with open("README", "r") as fh:
 
 setuptools.setup(
     name="hinawa-utils",
-    version="0.1.0",
+    version="0.2.0",
     author="Takashi Sakamoto",
     author_email="o-takashi@sakamocchi.jp",
     description="Utility to control Audio and Music units on IEEE 1394 bus",

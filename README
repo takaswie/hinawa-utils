@@ -1,6 +1,6 @@
 # hinawa-utils
 
-2018/08/04
+2019/12/05
 Takashi Sakamoto
 
 ## Introduction
@@ -88,7 +88,7 @@ The modules include applications of below specifications:
     * https://docs.python.org/3/library/pathlib.html
  * PyGObject
     * https://gitlab.gnome.org/GNOME/pygobject
- * libhinawa 1.0.0 or later, with gir support
+ * libhinawa 1.4.0 or later, with gir support
     * https://github.com/takaswie/libhinawa
 
 ## License
