@@ -44,6 +44,7 @@ setuptools.setup(
         'hinawa-apogee-ensemble-cli',
         'hinawa-apogee-duet-cli',
         'hinawa-bebob-parser',
+        'hinawa-bebob-connection-cli',
         'hinawa-config-rom-printer',
         'hinawa-dg003-cli',
         'hinawa-dg00x-common-cli',
