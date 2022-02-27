@@ -1,10 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
-import gi
-gi.require_version('Hinawa', '2.0')
-from gi.repository import Hinawa
-
 from hinawa_utils.bebob.bebob_unit import BebobUnit
 from hinawa_utils.ta1394.audio import AvcAudio
 
