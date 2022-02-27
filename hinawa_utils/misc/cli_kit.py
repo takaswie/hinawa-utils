@@ -8,7 +8,7 @@ from signal import SIGINT
 
 import gi
 gi.require_version('GLib', '2.0')
-gi.require_version('Hinawa', '2.0')
+gi.require_version('Hinawa', '3.0')
 from gi.repository import GLib, Hinawa
 
 __all__ = ['CliKit']
