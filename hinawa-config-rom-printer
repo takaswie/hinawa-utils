@@ -142,7 +142,7 @@ def handle_ame_unit_dep_keys(key_id, type_name, data):
 
 pp = PrettyPrinter(indent=2, compact=False)
 
-unit = Hinawa.FwUnit()
+unit = Hinawa.FwNode()
 unit.open(path)
 
 data = unit.get_config_rom()

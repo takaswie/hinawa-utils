@@ -271,7 +271,7 @@ class InputCmd():
         return float(resp[2] * 75 / 0x4f)
 
     @classmethod
-    def get_meters(cls, unit: Hinawa.FwUnit):
+    def get_meters(cls, unit: Hinawa.FwNode):
         req = Hinawa.FwReq()
         frames = bytearray(8)
         frames = req.transaction(unit.get_node(),
@@ -419,7 +419,7 @@ class MixerCmd():
         return float(48 * val / 0x3fff - 48)
 
     @classmethod
-    def get_meters(cls, unit: Hinawa.FwUnit):
+    def get_meters(cls, unit: Hinawa.FwNode):
         req = Hinawa.FwReq()
         frames = bytearray(16)
         frames = req.transaction(unit.get_node(),
