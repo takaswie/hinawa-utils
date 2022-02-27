@@ -1,6 +1,11 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2018 Takashi Sakamoto
 
+import gi
+gi.require_version('GLib', '2.0')
+gi.require_version('Hinawa', '3.0')
+from gi.repository import GLib, Hinawa
+
 from hinawa_utils.ta1394.general import AvcGeneral
 from hinawa_utils.ta1394.general import AvcConnection
 from hinawa_utils.ta1394.ccm import AvcCcm
@@ -10,13 +15,36 @@ from hinawa_utils.bebob.extensions import BcoPlugInfo
 from hinawa_utils.bebob.extensions import BcoSubunitInfo
 from hinawa_utils.bebob.extensions import BcoStreamFormatInfo
 
+from threading import Thread
+
 __all__ = ['PlugParser']
 
 
-class PlugParser(BebobUnit):
+class PlugParser():
     def __init__(self, path):
-        super().__init__(path)
+        self.node = Hinawa.FwNode.new()
+        self.node.open(path)
 
+        self.fcp = Hinawa.FwFcp.new()
+        self.fcp.bind(self.node)
+
+    def listen(self):
+        ctx = GLib.MainContext.new()
+        src = self.node.create_source()
+        src.attach(ctx)
+
+        self.dispatcher = GLib.MainLoop.new(ctx, False)
+        self.th = Thread(target=lambda d: d.run(), args=(self.dispatcher, ))
+        self.th.start()
+
+    def unlisten(self):
+        self.dispatcher.quit()
+        self.fcp.release()
+        self.th.join()
+        del self.dispatcher
+        del self.th
+
+    def parse(self):
         self.unit_info = self.__parse_unit_info()
         self.unit_plugs = self.__parse_unit_plugs()
 
