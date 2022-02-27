@@ -109,7 +109,7 @@ class BcoPlugInfo():
             addr.append(data['subunit-id'])
             addr.append(0xff)
             addr.append(0xff)
-            if info['mode'] is 'function-block':
+            if info['mode'] == 'function-block':
                 addr.append(data['function-block-type'])
                 addr.append(data['function-block-id'])
                 addr.append(data['plug'])
@@ -443,10 +443,10 @@ class BcoVendorDependent():
 
     @classmethod
     def set_digital_channel_status(cls, fcp, spec, name, values):
-        if spec is 'con':
+        if spec == 'con':
             attrs = cls.SUPPORTED_CON_STATUS
             subcmds = cls.__CON_SUBCMDS
-        elif spec is 'pro':
+        elif spec == 'pro':
             attrs = cls.SUPPORTED_PRO_STATUS
             subcmds = cls.__PRO_SUBCMDS
         else:
@@ -454,7 +454,7 @@ class BcoVendorDependent():
         if name not in attrs:
             raise ValueError('Invalid argument for attribute name')
         if attrs[name] != 1:
-            if type(values) is not 'list' or len(values) != attrs[name]:
+            if type(values) != 'list' or len(values) != attrs[name]:
                 raise ValueError('Invalid argument for attribute value length')
         args = bytearray(0xff for i in range(10))
         args[0] = 0x00
@@ -472,10 +472,10 @@ class BcoVendorDependent():
 
     @classmethod
     def get_digital_channel_status(cls, fcp, spec, name):
-        if spec is 'con':
+        if spec == 'con':
             attrs = cls.SUPPORTED_CON_STATUS
             subcmds = cls.__CON_SUBCMDS
-        elif spec is 'pro':
+        elif spec == 'pro':
             attrs = cls.SUPPORTED_PRO_STATUS
             subcmds = cls.__PRO_SUBCMDS
         else:

@@ -270,7 +270,7 @@ class EfwUnit(Hinawa.SndEfw):
         return labels
 
     def set_control_room_mirroring(self, source):
-        if self.info['features']['control-room-mirroring'] is False:
+        if not self.info['features']['control-room-mirroring']:
             raise RuntimeError('Not supported by this model')
         labels = self.get_control_room_source_labels()
         if source not in labels:
@@ -279,7 +279,7 @@ class EfwUnit(Hinawa.SndEfw):
         EftIoconf.set_control_room_mirroring(self, val)
 
     def get_control_room_mirroring(self):
-        if self.info['features']['control-room-mirroring'] is False:
+        if not self.info['features']['control-room-mirroring']:
             raise RuntimeError('Not supported by this model')
         val = EftIoconf.get_control_room_mirroring(self)
         labels = self.get_control_room_source_labels()
@@ -293,7 +293,7 @@ class EfwUnit(Hinawa.SndEfw):
         return labels
 
     def set_digital_input_mode(self, mode):
-        if self.info['features'][mode] is False:
+        if not self.info['features'][mode]:
             raise RuntimeError('Not supported by this model')
         EftIoconf.set_digital_input_mode(self, mode)
 
@@ -301,24 +301,24 @@ class EfwUnit(Hinawa.SndEfw):
         return EftIoconf.get_digital_input_mode(self)
 
     def set_phantom_powering(self, state):
-        if self.info['features']['phantom-powering'] is False:
+        if not self.info['features']['phantom-powering']:
             raise RuntimeError('Not supported by this model')
         EftIoconf.set_phantom_powering(self, state)
 
     def get_phantom_powering(self):
-        if self.info['features']['phantom-powering'] is False:
+        if not self.info['features']['phantom-powering']:
             raise RuntimeError('Not supported by this model')
         return EftIoconf.get_phantom_powering(self)
 
     def set_stream_mapping(self, rx_maps, tx_maps):
-        if rx_maps and self.info['features']['rx-mapping'] is False:
+        if not rx_maps and self.info['features']['rx-mapping']:
             raise RuntimeError('Not supported by this model')
-        if tx_maps and self.info['features']['tx-mapping'] is False:
+        if not tx_maps and self.info['features']['tx-mapping']:
             raise RuntimeError('Not supported by this model')
         EftIoconf.set_stream_mapping(self, rx_maps, tx_maps)
 
     def get_stream_mapping(self):
-        if self.info['features']['rx-mapping'] is False and \
-           self.info['features']['tx-mapping'] is False:
+        if not self.info['features']['rx-mapping'] and \
+           not self.info['features']['tx-mapping']:
             raise RuntimeError('Not supported by this model')
         return EftIoconf.get_stream_mapping(self)
