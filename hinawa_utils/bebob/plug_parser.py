@@ -60,7 +60,7 @@ class PlugParser(BebobUnit):
             ch = BcoPlugInfo.get_plug_ch_name(self.fcp, addr, channel + 1)
             plug['channels'].append(ch)
         plug['clusters'] = []
-        if plug['type'] is 'IsoStream':
+        if plug['type'] == 'IsoStream':
             clusters = BcoPlugInfo.get_plug_clusters(self.fcp, addr)
             for cluster in range(len(clusters)):
                 clst = BcoPlugInfo.get_plug_cluster_info(
@@ -185,7 +185,7 @@ class PlugParser(BebobUnit):
             ch = BcoPlugInfo.get_plug_ch_name(self.fcp, addr, channel + 1)
             plug['channels'].append(ch)
         plug['clusters'] = []
-        if plug['type'] is 'IsoStream':
+        if plug['type'] == 'IsoStream':
             clusters = BcoPlugInfo.get_plug_clusters(self.fcp, addr)
             for cluster in range(len(clusters)):
                 clst = BcoPlugInfo.get_plug_cluster_info(

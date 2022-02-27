@@ -380,7 +380,7 @@ class EftFlash():
     @classmethod
     def set_lock(cls, unit, lock):
         args = array('I')
-        if lock is not 0:
+        if lock > 0:
             args.append(1)
         else:
             args.append(0)
@@ -508,7 +508,7 @@ class EftHwctl():
             if name not in cls.SUPPORTED_BOX_STATES:
                 raise ValueError('Invalid value in box states')
             shift = cls.__BOX_STATE_POSITIONS[name]
-            if cls.SUPPORTED_BOX_STATES[name].index(state) is 0:
+            if cls.SUPPORTED_BOX_STATES[name].index(state) == 0:
                 mask_clear |= (1 << shift)
             else:
                 mask_set |= (1 << shift)
@@ -557,13 +557,13 @@ class EftPhysOutput():
 
     @classmethod
     def set_param(cls, unit, operation, channel, value):
-        if operation is 'gain':
+        if operation == 'gain':
             cmd = 0
-        elif operation is 'mute':
+        elif operation == 'mute':
             cmd = 2
             if value > 0:
                 value = 1
-        elif operation is 'nominal':
+        elif operation == 'nominal':
             cmd = 8
             if value > 0:
                 value = 2
@@ -576,11 +576,11 @@ class EftPhysOutput():
 
     @classmethod
     def get_param(cls, unit, operation, channel):
-        if operation is 'gain':
+        if operation == 'gain':
             cmd = 1
-        elif operation is 'mute':
+        elif operation == 'mute':
             cmd = 3
-        elif operation is 'nominal':
+        elif operation == 'nominal':
             print('Unfortunately, this doesn\'t work well...')
             cmd = 9
         else:
@@ -588,7 +588,7 @@ class EftPhysOutput():
         args = array('I')
         args.append(channel)
         params = cls._execute_command(unit, cmd, args)
-        if operation is 'nominal':
+        if operation == 'nominal':
             if params[1] == 2:
                 params[1] = 1
         return params[1]
@@ -610,7 +610,7 @@ class EftPhysInput():
 
     @classmethod
     def set_param(cls, unit, operation, channel, value):
-        if operation is 'nominal':
+        if operation == 'nominal':
             cmd = 8
             if value > 0:
                 value = 2
@@ -623,7 +623,7 @@ class EftPhysInput():
 
     @classmethod
     def get_param(cls, unit, operation, channel):
-        if operation is 'nominal':
+        if operation == 'nominal':
             print('Unfortunately, this doesn\'t work well...')
             cmd = 9
         else:
@@ -651,13 +651,13 @@ class EftPlayback():
 
     @classmethod
     def set_param(cls, unit, operation, channel, value):
-        if operation is 'gain':
+        if operation == 'gain':
             cmd = 0
-        elif operation is 'mute':
+        elif operation == 'mute':
             cmd = 2
             if value > 0:
                 value = 1
-        elif operation is 'solo':
+        elif operation == 'solo':
             cmd = 4
             if value > 0:
                 value = 1
@@ -670,11 +670,11 @@ class EftPlayback():
 
     @classmethod
     def get_param(cls, unit, operation, channel):
-        if operation is 'gain':
+        if operation == 'gain':
             cmd = 1
-        elif operation is 'mute':
+        elif operation == 'mute':
             cmd = 3
-        elif operation is 'solo':
+        elif operation == 'solo':
             cmd = 5
         else:
             raise ValueError('Invalid argument for operation.')
@@ -711,17 +711,17 @@ class EftMonitor():
 
     @classmethod
     def set_param(cls, unit, operation, in_ch, out_ch, value):
-        if operation is 'gain':
+        if operation == 'gain':
             cmd = 0
-        elif operation is 'mute':
+        elif operation == 'mute':
             cmd = 2
             if value > 0:
                 value = 1
-        elif operation is 'solo':
+        elif operation == 'solo':
             cmd = 4
             if value > 0:
                 value = 1
-        elif operation is 'pan':
+        elif operation == 'pan':
             cmd = 6
             if value < 0 or value > 255:
                 raise ValueError('Invalid argument for panning')
@@ -735,13 +735,13 @@ class EftMonitor():
 
     @classmethod
     def get_param(cls, unit, operation, in_ch, out_ch):
-        if operation is 'gain':
+        if operation == 'gain':
             cmd = 1
-        elif operation is 'mute':
+        elif operation == 'mute':
             cmd = 3
-        elif operation is 'solo':
+        elif operation == 'solo':
             cmd = 5
-        elif operation is 'pan':
+        elif operation == 'pan':
             cmd = 7
         else:
             raise ValueError('Invalid argument for operation.')

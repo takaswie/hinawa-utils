@@ -187,7 +187,7 @@ def handle_rx_stream_mapping(unit, args):
     num = 0
     for index, name in enumerate(unit.info['phys-outputs']):
         if index % 2 == 0:
-            if prev is not name:
+            if prev != name:
                 num = 0
             targets.append('{0}-{1}/{2}'.format(name,
                                                 num * 2 + 1, num * 2 + 2))
@@ -226,7 +226,7 @@ def handle_tx_stream_mapping(unit, args):
     num = 0
     for index, name in enumerate(unit.info['phys-inputs']):
         if index % 2 == 0:
-            if prev is not name:
+            if prev != name:
                 num = 0
             inputs.append('{0}-{1}/{2}'.format(name, num * 2 + 1, num * 2 + 2))
             prev = name

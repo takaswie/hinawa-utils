@@ -70,7 +70,7 @@ class AvcAudio():
     def set_feature_mute_state(cls, fcp, subunit_id, attr, fb_id, ch, mute):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if attr is not 'current':
+        if attr != 'current':
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
@@ -98,7 +98,7 @@ class AvcAudio():
     def get_feature_mute_state(cls, fcp, subunit_id, attr, fb_id, ch):
         if subunit_id > 0x07:
             raise ValueError('Invalid argument for subunit ID')
-        if attr is not 'current':
+        if attr != 'current':
             raise ValueError('Invalid argument for attribute')
         if fb_id > 255:
             raise ValueError('Invalid argument for function block ID')
