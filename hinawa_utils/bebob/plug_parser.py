@@ -45,7 +45,7 @@ class PlugParser(BebobUnit):
                     try:
                         plug = self.__parse_unit_plug(dir, type, i)
                         unit_plugs[type][dir][i] = plug
-                    except:
+                    except Exception:
                         continue
         return unit_plugs
 
@@ -79,7 +79,7 @@ class PlugParser(BebobUnit):
         for page in range(AvcGeneral.MAXIMUM_SUBUNIT_PAGE + 1):
             try:
                 subunits = AvcGeneral.get_subunit_info(self.fcp, page)
-            except:
+            except Exception:
                 break
 
             for entry in subunits:
@@ -122,11 +122,11 @@ class PlugParser(BebobUnit):
         # Music subunits have counter direction.
         try:
             plug['input'] = BcoPlugInfo.get_plug_input(self.fcp, addr)
-        except:
+        except Exception:
             pass
         try:
             plug['outputs'] = BcoPlugInfo.get_plug_outputs(self.fcp, addr)
-        except:
+        except Exception:
             pass
         return plug
 
@@ -196,11 +196,11 @@ class PlugParser(BebobUnit):
         # Music subunits have counter direction.
         try:
             plug['input'] = BcoPlugInfo.get_plug_input(self.fcp, addr)
-        except:
+        except Exception:
             pass
         try:
             plug['outputs'] = BcoPlugInfo.get_plug_outputs(self.fcp, addr)
-        except:
+        except Exception:
             pass
         return plug
 
@@ -239,7 +239,7 @@ class PlugParser(BebobUnit):
             try:
                 AvcCcm.ask_signal_source(self.fcp, addr,
                                          self.signal_destination)
-            except:
+            except Exception:
                 continue
             srcs.append(params)
         return srcs
@@ -258,6 +258,6 @@ class PlugParser(BebobUnit):
                         fmts = BcoStreamFormatInfo.get_entry_list(self.fcp,
                                                                   addr)
                         hoge[type][dir][i] = fmts
-                    except:
+                    except Exception:
                         continue
         return hoge
