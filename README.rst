@@ -55,6 +55,8 @@ CLI tools to control Audio and Music unit on IEEE 1394 bus
    * A lexer/parser of configuration ROM on IEEE 1394 bus
 * hinawa-bebob-parser
    * Plug structure parser for BeBoB firmware
+* hinawa-bebob-connection-cli
+   * Signal connection management between plugs of subunits for BeBoB firmware
 * hinawa-alesis-io-cli
    * CLI tool for Alesis iO|14 and iO|26
 * hinawa-apogee-duet-cli
