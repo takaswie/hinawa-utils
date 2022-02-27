@@ -137,7 +137,7 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
                 req.transaction(self.unit.get_node(), tcode,
                                 self.BASE_ADDR + offset, len(data), data)
                 break
-            except Exception as e:
+            except Exception:
                 if count > 10:
                     raise OSError('Fail to communicate to the unit.')
                 count += 1

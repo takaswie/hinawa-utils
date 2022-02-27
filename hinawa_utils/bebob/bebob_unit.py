@@ -135,7 +135,7 @@ class BebobUnit(Hinawa.SndUnit):
         for page in range(AvcGeneral.MAXIMUM_SUBUNIT_PAGE + 1):
             try:
                 info = AvcGeneral.get_subunit_info(self.fcp, page)
-            except:
+            except Exception:
                 break
 
             for entry in info:
@@ -146,7 +146,7 @@ class BebobUnit(Hinawa.SndUnit):
                     try:
                         data = AvcConnection.get_subunit_plug_info(self.fcp,
                                                     subunit_type, subunit_id)
-                    except:
+                    except Exception:
                         continue
 
                     id = (subunit_type, subunit_id)
@@ -209,13 +209,13 @@ class BebobUnit(Hinawa.SndUnit):
         for dst_seqid, dst_addr in dst_candidates.items():
             try:
                 curr_src_info = AvcCcm.get_signal_source(self.fcp, dst_addr)
-            except:
+            except Exception:
                 curr_src_info = None
 
             for src_seqid, src_addr in src_candidates.items():
                 try:
                     AvcCcm.ask_signal_source(self.fcp, src_addr, dst_addr)
-                except:
+                except Exception:
                     continue
 
                 if dst_seqid not in avail:
