@@ -4,7 +4,7 @@
 from struct import pack, unpack
 
 import gi
-gi.require_version('Hinawa', '2.0')
+gi.require_version('Hinawa', '3.0')
 from gi.repository import Hinawa
 
 from hinawa_utils.dice.dice_unit import DiceUnit

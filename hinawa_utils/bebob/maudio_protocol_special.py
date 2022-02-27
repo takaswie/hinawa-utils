@@ -5,7 +5,7 @@ from struct import unpack, pack
 from pathlib import Path
 
 import gi
-gi.require_version('Hinawa', '2.0')
+gi.require_version('Hinawa', '3.0')
 from gi.repository import Hinawa
 
 from hinawa_utils.bebob.maudio_protocol_abstract import MaudioProtocolAbstract
