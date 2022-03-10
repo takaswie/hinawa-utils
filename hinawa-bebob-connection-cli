@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
 
-from hinawa_utils.misc.cli_kit import CliKit
-from hinawa_utils.bebob.bebob_unit import BebobUnit
+import gi
+gi.require_version('GLib', '2.0')
+gi.require_version('Hinawa', '3.0')
+from gi.repository import GLib, Hinawa
+
 from hinawa_utils.bebob.plug_parser import PlugParser
 from hinawa_utils.bebob.extensions import BcoPlugInfo
 
-def handle_dump_connections(unit, args):
-    unit_plug_list = PlugParser.get_unit_plug_list(unit.fcp)
-    subunit_plug_list = PlugParser.get_subunit_plug_list(unit.fcp)
+from sys import argv, exit
+from pathlib import Path
+from threading import Thread
 
-    conns = PlugParser.get_avail_connections(unit.fcp, unit_plug_list, subunit_plug_list)
+def handle_dump_connections(fcp):
+    unit_plug_list = PlugParser.get_unit_plug_list(fcp)
+    subunit_plug_list = PlugParser.get_subunit_plug_list(fcp)
+
+    conns = PlugParser.get_avail_connections(fcp, unit_plug_list, subunit_plug_list)
 
     if len(conns) == 0:
         print('nothing avail.')
@@ -23,7 +30,7 @@ def handle_dump_connections(unit, args):
         else:
             return False
 
-        dst_spec = PlugParser.get_plug_spec(unit.fcp, info)
+        dst_spec = PlugParser.get_plug_spec(fcp, info)
         print('{0} ({1})'.format(dst_spec['name'], dst_seqid))
 
         for avail in avails:
@@ -35,7 +42,7 @@ def handle_dump_connections(unit, args):
             else:
                 return False
 
-            src_spec = PlugParser.get_plug_spec(unit.fcp, info)
+            src_spec = PlugParser.get_plug_spec(fcp, info)
             if used:
                 print('   < {0} ({1})'.format(src_spec['name'], src_seqid))
             else:
@@ -43,14 +50,14 @@ def handle_dump_connections(unit, args):
 
     return True
 
-def handle_graph_connections(unit, args):
-    unit_plug_list = PlugParser.get_unit_plug_list(unit.fcp)
-    subunit_plug_list = PlugParser.get_subunit_plug_list(unit.fcp)
+def handle_graph_connections(fcp):
+    unit_plug_list = PlugParser.get_unit_plug_list(fcp)
+    subunit_plug_list = PlugParser.get_subunit_plug_list(fcp)
 
     specs = {}
     for plug_list in (unit_plug_list, subunit_plug_list):
         for seqid, info in plug_list.items():
-            spec = PlugParser.get_plug_spec(unit.fcp, info)
+            spec = PlugParser.get_plug_spec(fcp, info)
             specs[seqid] = spec
 
     unit_plugs = {}
@@ -116,7 +123,7 @@ def handle_graph_connections(unit, args):
             print('    }')
         print('  }')
 
-    conns = PlugParser.get_avail_connections(unit.fcp, unit_plug_list, subunit_plug_list)
+    conns = PlugParser.get_avail_connections(fcp, unit_plug_list, subunit_plug_list)
     for dst_seqid, avails in conns.items():
         dst_spec = specs[dst_seqid]
         for avail in avails:
@@ -144,7 +151,56 @@ cmds = {
     'graph-connections':    handle_graph_connections,
 }
 
-fullpath = CliKit.seek_snd_unit_path()
-if fullpath:
-    with BebobUnit(fullpath) as unit:
-        CliKit.dispatch_command(unit, cmds)
+def print_help(reason=""):
+    if len(reason) > 0:
+        print(reason)
+        print("")
+    print("$ {} CDEV MODE".format(argv[0]))
+    print("  CDEV: path to special file for Linux Firewire character device (e.g. /dev/fw1)")
+    print("  MODE: {}".format(" | ".join(cmds)))
+
+if len(argv) < 3:
+    print_help("Missing arguments")
+    exit(1)
+
+path = Path(argv[1])
+if not path.exists():
+    print_help("{} is not found.¥n".format(path))
+    exit(1)
+elif not path.is_char_device():
+    print_help("{} is not special file for character device.".format(path))
+    exit(1)
+fullpath = str(path)
+
+node = Hinawa.FwNode.new()
+try:
+    node.open(fullpath)
+except Exception as e:
+    print_help("Fail to operate {}: {}".format(fullpath, e))
+    exit(1)
+
+mode = argv[2]
+if mode not in cmds:
+    print_help("{} is not supported.".format(mode))
+    exit(1)
+op = cmds[mode]
+
+ctx = GLib.MainContext.new()
+src = node.create_source()
+src.attach(ctx)
+
+dispatcher = GLib.MainLoop.new(ctx, False)
+th = Thread(target = lambda d: d.run(), args=(dispatcher,))
+th.start()
+
+try:
+    fcp = Hinawa.FwFcp.new()
+    fcp.bind(node)
+    op(fcp)
+except Exception as e:
+    print(e)
+finally:
+    fcp.unbind()
+
+dispatcher.quit()
+th.join()
