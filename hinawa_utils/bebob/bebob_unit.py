@@ -107,11 +107,12 @@ class BebobUnit(Hinawa.SndUnit):
 
         return info
 
-    def get_unit_plug_list(self):
+    @classmethod
+    def get_unit_plug_list(cls, fcp):
         plugs = {}
         seqid = 0
 
-        units = AvcConnection.get_unit_plug_info(self.fcp)
+        units = AvcConnection.get_unit_plug_info(fcp)
         for type, data in units.items():
             for direction, count in data.items():
                 for plug_id in range(count):
@@ -130,11 +131,12 @@ class BebobUnit(Hinawa.SndUnit):
 
         return plugs
 
-    def _get_subunit_plug_info(self):
+    @classmethod
+    def _get_subunit_plug_info(cls, fcp):
         subunits = {}
         for page in range(AvcGeneral.MAXIMUM_SUBUNIT_PAGE + 1):
             try:
-                info = AvcGeneral.get_subunit_info(self.fcp, page)
+                info = AvcGeneral.get_subunit_info(fcp, page)
             except Exception:
                 break
 
@@ -144,7 +146,7 @@ class BebobUnit(Hinawa.SndUnit):
 
                 for subunit_id in range(maximum_id + 1):
                     try:
-                        data = AvcConnection.get_subunit_plug_info(self.fcp,
+                        data = AvcConnection.get_subunit_plug_info(fcp,
                                                     subunit_type, subunit_id)
                     except Exception:
                         continue
@@ -157,11 +159,12 @@ class BebobUnit(Hinawa.SndUnit):
 
         return subunits
 
-    def get_subunit_plug_list(self):
+    @classmethod
+    def get_subunit_plug_list(cls, fcp):
         plugs = {}
         seqid = 0
 
-        subunits = self._get_subunit_plug_info()
+        subunits = cls._get_subunit_plug_info(fcp)
         for id, data in subunits.items():
             for direction, count in data.items():
                 for plug_id in range(count):
@@ -181,7 +184,8 @@ class BebobUnit(Hinawa.SndUnit):
 
         return plugs
 
-    def get_avail_connections(self, unit_plug_list, subunit_plug_list):
+    @classmethod
+    def get_avail_connections(cls, fcp, unit_plug_list, subunit_plug_list):
         src_candidates = {}
         dst_candidates = {}
         avail = {}
@@ -208,13 +212,13 @@ class BebobUnit(Hinawa.SndUnit):
 
         for dst_seqid, dst_addr in dst_candidates.items():
             try:
-                curr_src_info = AvcCcm.get_signal_source(self.fcp, dst_addr)
+                curr_src_info = AvcCcm.get_signal_source(fcp, dst_addr)
             except Exception:
                 curr_src_info = None
 
             for src_seqid, src_addr in src_candidates.items():
                 try:
-                    AvcCcm.ask_signal_source(self.fcp, src_addr, dst_addr)
+                    AvcCcm.ask_signal_source(fcp, src_addr, dst_addr)
                 except Exception:
                     continue
 
@@ -226,7 +230,8 @@ class BebobUnit(Hinawa.SndUnit):
 
         return avail
 
-    def get_plug_spec(self, info):
+    @classmethod
+    def get_plug_spec(cls, fcp, info):
         data = info['data']
         if info['mode'] == 'unit':
             addr = BcoPlugInfo.get_unit_addr(info['dir'],
@@ -238,27 +243,27 @@ class BebobUnit(Hinawa.SndUnit):
             raise ValueError('Invalid mode of plug info.')
 
         spec = {
-            'name': BcoPlugInfo.get_plug_name(self.fcp, addr),
-            'type': BcoPlugInfo.get_plug_type(self.fcp, addr),
+            'name': BcoPlugInfo.get_plug_name(fcp, addr),
+            'type': BcoPlugInfo.get_plug_type(fcp, addr),
         }
 
         if info['dir'] == 'input':
-            spec['input'] = BcoPlugInfo.get_plug_input(self.fcp, addr),
+            spec['input'] = BcoPlugInfo.get_plug_input(fcp, addr),
         else:
-            spec['outputs'] = BcoPlugInfo.get_plug_outputs(self.fcp, addr),
+            spec['outputs'] = BcoPlugInfo.get_plug_outputs(fcp, addr),
 
         return spec
 
         if info['mode'] == 'unit':
             spec['clusters'] = []
-            clusters = BcoPlugInfo.get_plug_clusters(self.fcp, addr)
+            clusters = BcoPlugInfo.get_plug_clusters(fcp, addr)
 
             for i, cluster in enumerate(clusters):
                 mapping = []
-                name = BcoPlugInfo.get_plug_cluster_info(self.fcp, addr, i + 1)
+                name = BcoPlugInfo.get_plug_cluster_info(fcp, addr, i + 1)
                 for info in cluster:
                     idx, pos = info
-                    ch_name = BcoPlugInfo.get_plug_ch_name(self.fcp, addr, idx)
+                    ch_name = BcoPlugInfo.get_plug_ch_name(fcp, addr, idx)
                     mapping.append(ch_name)
                 entry = {
                     'name': name,

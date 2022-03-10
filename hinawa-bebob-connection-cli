@@ -5,10 +5,10 @@ from hinawa_utils.bebob.bebob_unit import BebobUnit
 from hinawa_utils.bebob.extensions import BcoPlugInfo
 
 def handle_dump_connections(unit, args):
-    unit_plug_list = unit.get_unit_plug_list()
-    subunit_plug_list = unit.get_subunit_plug_list()
+    unit_plug_list = BebobUnit.get_unit_plug_list(unit.fcp)
+    subunit_plug_list = BebobUnit.get_subunit_plug_list(unit.fcp)
 
-    conns = unit.get_avail_connections(unit_plug_list, subunit_plug_list)
+    conns = BebobUnit.get_avail_connections(unit.fcp, unit_plug_list, subunit_plug_list)
 
     if len(conns) == 0:
         print('nothing avail.')
@@ -22,7 +22,7 @@ def handle_dump_connections(unit, args):
         else:
             return False
 
-        dst_spec = unit.get_plug_spec(info)
+        dst_spec = BebobUnit.get_plug_spec(unit.fcp, info)
         print('{0} ({1})'.format(dst_spec['name'], dst_seqid))
 
         for avail in avails:
@@ -34,7 +34,7 @@ def handle_dump_connections(unit, args):
             else:
                 return False
 
-            src_spec = unit.get_plug_spec(info)
+            src_spec = BebobUnit.get_plug_spec(unit.fcp, info)
             if used:
                 print('   < {0} ({1})'.format(src_spec['name'], src_seqid))
             else:
@@ -43,13 +43,13 @@ def handle_dump_connections(unit, args):
     return True
 
 def handle_graph_connections(unit, args):
-    unit_plug_list = unit.get_unit_plug_list()
-    subunit_plug_list = unit.get_subunit_plug_list()
+    unit_plug_list = BebobUnit.get_unit_plug_list(unit.fcp)
+    subunit_plug_list = BebobUnit.get_subunit_plug_list(unit.fcp)
 
     specs = {}
     for plug_list in (unit_plug_list, subunit_plug_list):
         for seqid, info in plug_list.items():
-            spec = unit.get_plug_spec(info)
+            spec = BebobUnit.get_plug_spec(unit.fcp, info)
             specs[seqid] = spec
 
     unit_plugs = {}
@@ -115,7 +115,7 @@ def handle_graph_connections(unit, args):
             print('    }')
         print('  }')
 
-    conns = unit.get_avail_connections(unit_plug_list, subunit_plug_list)
+    conns = BebobUnit.get_avail_connections(unit.fcp, unit_plug_list, subunit_plug_list)
     for dst_seqid, avails in conns.items():
         dst_spec = specs[dst_seqid]
         for avail in avails:
