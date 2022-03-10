@@ -104,7 +104,7 @@ Requirements
    * https://docs.python.org/3/library/pathlib.html
 * PyGObject
    * https://gitlab.gnome.org/GNOME/pygobject
-* libhinawa 1.4.0 or later, with gir support
+* libhinawa 2.0.0 or later, with gir support
    * https://github.com/takaswie/libhinawa
 
 License
