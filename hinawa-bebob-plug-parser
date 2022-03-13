@@ -13,6 +13,7 @@ from sys import argv, exit
 from pathlib import Path
 from threading import Thread
 import json
+from pprint import PrettyPrinter
 
 def print_help(reason=""):
     if len(reason) > 0:
@@ -23,7 +24,7 @@ def print_help(reason=""):
     print('')
     print('  where:')
     print('    CDEV: the path to special file for Linux FireWire character device (e.g. /dev/fw[0-9]+)')
-    print('    MODE: dump mode (0: id-only, 1: whole as json)')
+    print('    MODE: dump mode (0: id-only, 1: whole as json, 2: pretty print)')
 
 def dump_plug_info_to_stdio_as_json(fcp):
     unit_plugs = PlugParser.parse_unit_plugs(fcp)
@@ -74,9 +75,20 @@ def dump_plug_info_to_stdio_as_ids_only(fcp):
                 for j, entry in enumerate(entries):
                     print(type, dir, i, j, entry['type'])
 
+def dump_plug_info_to_stdio_by_pprinter(fcp):
+    unit_plugs = PlugParser.parse_unit_plugs(fcp)
+    subunit_plugs = PlugParser.parse_subunit_plugs(fcp)
+    function_block_plugs = PlugParser.parse_function_block_plugs(fcp, subunit_plugs)
+
+    pp = PrettyPrinter()
+    pp.pprint(unit_plugs)
+    pp.pprint(subunit_plugs)
+    pp.pprint(function_block_plugs)
+
 ops = {
     '0': dump_plug_info_to_stdio_as_ids_only,
     '1': dump_plug_info_to_stdio_as_json,
+    '2': dump_plug_info_to_stdio_by_pprinter,
 }
 
 if len(argv) < 3:
