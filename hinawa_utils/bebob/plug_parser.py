@@ -14,23 +14,12 @@ __all__ = ['PlugParser']
 
 
 class PlugParser():
-    def parse(self, fcp):
-        self.unit_info = self.__parse_unit_info(fcp)
-        self.unit_plugs = self.__parse_unit_plugs(fcp)
-
-        self.subunit_plugs = self.__parse_subunit_plugs(fcp)
-
-        self.function_block_plugs = self.__parse_function_block_plugs(fcp)
-
-        self.stream_formats = self.__parse_stream_formats(fcp)
-
-        self.signal_destination = self.__parse_signal_destination(fcp)
-        self.signal_sources = self.__parse_signal_sources(fcp)
-
-    def __parse_unit_info(self, fcp):
+    @classmethod
+    def parse_unit_info(cls, fcp):
         return AvcGeneral.get_unit_info(fcp)
 
-    def __parse_unit_plugs(self, fcp):
+    @classmethod
+    def parse_unit_plugs(cls, fcp):
         unit_plugs = {}
         info = AvcConnection.get_unit_plug_info(fcp)
         for type, params in info.items():
@@ -41,13 +30,14 @@ class PlugParser():
             for dir, num in params.items():
                 for i in range(num + 1):
                     try:
-                        plug = self.__parse_unit_plug(fcp, dir, type, i)
+                        plug = cls.parse_unit_plug(fcp, dir, type, i)
                         unit_plugs[type][dir][i] = plug
                     except Exception:
                         continue
         return unit_plugs
 
-    def __parse_unit_plug(self, fcp, dir, type, num):
+    @classmethod
+    def parse_unit_plug(cls, fcp, dir, type, num):
         plug = {}
         addr = BcoPlugInfo.get_unit_addr(dir, type, num)
         plug['type'] = BcoPlugInfo.get_plug_type(fcp, addr)
@@ -72,7 +62,8 @@ class PlugParser():
             plug['outputs'] = BcoPlugInfo.get_plug_outputs(fcp, addr)
         return plug
 
-    def __parse_subunit_plugs(self, fcp):
+    @classmethod
+    def parse_subunit_plugs(cls, fcp):
         subunit_plugs = {}
         for page in range(AvcGeneral.MAXIMUM_SUBUNIT_PAGE + 1):
             try:
@@ -94,11 +85,12 @@ class PlugParser():
                 info = AvcConnection.get_subunit_plug_info(fcp, type, 0)
                 for dir, num in info.items():
                     for i in range(num):
-                        plug = self.__parse_subunit_plug(fcp, dir, type, 0, i)
+                        plug = cls.parse_subunit_plug(fcp, dir, type, 0, i)
                         subunit_plugs[type][id][dir][i] = plug
         return subunit_plugs
 
-    def __parse_subunit_plug(self, fcp, dir, type, id, num):
+    @classmethod
+    def parse_subunit_plug(cls, fcp, dir, type, id, num):
         plug = {}
         addr = BcoPlugInfo.get_subunit_addr(dir, type, id, num)
         plug['type'] = BcoPlugInfo.get_plug_type(fcp, addr)
@@ -128,9 +120,10 @@ class PlugParser():
             pass
         return plug
 
-    def __parse_function_block_plugs(self, fcp):
+    @classmethod
+    def parse_function_block_plugs(cls, fcp, subunit_plugs):
         subunits = {}
-        for subunit_type, subunit_type_plugs in self.subunit_plugs.items():
+        for subunit_type, subunit_type_plugs in subunit_plugs.items():
             if subunit_type not in subunits:
                 subunits[subunit_type] = {}
 
@@ -156,12 +149,10 @@ class PlugParser():
                     fb['outputs'] = {}
                     fb['inputs'] = {}
                     for i in range(entry['inputs']):
-                        plug = self._parse_fb_plug('input', subunit_type,
-                                                   subunit_id, fb_type, fb_id, i)
+                        plug = cls.parse_fb_plug(fcp, 'input', subunit_type, subunit_id, fb_type, fb_id, i)
                         fb['inputs'][i] = plug
                     for i in range(entry['outputs']):
-                        plug = self._parse_fb_plug('output', subunit_type,
-                                                   subunit_id, fb_type, fb_id, i)
+                        plug = cls.parse_fb_plug(fcp, 'output', subunit_type, subunit_id, fb_type, fb_id, i)
                         fb['outputs'][i] = plug
 
                     fbs[fb_type][fb_id] = fb
@@ -170,8 +161,8 @@ class PlugParser():
 
         return subunits
 
-    def _parse_fb_plug(self, fcp, dir, subunit_type, subunit_id, fb_type, fb_id,
-                       num):
+    @classmethod
+    def parse_fb_plug(cls, fcp, dir, subunit_type, subunit_id, fb_type, fb_id, num):
         plug = {}
         addr = BcoPlugInfo.get_function_block_addr(dir, subunit_type,
                                                    subunit_id, fb_type, fb_id, num)
@@ -202,30 +193,32 @@ class PlugParser():
             pass
         return plug
 
-    def __parse_signal_destination(self, fcp):
+    @classmethod
+    def parse_signal_destination(cls, fcp, subunit_plugs):
         dst = []
-        for subunit_id, subunit_id_plugs in self.subunit_plugs['music'].items():
+        for subunit_id, subunit_id_plugs in subunit_plugs['music'].items():
             for i, plug in subunit_id_plugs['input'].items():
                 if plug['type'] == 'Sync':
                     dst = AvcCcm.get_subunit_signal_addr('music', 0, i)
         return dst
 
-    def __parse_signal_sources(self, fcp):
+    @classmethod
+    def parse_signal_sources(cls, fcp, unit_plugs, subunit_plugs, signal_destination):
         srcs = []
         candidates = []
         # This is internal clock source.
-        for subunit_id, subunit_id_plugs in self.subunit_plugs['music'].items():
+        for subunit_id, subunit_id_plugs in subunit_plugs['music'].items():
             for i, plug in subunit_id_plugs['output'].items():
                 if plug['type'] == 'Sync':
                     addr = AvcCcm.get_subunit_signal_addr('music', 0, i)
                     candidates.append((addr, plug))
         # External source is available.
-        for i, plug in self.unit_plugs['external']['input'].items():
+        for i, plug in unit_plugs['external']['input'].items():
             if plug['type'] in ('Sync', 'Digital', 'Clock'):
                 addr = AvcCcm.get_unit_signal_addr('external', i)
                 candidates.append((addr, plug))
         # SYT-match is available, but not practical.
-        for i, plug in self.unit_plugs['isoc']['input'].items():
+        for i, plug in unit_plugs['isoc']['input'].items():
             if plug['type'] == 'Sync':
                 addr = AvcCcm.get_unit_signal_addr('isoc', i)
                 candidates.append((addr, plug))
@@ -235,16 +228,16 @@ class PlugParser():
             addr = params[0]
             plug = params[1]
             try:
-                AvcCcm.ask_signal_source(fcp, addr,
-                                         self.signal_destination)
+                AvcCcm.ask_signal_source(fcp, addr, signal_destination)
             except Exception:
                 continue
             srcs.append(params)
         return srcs
 
-    def __parse_stream_formats(self, fcp):
+    @classmethod
+    def parse_stream_formats(cls, fcp, unit_plugs):
         hoge = {}
-        for type, dir_plugs in self.unit_plugs.items():
+        for type, dir_plugs in unit_plugs.items():
             if type == 'async':
                 continue
             hoge[type] = {}
@@ -285,7 +278,7 @@ class PlugParser():
         return plugs
 
     @classmethod
-    def _get_subunit_plug_info(cls, fcp):
+    def get_subunit_plug_info(cls, fcp):
         subunits = {}
         for page in range(AvcGeneral.MAXIMUM_SUBUNIT_PAGE + 1):
             try:
@@ -317,7 +310,7 @@ class PlugParser():
         plugs = {}
         seqid = 0
 
-        subunits = cls._get_subunit_plug_info(fcp)
+        subunits = cls.get_subunit_plug_info(fcp)
         for id, data in subunits.items():
             for direction, count in data.items():
                 for plug_id in range(count):

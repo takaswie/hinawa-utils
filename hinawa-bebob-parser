@@ -26,32 +26,38 @@ def print_help(reason=""):
     print('    MODE: dump mode (0: id-only, 1: whole as json)')
 
 def dump_plug_info_to_stdio_as_json(fcp):
-    parser = PlugParser()
-    parser.parse(fcp)
+    unit_plugs = PlugParser.parse_unit_plugs(fcp)
+    subunit_plugs = PlugParser.parse_subunit_plugs(fcp)
+    function_block_plugs = PlugParser.parse_function_block_plugs(fcp, subunit_plugs)
+    stream_formats = PlugParser.parse_stream_formats(fcp, unit_plugs)
+
     info = {
-        'units': parser.unit_plugs,
-        'subunits': parser.subunit_plugs,
-        'function-blocks': parser.function_block_plugs,
-        'stream-formats': parser.stream_formats,
+        'units': unit_plugs,
+        'subunits': subunit_plugs,
+        'function-blocks': function_block_plugs,
+        'stream-formats': stream_formats,
     }
     print(json.dumps(info))
 
 
 def dump_plug_info_to_stdio_as_ids_only(fcp):
-    parser = PlugParser()
-    parser.parse(fcp)
-    for type, dir_plugs in parser.unit_plugs.items():
+    unit_plugs = PlugParser.parse_unit_plugs(fcp)
+    subunit_plugs = PlugParser.parse_subunit_plugs(fcp)
+    function_block_plugs = PlugParser.parse_function_block_plugs(fcp, subunit_plugs)
+    stream_formats = PlugParser.parse_stream_formats(fcp, unit_plugs)
+
+    for type, dir_plugs in unit_plugs.items():
         for dir, plugs in dir_plugs.items():
             for num, plug in plugs.items():
                 print(type, dir, num, plug['name'])
 
-    for type, dir_plugs in parser.subunit_plugs.items():
+    for type, dir_plugs in subunit_plugs.items():
         for id, id_plugs in dir_plugs.items():
             for dir, dir_plugs in id_plugs.items():
                 for plug_id, attrs in dir_plugs.items():
                     print(type, id, dir, plug_id, attrs['name'])
 
-    for type, type_plugs in parser.function_block_plugs.items():
+    for type, type_plugs in function_block_plugs.items():
         for id, id_plugs in type_plugs.items():
             for fb_type, fb_type_plugs in id_plugs.items():
                 for fb_id, fb_id_plugs in fb_type_plugs.items():
@@ -62,7 +68,7 @@ def dump_plug_info_to_stdio_as_ids_only(fcp):
                         print(type, id, fb_type, fb_id, 'input', plug_id,
                               attrs['name'])
 
-    for type, dir_fmts in parser.stream_formats.items():
+    for type, dir_fmts in stream_formats.items():
         for dir, fmts in dir_fmts.items():
             for i, entries in fmts.items():
                 for j, entry in enumerate(entries):
