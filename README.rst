@@ -2,7 +2,7 @@
 hinawa-utils
 ============
 
-2022/02/27
+2022/03/13
 Takashi Sakamoto
 
 Disclaimer
@@ -53,7 +53,7 @@ CLI tools to control Audio and Music unit on IEEE 1394 bus
 
 * hinawa-config-rom-printer
    * A lexer/parser of configuration ROM on IEEE 1394 bus
-* hinawa-bebob-parser
+* hinawa-bebob-plug-parser
    * Plug structure parser for BeBoB firmware
 * hinawa-bebob-connection-cli
    * Signal connection management between plugs of subunits for BeBoB firmware

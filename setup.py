@@ -43,7 +43,7 @@ setuptools.setup(
         'hinawa-alesis-io-cli',
         'hinawa-apogee-ensemble-cli',
         'hinawa-apogee-duet-cli',
-        'hinawa-bebob-parser',
+        'hinawa-bebob-plug-parser',
         'hinawa-bebob-connection-cli',
         'hinawa-config-rom-printer',
         'hinawa-dg003-cli',
