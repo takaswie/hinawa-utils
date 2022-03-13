@@ -4,17 +4,17 @@
 
 from hinawa_utils.bebob.plug_parser import PlugParser
 
-import sys
+from sys import argv, exit
 import json
 
-argv = sys.argv
-argc = len(argv)
-
-if argc < 3:
-    print('arguments:')
-    print(' 1: the number of firewire character device (/dev/fw*)')
-    print(' 2: dump mode (0: id-only, 1: whole as json)')
-    sys.exit()
+if len(argv) < 3:
+    print('Usage:')
+    print('  {} CDEV MODE'.format(argv[0]))
+    print('')
+    print('  where:')
+    print('    CDEV: the numeric identifier of firewire character device (/dev/fw*)')
+    print('    MODE: dump mode (0: id-only, 1: whole as json)')
+    exit(1)
 
 path = '/dev/fw{0}'.format(argv[1])
 mode = int(argv[2])
@@ -67,5 +67,3 @@ if mode == 0:
     dump_plug_info_to_stdio_as_ids_only(parser)
 else:
     dump_plug_info_to_stdio_as_json(parser)
-
-sys.exit()
