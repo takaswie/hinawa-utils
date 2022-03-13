@@ -5,23 +5,19 @@
 from hinawa_utils.bebob.plug_parser import PlugParser
 
 from sys import argv, exit
+from pathlib import Path
 import json
 
-if len(argv) < 3:
+def print_help(reason=""):
+    if len(reason) > 0:
+        print(reason)
+        print('')
     print('Usage:')
     print('  {} CDEV MODE'.format(argv[0]))
     print('')
     print('  where:')
-    print('    CDEV: the numeric identifier of firewire character device (/dev/fw*)')
+    print('    CDEV: the path to special file for Linux FireWire character device (e.g. /dev/fw[0-9]+)')
     print('    MODE: dump mode (0: id-only, 1: whole as json)')
-    exit(1)
-
-path = '/dev/fw{0}'.format(argv[1])
-mode = int(argv[2])
-parser = PlugParser(path)
-parser.listen()
-parser.parse()
-parser.unlisten()
 
 def dump_plug_info_to_stdio_as_json(parser):
     info = {
@@ -33,7 +29,7 @@ def dump_plug_info_to_stdio_as_json(parser):
     print(json.dumps(info))
 
 
-def dump_plug_info_to_stdio_as_ids_only(unit):
+def dump_plug_info_to_stdio_as_ids_only(parser):
     for type, dir_plugs in parser.unit_plugs.items():
         for dir, plugs in dir_plugs.items():
             for num, plug in plugs.items():
@@ -62,8 +58,33 @@ def dump_plug_info_to_stdio_as_ids_only(unit):
                 for j, entry in enumerate(entries):
                     print(type, dir, i, j, entry['type'])
 
+ops = {
+    '0': dump_plug_info_to_stdio_as_ids_only,
+    '1': dump_plug_info_to_stdio_as_json,
+}
 
-if mode == 0:
-    dump_plug_info_to_stdio_as_ids_only(parser)
-else:
-    dump_plug_info_to_stdio_as_json(parser)
+if len(argv) < 3:
+    print_help("Missing arguments")
+    exit(1)
+
+path = Path(argv[1])
+if not path.exists():
+    print_help("{} is not found.¥n".format(path))
+    exit(1)
+elif not path.is_char_device():
+    print_help("{} is not special file for character device.".format(path))
+    exit(1)
+fullpath = str(path)
+
+mode = argv[2]
+if mode not in ops:
+    print_help('Invalid mode')
+    exit(1)
+op = ops[mode]
+
+parser = PlugParser(fullpath)
+parser.listen()
+parser.parse()
+parser.unlisten()
+
+op(parser)
