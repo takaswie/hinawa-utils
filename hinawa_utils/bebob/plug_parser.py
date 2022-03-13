@@ -236,22 +236,22 @@ class PlugParser():
 
     @classmethod
     def parse_stream_formats(cls, fcp, unit_plugs):
-        hoge = {}
+        formats = {}
         for type, dir_plugs in unit_plugs.items():
             if type == 'async':
                 continue
-            hoge[type] = {}
+            formats[type] = {}
             for dir, plugs in dir_plugs.items():
-                hoge[type][dir] = {}
+                formats[type][dir] = {}
                 for i, plug in plugs.items():
                     addr = BcoPlugInfo.get_unit_addr(dir, type, i)
                     try:
                         fmts = BcoStreamFormatInfo.get_entry_list(fcp,
                                                                   addr)
-                        hoge[type][dir][i] = fmts
+                        formats[type][dir][i] = fmts
                     except Exception:
                         continue
-        return hoge
+        return formats
 
     @classmethod
     def get_unit_plug_list(cls, fcp):
