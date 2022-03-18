@@ -79,11 +79,13 @@ def dump_plug_info_to_stdio_by_pprinter(fcp):
     unit_plugs = PlugParser.parse_unit_plugs(fcp)
     subunit_plugs = PlugParser.parse_subunit_plugs(fcp)
     function_block_plugs = PlugParser.parse_function_block_plugs(fcp, subunit_plugs)
+    stream_formats = PlugParser.parse_stream_formats(fcp, unit_plugs)
 
     pp = PrettyPrinter()
     pp.pprint(unit_plugs)
     pp.pprint(subunit_plugs)
     pp.pprint(function_block_plugs)
+    pp.pprint(stream_formats)
 
 ops = {
     '0': dump_plug_info_to_stdio_as_ids_only,
