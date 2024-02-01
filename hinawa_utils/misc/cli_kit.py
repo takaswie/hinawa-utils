@@ -43,6 +43,13 @@ class CliKit():
             return True
 
     @staticmethod
+    def _dump_deprecation_text():
+        print('  NOTICE')
+        print('    This tool has been already abandoned. Please look into the migration')
+        print('    to successive project:')
+        print('      https://github.com/alsa-project/snd-firewire-ctl-services')
+
+    @staticmethod
     def _dump_help(cmdline):
         print('{0} CARD|GUID [FILE|CMD [ARGS]]'.format(cmdline))
         print('  CARD:  the number as ALSA sound card, see /proc/asound/cards.')
@@ -50,12 +57,16 @@ class CliKit():
         print('  FILE:  path for a file with command list')
         print('  CMD:   issue which you need')
         print('  ARGS:  arguments for the command')
+        print('')
+        cls._dump_deprecation_text()
 
-    @staticmethod
-    def _dump_commands(cmds):
+    @classmethod
+    def _dump_commands(cls, cmds):
         print('Available commands:')
         for name in cmds.keys():
             print('  {0}'.format(name))
+        print('')
+        cls._dump_deprecation_text()
 
     @classmethod
     def seek_snd_unit_path(cls):
