@@ -5,7 +5,7 @@ from re import match
 from struct import unpack
 
 import gi
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import Hinawa
 
 from hinawa_utils.bebob.maudio_protocol_abstract import MaudioProtocolAbstract
@@ -433,11 +433,12 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
     def get_meters(self):
         labels = self.labels['meters']
         meters = {}
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         frames = [0] * 256
-        data = req.transaction(self.unit.get_node(),
-                Hinawa.FwTcode.READ_BLOCK_REQUEST, self._ADDR_FOR_METERING,
-                self.__meters, frames)
+        _, data = req.transaction(self.unit.get_node(),
+                                  Hinawa.FwTcode.READ_BLOCK_REQUEST,
+                                  self._ADDR_FOR_METERING, self.__meters,
+                                  frames, 100)
         for i, name in enumerate(labels):
             meters[name] = unpack('>I', data[i * 4:(i + 1) * 4])[0]
         if len(data) > len(labels) * 4:

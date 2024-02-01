@@ -7,7 +7,7 @@ from time import sleep
 
 import gi
 gi.require_version('GLib', '2.0')
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 gi.require_version('Hitaki', '0.0')
 from gi.repository import GLib, Hinawa, Hitaki
 
@@ -34,21 +34,22 @@ class OxfwUnit(Hitaki.SndUnit):
 
         fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
         self.__node = Hinawa.FwNode.new()
-        self.__node.open(fw_node_path)
+        self.__node.open(fw_node_path, 0)
         ctx = GLib.MainContext.new()
-        src = self.__node.create_source()
+        _, src = self.__node.create_source()
         src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
 
         parser = Ta1394ConfigRomParser()
-        info = parser.parse_rom(self.get_node().get_config_rom())
+        _, image = self.__node.get_config_rom()
+        info = parser.parse_rom(image)
         self.vendor_name = info['vendor-name']
         self.model_name = info['model-name']
 
         self.fcp = Hinawa.FwFcp()
-        self.fcp.bind(self.get_node())
+        _ = self.fcp.bind(self.get_node())
 
         self.hw_info = self._parse_hardware_info()
         self.supported_sampling_rates = self._parse_supported_sampling_rates()
@@ -73,18 +74,20 @@ class OxfwUnit(Hitaki.SndUnit):
     def _parse_hardware_info(self):
         hw_info = {}
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
 
         frames = bytearray(4)
-        frames = req.transaction(self.get_node(),
-                Hinawa.FwTcode.READ_QUADLET_REQUEST, 0xfffff0050000, 4, frames)
+        _, frames = req.transaction(self.get_node(),
+                                    Hinawa.FwTcode.READ_QUADLET_REQUEST,
+                                    0xfffff0050000, 4, frames, 100)
         hw_info['asic-type'] = 'FW{0:x}'.format(
             unpack('>H', frames[0:2])[0] >> 4)
         hw_info['firmware-version'] = '{0}.{1}'.format(frames[2], frames[3])
 
         frames = bytearray(4)
-        frames = req.transaction(self.get_node(),
-                Hinawa.FwTcode.READ_QUADLET_REQUEST, 0xfffff0090020, 4, frames)
+        _, frames = req.transaction(self.get_node(),
+                                    Hinawa.FwTcode.READ_QUADLET_REQUEST,
+                                    0xfffff0090020, 4, frames, 100)
         hw_info['asic-id'] = frames.decode('US-ASCII').rstrip('\0')
 
         return hw_info

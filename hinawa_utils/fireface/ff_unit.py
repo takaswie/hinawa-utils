@@ -8,7 +8,7 @@ from pathlib import Path
 
 import gi
 gi.require_version('GLib', '2.0')
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 gi.require_version('Hitaki', '0.0')
 from gi.repository import GLib, Hinawa, Hitaki
 
@@ -66,16 +66,17 @@ class FFUnit(Hitaki.SndUnit):
 
         fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
         self.__node = Hinawa.FwNode.new()
-        self.__node.open(fw_node_path)
+        self.__node.open(fw_node_path, 0)
         ctx = GLib.MainContext.new()
-        src = self.__node.create_source()
+        _, src = self.__node.create_source()
         src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
 
         parser = FFConfigRomParser()
-        info = parser.parse_rom(self.get_node().get_config_rom())
+        _, image = self.get_node().get_config_rom()
+        info = parser.parse_rom(image)
         if info['model_id'] not in self.__MODELS:
             raise OSError('Unsupported model.')
 
@@ -165,10 +166,10 @@ class FFUnit(Hitaki.SndUnit):
         if self.__name == 'Fireface400':
             FFOptionReg.build_single_option(self.__option_cache,
                                             'midi-low-addr', '0x00000000', True)
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         frames = pack('<3I', *self.__option_cache)
-        req.transaction(self.get_node(), Hinawa.FwTcode.WRITE_BLOCK_REQUEST,
-                        self.__regs[0], len(frames), frames)
+        _, _ = req.transaction(self.get_node(), Hinawa.FwTcode.WRITE_BLOCK_REQUEST,
+                               self.__regs[0], len(frames), frames, 100)
 
     def __create_multiple_option_initial_cache(self, cache):
         default_params = {
@@ -251,11 +252,11 @@ class FFUnit(Hitaki.SndUnit):
                                                item)
 
     def get_sync_status(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         frames = bytearray(8)
-        frames = req.transaction(self.get_node(),
-                    Hinawa.FwTcode.READ_BLOCK_REQUEST,
-                    0x0000801c0000, 8, frames)
+        _, frames = req.transaction(self.get_node(),
+                                    Hinawa.FwTcode.READ_BLOCK_REQUEST,
+                                    0x0000801c0000, 8, frames, 100)
         quads = unpack('<2I', frames)
 
         return FFStatusReg.parse(quads)
@@ -298,9 +299,10 @@ class FFUnit(Hitaki.SndUnit):
         offset = FFMixerRegs.calculate_src_offset(self.__spec, target, src)
         val = self.__build_val_from_db(db)
         data = pack('<I', val)
-        req = Hinawa.FwReq()
-        req.transaction(self.get_node(), Hinawa.FwTcode.WRITE_BLOCK_REQUEST,
-                        self.__regs[1] + offset, len(data), data)
+        req = Hinawa.FwReq.new()
+        _, _ = req.transaction(self.get_node(),
+                               Hinawa.FwTcode.WRITE_BLOCK_REQUEST,
+                               self.__regs[1] + offset, len(data), data, 100)
         self.__mixer_cache[offset // 4] = val
         self.__write_cache_to_file()
 
@@ -328,9 +330,10 @@ class FFUnit(Hitaki.SndUnit):
         offset = FFOutRegs.calculate_out_offset(self.__spec, target)
         val = self.__build_val_from_db(db)
         data = pack('<I', val)
-        req = Hinawa.FwReq()
-        req.transaction(self.get_node(), Hinawa.FwTcode.WRITE_BLOCK_REQUEST,
-                        self.__regs[2] + offset, len(data), data)
+        req = Hinawa.FwReq.new()
+        _, _ = req.transaction(self.get_node(),
+                               Hinawa.FwTcode.WRITE_BLOCK_REQUEST,
+                               self.__regs[2] + offset, len(data), data, 100)
         self.__out_cache[offset // 4] = val
 
     def get_out_volume(self, target):

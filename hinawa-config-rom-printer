@@ -11,7 +11,7 @@ from hinawa_utils.ieee1212.config_rom_lexer import Ieee1212ConfigRomLexer
 from hinawa_utils.ieee1394.config_rom_parser import Ieee1394ConfigRomParser
 
 import gi
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import Hinawa
 
 if len(sys.argv) < 2:
@@ -142,10 +142,10 @@ def handle_ame_unit_dep_keys(key_id, type_name, data):
 
 pp = PrettyPrinter(indent=2, compact=False)
 
-unit = Hinawa.FwNode()
-unit.open(path)
+node = Hinawa.FwNode()
+node.open(path, 0)
 
-data = unit.get_config_rom()
+_, data = node.get_config_rom()
 
 if op == 'lex':
     entries = Ieee1212ConfigRomLexer.detect_entries(data)

@@ -5,7 +5,7 @@ from threading import Thread
 
 import gi
 gi.require_version('GLib', '2.0')
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 gi.require_version('Hitaki', '0.0')
 from gi.repository import GLib, Hinawa, Hitaki
 
@@ -31,20 +31,21 @@ class DiceUnit(Hitaki.SndDice):
 
         fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
         self.__node = Hinawa.FwNode.new()
-        self.__node.open(fw_node_path)
+        self.__node.open(fw_node_path, 0)
         ctx = GLib.MainContext.new()
-        src = self.__node.create_source()
+        _, src = self.__node.create_source()
         src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
 
         parser = Ta1394ConfigRomParser()
-        info = parser.parse_rom(self.get_node().get_config_rom())
+        _, image = self.__node.get_config_rom()
+        info = parser.parse_rom(image)
         self.vendor_id = info['vendor-id']
         self.model_id = info['model-id']
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         self._protocol = TcatProtocolGeneral(self, req)
 
     def release(self):
@@ -63,19 +64,19 @@ class DiceUnit(Hitaki.SndDice):
         return self.__node
 
     def get_owner_addr(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_owner_addr(req)
 
     def get_latest_notification(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_latest_notification(req)
 
     def set_nickname(self, name):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         self._protocol.write_nickname(req, name)
 
     def get_nickname(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_nickname(req)
 
     def get_supported_clock_sources(self):
@@ -89,7 +90,7 @@ class DiceUnit(Hitaki.SndDice):
     def set_clock_source(self, source):
         if self.get_property('is-locked'):
             raise RuntimeError('Packet is-locked started.')
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         labels = self._protocol.get_clock_source_names()
         if source not in labels or source == 'Unused':
             raise ValueError('Invalid argument for clock source.')
@@ -97,7 +98,7 @@ class DiceUnit(Hitaki.SndDice):
         self._protocol.write_clock_source(req, alias)
 
     def get_clock_source(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         labels = self._protocol.get_clock_source_names()
         src = self._protocol.read_clock_source(req)
         index = {v: k for k, v in self._protocol.CLOCK_BITS.items()}[src]
@@ -109,52 +110,52 @@ class DiceUnit(Hitaki.SndDice):
     def set_sampling_rate(self, rate):
         if self.get_property('is-locked'):
             raise RuntimeError('Packet is-locked started.')
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         self._protocol.write_sampling_rate(req, rate)
 
     def get_sampling_rate(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_sampling_rate(req)
 
     def get_enabled(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_enabled(req)
 
     def get_clock_status(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_clock_status(req)
 
     def get_external_clock_states(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_external_clock_states(req)
 
     def get_measured_sampling_rate(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_measured_sampling_rate(req)
 
     def get_dice_version(self):
         return self._protocol.get_dice_version()
 
     def get_tx_params(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_tx_params(req)
 
     def get_rx_params(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_rx_params(req)
 
     def get_external_sync_clock_source(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_external_sync_clock_source(req)
 
     def get_external_sync_locked(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_external_sync_locked(req)
 
     def get_external_sync_rate(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_external_sync_rate(req)
 
     def get_external_sync_adat_status(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return self._protocol.read_external_sync_adat_status(req)

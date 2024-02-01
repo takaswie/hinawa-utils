@@ -5,7 +5,7 @@ from enum import Enum
 from struct import pack, unpack
 
 import gi
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import Hinawa
 
 from hinawa_utils.ta1394.general import AvcGeneral
@@ -272,11 +272,11 @@ class InputCmd():
 
     @classmethod
     def get_meters(cls, unit: Hinawa.FwNode):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         frames = bytearray(8)
-        frames = req.transaction(unit.get_node(),
-                                 Hinawa.FwTcode.READ_BLOCK_REQUEST,
-                                 cls.__ADDR_IN_METERS, 8, frames)
+        _, frames = req.transaction(unit.get_node(),
+                                    Hinawa.FwTcode.READ_BLOCK_REQUEST,
+                                    cls.__ADDR_IN_METERS, 8, frames, 100)
         vals = unpack('>2I', frames)
         meters = {
             'analog-1': vals[0],
@@ -420,11 +420,11 @@ class MixerCmd():
 
     @classmethod
     def get_meters(cls, unit: Hinawa.FwNode):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         frames = bytearray(16)
-        frames = req.transaction(unit.get_node(),
-                                 Hinawa.FwTcode.READ_BLOCK_REQUEST,
-                                 cls.__ADDR_SRC_LEVELS, 16, frames)
+        _, frames = req.transaction(unit.get_node(),
+                                    Hinawa.FwTcode.READ_BLOCK_REQUEST,
+                                    cls.__ADDR_SRC_LEVELS, 16, frames, 100)
         vals = unpack('>4I', frames)
         meters = {
             'stream-1': vals[0],

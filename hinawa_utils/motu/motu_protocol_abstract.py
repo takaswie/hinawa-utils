@@ -4,7 +4,7 @@
 from abc import ABCMeta, abstractmethod
 
 import gi
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import Hinawa
 
 __all__ = ['MotuProtocolAbstract']
@@ -38,15 +38,15 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
         self._debug = bool(debug)
 
     def read(self, offset, size):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         if size == 4:
             tcode = Hinawa.FwTcode.READ_QUADLET_REQUEST
         else:
             tcode = Hinawa.FwTcode.READ_BLOCK_REQUEST
         addr = self.BASE_ADDR + offset
         frames = bytearray(size)
-        frames = req.transaction(self._unit.get_node(), tcode, addr, size,
-                                 frames)
+        _, frames = req.transaction(self._unit.get_node(), tcode, addr, size,
+                                    frames, 100)
         if self._debug:
             print('    read: {0:012x}:'.format(addr))
             for i, frame in enumerate(frames):
@@ -54,7 +54,7 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
         return bytearray(frames)
 
     def write(self, offset, frames):
-        req = Hinawa.FwReq(timeout=100)
+        req = Hinawa.FwReq.new()
         if len(frames) == 4:
             tcode = Hinawa.FwTcode.WRITE_QUADLET_REQUEST
         else:
@@ -65,7 +65,7 @@ class MotuProtocolAbstract(metaclass=ABCMeta):
             for i, frame in enumerate(frames):
                 print('        {0:04x}: {1:02x}'.format(offset + i, frame))
 
-        req.transaction(self.get_node(), tcode, addr, len(frames), frames)
+        _, _ = req.transaction(self.get_node(), tcode, addr, len(frames), frames, 100)
 
     @abstractmethod
     def get_supported_sampling_rates(self):

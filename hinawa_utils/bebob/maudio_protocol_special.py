@@ -5,7 +5,7 @@ from struct import unpack, pack
 from pathlib import Path
 
 import gi
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import Hinawa
 
 from hinawa_utils.bebob.maudio_protocol_abstract import MaudioProtocolAbstract
@@ -127,15 +127,16 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
     def __write_data(self, offset, data):
         # Write to the unit.
         count = 0
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         while True:
             if len(data) == 4:
                 tcode = Hinawa.FwTcode.WRITE_QUADLET_REQUEST
             else:
                 tcode = Hinawa.FwTcode.WRITE_BLOCK_REQUEST
             try:
-                req.transaction(self.unit.get_node(), tcode,
-                                self.BASE_ADDR + offset, len(data), data)
+                _, _ = req.transaction(self.unit.get_node(), tcode,
+                                       self.BASE_ADDR + offset, len(data),
+                                       data, 100)
                 break
             except Exception:
                 if count > 10:
@@ -397,11 +398,11 @@ class MaudioProtocolSpecial(MaudioProtocolAbstract):
     # may differs analog-in and the others.
     def get_meters(self):
         meters = {}
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         data = [0] * 84
-        data = req.transaction(self.unit.get_node(),
-                               Hinawa.FwTcode.READ_BLOCK_REQUEST,
-                               self._ADDR_FOR_METERING, 84, data)
+        _, data = req.transaction(self.unit.get_node(),
+                                  Hinawa.FwTcode.READ_BLOCK_REQUEST,
+                                  self._ADDR_FOR_METERING, 84, data, 100)
         meters['switch-0'] = data[0]
         meters['rotery-0'] = data[1]
         meters['rotery-1'] = data[2]

@@ -4,7 +4,7 @@
 from struct import unpack
 
 import gi
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import Hinawa
 
 __all__ = ['TcatProtocolGeneral']
@@ -64,8 +64,8 @@ class TcatProtocolGeneral():
                 tcode = Hinawa.FwTcode.WRITE_QUADLET_REQUEST
             else:
                 tcode = Hinawa.FwTcode.WRITE_BLOCK_REQUEST
-            req.transaction(self._unit.get_node(), tcode, addr, count,
-                            data[0:count])
+            _, _ = req.transaction(self._unit.get_node(), tcode, addr, count,
+                                   data[0:count], 100)
             data = data[count:]
             length -= count
             addr += count
@@ -84,8 +84,8 @@ class TcatProtocolGeneral():
             else:
                 tcode = Hinawa.FwTcode.READ_BLOCK_REQUEST
             frames = bytearray(count)
-            frames = req.transaction(self._unit.get_node(), tcode, addr, count,
-                                     frames)
+            _, frames = req.transaction(self._unit.get_node(), tcode, addr, count,
+                                        frames, 100)
             data.extend(frames)
             length -= count
             addr += count

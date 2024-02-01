@@ -2,7 +2,7 @@
 
 import gi
 gi.require_version('GLib', '2.0')
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import GLib, Hinawa
 
 from hinawa_utils.bebob.plug_parser import PlugParser
@@ -174,7 +174,7 @@ fullpath = str(path)
 
 node = Hinawa.FwNode.new()
 try:
-    node.open(fullpath)
+    node.open(fullpath, 0)
 except Exception as e:
     print_help("Fail to operate {}: {}".format(fullpath, e))
     exit(1)
@@ -186,7 +186,7 @@ if mode not in cmds:
 op = cmds[mode]
 
 ctx = GLib.MainContext.new()
-src = node.create_source()
+_, src = node.create_source()
 src.attach(ctx)
 
 dispatcher = GLib.MainLoop.new(ctx, False)
@@ -195,7 +195,7 @@ th.start()
 
 try:
     fcp = Hinawa.FwFcp.new()
-    fcp.bind(node)
+    _ = fcp.bind(node)
     op(fcp)
 except Exception as e:
     print(e)

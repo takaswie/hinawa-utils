@@ -6,7 +6,7 @@ from struct import unpack
 
 import gi
 gi.require_version('GLib', '2.0')
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 gi.require_version('Hitaki', '0.0')
 from gi.repository import GLib, Hinawa, Hitaki
 
@@ -37,21 +37,22 @@ class BebobUnit(Hitaki.SndUnit):
 
         fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
         self.__node = Hinawa.FwNode.new()
-        self.__node.open(fw_node_path)
+        self.__node.open(fw_node_path, 0)
         ctx = GLib.MainContext.new()
-        src = self.__node.create_source()
+        _, src = self.__node.create_source()
         src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
 
         parser = BebobConfigRomParser()
-        info = parser.parse_rom(self.get_node().get_config_rom())
+        _, image = self.__node.get_config_rom()
+        info = parser.parse_rom(image)
         self.vendor_id = info['vendor-id']
         self.model_id = info['model-id']
 
         self.fcp = Hinawa.FwFcp()
-        self.fcp.bind(self.get_node())
+        _ = self.fcp.bind(self.get_node())
         self.firmware_info = self._get_firmware_info()
 
     def release(self):
@@ -81,11 +82,11 @@ class BebobUnit(Hitaki.SndUnit):
                 return '000000'
             return params.decode('US-ASCII')
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         frames = bytearray(104)
-        params = req.transaction(self.get_node(),
-                    Hinawa.FwTcode.READ_BLOCK_REQUEST, BebobUnit.REG_INFO, 104,
-                    frames)
+        _, params = req.transaction(self.get_node(),
+                                    Hinawa.FwTcode.READ_BLOCK_REQUEST,
+                                    BebobUnit.REG_INFO, 104, frames, 100)
 
         info = {}
         info['manufacturer'] = _get_string_literal(params[0:8])

@@ -4,7 +4,7 @@
 from struct import pack, unpack
 
 import gi
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import Hinawa
 
 from hinawa_utils.dice.dice_unit import DiceUnit
@@ -124,12 +124,12 @@ class AlesisIoUnit(DiceUnit):
             self.__write_data(self.__MIXER_23_24_SWITCH, data)
 
     def __write_data(self, offset, data):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         offset += self.__BASE_OFFSET
         self._protocol.write_transactions(req, offset, data)
 
     def __read_data(self, offset, length):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         offset += self.__BASE_OFFSET
         return self._protocol.read_transactions(req, offset, length)
 

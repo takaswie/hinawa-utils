@@ -5,7 +5,7 @@ from threading import Thread
 
 import gi
 gi.require_version('GLib', '2.0')
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 gi.require_version('Hitaki', '0.0')
 from gi.repository import GLib, Hinawa, Hitaki
 
@@ -36,16 +36,17 @@ class Dg00xUnit(Hitaki.SndDigi00x):
 
         fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
         self.__node = Hinawa.FwNode.new()
-        self.__node.open(fw_node_path)
+        self.__node.open(fw_node_path, 0)
         ctx = GLib.MainContext.new()
-        src = self.__node.create_source()
+        _, src = self.__node.create_source()
         src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
 
         parser = Dg00xConfigRomParser()
-        info = parser.parse_rom(self.get_node().get_config_rom())
+        _, image = self.__node.get_config_rom()
+        info = parser.parse_rom(image)
         self._model_name = info['model-name']
 
     def release(self):
@@ -64,24 +65,25 @@ class Dg00xUnit(Hitaki.SndDigi00x):
         return self.__node
 
     def _read_transaction(self, offset, size):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         addr = self.__BASE_ADDR + offset
         if size == 4:
             tcode = Hinawa.FwTcode.READ_QUADLET_REQUEST
         else:
             tcode = Hinawa.FwTcode.READ_BLOCK_REQUEST
         frames = bytearray(size)
-        return req.transaction(self.get_node(), tcode, addr, size, frames)
+        _, resp = req.transaction(self.get_node(), tcode, addr, size, frames, 100)
+        return resp
 
     def _write_transaction(self, offset, size):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         addr = self.__BASE_ADDR + offset
         if size == 4:
             tcode = Hinawa.FwTcode.WRITE_QUADLET_REQUEST
         else:
             tcode = Hinawa.FwTcode.WRITE_BLOCK_REQUEST
         frames = bytearray(size)
-        return req.transaction(self.get_node(), tcode, addr, size, frames)
+        _, _ = req.transaction(self.get_node(), tcode, addr, size, frames, 100)
 
     def set_clock_source(self, source):
         if source not in self.SUPPORTED_CLOCK_SOURCES:

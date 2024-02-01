@@ -4,7 +4,7 @@
 from struct import pack, unpack
 
 import gi
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import Hinawa
 
 from hinawa_utils.bebob.bebob_unit import BebobUnit
@@ -124,25 +124,26 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         for i in range(count):
             frames.extend(pack('>I', quads[0]))
             quads = quads[1:]
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         if len(frames) == 4:
             tcode = Hinawa.FwTcode.WRITE_QUADLET_REQUEST
         else:
             tcode = Hinawa.FwTcode.WRITE_BLOCK_REQUEST
-        req.transaction(self.get_node(), tcode,
-                        self._BASE_ADDR + offset, len(frames), frames)
+        _, _ = req.transaction(self.get_node(), tcode,
+                               self._BASE_ADDR + offset, len(frames), frames,
+                               100)
 
     def _read_quads(self, offset, count):
         quads = []
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         size = count * 4
         if size == 4:
             tcode = Hinawa.FwTcode.READ_QUADLET_REQUEST
         else:
             tcode = Hinawa.FwTcode.READ_BLOCK_REQUEST
         frames = bytearray(size)
-        frames = req.transaction(self.get_node(), tcode,
-                                 self._BASE_ADDR + offset, size, frames)
+        _, frames = req.transaction(self.get_node(), tcode,
+                                    self._BASE_ADDR + offset, size, frames, 100)
         for i in range(count):
             quads.append(unpack('>I', frames[0:4])[0])
             frames = frames[4:]
