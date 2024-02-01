@@ -2,7 +2,7 @@
 hinawa-utils
 ============
 
-2022/03/13
+2024/02/01
 Takashi Sakamoto
 
 Disclaimer
@@ -19,7 +19,7 @@ Introduction
 
 This batch of Python 3 codes consists of modules and scripts to control
 Audio and Music units on IEEE 1394 bus, with a help of PyGObject for
-gobject-introspection to libhinawa APIs.
+gobject-introspection to libhinawa and libhitaki APIs.
 
 The modules include applications of below specifications:
 
@@ -106,6 +106,8 @@ Requirements
    * https://gitlab.gnome.org/GNOME/pygobject
 * libhinawa 2.0.0 or later, with gir support
    * https://github.com/takaswie/libhinawa
+* libhitaki 0.2 or later, with gir support
+   * https://github.com/alsa-project/libhitaki
 
 License
 =======
@@ -113,5 +115,3 @@ License
 * All modules are licensed under GNU Lesser General Public License version 3 or
   later.
 * All scripts are licensed under GNU General Public License version 3 or later.
-
-End

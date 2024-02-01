@@ -309,8 +309,8 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         return self._caps['rate-modes']
 
     def set_rate_mode(self, mode):
-        if self.get_property('streaming'):
-            raise OSError('Packet streaming starts')
+        if self.get_property('is-locked'):
+            raise OSError('Packet is-locked starts')
         if mode not in self._caps['rate-modes']:
             raise ValueError('Invalid argument for frequency mode.')
         quads = []
@@ -338,8 +338,8 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         return rates
 
     def set_sampling_rate(self, rate):
-        if self.get_property('streaming'):
-            raise OSError('Packet streaming starts')
+        if self.get_property('is-locked'):
+            raise OSError('Packet is-locked starts')
         curr_rate = AvcConnection.get_plug_signal_format(self.fcp, 'input', 0)
         for mode, rates in self._RATE_MODES.items():
             if curr_rate in rates:
@@ -362,8 +362,8 @@ class FocusriteSaffireproIoUnit(BebobUnit):
         return self._caps['clocks']
 
     def set_clock_source(self, source):
-        if self.get_property('streaming'):
-            raise OSError('Packet streaming starts')
+        if self.get_property('is-locked'):
+            raise OSError('Packet is-locked starts')
         if source not in self._caps['clocks']:
             raise ValueError('Invalid argument for clock source.')
         quads = []

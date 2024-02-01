@@ -6,7 +6,8 @@ from threading import Thread
 import gi
 gi.require_version('GLib', '2.0')
 gi.require_version('Hinawa', '3.0')
-from gi.repository import GLib, Hinawa
+gi.require_version('Hitaki', '0.0')
+from gi.repository import GLib, Hinawa, Hitaki
 
 from hinawa_utils.motu.motu_protocol_v1 import MotuProtocolV1
 from hinawa_utils.motu.motu_protocol_v2 import MotuProtocolV2
@@ -16,7 +17,7 @@ from hinawa_utils.motu.config_rom_parser import MotuConfigRomParser
 __all__ = ['MotuUnit']
 
 
-class MotuUnit(Hinawa.SndMotu):
+class MotuUnit(Hitaki.SndMotu):
     SUPPORTED_MODELS = {
         0x000001: ('828',       MotuProtocolV1),
         0x000002: ('828',       MotuProtocolV1),
@@ -29,19 +30,23 @@ class MotuUnit(Hinawa.SndMotu):
 
     def __init__(self, path):
         super().__init__()
-        self.open(path)
-        if self.get_property('type') != 7:
+        self.open(path, 0)
+        if self.get_property('unit-type') != 7:
             raise ValueError('The character device is not for Motu unit.')
 
         ctx = GLib.MainContext.new()
-        self.create_source().attach(ctx)
+        _, src = self.create_source()
+        src.attach(ctx)
         self.__unit_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__unit_th = Thread(target=lambda d: d.run(), args=(self.__unit_dispatcher, ))
         self.__unit_th.start()
 
-        node = self.get_node()
+        fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
+        self.__node = Hinawa.FwNode.new()
+        self.__node.open(fw_node_path)
         ctx = GLib.MainContext.new()
-        node.create_source().attach(ctx)
+        src = self.__node.create_source()
+        src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
@@ -68,6 +73,9 @@ class MotuUnit(Hinawa.SndMotu):
     def __exit__(self, ex_type, ex_value, trace):
         self.release()
 
+    def get_node(self):
+        return self.__node
+
     def get_sampling_rates(self):
         return self._protocol.get_supported_sampling_rates()
 
@@ -79,8 +87,8 @@ class MotuUnit(Hinawa.SndMotu):
         return rate
 
     def set_sampling_rate(self, rate):
-        if self.get_property('streaming'):
-            raise ValueError('Packet streaming already runs.')
+        if self.get_property('is-locked'):
+            raise ValueError('Packet is-locked already runs.')
         if rate not in self._protocol.get_supported_sampling_rates():
             raise ValueError('Unsupported sampling rate.')
         self._protocol.set_sampling_rate(rate)
@@ -96,8 +104,8 @@ class MotuUnit(Hinawa.SndMotu):
         return source
 
     def set_clock_source(self, source):
-        if self.get_property('streaming'):
-            raise ValueError('Packet streaming already runs.')
+        if self.get_property('is-locked'):
+            raise ValueError('Packet is-locked already runs.')
         if source not in self._protocol.get_supported_clock_sources():
             raise ValueError('Unsupported or unavailable clock source.')
         self._protocol.set_clock_source(source)
@@ -130,8 +138,8 @@ class MotuUnit(Hinawa.SndMotu):
         return mode
 
     def set_opt_iface_mode(self, direction, index, mode):
-        if self.get_property('streaming'):
-            raise ValueError('Packet streaming already runs.')
+        if self.get_property('is-locked'):
+            raise ValueError('Packet is-locked already runs.')
 
         if index not in self._protocol.get_supported_opt_iface_indexes():
             raise ValueError('Invalid argument for index of optical iface.')

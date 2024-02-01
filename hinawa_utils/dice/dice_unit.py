@@ -6,7 +6,8 @@ from threading import Thread
 import gi
 gi.require_version('GLib', '2.0')
 gi.require_version('Hinawa', '3.0')
-from gi.repository import GLib, Hinawa
+gi.require_version('Hitaki', '0.0')
+from gi.repository import GLib, Hinawa, Hitaki
 
 from hinawa_utils.dice.tcat_protocol_general import TcatProtocolGeneral
 from hinawa_utils.ta1394.config_rom_parser import Ta1394ConfigRomParser
@@ -14,22 +15,26 @@ from hinawa_utils.ta1394.config_rom_parser import Ta1394ConfigRomParser
 __all__ = ['DiceUnit']
 
 
-class DiceUnit(Hinawa.SndDice):
+class DiceUnit(Hitaki.SndDice):
     def __init__(self, path):
         super().__init__()
-        self.open(path)
-        if self.get_property('type') != 1:
+        self.open(path, 0)
+        if self.get_property('unit-type') != 1:
             raise ValueError('The character device is not for Dice unit')
 
         ctx = GLib.MainContext.new()
-        self.create_source().attach(ctx)
+        _, src = self.create_source()
+        src.attach(ctx)
         self.__unit_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__unit_th = Thread(target=lambda d: d.run(), args=(self.__unit_dispatcher, ))
         self.__unit_th.start()
 
-        node = self.get_node()
+        fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
+        self.__node = Hinawa.FwNode.new()
+        self.__node.open(fw_node_path)
         ctx = GLib.MainContext.new()
-        node.create_source().attach(ctx)
+        src = self.__node.create_source()
+        src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
@@ -53,6 +58,9 @@ class DiceUnit(Hinawa.SndDice):
 
     def __exit__(self, ex_type, ex_value, trace):
         self.release()
+
+    def get_node(self):
+        return self.__node
 
     def get_owner_addr(self):
         req = Hinawa.FwReq()
@@ -79,8 +87,8 @@ class DiceUnit(Hinawa.SndDice):
         return labels
 
     def set_clock_source(self, source):
-        if self.get_property('streaming'):
-            raise RuntimeError('Packet streaming started.')
+        if self.get_property('is-locked'):
+            raise RuntimeError('Packet is-locked started.')
         req = Hinawa.FwReq()
         labels = self._protocol.get_clock_source_names()
         if source not in labels or source == 'Unused':
@@ -99,8 +107,8 @@ class DiceUnit(Hinawa.SndDice):
         return self._protocol.get_supported_sampling_rates()
 
     def set_sampling_rate(self, rate):
-        if self.get_property('streaming'):
-            raise RuntimeError('Packet streaming started.')
+        if self.get_property('is-locked'):
+            raise RuntimeError('Packet is-locked started.')
         req = Hinawa.FwReq()
         self._protocol.write_sampling_rate(req, rate)
 

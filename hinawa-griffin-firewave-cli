@@ -10,7 +10,7 @@ from hinawa_utils.ta1394.audio import AvcAudio
 def handle_current_status(unit, args):
     print('Current status:')
     print('  Packet Streaming:')
-    print('    running:          {0}'.format(unit.get_property('streaming')))
+    print('    running:          {0}'.format(unit.get_property('is-locked')))
     fmts = unit.get_current_stream_formats()
     print('  sampling-rate:    {0}'.format(fmts['playback']['sampling-rate']))
     print('Volumes:')

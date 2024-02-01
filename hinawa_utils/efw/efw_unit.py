@@ -6,7 +6,8 @@ from threading import Thread
 import gi
 gi.require_version('GLib', '2.0')
 gi.require_version('Hinawa', '3.0')
-from gi.repository import GLib, Hinawa
+gi.require_version('Hitaki', '0.0')
+from gi.repository import GLib, Hinawa, Hitaki
 
 from hinawa_utils.efw.transactions import EftInfo
 from hinawa_utils.efw.transactions import EftHwctl
@@ -20,20 +21,24 @@ from math import log10
 __all__ = ['EfwUnit']
 
 
-class EfwUnit(Hinawa.SndEfw):
+class EfwUnit(Hitaki.SndEfw):
     def __init__(self, path):
         super().__init__()
-        self.open(path)
+        self.open(path, 0)
 
         ctx = GLib.MainContext.new()
-        self.create_source().attach(ctx)
+        _, src = self.create_source()
+        src.attach(ctx)
         self.__unit_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__unit_th = Thread(target=lambda d: d.run(), args=(self.__unit_dispatcher, ))
         self.__unit_th.start()
 
-        node = self.get_node()
+        fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
+        self.__node = Hinawa.FwNode.new()
+        self.__node.open(fw_node_path)
         ctx = GLib.MainContext.new()
-        node.create_source().attach(ctx)
+        src = self.__node.create_source()
+        src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
@@ -52,6 +57,9 @@ class EfwUnit(Hinawa.SndEfw):
 
     def __exit__(self, ex_type, ex_value, trace):
         self.release()
+
+    def get_node(self):
+        return self.__node
 
     def _fixup_info(self):
         # Mapping for channels on tx stream is supported by Onyx1200F only.

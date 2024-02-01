@@ -9,7 +9,7 @@ from hinawa_utils.bebob.phase_go_unit import PhaseGoUnit
 def handle_current_status(unit, args):
     print('Current status:')
     print('  Packet Streaming:')
-    print('    started:          {0}'.format(unit.get_property('streaming')))
+    print('    started:          {0}'.format(unit.get_property('is-locked')))
     rate = unit.protocol.get_sampling_rate()
     print('    sampling-rate:    {0}'.format(rate))
     source = unit.protocol.get_clock_source()
@@ -175,8 +175,8 @@ def handle_sampling_rate(unit, args):
         op = args[0]
         if len(args) >= 2 and op == 'set' and int(args[1]) in rates:
             rate = int(args[1])
-            if unit.get_property('streaming'):
-                print('Packet streaming started.')
+            if unit.get_property('is-locked'):
+                print('Packet is-locked started.')
                 return False
             unit.protocol.set_sampling_rate(rate)
             return True
@@ -196,8 +196,8 @@ def handle_clock_source(unit, args):
     if len(args) >= 1 and args[0] in ops:
         op = args[0]
         if len(args) >= 2 and op == 'set' and args[1] in sources:
-            if unit.get_property('streaming'):
-                print('Packet streaming started.')
+            if unit.get_property('is-locked'):
+                print('Packet is-locked started.')
                 return False
             source = args[1]
             unit.protocol.set_clock_source(source)

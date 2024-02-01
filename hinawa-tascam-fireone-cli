@@ -11,7 +11,7 @@ from hinawa_utils.oxfw.tascam_fireone import TascamFireone
 def handle_current_status(unit, args):
     print('Current status:')
     print('  Packet Streaming:')
-    print('    running:          {0}'.format(unit.get_property('streaming')))
+    print('    running:          {0}'.format(unit.get_property('is-locked')))
     fmts = unit.get_current_stream_formats()
     print(
         '    sampling-rate:    {0}'.format(fmts['playback']['sampling-rate']))
@@ -87,8 +87,8 @@ def handle_sampling_rate(unit, args):
     if len(args) > 0 and args[0] in ops:
         op = args[0]
         if op == ops[0] and len(args) == 2:
-            if unit.get_property('streaming'):
-                print('Packet streaming started.')
+            if unit.get_property('is-locked'):
+                print('Packet is-locked started.')
                 return False
             rate = int(args[1])
             for fmt in unit.supported_stream_formats['playback']:

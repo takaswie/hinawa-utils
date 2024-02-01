@@ -454,8 +454,8 @@ class MaudioProtocolNormal(MaudioProtocolAbstract):
         return self.__clocks.keys()
 
     def set_clock_source(self, src):
-        if self.unit.get_property('streaming'):
-            raise ValueError('Packet streaming already runs.')
+        if self.unit.get_property('is-locked'):
+            raise ValueError('Packet is-locked already runs.')
         dst = AvcCcm.get_subunit_signal_addr('music', 0, 1)
         addr = self.__clocks[src]
         AvcCcm.set_signal_source(self.unit.fcp, addr, dst)

@@ -8,8 +8,8 @@ from signal import SIGINT
 
 import gi
 gi.require_version('GLib', '2.0')
-gi.require_version('Hinawa', '3.0')
-from gi.repository import GLib, Hinawa
+gi.require_version('Hitaki', '0.0')
+from gi.repository import GLib, Hitaki
 
 __all__ = ['CliKit']
 
@@ -20,8 +20,8 @@ class CliKit():
         for fullpath in Path('/dev/snd').glob('hw*'):
             fullpath = str(fullpath)
             try:
-                unit = Hinawa.SndUnit()
-                unit.open(fullpath)
+                unit = Hitaki.SndUnit()
+                unit.open(fullpath, 0)
                 if unit.get_property('guid') == guid:
                     return fullpath
             except Exception as e:
