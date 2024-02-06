@@ -83,7 +83,7 @@ def handle_listen_message(unit, args):
         loop.quit()
     unit.connect('notified', handle_notified)
     GLib.unix_signal_add(GLib.PRIORITY_HIGH, signal.SIGINT, handle_unix_signal)
-    unit.connect('disconnected', handle_disconnect, loop)
+    unit.connect('notify::is-disconnected', handle_disconnect, loop)
     loop.run()
     return True
 

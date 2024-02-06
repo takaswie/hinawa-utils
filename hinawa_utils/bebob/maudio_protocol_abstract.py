@@ -175,8 +175,8 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
         return rates
 
     def set_sampling_rate(self, rate):
-        if self.unit.get_property('streaming'):
-            raise ValueError('Packet streaming already runs.')
+        if self.unit.get_property('is-locked'):
+            raise ValueError('Packet is-locked already runs.')
         if rate not in self.get_sampling_rate_labels():
             raise ValueError('Invalid argument for sampling rate')
         old_timeout = self.unit.fcp.get_property('timeout')

@@ -11,8 +11,8 @@ def handle_clock_source(unit, args):
     if len(args) > 0 and args[0] in ops:
         op = args[0]
         if op == ops[0] and len(args) == 2:
-            if unit.get_property('streaming'):
-                print('Packet streaming started.')
+            if unit.get_property('is-locked'):
+                print('Packet is-locked started.')
                 return False
             source = args[1]
             unit.set_clock_source(source)

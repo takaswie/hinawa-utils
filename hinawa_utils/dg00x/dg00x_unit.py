@@ -6,14 +6,15 @@ from threading import Thread
 import gi
 gi.require_version('GLib', '2.0')
 gi.require_version('Hinawa', '3.0')
-from gi.repository import GLib, Hinawa
+gi.require_version('Hitaki', '0.0')
+from gi.repository import GLib, Hinawa, Hitaki
 
 from hinawa_utils.dg00x.config_rom_parser import Dg00xConfigRomParser
 
 __all__ = ['Dg00xUnit']
 
 
-class Dg00xUnit(Hinawa.SndDg00x):
+class Dg00xUnit(Hitaki.SndDigi00x):
     __BASE_ADDR = 0xffffe0000000
 
     SUPPORTED_SAMPLING_RATES = (44100, 48000, 88200, 96000)
@@ -22,19 +23,23 @@ class Dg00xUnit(Hinawa.SndDg00x):
 
     def __init__(self, path):
         super().__init__()
-        self.open(path)
-        if self.get_property('type') != 5:
+        self.open(path, 0)
+        if self.get_property('unit-type') != 5:
             raise ValueError('The character device is not for Dg00x unit')
 
         ctx = GLib.MainContext.new()
-        self.create_source().attach(ctx)
+        _, src = self.create_source()
+        src.attach(ctx)
         self.__unit_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__unit_th = Thread(target=lambda d: d.run(), args=(self.__unit_dispatcher, ))
         self.__unit_th.start()
 
-        node = self.get_node()
+        fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
+        self.__node = Hinawa.FwNode.new()
+        self.__node.open(fw_node_path)
         ctx = GLib.MainContext.new()
-        node.create_source().attach(ctx)
+        src = self.__node.create_source()
+        src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
@@ -54,6 +59,9 @@ class Dg00xUnit(Hinawa.SndDg00x):
 
     def __exit__(self, ex_type, ex_value, trace):
         self.release()
+
+    def get_node(self):
+        return self.__node
 
     def _read_transaction(self, offset, size):
         req = Hinawa.FwReq()

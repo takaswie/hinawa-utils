@@ -7,7 +7,8 @@ from struct import unpack
 import gi
 gi.require_version('GLib', '2.0')
 gi.require_version('Hinawa', '3.0')
-from gi.repository import GLib, Hinawa
+gi.require_version('Hitaki', '0.0')
+from gi.repository import GLib, Hinawa, Hitaki
 
 from hinawa_utils.ta1394.general import AvcGeneral, AvcConnection
 from hinawa_utils.ta1394.ccm import AvcCcm
@@ -18,24 +19,28 @@ from hinawa_utils.bebob.extensions import BcoPlugInfo
 __all__ = ['BebobUnit']
 
 
-class BebobUnit(Hinawa.SndUnit):
+class BebobUnit(Hitaki.SndUnit):
     REG_INFO = 0xffffc8020000
 
     def __init__(self, path):
         super().__init__()
-        self.open(path)
-        if self.get_property('type') != 3:
+        self.open(path, 0)
+        if self.get_property('unit-type') != 3:
             raise ValueError('The character device is not for BeBoB unit')
 
         ctx = GLib.MainContext.new()
-        self.create_source().attach(ctx)
+        _, src = self.create_source()
+        src.attach(ctx)
         self.__unit_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__unit_th = Thread(target=lambda d: d.run(), args=(self.__unit_dispatcher, ))
         self.__unit_th.start()
 
-        node = self.get_node()
+        fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
+        self.__node = Hinawa.FwNode.new()
+        self.__node.open(fw_node_path)
         ctx = GLib.MainContext.new()
-        node.create_source().attach(ctx)
+        src = self.__node.create_source()
+        src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
@@ -61,6 +66,9 @@ class BebobUnit(Hinawa.SndUnit):
 
     def __exit__(self, ex_type, ex_value, trace):
         self.release()
+
+    def get_node(self):
+        return self.__node
 
     def _get_firmware_info(self):
         def _get_string_literal(params):

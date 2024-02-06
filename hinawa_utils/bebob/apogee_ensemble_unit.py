@@ -136,8 +136,8 @@ class ApogeeEnsembleUnit(BebobUnit):
         return labels
 
     def set_clock_src(self, src):
-        if self.get_property('streaming'):
-            raise OSError('Packet streaming started.')
+        if self.get_property('is-locked'):
+            raise OSError('Packet is-locked started.')
         if src not in self.__CLOCK_SRCS and src != 'Internal':
             raise ValueError('Invalid argument for source of clock.')
         plugs = self.__get_clock_plugs()
