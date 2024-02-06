@@ -5,7 +5,7 @@ from threading import Thread
 
 import gi
 gi.require_version('GLib', '2.0')
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 gi.require_version('Hitaki', '0.0')
 from gi.repository import GLib, Hinawa, Hitaki
 
@@ -43,16 +43,17 @@ class MotuUnit(Hitaki.SndMotu):
 
         fw_node_path = '/dev/{}'.format(self.get_property('node-device'))
         self.__node = Hinawa.FwNode.new()
-        self.__node.open(fw_node_path)
+        self.__node.open(fw_node_path, 0)
         ctx = GLib.MainContext.new()
-        src = self.__node.create_source()
+        _, src = self.__node.create_source()
         src.attach(ctx)
         self.__node_dispatcher = GLib.MainLoop.new(ctx, False)
         self.__node_th = Thread(target=lambda d: d.run(), args=(self.__node_dispatcher, ))
         self.__node_th.start()
 
         parser = MotuConfigRomParser()
-        info = parser.parse_rom(self.get_node().get_config_rom())
+        _, image = self.get_node().get_config_rom()
+        info = parser.parse_rom(image)
 
         if info['model-id'] in self.SUPPORTED_MODELS:
             name, protocol = self.SUPPORTED_MODELS[info['model-id']]

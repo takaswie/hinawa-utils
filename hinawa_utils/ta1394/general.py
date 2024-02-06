@@ -2,7 +2,7 @@
 # Copyright (C) 2018 Takashi Sakamoto
 
 import gi
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import Hinawa
 
 __all__ = ['AvcGeneral', 'AvcConnection']
@@ -22,7 +22,7 @@ class AvcGeneral():
         if cmd[0] != 0x00:
             raise ValueError('Invalid command code for control')
         params = [0] * 256
-        params = fcp.transaction(cmd, params)
+        _, params = fcp.avc_transaction(cmd, params, 100)
         if params[0] == 0x08:
             raise OSError('Not implemented')
         elif params[0] == 0x0a:
@@ -38,7 +38,7 @@ class AvcGeneral():
         if cmd[0] != 0x01:
             raise ValueError('Invalid command code for status')
         params = [0] * 256
-        params = fcp.transaction(cmd, params)
+        _, params = fcp.avc_transaction(cmd, params, 100)
         if params[0] == 0x08:
             raise OSError('Not implemented')
         elif params[0] == 0x0a:
@@ -56,7 +56,7 @@ class AvcGeneral():
         if cmd[0] != 0x02:
             raise ValueError('Invalid command code for inquire')
         params = [0] * 256
-        params = fcp.transaction(cmd, params)
+        _, params = fcp.avc_transaction(cmd, params, 100)
         if params[0] == 0x08:
             raise OSError('Not Implemented')
         elif params[0] != 0x0c:

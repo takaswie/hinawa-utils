@@ -179,12 +179,9 @@ class MaudioProtocolAbstract(metaclass=ABCMeta):
             raise ValueError('Packet is-locked already runs.')
         if rate not in self.get_sampling_rate_labels():
             raise ValueError('Invalid argument for sampling rate')
-        old_timeout = self.unit.fcp.get_property('timeout')
         # The unit tends to respond with larger interval from these requests.
-        self.unit.fcp.set_property('timeout', 500)
         AvcConnection.set_plug_signal_format(self.unit.fcp, 'input', 0, rate)
         AvcConnection.set_plug_signal_format(self.unit.fcp, 'output', 0, rate)
-        self.unit.fcp.set_property('timeout', old_timeout)
 
     @abstractmethod
     def get_sampling_rate(self):

@@ -293,7 +293,8 @@ class PlugParser():
                 for subunit_id in range(maximum_id + 1):
                     try:
                         data = AvcConnection.get_subunit_plug_info(fcp,
-                                                    subunit_type, subunit_id)
+                                                                   subunit_type,
+                                                                   subunit_id)
                     except Exception:
                         continue
 
@@ -348,7 +349,8 @@ class PlugParser():
         for seqid, info in subunit_plug_list.items():
             data = info['data']
             addr = AvcCcm.get_subunit_signal_addr(data['subunit-type'],
-                                            data['subunit-id'], data['plug'])
+                                                  data['subunit-id'],
+                                                  data['plug'])
             # Inverse direction against plugs of unit.
             if info['dir'] == 'output':
                 target = src_candidates
@@ -384,7 +386,9 @@ class PlugParser():
                                              data['unit-type'], data['plug'])
         elif info['mode'] == 'subunit':
             addr = BcoPlugInfo.get_subunit_addr(info['dir'],
-                    data['subunit-type'], data['subunit-id'], data['plug'])
+                                                data['subunit-type'],
+                                                data['subunit-id'],
+                                                data['plug'])
         else:
             raise ValueError('Invalid mode of plug info.')
 

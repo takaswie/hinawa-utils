@@ -4,7 +4,7 @@
 from threading import Timer
 
 import gi
-gi.require_version('Hinawa', '3.0')
+gi.require_version('Hinawa', '4.0')
 from gi.repository import Hinawa
 
 from hinawa_utils.dice.dice_unit import DiceUnit
@@ -35,7 +35,7 @@ class DiceExtendedUnit(DiceUnit):
     def __init__(self, fullpath):
         super().__init__(fullpath)
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         ExtCtlSpace.detect_layout(self._protocol, req)
         ExtCapsSpace.detect_caps(self._protocol, req)
 
@@ -65,7 +65,7 @@ class DiceExtendedUnit(DiceUnit):
         Timer(0, self._cache_router_nodes)
 
     def _cache_router_nodes(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
 
         rate = self._protocol.read_sampling_rate(req)
         mode = self._get_rate_mode(rate)
@@ -97,7 +97,7 @@ class DiceExtendedUnit(DiceUnit):
         if rate not in self._protocol.get_supported_sampling_rates():
             raise ValueError('Invalid argument for sampling rate.')
         mode = self._get_rate_mode(rate)
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return ExtCurrentConfigSpace.read_stream_config(self._protocol, req, mode)
 
     def get_router_entries(self, rate):
@@ -105,7 +105,7 @@ class DiceExtendedUnit(DiceUnit):
             raise ValueError('Invalid argument for sampling rate.')
         mode = self._get_rate_mode(rate)
         entries = []
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         routes = ExtCurrentConfigSpace.read_router_config(self._protocol, req,
                                                           mode)
         for route in routes:
@@ -140,7 +140,7 @@ class DiceExtendedUnit(DiceUnit):
         if len(categories) == 0:
             raise RuntimeError('Nothing can be stored.')
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         rate = self._protocol.read_sampling_rate(req)
         mode = self._get_rate_mode(rate)
         ExtCmdSpace(self._protocol, req, 'load-to-storage', mode)
@@ -163,7 +163,7 @@ class DiceExtendedUnit(DiceUnit):
         if len(categories) == 0:
             raise RuntimeError('Nothing can be loaded.')
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         rate = self._protocol.read_sampling_rate(req)
         mode = self._get_rate_mode(rate)
         ExtCmdSpace.initiate(self._protocol, req, 'load-from-storage', mode)
@@ -219,7 +219,7 @@ class DiceExtendedUnit(DiceUnit):
                     }
                     self._routes.append(pair)
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         rate = self._protocol.read_sampling_rate(req)
         mode = self._get_rate_mode(rate)
         ExtNewRouterSpace.set_entries(self._protocol, req, self._routes)
@@ -357,7 +357,7 @@ class DiceExtendedUnit(DiceUnit):
         return gains
 
     def set_mixer_gain(self, output, input, ch, db):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         gains = self._get_mixer_gains(req, output, input, ch)
         total = gains[0]['val'] + gains[1]['val']
         val = ExtMixerSpace.build_val_from_db(db)
@@ -372,13 +372,13 @@ class DiceExtendedUnit(DiceUnit):
                                      gain['src-ch'], gain['val'])
 
     def get_mixer_gain(self, output, input, ch):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         gains = self._get_mixer_gains(req, output, input, ch)
         total = gains[0]['val'] + gains[1]['val']
         return ExtMixerSpace.parse_val_to_db(total)
 
     def set_mixer_balance(self, output, input, ch, balance):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         gains = self._get_mixer_gains(req, output, input, ch)
         total = gains[0]['val'] + gains[1]['val']
         gains[0]['val'] = int(total * (100 - balance) // 100)
@@ -388,7 +388,7 @@ class DiceExtendedUnit(DiceUnit):
                                      gain['src-ch'], gain['val'])
 
     def get_mixer_balance(self, output, input, ch):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         gains = self._get_mixer_gains(req, output, input, ch)
         total = gains[0]['val'] + gains[1]['val']
         if total == 0:
@@ -400,7 +400,7 @@ class DiceExtendedUnit(DiceUnit):
     def get_mixer_saturations(self):
         outputs = self.get_mixer_output_labels()
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         rate = self._protocol.read_sampling_rate(req)
         mode = self._get_rate_mode(rate)
         saturations = ExtMixerSpace.read_saturation(self._protocol, req, mode)
@@ -417,7 +417,7 @@ class DiceExtendedUnit(DiceUnit):
     def get_metering(self):
         meters = {}
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         for peak in ExtPeakSpace.get(self._protocol, req):
             for src in self._srcs:
                 if peak['src-blk'] == src[1] and peak['src-ch'] in src[2]:
@@ -442,7 +442,7 @@ class DiceExtendedUnit(DiceUnit):
         return meters
 
     def set_standalone_clock_source(self, source):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         labels = self._protocol.get_clock_source_names()
         if source not in labels or source == 'Unused':
             raise ValueError('Invalid argument for clock source.')
@@ -450,7 +450,7 @@ class DiceExtendedUnit(DiceUnit):
         ExtStandaloneSpace.write_clock_source(self._protocol, req, alias)
 
     def get_standalone_clock_source(self):
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         labels = self._protocol.get_clock_source_names()
         src = ExtStandaloneSpace.read_clock_source(self._protocol, req)
         index = {v: k for k, v in self._protocol.CLOCK_BITS.items()}[src]
@@ -476,7 +476,7 @@ class DiceExtendedUnit(DiceUnit):
             if name not in params:
                 raise ValueError('Invalid argument for params.')
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         ExtStandaloneSpace.write_clock_source_params(self._protocol, req, alias,
                                                      params)
 
@@ -486,6 +486,6 @@ class DiceExtendedUnit(DiceUnit):
             raise ValueError('Invalid argument for clock source.')
         alias = self._protocol.CLOCK_BITS[labels.index(source)]
 
-        req = Hinawa.FwReq()
+        req = Hinawa.FwReq.new()
         return ExtStandaloneSpace.read_clock_source_params(self._protocol, req,
                                                            alias)
