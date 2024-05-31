@@ -143,7 +143,7 @@ class DiceExtendedUnit(DiceUnit):
         req = Hinawa.FwReq.new()
         rate = self._protocol.read_sampling_rate(req)
         mode = self._get_rate_mode(rate)
-        ExtCmdSpace(self._protocol, req, 'load-to-storage', mode)
+        ExtCmdSpace.initiate(self._protocol, req, 'load-to-storage', mode)
 
         # MEMO: however, in most models, configuration of router is stored by
         # 'load-from-router' command.
